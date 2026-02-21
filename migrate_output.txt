@@ -1,0 +1,160 @@
+
+  Dropping all tables  9.17ms DONE
+
+   INFO  Preparing database.  
+
+  Creating migration table  5.35ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000000_create_users_table  7.31ms DONE
+  0001_01_01_000001_create_cache_table  2.06ms DONE
+  0001_01_01_000002_create_jobs_table  5.57ms DONE
+  2025_10_12_062126_create_telescope_entries_table  10.43ms DONE
+  2025_10_12_062639_create_permission_tables  13.63ms DONE
+  2025_10_26_111023_create_institutions_table  1.34ms DONE
+  2025_10_26_111036_create_partners_table  0.96ms DONE
+  2025_10_26_111036_create_research_schemes_table  1.20ms DONE
+  2025_10_26_111037_create_focus_areas_table  1.11ms DONE
+  2025_10_26_111038_create_keywords_table  2.02ms DONE
+  2025_10_26_111038_create_national_priorities_table  1.18ms DONE
+  2025_10_26_111048_create_faculties_table  2.17ms DONE
+  2025_10_26_111048_create_science_clusters_table  0.94ms DONE
+  2025_10_26_111049_create_study_programs_table  0.96ms DONE
+  2025_10_26_111049_create_themes_table  1.53ms DONE
+  2025_10_26_111050_create_identities_table  2.78ms DONE
+  2025_10_26_111050_create_topics_table  1.33ms DONE
+  2025_10_26_111099_create_macro_research_groups_table  1.02ms DONE
+  2025_10_26_111100_create_proposals_table  2.02ms DONE
+  2025_10_26_111100_create_research_table  1.37ms DONE
+  2025_10_26_111101_create_community_services_table  1.39ms DONE
+  2025_10_26_111113_create_budget_groups_table  1.70ms DONE
+  2025_10_26_111113_create_proposal_keyword_table  1.29ms DONE
+  2025_10_26_111113_create_proposal_user_table  1.11ms DONE
+  2025_10_26_111114_create_budget_components_table  10.03ms DONE
+  2025_10_26_111114_create_proposal_outputs_table  1.10ms DONE
+  2025_10_26_111115_create_activity_schedules_table  0.99ms DONE
+  2025_10_26_111115_create_budget_items_table  1.00ms DONE
+  2025_10_26_111116_create_research_stages_table  1.01ms DONE
+  2025_10_28_082611_create_proposal_reviewer_table  3.61ms DONE
+  2025_11_02_130859_create_proposal_partner_table  1.15ms DONE
+  2025_11_04_183740_create_notifications_table  3.45ms DONE
+  2025_11_07_214747_create_progress_reports_table  2.11ms DONE
+  2025_11_07_214756_create_progress_report_keyword_table  1.27ms DONE
+  2025_11_07_214757_create_mandatory_outputs_table  3.66ms DONE
+  2025_11_07_214758_create_additional_outputs_table  2.50ms DONE
+  2025_11_09_071120_create_proposal_status_logs_table  2.80ms DONE
+  2025_11_10_043157_create_media_table  2.75ms DONE
+  2025_11_23_063411_add_fields_to_outputs_tables  50.84ms DONE
+  2025_11_28_000000_create_settings_table  2.13ms DONE
+  2025_11_28_182637_create_tkt_tables  10.56ms DONE
+  2025_11_29_000001_add_percentage_to_budget_groups_table  1.70ms DONE
+  2025_11_29_000002_create_budget_caps_table  2.03ms DONE
+  2025_11_29_124604_create_research_tkt_indicator_table  0.97ms DONE
+  2026_01_06_185747_add_start_year_to_proposals_table  1.59ms DONE
+  2026_01_06_190335_add_year_to_budget_items_table  1.56ms DONE
+  2026_01_06_203354_create_daily_notes_table  0.98ms DONE
+  2026_01_12_061107_enhance_proposal_reviewer_table  10.66ms DONE
+  2026_01_12_062443_add_waiting_reviewer_status_to_proposals_table  0.05ms DONE
+  2026_01_13_033746_create_review_logs_table  2.96ms DONE
+  2026_01_14_040135_update_mandatory_outputs_status_type_enum  0.06ms DONE
+  2026_01_14_040610_update_additional_outputs_status_enum  0.05ms DONE
+  2026_01_14_042312_make_output_statuses_nullable  18.90ms DONE
+  2026_01_20_020015_add_macro_research_group_id_to_community_services_table  8.51ms DONE
+  2026_01_20_023918_add_description_to_proposal_outputs_table  1.89ms DONE
+  2026_01_22_021705_create_review_criterias_table  1.08ms DONE
+  2026_01_22_021706_create_review_scores_table  1.27ms DONE
+  2026_01_22_022733_add_total_score_to_review_logs_table  1.83ms DONE
+  2026_01_24_062531_add_budget_group_and_amount_to_daily_notes_table  9.25ms DONE
+  2026_01_25_110522_create_proposal_monevs_table  1.51ms DONE
+  2026_01_25_112102_add_soft_deletes_to_proposals_tables  5.30ms DONE
+  2026_01_25_112103_create_proposal_activities_table  1.14ms DONE
+  2026_02_03_073045_add_details_to_institutions_table  8.38ms DONE
+
+
+   INFO  Seeding database.  
+
+  Database\Seeders\RoleSeeder  RUNNING  
+  Database\Seeders\RoleSeeder  30 ms DONE  
+
+  Database\Seeders\InstitutionSeeder  RUNNING  
+  Database\Seeders\InstitutionSeeder  2 ms DONE  
+
+  Database\Seeders\ResearchSchemeSeeder  RUNNING  
+  Database\Seeders\ResearchSchemeSeeder  16 ms DONE  
+
+  Database\Seeders\TktSeeder  RUNNING  
+  Database\Seeders\TktSeeder  144 ms DONE  
+
+  Database\Seeders\FocusAreaSeeder  RUNNING  
+  Database\Seeders\FocusAreaSeeder  12 ms DONE  
+
+  Database\Seeders\NationalPrioritySeeder  RUNNING  
+  Database\Seeders\NationalPrioritySeeder  9 ms DONE  
+
+  Database\Seeders\KeywordSeeder  RUNNING  
+  Database\Seeders\KeywordSeeder  34 ms DONE  
+
+  Database\Seeders\MacroResearchGroupSeeder  RUNNING  
+  Database\Seeders\MacroResearchGroupSeeder  8 ms DONE  
+
+  Database\Seeders\BudgetGroupSeeder  RUNNING  
+  Database\Seeders\BudgetGroupSeeder  7 ms DONE  
+
+  Database\Seeders\BudgetComponentSeeder  RUNNING  
+Budget components seeded successfully!
+Honor/Upah: 8 components
+Teknologi & Inovasi: 12 components
+Pelatihan: 7 components
+Perjalanan: 7 components
+Lainnya: 12 components
+Total: 46 budget components seeded
+  Database\Seeders\BudgetComponentSeeder  60 ms DONE  
+
+  Database\Seeders\ReviewCriteriaSeeder  RUNNING  
+  Database\Seeders\ReviewCriteriaSeeder  10 ms DONE  
+
+  Database\Seeders\ScienceClusterSeeder  RUNNING  
+Science clusters seeded successfully!
+Level 1: 12 Rumpun Ilmu
+Level 2: 39 Sub Rumpun
+Level 3: 63 Bidang Ilmu Detail
+Total: 114 clusters seeded
+  Database\Seeders\ScienceClusterSeeder  4 ms DONE  
+
+  Database\Seeders\FacultySeeder  RUNNING  
+  Database\Seeders\FacultySeeder  3 ms DONE  
+
+  Database\Seeders\StudyProgramSeeder  RUNNING  
+  Database\Seeders\StudyProgramSeeder  10 ms DONE  
+
+  Database\Seeders\ThemeSeeder  RUNNING  
+  Database\Seeders\ThemeSeeder  13 ms DONE  
+
+  Database\Seeders\TopicSeeder  RUNNING  
+  Database\Seeders\TopicSeeder  50 ms DONE  
+
+  Database\Seeders\AdminUserSeeder  RUNNING  
+Admin users seeded successfully!
+  Database\Seeders\AdminUserSeeder  540 ms DONE  
+
+  Database\Seeders\PartnerSeeder  RUNNING  
+  Database\Seeders\PartnerSeeder  9 ms DONE  
+
+  Database\Seeders\UserSeeder  RUNNING  
+Users seeded successfully!
+Total users created: 13
+Faculties used: Fakultas Sains dan Teknologi, Fakultas Desain Kreatif dan Bisnis Digital
+  Database\Seeders\UserSeeder  2,909 ms DONE  
+
+  Database\Seeders\ProposalSeeder  RUNNING  
+  Database\Seeders\ResearchSeeder  RUNNING  
+ResearchSeeder completed successfully.
+  Database\Seeders\ResearchSeeder  1,875 ms DONE  
+
+  Database\Seeders\CommunityServiceSeeder  RUNNING  
+CommunityServiceSeeder completed successfully.
+  Database\Seeders\CommunityServiceSeeder  1,781 ms DONE  
+
+  Database\Seeders\ProposalSeeder  3,660 ms DONE  
+

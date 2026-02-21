@@ -1,0 +1,274 @@
+<?php
+
+namespace App\Livewire\Reports;
+
+use App\Enums\ProposalStatus;
+use App\Models\AdditionalOutput;
+use App\Models\MandatoryOutput;
+use App\Models\Proposal;
+use Illuminate\Support\Collection;
+use Illuminate\View\View;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithPagination;
+
+#[Layout('components.layouts.app', ['title' => 'Laporan Penelitian', 'pageTitle' => 'Laporan Penelitian'])]
+class Research extends Component
+{
+    use WithPagination;
+
+    public string $period;
+
+    public function mount()
+    {
+        $this->period = (string) date('Y');
+    }
+
+    /**
+     * Update the selected reporting period.
+     */
+    public function setPeriod(string $period): void
+    {
+        $this->period = $period;
+    }
+
+    #[\Livewire\Attributes\On('report-export-pdf')]
+    public function exportPdf()
+    {
+        $proposals = Proposal::query()
+            ->where('detailable_type', 'App\Models\Research')
+            ->where('start_year', $this->period)
+            ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme', 'budgetItems'])
+            ->latest()
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.research-pdf', [
+            'proposals' => $proposals,
+            'period' => $this->period,
+        ])->setPaper('a4', 'landscape');
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, 'laporan-penelitian-'.$this->period.'-'.now()->format('YmdHis').'.pdf', [
+            'Content-Type' => 'application/pdf',
+        ]);
+    }
+
+    #[\Livewire\Attributes\On('report-export-excel')]
+    public function exportExcel()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\ResearchReportExport($this->period),
+            'laporan-penelitian-'.$this->period.'-'.now()->format('YmdHis').'.xlsx'
+        );
+    }
+
+    /**
+     * Render the component view.
+     */
+    public function render(): View
+    {
+        return view('livewire.reports.research', [
+            'periods' => $this->availablePeriods(),
+            'summary' => $this->summaryMetrics(),
+            'schemes' => $this->researchByScheme(),
+            'focusAreas' => $this->researchByFocusArea(),
+            'faculties' => $this->researchByFaculty(),
+            'outputStats' => $this->outputAnalytics(),
+            'proposals' => $this->proposals(),
+        ]);
+    }
+
+    /**
+     * Get all research proposals for the current period with pagination.
+     */
+    protected function proposals()
+    {
+        return Proposal::query()
+            ->where('detailable_type', 'App\Models\Research')
+            ->where('start_year', $this->period)
+            ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme'])
+            ->latest()
+            ->paginate(15);
+    }
+
+    /**
+     * Get available years from proposals.
+     */
+    protected function availablePeriods(): array
+    {
+        return Proposal::query()
+            ->distinct()
+            ->whereNotNull('start_year')
+            ->orderBy('start_year', 'desc')
+            ->pluck('start_year')
+            ->map(fn ($year) => (string) $year)
+            ->toArray() ?: [(string) date('Y')];
+    }
+
+    /**
+     * Aggregate report metrics for the dashboard cards.
+     */
+    protected function summaryMetrics(): array
+    {
+        $query = Proposal::query()
+            ->where('detailable_type', 'App\Models\Research')
+            ->where('start_year', $this->period);
+
+        $totalApproved = (clone $query)
+            ->whereIn('status', [
+                ProposalStatus::APPROVED->value,
+                ProposalStatus::COMPLETED->value,
+                ProposalStatus::WAITING_REVIEWER->value,
+                ProposalStatus::UNDER_REVIEW->value,
+                ProposalStatus::REVIEWED->value,
+            ])
+            ->count();
+
+        $totalBudget = (clone $query)
+            ->whereIn('status', [
+                ProposalStatus::APPROVED->value,
+                ProposalStatus::COMPLETED->value,
+            ])
+            ->sum('sbk_value');
+
+        $reportsCount = (clone $query)
+            ->whereHas('progressReports')
+            ->count();
+
+        return [
+            [
+                'label' => __('Proposal Disetujui'),
+                'value' => $totalApproved,
+                'icon' => 'check',
+                'variant' => 'bg-green-lt text-green',
+            ],
+            [
+                'label' => __('Total Anggaran'),
+                'value' => 'Rp '.number_format($totalBudget, 0, ',', '.'),
+                'icon' => 'currency-dollar',
+                'variant' => 'bg-blue-lt text-blue',
+            ],
+            [
+                'label' => __('Laporan Terkumpul'),
+                'value' => $reportsCount,
+                'icon' => 'file-text',
+                'variant' => 'bg-yellow-lt text-yellow',
+            ],
+        ];
+    }
+
+    /**
+     * Aggregate output statistics for the current period.
+     */
+    protected function outputAnalytics(): Collection
+    {
+        $proposalIds = Proposal::query()
+            ->where('detailable_type', 'App\Models\Research')
+            ->where('start_year', $this->period)
+            ->pluck('id');
+
+        $mandatory = MandatoryOutput::query()
+            ->whereHas('progressReport', fn ($q) => $q->whereIn('proposal_id', $proposalIds))
+            ->with('proposalOutput')
+            ->get();
+
+        $additional = AdditionalOutput::query()
+            ->whereHas('progressReport', fn ($q) => $q->whereIn('proposal_id', $proposalIds))
+            ->with('proposalOutput')
+            ->get();
+
+        return $mandatory->concat($additional)
+            ->groupBy(fn ($output) => $output->proposalOutput->category ?? 'Lainnya')
+            ->map(fn ($group, $key) => [
+                'category' => $this->translateCategory($key),
+                'count' => $group->count(),
+                'published' => $group->filter(fn ($o) => in_array($o->status_type ?? $o->status, ['published', 'terbit', 'granted']))->count(),
+            ])
+            ->sortByDesc('count');
+    }
+
+    /**
+     * Simple category translation.
+     */
+    protected function translateCategory(string $key): string
+    {
+        $categories = [
+            'journal' => __('Jurnal'),
+            'book' => __('Buku'),
+            'hki' => __('HKI'),
+            'product' => __('Produk'),
+            'media' => __('Media Massa'),
+            'video' => __('Video'),
+        ];
+
+        return $categories[strtolower($key)] ?? ucfirst($key);
+    }
+
+    /**
+     * Group research by scheme for the current period.
+     */
+    protected function researchByScheme(): Collection
+    {
+        return Proposal::query()
+            ->where('detailable_type', 'App\Models\Research')
+            ->where('start_year', $this->period)
+            ->with('researchScheme')
+            ->get()
+            ->groupBy('research_scheme_id')
+            ->map(function ($proposals) {
+                $first = $proposals->first();
+
+                return [
+                    'name' => $first->researchScheme->name ?? __('Tanpa Skema'),
+                    'count' => $proposals->count(),
+                    'budget' => $proposals->sum('sbk_value'),
+                ];
+            })
+            ->sortByDesc('count');
+    }
+
+    /**
+     * Group research by focus area for the current period.
+     */
+    protected function researchByFocusArea(): Collection
+    {
+        return Proposal::query()
+            ->where('detailable_type', 'App\Models\Research')
+            ->where('start_year', $this->period)
+            ->with('focusArea')
+            ->get()
+            ->groupBy('focus_area_id')
+            ->map(function ($proposals) {
+                $first = $proposals->first();
+
+                return [
+                    'name' => $first->focusArea->name ?? __('Lainnya'),
+                    'count' => $proposals->count(),
+                ];
+            })
+            ->sortByDesc('count');
+    }
+
+    /**
+     * Group research by faculty for the current period.
+     */
+    protected function researchByFaculty(): Collection
+    {
+        return Proposal::query()
+            ->where('detailable_type', 'App\Models\Research')
+            ->where('start_year', $this->period)
+            ->with(['submitter.identity.faculty'])
+            ->get()
+            ->groupBy(fn ($p) => $p->submitter?->identity?->faculty_id)
+            ->map(function ($proposals) {
+                $first = $proposals->first();
+
+                return [
+                    'name' => $first->submitter?->identity?->faculty?->name ?? __('Pusat/Lainnya'),
+                    'count' => $proposals->count(),
+                ];
+            })
+            ->sortByDesc('count');
+    }
+}

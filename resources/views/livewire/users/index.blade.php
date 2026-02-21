@@ -1,0 +1,269 @@
+<div>
+    <x-slot:title>Daftar Pengguna</x-slot:title>
+    <x-slot:pageTitle>Daftar Pengguna</x-slot:pageTitle>
+    <x-slot:pageSubtitle>Kelola pengguna dalam sistem.</x-slot:pageSubtitle>
+    <x-slot:pageActions>
+        <a href="{{ route('users.sync-sinta') }}" class="btn btn-outline-primary me-2" wire:navigate.hover>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-refresh">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+            </svg>
+            {{ __('Sync SINTA') }}
+        </a>
+        <a href="{{ route('users.import') }}" class="btn btn-success me-2" wire:navigate.hover>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                <path d="M7 9l5 -5l5 5"></path>
+                <path d="M12 4l0 12"></path>
+            </svg>
+            {{ __('Import Excel') }}
+        </a>
+        <a href="{{ route('users.create') }}" class="btn btn-primary me-2" wire:navigate.hover>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                <path d="M12 5v14"></path>
+                <path d="M5 12h14"></path>
+            </svg>
+            {{ __('Tambah Pengguna') }}
+        </a>
+        @if(auth()->user()->hasAnyRole(['superadmin', 'admin lppm']))
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reset-password-modal">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-key" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"></path>
+                    <path d="M15 9h.01"></path>
+                </svg>
+                {{ __('Reset Password Massal') }}
+            </button>
+        @endif
+    </x-slot:pageActions>
+
+    <x-tabler.alert />
+
+    <div class="card card-stacked">
+        <div class="border-bottom card-body">
+            <div class="align-items-end row g-3">
+                <div class="col-md-4">
+                    <label for="user-search" class="form-label">{{ __('Cari') }}</label>
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M10 17a7 7 0 1 0 0 -14 7 7 0 0 0 0 14z"></path>
+                                <path d="M21 21l-6 -6"></path>
+                            </svg>
+                        </span>
+                        <input id="user-search" type="search" class="form-control"
+                            wire:model.live.debounce.400ms="search"
+                            placeholder="{{ __('Cari nama, email, atau ID...') }}">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="role-filter" class="form-label">{{ __('Peran') }}</label>
+                    <select id="role-filter" class="form-select" wire:model.live="role">
+                        @foreach ($roleOptions as $option)
+                            <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="status-filter" class="form-label">{{ __('Status') }}</label>
+                    <select id="status-filter" class="form-select" wire:model.live="status">
+                        @foreach ($statusOptions as $option)
+                            <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="sort-filter" class="form-label">{{ __('Urutkan Berdasarkan') }}</label>
+                    <select id="sort-filter" class="form-select" wire:model.live="sort">
+                        <option value="latest">{{ __('Terbaru (Z-A)') }}</option>
+                        <option value="oldest">{{ __('Terlama (A-Z)') }}</option>
+                        <option value="name_asc">{{ __('Nama (A-Z)') }}</option>
+                        <option value="name_desc">{{ __('Nama (Z-A)') }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="card-table table-vcenter table">
+                <thead>
+                    <tr>
+                        <th>{{ __('Nama') }}</th>
+                        <th>{{ __('Email') }}</th>
+                        <th>{{ __('Peran') }}</th>
+                        @if(auth()->user()->hasAnyRole(['admin lppm', 'superadmin']))
+                            <th>{{ __('Original Password') }}</th>
+                        @endif
+                        <th class="text-center">{{ __('Status') }}</th>
+                        <th class="text-end">{{ __('Bergabung') }}</th>
+                        <th class="text-end"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($users as $user)
+                        <tr wire:key="user-{{ $user->id }}">
+                            <td class="fw-semibold">
+                                <div>{{ $user->name }}</div>
+                                <div class="text-secondary text-truncate">{{ $user->identity?->identity_id }}</div>
+                            </td>
+                            <td>{{ $user->email }}</td>
+                            <td>
+                                @if ($user->roles->isNotEmpty())
+                                    <x-tabler.badge color="primary">
+                                        {{ str($user->roles->first()->name)->title() }}
+                                    </x-tabler.badge>
+                                @else
+                                    <span class="text-secondary">{{ __('Tidak ada peran') }}</span>
+                                @endif
+                            </td>
+                            @if(auth()->user()->hasAnyRole(['admin lppm', 'superadmin']))
+                                <td>
+                                    @if($user->original_password)
+                                        <div class="d-flex align-items-center gap-2" x-data="{ show: false }">
+                                            <div class="d-flex align-items-center">
+                                                <code class="text-azure" x-show="show">{{ $user->original_password }}</code>
+                                                <span class="text-muted fst-italic" x-show="!show">********</span>
+                                            </div>
+                                            <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" @click="show = !show" title="Toggle visibility">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" x-show="!show">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                                </svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" x-show="show" style="display: none;">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 3.145 -3.594 5.27 -4.194" /><path d="M7.5 8l12.01 12.01" /><path d="M3 3l18 18" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    @else
+                                        <span class="text-secondary small fst-italic">Not available</span>
+                                    @endif
+                                </td>
+                            @endif
+                            <td class="text-center">
+                                @if ($user->hasVerifiedEmail())
+                                    <x-tabler.badge color="green">{{ __('Terverifikasi') }}</x-tabler.badge>
+                                @else
+                                    <x-tabler.badge color="yellow">{{ __('Menunggu') }}</x-tabler.badge>
+                                @endif
+                            </td>
+                            <td class="text-secondary text-end">
+                                {{ optional($user->created_at)->translatedFormat('d M Y') }}
+                            </td>
+                            <td class="text-end">
+                                <div class="justify-content-end btn-list">
+                                    <a href="{{ route('users.show', $user) }}" wire:navigate
+                                        class="btn-outline-secondary btn btn-sm">
+                                        {{ __('Lihat') }}
+                                    </a>
+                                    <a href="{{ route('users.edit', $user) }}" wire:navigate
+                                        class="btn btn-primary btn-sm">
+                                        {{ __('Ubah') }}
+                                    </a>
+                                    @if(auth()->user()->hasAnyRole(['superadmin', 'admin lppm']) && $user->id !== auth()->id() && !$user->hasRole('superadmin'))
+                                        <button 
+                                            class="btn btn-danger btn-sm"
+                                            wire:click="delete('{{ $user->id }}')"
+                                            wire:confirm="{{ __('Apakah Anda yakin ingin menghapus pengguna ini?') }}"
+                                        >
+                                            {{ __('Hapus') }}
+                                        </button>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="{{ auth()->user()->hasAnyRole(['admin lppm', 'superadmin']) ? 7 : 6 }}" class="text-secondary py-5 text-center">
+                                {{ __('Tidak ada pengguna yang cocok dengan filter Anda.') }}
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between card-footer">
+            <div class="text-secondary">
+                {{ trans_choice('{0}Tidak ada data|{1}Menampilkan :count pengguna|[2,*]Menampilkan :count pengguna', $users->count(), ['count' => $users->count()]) }}
+            </div>
+            <div>
+                {{ $users->links() }}
+            </div>
+        </div>
+    </div>
+
+    {{-- Reset Password Modal --}}
+    @if(auth()->user()->hasAnyRole(['superadmin', 'admin lppm']))
+    <div class="modal modal-blur fade" id="reset-password-modal" tabindex="-1" role="dialog" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reset Password Massal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" x-data="{ role: '', password: '' }">
+                    <div class="alert alert-danger mb-3">
+                        <x-lucide-alert-triangle class="icon me-2" />
+                        Tindakan ini akan mereset password <strong>SEMUA</strong> pengguna dengan role yang dipilih.
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Pilih Role Target</label>
+                        <select class="form-select" x-model="role">
+                            <option value="">-- Pilih Role --</option>
+                            @foreach($roleOptions as $role)
+                                @if($role['value'] !== 'all' && $role['value'] !== 'superadmin')
+                                    <option value="{{ $role['value'] }}">{{ $role['label'] }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Password Baru Standar</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" x-model="password" placeholder="Masukkan password baru">
+                            <button type="button" class="btn btn-icon" 
+                                @click="
+                                    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+                                    let result = '';
+                                    for (let i = 0; i < 8; i++) {
+                                        result += chars.charAt(Math.floor(Math.random() * chars.length));
+                                    }
+                                    password = result;
+                                " 
+                                title="Generate Random Password">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wand" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M6 21l15 -15l-3 -3l-15 15l3 3"></path>
+                                    <path d="M15 6l3 3"></path>
+                                    <path d="M9 3a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+                                    <path d="M19 13a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <small class="form-hint">Password ini akan diterapkan ke semua user dalam role tersebut.</small>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-ghost-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger" 
+                            :disabled="!role || !password"
+                            @click="if(confirm('Apakah Anda yakin ingin mereset password untuk role: ' + role + '?')) { $wire.resetPasswordsForRole(role, password) }">
+                            Reset Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+</div>

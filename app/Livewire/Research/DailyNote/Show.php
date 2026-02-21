@@ -1,0 +1,241 @@
+<?php
+
+namespace App\Livewire\Research\DailyNote;
+
+use App\Livewire\Concerns\HasToast;
+use App\Models\DailyNote;
+use App\Models\Proposal;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class Show extends Component
+{
+    use HasToast;
+    use WithFileUploads;
+
+    public Proposal $proposal;
+
+    #[Validate('required|date|before_or_equal:today')]
+    public string $activity_date = '';
+
+    #[Validate('required|string|min:10')]
+    public string $activity_description = '';
+
+    #[Validate('required|integer|min:0|max:100')]
+    public int $progress_percentage = 0;
+
+    #[Validate('nullable|string')]
+    public string $notes = '';
+
+    #[Validate('nullable|exists:budget_groups,id')]
+    public ?int $budget_group_id = null;
+
+    #[Validate('nullable|numeric|min:0')]
+    public $amount = 0;
+
+    #[Validate(['evidence.*' => 'file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120'])] // 5MB max per file
+    public $evidence = [];
+
+    public ?string $editingId = null;
+
+    public function mount(Proposal $proposal): void
+    {
+        if (! $this->canAccess($proposal)) {
+            abort(403);
+        }
+
+        $this->proposal = $proposal;
+        $this->activity_date = date('Y-m-d');
+    }
+
+    protected function canAccess(Proposal $proposal): bool
+    {
+        $user = Auth::user();
+
+        if ($user->hasAnyRole(['admin lppm', 'kepala lppm', 'rektor', 'superadmin', 'dekan'])) {
+            return true;
+        }
+
+        return $proposal->submitter_id === $user->id ||
+            $proposal->teamMembers()->where('user_id', $user->id)->exists();
+    }
+
+    public function canManage(Proposal $proposal): bool
+    {
+        $userId = Auth::id();
+
+        return $proposal->submitter_id === $userId ||
+            $proposal->teamMembers()->where('user_id', $userId)->exists();
+    }
+
+    public function create(): void
+    {
+        if (! $this->canManage($this->proposal)) {
+            abort(403);
+        }
+
+        $this->reset(['activity_description', 'progress_percentage', 'notes', 'evidence', 'editingId', 'budget_group_id', 'amount']);
+        $this->activity_date = date('Y-m-d');
+        $this->dispatch('open-modal', modalId: 'daily-note-modal');
+    }
+
+    public function save(): void
+    {
+        if (! $this->canManage($this->proposal)) {
+            abort(403);
+        }
+
+        $this->validate();
+
+        // Check budget constraint if group and amount is selected
+        if ($this->budget_group_id && $this->amount > 0) {
+            $allocatedBudget = $this->proposal->budgetItems()
+                ->where('budget_group_id', $this->budget_group_id)
+                ->sum('total_price');
+
+            $usedBudgetQuery = $this->proposal->dailyNotes()
+                ->where('budget_group_id', $this->budget_group_id);
+
+            // Exclude current note if editing
+            if ($this->editingId) {
+                $usedBudgetQuery->where('id', '!=', $this->editingId);
+            }
+
+            $usedBudget = $usedBudgetQuery->sum('amount');
+            $remainingConstraint = $allocatedBudget - $usedBudget;
+
+            if ($this->amount > $remainingConstraint) {
+                $this->addError('amount', 'Nominal pengeluaran (Rp '.number_format($this->amount, 0, ',', '.').') melebihi sisa anggaran (Rp '.number_format($remainingConstraint, 0, ',', '.').') untuk kategori ini.');
+
+                return;
+            }
+        }
+
+        $data = [
+            'proposal_id' => $this->proposal->id,
+            'activity_date' => $this->activity_date,
+            'activity_description' => $this->activity_description,
+            'progress_percentage' => $this->progress_percentage,
+            'notes' => $this->notes,
+            'budget_group_id' => $this->budget_group_id,
+            'amount' => $this->amount,
+        ];
+
+        if ($this->editingId) {
+            $note = DailyNote::findOrFail($this->editingId);
+            $note->update($data);
+        } else {
+            $note = DailyNote::create($data);
+        }
+
+        if ($this->evidence) {
+            foreach ($this->evidence as $file) {
+                $note->addMedia($file->getRealPath())
+                    ->usingName($file->getClientOriginalName())
+                    ->usingFileName($file->getClientOriginalName())
+                    ->toMediaCollection('evidence');
+            }
+        }
+
+        $this->reset(['activity_description', 'progress_percentage', 'notes', 'evidence', 'editingId', 'budget_group_id', 'amount']);
+        $this->activity_date = date('Y-m-d');
+        $this->dispatch('note-saved');
+        $this->dispatch('close-modal', modalId: 'daily-note-modal');
+        $message = 'Catatan harian berhasil disimpan.';
+        session()->flash('success', $message);
+        $this->toastSuccess($message);
+    }
+
+    public function edit(string $id): void
+    {
+        if (! $this->canManage($this->proposal)) {
+            abort(403);
+        }
+
+        $note = DailyNote::findOrFail($id);
+
+        // Authorization check (optional but recommended)
+        if ($note->proposal_id !== $this->proposal->id) {
+            abort(403);
+        }
+
+        $this->editingId = $id;
+        $this->activity_date = $note->activity_date->format('Y-m-d');
+        $this->activity_description = $note->activity_description;
+        $this->progress_percentage = $note->progress_percentage;
+        $this->notes = $note->notes ?? '';
+        $this->budget_group_id = $note->budget_group_id;
+        $this->amount = $note->amount;
+
+        $this->dispatch('open-modal', modalId: 'daily-note-modal');
+    }
+
+    public function delete(string $id): void
+    {
+        if (! $this->canManage($this->proposal)) {
+            abort(403);
+        }
+
+        $note = DailyNote::findOrFail($id);
+        if ($note->proposal_id !== $this->proposal->id) {
+            abort(403);
+        }
+        $note->delete();
+        $message = 'Catatan harian berhasil dihapus.';
+        session()->flash('success', $message);
+        $this->toastSuccess($message);
+    }
+
+    public function deleteEvidence(string $mediaId): void
+    {
+        if (! $this->canManage($this->proposal)) {
+            abort(403);
+        }
+
+        $media = Media::findOrFail($mediaId);
+
+        // Check if the media belongs to a note in this proposal
+        $note = DailyNote::find($media->model_id);
+
+        if ($note && $note->proposal_id === $this->proposal->id) {
+            $media->delete();
+            $message = 'File bukti berhasil dihapus.';
+            session()->flash('success', $message);
+            $this->toastSuccess($message);
+        } else {
+            abort(403);
+        }
+    }
+
+    public function removeEvidence(int $index): void
+    {
+        if (isset($this->evidence[$index])) {
+            unset($this->evidence[$index]);
+            $this->evidence = array_values($this->evidence);
+        }
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->reset(['activity_description', 'progress_percentage', 'notes', 'evidence', 'editingId', 'budget_group_id', 'amount']);
+        $this->activity_date = date('Y-m-d');
+        $this->dispatch('close-modal', modalId: 'daily-note-modal');
+    }
+
+    public function render()
+    {
+        return view('livewire.research.daily-note.show', [
+            'notes_list' => $this->proposal->dailyNotes()->with(['media.model', 'budgetGroup'])->latest('activity_date')->get(),
+            'budget_groups' => \App\Models\BudgetGroup::whereIn('id', $this->proposal->budgetItems()->pluck('budget_group_id'))->get(),
+            'budget_summaries' => $this->proposal->budgetItems()
+                ->selectRaw('budget_group_id, sum(total_price) as total_budget')
+                ->groupBy('budget_group_id')
+                ->get()
+                ->keyBy('budget_group_id'),
+            'total_proposed_budget' => $this->proposal->budgetItems()->sum('total_price'),
+        ]);
+    }
+}

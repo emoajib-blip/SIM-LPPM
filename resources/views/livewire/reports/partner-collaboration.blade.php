@@ -1,0 +1,354 @@
+<div>
+    <x-slot:pageHeader>
+        <div class="mb-2">
+            <h2 class="page-title text-indigo fw-bold">{{ __('Dashboard Ekosistem Kemitraan') }}</h2>
+        </div>
+        <div class="mt-2 text-muted small d-flex align-items-center">
+            <i class="ti ti-heart-handshake me-1 text-indigo"></i>
+            {{ __('Visualisasi mencakup keterlibatan mitra dalam hibah dan status dokumen legal (MOU/PKS).') }}
+        </div>
+    </x-slot:pageHeader>
+
+    <x-slot:pageActions>
+        <div class="btn-list">
+            <div class="btn-group shadow-sm">
+                <button onclick="Livewire.dispatch('report-export-excel')" class="btn btn-white" wire:loading.attr="disabled">
+                    <i class="ti ti-table me-2 text-success"></i>
+                    {{ __('Excel') }}
+                </button>
+                <button onclick="Livewire.dispatch('report-export-pdf')" class="btn btn-white" wire:loading.attr="disabled">
+                    <i class="ti ti-file-type-pdf me-2 text-danger"></i>
+                    {{ __('PDF') }}
+                </button>
+            </div>
+        </div>
+    </x-slot:pageActions>
+
+    <!-- Summary Cards with Visual Polish -->
+    <div class="row g-3 mb-4">
+        @foreach($this->summary as $card)
+            <div class="col-sm-6 col-xl-3">
+                <div class="card card-stacked shadow-sm border-0 border-start border-3 border-indigo">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar avatar-md me-3 rounded-3 {{ $card['variant'] }} bg-opacity-10 shadow-none">
+                                @switch($card['icon'])
+                                    @case('handshake')   <i class="ti ti-users-group fs-2"></i>    @break
+                                    @case('file-check')  <i class="ti ti-file-certificate fs-2"></i>   @break
+                                    @case('users')       <i class="ti ti-user-check fs-2"></i>         @break
+                                    @case('currency-dollar') <i class="ti ti-coins fs-2"></i> @break
+                                    @default             <i class="ti ti-chart-dotsfs-2"></i>
+                                @endswitch
+                            </div>
+                            <div>
+                                <div class="h2 mb-0 fw-bold">{{ $card['value'] }}</div>
+                                <div class="text-secondary small fw-medium">{{ $card['label'] }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+
+
+    {{-- Filter Bar --}}
+    <div class="card mb-4 border-0 shadow-sm overflow-hidden">
+        <div class="card-body bg-light-lt">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label">Cari Mitra</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <x-lucide-search class="icon" />
+                        </span>
+                        <input type="text" wire:model.live.debounce.300ms="search"
+                            class="form-control" placeholder="Nama, institusi, atau email...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Jenis Mitra</label>
+                    <select wire:model.live="typeFilter" class="form-select">
+                        <option value="">— Semua Jenis —</option>
+                        @foreach($this->partnerTypes as $type)
+                            <option value="{{ $type }}">{{ $type }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Tahun Kerjasama</label>
+                    <select wire:model.live="periodFilter" class="form-select">
+                        <option value="">— Semua Tahun —</option>
+                        @foreach($this->periods as $year)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    @if($search || $typeFilter || $periodFilter)
+                        <button type="button" wire:click="$set('search', ''); $set('typeFilter', ''); $set('periodFilter', '')"
+                            class="btn btn-outline-secondary w-100" title="Reset Filter">
+                            <x-lucide-x class="icon" />
+                        </button>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        {{-- Tabel Mitra --}}
+        <div class="{{ $selectedPartnerId ? 'col-lg-7' : 'col-12' }}">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h3 class="card-title mb-0">
+                        <x-lucide-handshake class="icon me-2" />
+                        Daftar Mitra Kerjasama
+                    </h3>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="btn-group btn-group-sm">
+                            <button onclick="Livewire.dispatch('report-export-excel')" class="btn btn-outline-success" title="Export Excel" wire:loading.attr="disabled">
+                                <x-lucide-table class="icon-sm me-1" /> Excel
+                            </button>
+                            <button onclick="Livewire.dispatch('report-export-pdf')" class="btn btn-outline-danger" title="Export PDF" wire:loading.attr="disabled">
+                                <x-lucide-file-text class="icon-sm me-1" /> PDF
+                            </button>
+                        </div>
+                        <span class="badge bg-blue-lt">{{ $partners->total() }} mitra</span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mitra</th>
+                                <th class="text-center">Jenis</th>
+                                <th class="text-center">Proposal</th>
+                                <th class="text-center">Disetujui</th>
+                                <th class="text-center">Dana (Rp)</th>
+                                <th class="text-center">MOU / PKS</th>
+                                <th class="text-center">Surat Kesediaan</th>
+                                <th class="text-center">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($partners as $partner)
+                                <tr class="{{ $selectedPartnerId === $partner->id ? 'table-active' : '' }}"
+                                    wire:key="row-{{ $partner->id }}">
+                                    <td>
+                                        <div class="fw-medium">{{ $partner->name }}</div>
+                                        @if($partner->institution)
+                                            <div class="text-muted small">{{ $partner->institution }}</div>
+                                        @endif
+                                        @if($partner->email)
+                                            <div class="text-muted small">
+                                                <x-lucide-mail class="icon-sm me-1" />
+                                                {{ $partner->email }}
+                                            </div>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if($partner->type)
+                                            <span class="badge bg-azure-lt">{{ $partner->type }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fw-bold">{{ $partner->proposals_count }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        @if($partner->approved_count > 0)
+                                            <span class="badge bg-green-lt text-green">{{ $partner->approved_count }}</span>
+                                        @else
+                                            <span class="text-muted">0</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if($partner->total_budget > 0)
+                                            <span class="text-green fw-semibold">{{ number_format($partner->total_budget, 0, ',', '.') }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if($partner->hasMedia('mou_pks'))
+                                            @php $media = $partner->getFirstMedia('mou_pks'); @endphp
+                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                                               class="badge bg-green-lt text-green text-decoration-none" title="Lihat MOU/PKS">
+                                                <x-lucide-file-check class="icon-sm me-1" />
+                                                Ada
+                                            </a>
+                                        @else
+                                            <span class="badge bg-yellow-lt text-yellow">Belum</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        {{-- Surat Kesediaan (Indikator saja) --}}
+                                        @if($partner->hasMedia('commitment_letter'))
+                                            <span class="badge bg-green-lt text-green" title="Tersedia di rincian proposal">
+                                                <x-lucide-check-circle class="icon-sm me-1" />
+                                                Ada
+                                            </span>
+                                        @else
+                                            <span class="badge bg-muted-lt text-muted" title="Belum ada surat kesediaan">
+                                                -
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button"
+                                            wire:click="selectPartner('{{ $partner->id }}')"
+                                            class="btn btn-sm {{ $selectedPartnerId === $partner->id ? 'btn-primary' : 'btn-outline-primary' }}"
+                                            title="Lihat Detail Proposal">
+                                            <x-lucide-eye class="icon" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted py-4">
+                                        <x-lucide-search class="icon mb-2" />
+                                        <div>Tidak ada mitra yang cocok dengan filter.</div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    {{ $partners->links() }}
+                </div>
+            </div>
+        </div>
+
+        {{-- Panel Detail Proposal Mitra --}}
+        @if($selectedPartnerId && $detailProposals !== null)
+            @php $selectedPartner = $partners->firstWhere('id', $selectedPartnerId) ?? \App\Models\Partner::with('media')->find($selectedPartnerId); @endphp
+            <div class="col-lg-5" wire:key="detail-panel">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0">{{ $selectedPartner?->name }}</h4>
+                            <div class="text-muted small">{{ $selectedPartner?->institution }}</div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            @if($selectedPartner?->hasMedia('mou_pks'))
+                                @php $media = $selectedPartner->getFirstMedia('mou_pks'); @endphp
+                                <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                                   class="btn btn-sm btn-outline-primary" title="Unduh MOU/PKS">
+                                    <x-lucide-file-text class="icon" /> MOU/PKS
+                                </a>
+                            @endif
+                            <button type="button" wire:click="$set('selectedPartnerId', null)" class="btn btn-sm btn-ghost-secondary">
+                                <x-lucide-x class="icon" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Info Mitra --}}
+                    <div class="card-body border-bottom pb-3">
+                        <div class="row g-2 text-sm">
+                            @if($selectedPartner?->type)
+                                <div class="col-6">
+                                    <div class="text-muted small">Jenis</div>
+                                    <div class="fw-medium">{{ $selectedPartner->type }}</div>
+                                </div>
+                            @endif
+                            @if($selectedPartner?->country)
+                                <div class="col-6">
+                                    <div class="text-muted small">Negara</div>
+                                    <div class="fw-medium">{{ $selectedPartner->country }}</div>
+                                </div>
+                            @endif
+                            @if($selectedPartner?->email)
+                                <div class="col-12">
+                                    <div class="text-muted small">Email</div>
+                                    <div class="fw-medium">{{ $selectedPartner->email }}</div>
+                                </div>
+                            @endif
+                            @if($selectedPartner?->address)
+                                <div class="col-12">
+                                    <div class="text-muted small">Alamat</div>
+                                    <div class="fw-medium">{{ $selectedPartner->address }}</div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Daftar Proposal --}}
+                    <div class="card-header border-top-0 pt-3">
+                        <h5 class="mb-0">
+                            Proposal Terkait
+                            <span class="badge bg-blue-lt ms-1">{{ $detailProposals->count() }}</span>
+                        </h5>
+                    </div>
+                    <div class="list-group list-group-flush" style="max-height: 450px; overflow-y: auto;">
+                        @forelse($detailProposals as $proposal)
+                            @php
+                                $isResearch = $proposal->detailable_type === 'App\Models\Research';
+                                $typeLabel  = $isResearch ? 'Penelitian' : 'PKM';
+                                $typeColor  = $isResearch ? 'bg-blue-lt text-blue' : 'bg-green-lt text-green';
+                            @endphp
+                            <div class="list-group-item" wire:key="p-{{ $proposal->id }}">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <a href="{{ $isResearch
+                                            ? route('research.proposal.show', $proposal->id)
+                                            : route('community-service.proposal.show', $proposal->id) }}"
+                                           class="text-body d-block fw-medium text-decoration-none">
+                                            {{ Str::limit($proposal->title, 60) }}
+                                        </a>
+                                        <div class="d-flex align-items-center gap-2 mt-1">
+                                            <span class="badge {{ $typeColor }}">{{ $typeLabel }}</span>
+                                            <span class="text-muted small">{{ $proposal->start_year }}</span>
+                                            <span class="text-muted small">{{ $proposal->submitter?->name }}</span>
+                                            
+                                            {{-- Tombol Surat Kesediaan Spesifik Proposal --}}
+                                            @if($selectedPartner->hasCommitmentForProposal($proposal->id))
+                                                <a href="{{ $selectedPartner->getCommitmentUrlForProposal($proposal->id) }}" 
+                                                   target="_blank"
+                                                   class="btn btn-sm btn-icon btn-ghost-success ms-auto" 
+                                                   title="Unduh Surat Kesediaan Mitra (Proposal Ini)">
+                                                    <x-lucide-file-check class="icon-sm" />
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        @php
+                                            $statusColors = [
+                                                'draft'           => 'bg-secondary-lt',
+                                                'submitted'       => 'bg-blue-lt',
+                                                'approved'        => 'bg-green-lt text-green',
+                                                'revision'        => 'bg-yellow-lt text-yellow',
+                                                'rejected'        => 'bg-red-lt text-red',
+                                                'completed'       => 'bg-teal-lt text-teal',
+                                                'under_review'    => 'bg-purple-lt',
+                                            ];
+                                            $statusColor = $statusColors[$proposal->status->value ?? ''] ?? 'bg-secondary-lt';
+                                        @endphp
+                                        <span class="badge {{ $statusColor }}">
+                                            {{ $proposal->status->label() }}
+                                        </span>
+                                        @if($proposal->sbk_value > 0)
+                                            <div class="text-muted small text-end mt-1">
+                                                Rp {{ number_format($proposal->sbk_value, 0, ',', '.') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="list-group-item text-center text-muted py-4">
+                                <x-lucide-inbox class="icon mb-2" />
+                                <div>Belum ada proposal terkait mitra ini.</div>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+</div>
