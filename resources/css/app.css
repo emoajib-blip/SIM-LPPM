@@ -10,7 +10,8 @@
 @import 'nprogress/nprogress.css';
 
 .ts-dropdown {
-    z-index: 10500; /* Ensure dropdowns appear above other elements */
+    z-index: 10500;
+    /* Ensure dropdowns appear above other elements */
 }
 
 /* 
@@ -60,7 +61,8 @@
 
 /* Custom NProgress Color */
 #nprogress .bar {
-    background: #206bc4 !important; /* tabler-primary */
+    background: #206bc4 !important;
+    /* tabler-primary */
     height: 3px !important;
 }
 
@@ -86,8 +88,13 @@
 }
 
 @keyframes indeterminate {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 .modal-image-preview .modal-body {
@@ -168,4 +175,17 @@
 
 .timeline-content {
     position: relative;
+}
+
+/* Hide TomSelect Caret for Tagger */
+.ts-wrapper.hide-caret .ts-control::after,
+.ts-wrapper.hide-caret.single .ts-control::after,
+.ts-control.hide-caret::after {
+    display: none !important;
+}
+
+.ts-wrapper.hide-caret .ts-control,
+.ts-control.hide-caret {
+    padding-right: 0.75rem !important;
+    background-image: none !important;
 }

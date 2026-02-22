@@ -15,6 +15,12 @@ class FocusAreaManager extends Component
     #[Validate('required|min:3|max:255')]
     public string $name = '';
 
+    #[Validate('boolean')]
+    public bool $is_active_for_research = true;
+
+    #[Validate('boolean')]
+    public bool $is_active_for_community_service = true;
+
     public ?int $editingId = null;
 
     public string $modalTitle = 'Area Fokus';
@@ -42,16 +48,24 @@ class FocusAreaManager extends Component
         $this->validate();
 
         if ($this->editingId) {
-            FocusArea::findOrFail($this->editingId)->update(['name' => $this->name]);
+            FocusArea::findOrFail($this->editingId)->update([
+                'name' => $this->name,
+                'is_active_for_research' => $this->is_active_for_research,
+                'is_active_for_community_service' => $this->is_active_for_community_service,
+            ]);
         } else {
-            FocusArea::create(['name' => $this->name]);
+            FocusArea::create([
+                'name' => $this->name,
+                'is_active_for_research' => $this->is_active_for_research,
+                'is_active_for_community_service' => $this->is_active_for_community_service,
+            ]);
         }
 
         $message = $this->editingId ? 'Area Fokus berhasil diubah' : 'Area Fokus berhasil ditambahkan';
 
         // close modal
         $this->dispatch('close-modal', modalId: 'modal-focus-area');
-        $this->reset(['name', 'editingId']);
+        $this->resetForm();
 
         session()->flash('success', $message);
         $this->toastSuccess($message);
@@ -61,6 +75,8 @@ class FocusAreaManager extends Component
     {
         $this->editingId = $focusArea->id;
         $this->name = $focusArea->name;
+        $this->is_active_for_research = $focusArea->is_active_for_research;
+        $this->is_active_for_community_service = $focusArea->is_active_for_community_service;
         $this->modalTitle = 'Edit Area Fokus';
         $this->dispatch('open-modal', modalId: 'modal-focus-area');
     }
@@ -78,6 +94,8 @@ class FocusAreaManager extends Component
     public function resetForm(): void
     {
         $this->reset(['name', 'editingId']);
+        $this->is_active_for_research = true;
+        $this->is_active_for_community_service = true;
     }
 
     public function handleConfirmDeleteAction(): void

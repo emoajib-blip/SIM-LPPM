@@ -19,6 +19,12 @@ class ThemeManager extends Component
     #[Validate('required|exists:focus_areas,id')]
     public ?int $focusAreaId = null;
 
+    #[Validate('boolean')]
+    public bool $is_active_for_research = true;
+
+    #[Validate('boolean')]
+    public bool $is_active_for_community_service = true;
+
     public ?int $editingId = null;
 
     public string $modalTitle = '';
@@ -48,6 +54,8 @@ class ThemeManager extends Component
         $data = [
             'name' => $this->name,
             'focus_area_id' => $this->focusAreaId,
+            'is_active_for_research' => $this->is_active_for_research,
+            'is_active_for_community_service' => $this->is_active_for_community_service,
         ];
 
         if ($this->editingId) {
@@ -60,7 +68,7 @@ class ThemeManager extends Component
 
         // close modal
         $this->dispatch('close-modal', modalId: 'modal-theme');
-        $this->reset(['name', 'focusAreaId', 'editingId']);
+        $this->resetForm();
 
         session()->flash('success', $message);
         $this->toastSuccess($message);
@@ -71,6 +79,8 @@ class ThemeManager extends Component
         $this->editingId = $theme->id;
         $this->name = $theme->name;
         $this->focusAreaId = $theme->focus_area_id;
+        $this->is_active_for_research = $theme->is_active_for_research;
+        $this->is_active_for_community_service = $theme->is_active_for_community_service;
         $this->modalTitle = 'Edit Tema';
         $this->dispatch('open-modal', modalId: 'modal-theme');
     }
@@ -88,6 +98,8 @@ class ThemeManager extends Component
     public function resetForm(): void
     {
         $this->reset(['name', 'focusAreaId', 'editingId']);
+        $this->is_active_for_research = true;
+        $this->is_active_for_community_service = true;
     }
 
     public function handleConfirmDeleteAction(): void

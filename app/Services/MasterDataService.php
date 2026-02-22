@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BudgetComponent;
 use App\Models\BudgetGroup;
+use App\Models\CommunityServiceScheme;
 use App\Models\FocusArea;
 use App\Models\MacroResearchGroup;
 use App\Models\NationalPriority;
@@ -25,21 +26,40 @@ class MasterDataService
         return $this->cache['schemes'] ??= ResearchScheme::all();
     }
 
-    public function focusAreas(): Collection
+    public function communityServiceSchemes(): Collection
     {
-        return $this->cache['focus_areas'] ??= FocusArea::with('themes.topics')->get();
+        return $this->cache['community_service_schemes'] ??= CommunityServiceScheme::all();
     }
 
-    public function themes(?int $focusAreaId = null): Collection
+    public function focusAreas(?string $proposalType = null): Collection
     {
-        if ($focusAreaId === null) {
-            return $this->cache['themes'] ??= Theme::with('topics')->get();
+        $cacheKey = 'focus_areas_'.($proposalType ?? 'all');
+
+        return $this->cache[$cacheKey] ??= FocusArea::with('themes.topics')
+            ->when($proposalType === 'research', fn ($q) => $q->where('is_active_for_research', true))
+            ->when($proposalType === 'community-service', fn ($q) => $q->where('is_active_for_community_service', true))
+            ->get();
+    }
+
+    public function themes(?int $focusAreaId = null, ?string $proposalType = null): Collection
+    {
+        $query = Theme::with('topics');
+
+        if ($focusAreaId !== null) {
+            $query->where('focus_area_id', $focusAreaId);
         }
 
-        return Theme::with('topics')->where('focus_area_id', $focusAreaId)->get();
+        $query->when($proposalType === 'research', fn ($q) => $q->where('is_active_for_research', true))
+            ->when($proposalType === 'community-service', fn ($q) => $q->where('is_active_for_community_service', true));
+
+        if ($focusAreaId === null && $proposalType === null) {
+            return $this->cache['themes'] ??= $query->get();
+        }
+
+        return $query->get();
     }
 
-    public function topics(?int $focusAreaId = null, ?int $themeId = null): Collection
+    public function topics(?int $focusAreaId = null, ?int $themeId = null, ?string $proposalType = null): Collection
     {
         $query = Topic::query();
 
@@ -51,6 +71,9 @@ class MasterDataService
             $query->where('theme_id', $themeId);
         }
 
+        $query->when($proposalType === 'research', fn ($q) => $q->where('is_active_for_research', true))
+            ->when($proposalType === 'community-service', fn ($q) => $q->where('is_active_for_community_service', true));
+
         return $query->get();
     }
 
@@ -59,19 +82,24 @@ class MasterDataService
         return $this->cache['national_priorities'] ??= NationalPriority::all();
     }
 
-    public function scienceClusters(): Collection
+    public function scienceClusters(?string $proposalType = null): Collection
     {
-        return $this->cache['science_clusters'] ??= ScienceCluster::all();
+        $cacheKey = 'science_clusters_'.($proposalType ?? 'all');
+
+        return $this->cache[$cacheKey] ??= ScienceCluster::query()
+            ->when($proposalType === 'research', fn ($q) => $q->where('is_active_for_research', true))
+            ->when($proposalType === 'community-service', fn ($q) => $q->where('is_active_for_community_service', true))
+            ->get();
     }
 
-    public function clusterLevel1Options(): Collection
+    public function clusterLevel1Options(?string $proposalType = null): Collection
     {
-        return $this->scienceClusters()->whereNull('parent_id');
+        return $this->scienceClusters($proposalType)->whereNull('parent_id');
     }
 
-    public function clusterLevel2Options(?int $level1Id = null): Collection
+    public function clusterLevel2Options(?int $level1Id = null, ?string $proposalType = null): Collection
     {
-        $query = $this->scienceClusters()->whereNotNull('parent_id');
+        $query = clone $this->scienceClusters($proposalType)->whereNotNull('parent_id');
 
         if ($level1Id !== null) {
             $query = $query->where('parent_id', $level1Id);
@@ -81,9 +109,9 @@ class MasterDataService
         return $query;
     }
 
-    public function clusterLevel3Options(?int $level2Id = null): Collection
+    public function clusterLevel3Options(?int $level2Id = null, ?string $proposalType = null): Collection
     {
-        $query = $this->scienceClusters()->whereNotNull('parent_id');
+        $query = clone $this->scienceClusters($proposalType)->whereNotNull('parent_id');
 
         if ($level2Id !== null) {
             $query = $query->where('parent_id', $level2Id);
@@ -116,18 +144,28 @@ class MasterDataService
         return BudgetComponent::where('budget_group_id', $groupId)->get();
     }
 
-    public function tktTypes(): Collection
+    public function tktTypes(?string $proposalType = null): Collection
     {
-        return $this->cache['tkt_types'] ??= TktLevel::distinct()->pluck('type')->filter();
+        $cacheKey = 'tkt_types_'.($proposalType ?? 'all');
+
+        return $this->cache[$cacheKey] ??= TktLevel::query()
+            ->when($proposalType === 'research', fn ($q) => $q->where('is_active_for_research', true))
+            ->when($proposalType === 'community-service', fn ($q) => $q->where('is_active_for_community_service', true))
+            ->distinct()
+            ->pluck('type')
+            ->filter();
     }
 
-    public function tktLevelsByType(?string $type = null): Collection
+    public function tktLevelsByType(?string $type = null, ?string $proposalType = null): Collection
     {
         $query = TktLevel::query();
 
         if ($type !== null) {
             $query->where('type', $type);
         }
+
+        $query->when($proposalType === 'research', fn ($q) => $q->where('is_active_for_research', true))
+            ->when($proposalType === 'community-service', fn ($q) => $q->where('is_active_for_community_service', true));
 
         return $query->orderBy('level')->get();
     }

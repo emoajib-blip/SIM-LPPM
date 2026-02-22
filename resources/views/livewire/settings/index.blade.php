@@ -25,6 +25,11 @@
                             <x-lucide-shield class="me-2 icon" />
                             Autentikasi Dua Faktor
                         </button> --}}
+                        <button wire:click="setActiveTab('security')"
+                            class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'security' ? 'active' : '' }}">
+                            <x-lucide-activity class="me-2 icon" />
+                            Log Keamanan
+                        </button>
                     </div>
                     @role('admin lppm')
                         <h4 class="mt-4 subheader">Pengaturan Sistem</h4>
@@ -61,6 +66,12 @@
                     @elseif ($activeTab === 'appearance')
                         <div>
                             <livewire:settings.appearance />
+                        </div>
+                    @elseif ($activeTab === 'security')
+                        <div>
+                            <h2 class="mb-4">Log Keamanan</h2>
+                            <p class="mb-4 card-subtitle">Pantau riwayat aktivitas login dan akses akun Anda untuk menjaga keamanan.</p>
+                            <livewire:users.activity-log-list :user="auth()->user()" />
                         </div>
                     @endif
                 </div>

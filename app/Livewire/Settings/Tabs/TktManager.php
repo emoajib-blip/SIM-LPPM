@@ -35,6 +35,10 @@ class TktManager extends Component
 
     public string $levelDescriptionInput = '';
 
+    public bool $editIsActiveForResearch = true;
+
+    public bool $editIsActiveForCommunityService = true;
+
     public ?int $editingIndicatorId = null;
 
     public string $indicatorCodeInput = '';
@@ -365,6 +369,8 @@ class TktManager extends Component
 
         $this->editingLevelDesc = true;
         $this->levelDescriptionInput = $this->selectedLevel->description ?? '';
+        $this->editIsActiveForResearch = $this->selectedLevel->is_active_for_research;
+        $this->editIsActiveForCommunityService = $this->selectedLevel->is_active_for_community_service;
     }
 
     public function cancelEditLevelDesc(): void
@@ -387,6 +393,8 @@ class TktManager extends Component
 
         $this->selectedLevel->update([
             'description' => $this->levelDescriptionInput,
+            'is_active_for_research' => $this->editIsActiveForResearch,
+            'is_active_for_community_service' => $this->editIsActiveForCommunityService,
         ]);
 
         $this->editingLevelDesc = false;
@@ -521,6 +529,8 @@ class TktManager extends Component
         $this->newCategoryName = '';
         $this->editingCategoryName = null;
         $this->categoryNameInput = '';
+        $this->editIsActiveForResearch = true;
+        $this->editIsActiveForCommunityService = true;
     }
 
     public function updatedSearch(): void

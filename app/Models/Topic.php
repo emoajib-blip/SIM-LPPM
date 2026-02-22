@@ -15,6 +15,13 @@ class Topic extends Model
     protected $fillable = [
         'theme_id',
         'name',
+        'is_active_for_research',
+        'is_active_for_community_service',
+    ];
+
+    protected $casts = [
+        'is_active_for_research' => 'boolean',
+        'is_active_for_community_service' => 'boolean',
     ];
 
     /**

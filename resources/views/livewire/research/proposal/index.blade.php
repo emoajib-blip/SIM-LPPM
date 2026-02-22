@@ -21,12 +21,15 @@
                 Usulan Penelitian Baru
             </a>
         @endif
+        <x-lecturer-eligibility-modal />
     </div>
 </x-slot:pageActions>
 
 
 <div>
     <x-tabler.alert />
+
+    <x-lecturer-eligibility-alert />
 
     @php
         $user = auth()->user();

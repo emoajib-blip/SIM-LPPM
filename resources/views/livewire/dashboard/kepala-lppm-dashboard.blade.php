@@ -150,7 +150,7 @@
                                     @forelse($recentResearch as $research)
                                         <tr wire:key="res-{{ $research->id }}">
                                             <td>
-                                                <div class="text-truncate" style="max-width: 250px;">
+                                                <div class="text-wrap lh-base">
                                                     {{ $research->title }}
                                                 </div>
                                             </td>
@@ -202,7 +202,7 @@
                                     @forelse($recentCommunityService as $communityService)
                                         <tr wire:key="pkm-{{ $communityService->id }}">
                                             <td>
-                                                <div class="text-truncate" style="max-width: 250px;">
+                                                <div class="text-wrap lh-base">
                                                     {{ $communityService->title }}
                                                 </div>
                                             </td>

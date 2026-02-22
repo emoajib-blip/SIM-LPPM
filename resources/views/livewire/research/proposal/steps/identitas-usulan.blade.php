@@ -1,3 +1,5 @@
+<x-lecturer-eligibility-alert />
+
 <!-- Section: Informasi Dasar -->
 <div class="card mb-3">
     <div class="card-body">
@@ -128,26 +130,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="">
-                    <label class="form-label" for="keywords">Kata Kunci (Keywords) <span class="text-danger">*</span></label>
-                    <div wire:ignore>
-                        <select id="keywords" class="form-select @error('form.keywords') is-invalid @enderror"
-                            wire:model="form.keywords"
-                            x-data="tomSelect({create: true, maxItems: 5})" 
-                            multiple
-                            placeholder="Ketik lalu Enter untuk menambahkan kata kunci (Maks 5)" required>
-                            @foreach ($form->keywords as $keyword)
-                                <option value="{{ $keyword }}" selected>{{ $keyword }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @error('form.keywords')
-                        <div class="d-block invalid-feedback">{{ $message }}</div>
-                    @enderror
-                    <small class="text-muted">Tekan Enter setelah mengetik kata kunci. Maksimal 5 kata kunci.</small>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
@@ -243,7 +226,26 @@
             @error('form.summary')
                 <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror
-            <small class="text-muted">Minimum 100 karakter</small>
+            <small class="text-muted d-block mb-3">Minimum 100 karakter</small>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="keywords">Kata Kunci (Keywords) <span class="text-danger">*</span></label>
+            <div wire:ignore>
+                <select id="keywords" class="form-select @error('form.keywords') is-invalid @enderror"
+                    wire:model.live="form.keywords"
+                    x-data="tomSelect({create: true, maxItems: 5})" 
+                    multiple
+                    placeholder="Ketik lalu Enter untuk menambahkan kata kunci (Maks 5)" required>
+                    @foreach ($form->keywords as $keyword)
+                        <option value="{{ $keyword }}" selected>{{ $keyword }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @error('form.keywords')
+                <div class="d-block invalid-feedback">{{ $message }}</div>
+            @enderror
+            <small class="text-muted">Tekan Enter setelah mengetik kata kunci. Maksimal 5 kata kunci.</small>
         </div>
     </div>
 </div>

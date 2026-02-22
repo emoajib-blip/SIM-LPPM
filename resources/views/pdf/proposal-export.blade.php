@@ -241,14 +241,17 @@
                 </td>
                 <td>{{ $proposal->submitter->identity->institution->name ?? '-' }}</td>
                 <td>{{ $proposal->submitter->identity->studyProgram->name ?? '-' }}</td>
-                <td>Ketua {{ $proposal->detailable_type === 'App\Models\Research' ? 'Peneliti' : 'Pelaksana' }}</td>
+                <td>{{ $proposal->teamMembers->firstWhere('id', $proposal->submitter_id)->pivot->tasks ?? '-' }}</td>
                 <td class="text-center">{{ $proposal->submitter->identity->sinta_id ?? '-' }}</td>
                 <td class="text-center">{{ $proposal->submitter->identity->scopus_h_index ?? '-' }}</td>
                 <td>{{ $proposal->clusterLevel1->name ?? '-' }}</td>
             </tr>
             {{-- Anggota Dosen --}}
-            @foreach($proposal->teamMembers->where('pivot.role', 'anggota') as $member)
-                @if($member->identity?->type === 'dosen')
+            @php
+                $lecturerMembersSection2 = $proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id && ($m->identity?->type === 'dosen' || $m->pivot->role === 'anggota' || $m->pivot->role === 'dosen'));
+            @endphp
+            @foreach($lecturerMembersSection2 as $member)
+                @if($member->identity?->type === 'dosen' || $member->pivot->role === 'anggota' || $member->pivot->role === 'dosen')
                 <tr>
                     <td>
                         <span class="font-bold">{{ strtoupper(formatName($member->identity->title_prefix ?? '', $member->name, $member->identity->title_suffix ?? '')) }}</span><br>
@@ -259,7 +262,7 @@
                     <td>{{ $member->pivot->tasks ?? '-' }}</td>
                     <td class="text-center">{{ $member->identity->sinta_id ?? '-' }}</td>
                     <td class="text-center">{{ $member->identity->scopus_h_index ?? '-' }}</td>
-                    <td>{{ $member->identity->studyProgram->name ?? '-' }}</td>
+                    <td>{{ $proposal->clusterLevel1->name ?? '-' }}</td>
                 </tr>
                 @endif
             @endforeach
@@ -310,7 +313,7 @@
                 <tr>
                     <td>{{ strtoupper($student['name'] ?? '-') }}</td>
                     <td>{{ $student['identifier'] ?? '-' }}</td>
-                    <td>-</td> {{-- Prodi not stored in JSON currently --}}
+                    <td>{{ $student['study_program'] ?? ($student['prodi'] ?? '-') }}</td>
                     <td>{{ $student['tasks'] ?? '-' }}</td>
                 </tr>
             @endforeach
@@ -549,7 +552,7 @@
         </tr>
 
         @php
-            $lecturerMembers = $proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id && ($m->identity?->type === 'dosen' || $m->pivot->role === 'anggota'));
+            $lecturerMembers = $proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id && ($m->identity?->type === 'dosen' || $m->pivot->role === 'anggota' || $m->pivot->role === 'dosen'));
             $memberCount = 0;
         @endphp
 
@@ -589,6 +592,12 @@
                         $dummy->name = $jm['name'];
                         $dummy->identity = new \stdClass();
                         $dummy->identity->identity_id = $jm['identifier'] ?? '-';
+                        $dummy->identity->studyProgram = new \stdClass();
+                        $dummy->identity->studyProgram->name = $jm['study_program'] ?? ($jm['prodi'] ?? '-');
+                        $dummy->identity->institution = new \stdClass();
+                        $dummy->identity->institution->name = $jm['institution'] ?? 'ITSNU Pekalongan';
+                        $dummy->pivot = new \stdClass();
+                        $dummy->pivot->tasks = $jm['tasks'] ?? '-';
                         
                         $studentMembers->push($dummy);
                     }

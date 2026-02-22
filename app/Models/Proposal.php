@@ -35,6 +35,7 @@ class Proposal extends Model
         'detailable_id',
         'detailable_type',
         'research_scheme_id',
+        'community_service_scheme_id',
         'focus_area_id',
         'theme_id',
         'topic_id',
@@ -103,6 +104,14 @@ class Proposal extends Model
     public function researchScheme(): BelongsTo
     {
         return $this->belongsTo(ResearchScheme::class);
+    }
+
+    /**
+     * Get the community service scheme for the proposal.
+     */
+    public function communityServiceScheme(): BelongsTo
+    {
+        return $this->belongsTo(CommunityServiceScheme::class);
     }
 
     /**

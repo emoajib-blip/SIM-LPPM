@@ -15,6 +15,13 @@ class Theme extends Model
     protected $fillable = [
         'focus_area_id',
         'name',
+        'is_active_for_research',
+        'is_active_for_community_service',
+    ];
+
+    protected $casts = [
+        'is_active_for_research' => 'boolean',
+        'is_active_for_community_service' => 'boolean',
     ];
 
     /**

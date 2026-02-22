@@ -45,6 +45,7 @@ class Create extends ProposalCreate
     {
         if ($step === 1) {
             $rules = parent::getStepValidationRules(1);
+            $rules['form.community_service_scheme_id'] = 'required|exists:community_service_schemes,id';
             $rules['form.partner_issue_summary'] = 'required|string|min:50';
             $rules['form.solution_offered'] = 'required|string|min:50';
 

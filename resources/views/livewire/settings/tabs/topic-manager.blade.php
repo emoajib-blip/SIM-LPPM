@@ -15,6 +15,8 @@
                     <tr>
                         <th>Nama</th>
                         <th>Tema</th>
+                        <th>Penelitian</th>
+                        <th>Pengabdian</th>
                         <th class="w-25">Aksi</th>
                     </tr>
                 </thead>
@@ -23,6 +25,20 @@
                         <tr wire:key="topic-{{ $item->id }}">
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->theme?->name ?? 'N/A' }}</td>
+                            <td>
+                                @if($item->is_active_for_research)
+                                    <span class="badge bg-success text-success-fg">Aktif</span>
+                                @else
+                                    <span class="badge bg-secondary text-secondary-fg">Nonaktif</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($item->is_active_for_community_service)
+                                    <span class="badge bg-success text-success-fg">Aktif</span>
+                                @else
+                                    <span class="badge bg-secondary text-secondary-fg">Nonaktif</span>
+                                @endif
+                            </td>
                             <td>
                                 <div class="btn-list">
                                     <button type="button" class="btn-outline-warning btn btn-sm"
@@ -71,6 +87,24 @@
                         @endforeach
                     </select>
                     @error('themeId')
+                        <div class="d-block invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" wire:model="is_active_for_research">
+                        <span class="form-check-label">Aktif untuk Penelitian</span>
+                    </label>
+                    @error('is_active_for_research')
+                        <div class="d-block invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" wire:model="is_active_for_community_service">
+                        <span class="form-check-label">Aktif untuk Pengabdian</span>
+                    </label>
+                    @error('is_active_for_community_service')
                         <div class="d-block invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

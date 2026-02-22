@@ -36,6 +36,11 @@
                                 <x-lucide-file-text class="icon me-2" />
                                 Skema Penelitian
                             </button>
+                            <button wire:click="setActiveTab('community-service-schemes')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'community-service-schemes' ? 'active' : '' }}">
+                                <x-lucide-file-heart class="icon me-2" />
+                                Skema Pengabdian
+                            </button>
                             <button wire:click="setActiveTab('science-clusters')"
                                 class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'science-clusters' ? 'active' : '' }}">
                                 <x-lucide-atom class="icon me-2" />
@@ -150,6 +155,10 @@
                     @elseif ($activeTab === 'research-schemes')
                         <div>
                             <livewire:settings.tabs.research-scheme-manager />
+                        </div>
+                    @elseif ($activeTab === 'community-service-schemes')
+                        <div>
+                            <livewire:settings.tabs.community-service-scheme-manager />
                         </div>
                     @elseif ($activeTab === 'science-clusters')
                         <div>

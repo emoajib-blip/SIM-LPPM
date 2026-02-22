@@ -13,6 +13,7 @@ class MenuComposer
 {
     public function compose(View $view): void
     {
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $view->with('headerMenuItems', $this->menuItems(Auth::user()));
     }
 
@@ -303,7 +304,7 @@ class MenuComposer
     {
         $allowedRoles = $item['roles'] ?? null;
 
-        if ($allowedRoles !== null && (! $user || ! $user->hasAnyRole($allowedRoles))) {
+        if ($allowedRoles !== null && (! $user || ! active_has_any_role($allowedRoles))) {
             return null;
         }
 
@@ -352,7 +353,7 @@ class MenuComposer
     {
         $allowedRoles = $item['roles'] ?? null;
 
-        if ($allowedRoles !== null && (! $user || ! $user->hasAnyRole($allowedRoles))) {
+        if ($allowedRoles !== null && (! $user || ! active_has_any_role($allowedRoles))) {
             return null;
         }
 

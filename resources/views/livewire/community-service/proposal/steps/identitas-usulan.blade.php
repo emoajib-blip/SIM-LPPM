@@ -1,3 +1,5 @@
+<x-lecturer-eligibility-alert />
+
 <!-- Section: Informasi Dasar -->
 <div class="card mb-3">
     <div class="card-body">
@@ -11,15 +13,34 @@
                 <div class="mb-3">
                     <label class="form-label" for="title">Judul Proposal <span class="text-danger">*</span></label>
                     <input id="title" type="text" class="form-control @error('form.title') is-invalid @enderror"
-                        wire:model="form.title" placeholder="Masukkan judul proposal penelitian" required>
+                        wire:model="form.title" placeholder="Masukkan judul proposal pengabdian" required>
                     @error('form.title')
                         <div class="d-block invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="mb-3">
+            <div class="col-md-4">
+                <div class="">
+                    <label class="form-label" for="community_service_scheme">Skema Pengabdian <span class="text-danger">*</span></label>
+                    <div wire:ignore>
+                        <select id="community_service_scheme" class="form-select @error('form.community_service_scheme_id') is-invalid @enderror"
+                            wire:model.live="form.community_service_scheme_id" x-data="tomSelect" placeholder="Pilih skema pengabdian"
+                            required>
+                            <option value="">-- Pilih Skema Pengabdian --</option>
+                            @foreach ($this->communityServiceSchemes as $scheme)
+                                <option value="{{ $scheme->id }}">{{ $scheme->name }} ({{ $scheme->strata }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('form.community_service_scheme_id')
+                        <div class="d-block invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="">
                     <label class="form-label" for="start_year">Tahun Mulai <span class="text-danger">*</span></label>
                     <input id="start_year" type="number"
                         class="form-control @error('form.start_year') is-invalid @enderror"
@@ -31,8 +52,8 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="mb-3">
+            <div class="col-md-4">
+                <div class="">
                     <label class="form-label" for="duration_in_years">Durasi (Tahun) <span
                             class="text-danger">*</span></label>
                     <input id="duration_in_years" type="number"
@@ -43,8 +64,7 @@
                     @enderror
                     @if ($form->start_year && $form->duration_in_years)
                         <small class="text-muted">
-                            Periode: {{ $form->start_year }} -
-                            {{ (int) $form->start_year + (int) $form->duration_in_years - 1 }}
+                            Periode: {{ $form->start_year }} - {{ (int) $form->start_year + (int) $form->duration_in_years - 1 }}
                         </small>
                     @endif
                 </div>
@@ -108,26 +128,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="mb-3">
-                    <label class="form-label" for="keywords">Kata Kunci (Keywords) <span class="text-danger">*</span></label>
-                    <div wire:ignore>
-                        <select id="keywords" class="form-select @error('form.keywords') is-invalid @enderror"
-                            wire:model="form.keywords"
-                            x-data="tomSelect({create: true, maxItems: 5})" 
-                            multiple
-                            placeholder="Ketik lalu Enter untuk menambahkan kata kunci (Maks 5)" required>
-                            @foreach ($form->keywords as $keyword)
-                                <option value="{{ $keyword }}" selected>{{ $keyword }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @error('form.keywords')
-                        <div class="d-block invalid-feedback">{{ $message }}</div>
-                    @enderror
-                    <small class="text-muted">Tekan Enter setelah mengetik kata kunci. Maksimal 5 kata kunci.</small>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
@@ -225,7 +226,26 @@
             @error('form.summary')
                 <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror
-            <small class="text-muted">Minimum 100 karakter</small>
+            <small class="text-muted d-block mb-3">Minimum 100 karakter</small>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="keywords">Kata Kunci (Keywords) <span class="text-danger">*</span></label>
+            <div wire:ignore>
+                <select id="keywords" class="form-select @error('form.keywords') is-invalid @enderror"
+                    wire:model.live="form.keywords"
+                    x-data="tomSelect({create: true, maxItems: 5})" 
+                    multiple
+                    placeholder="Ketik lalu Enter untuk menambahkan kata kunci (Maks 5)" required>
+                    @foreach ($form->keywords as $keyword)
+                        <option value="{{ $keyword }}" selected>{{ $keyword }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @error('form.keywords')
+                <div class="d-block invalid-feedback">{{ $message }}</div>
+            @enderror
+            <small class="text-muted">Tekan Enter setelah mengetik kata kunci. Maksimal 5 kata kunci.</small>
         </div>
 
         <div class="mb-3">

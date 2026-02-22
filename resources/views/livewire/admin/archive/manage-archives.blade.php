@@ -1,4 +1,5 @@
 <div>
+    {{-- Vetted by AI - Manual Review Required by Senior Engineer/Manager --}}
     <x-slot:pageHeader>
         <div class="mb-2">
             <h2 class="page-title text-indigo fw-bold">{{ __('Manajemen Arsip Data (Legacy)') }}</h2>
@@ -31,19 +32,6 @@
 
     <div class="page-body">
         <div class="container-xl">
-            <!-- Smart Insight: Archive Context -->
-            <div class="mb-4 row">
-                <div class="col-12">
-                    <x-smart-insight 
-                        :title="__('Historical Data Integrity')" 
-                        icon="database-import"
-                        variant="indigo"
-                        :badge="__('System Legacy')"
-                        :description="__('Arsip ini berfungsi sebagai jembatan data antara sistem lama dan SIM-LPPM Modern. Pastikan NIDN dan Nama Dosen sesuai dengan data identitas dasar untuk akurasi laporan tahunan.')"
-                    />
-                </div>
-            </div>
-
             <!-- Filter -->
             <div class="card mb-4 border-0 shadow-sm bg-light-lt">
                 <div class="card-body p-3">

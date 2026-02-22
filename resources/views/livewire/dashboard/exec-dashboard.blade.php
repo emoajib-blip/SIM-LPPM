@@ -201,7 +201,7 @@
                             @forelse($recentResearch as $research)
                                 <tr>
                                     <td class="ps-4">
-                                        <div class="fw-bold text-truncate" style="max-width: 250px;" title="{{ $research->title }}">
+                                        <div class="fw-bold text-wrap lh-base" title="{{ $research->title }}">
                                             {{ $research->title }}
                                         </div>
                                         <div class="small text-muted d-flex align-items-center mt-1">
@@ -244,7 +244,7 @@
                             @forelse($recentCommunityService as $communityService)
                                 <tr>
                                     <td class="ps-4">
-                                        <div class="fw-bold text-truncate" style="max-width: 250px;" title="{{ $communityService->title }}">
+                                        <div class="fw-bold text-wrap lh-base" title="{{ $communityService->title }}">
                                             {{ $communityService->title }}
                                         </div>
                                         <div class="small text-muted d-flex align-items-center mt-1">

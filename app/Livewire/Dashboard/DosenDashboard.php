@@ -140,6 +140,8 @@ class DosenDashboard extends Component
         $memberStats = DB::table('proposals')
             ->join('proposal_user', 'proposals.id', '=', 'proposal_user.proposal_id')
             ->where('proposal_user.user_id', $this->user->id)
+            ->where('proposal_user.role', '!=', 'ketua') // Hanya hitung jika sebagai Anggota
+            ->where('proposal_user.status', 'accepted') // Hanya hitung yang sudah dikonfirmasi
             ->whereYear('proposals.created_at', $yearFilter)
             ->select([
                 'proposals.detailable_type',

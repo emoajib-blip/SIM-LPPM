@@ -173,7 +173,7 @@
                         {{-- Level Description Section --}}
                         <div class="mb-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="form-label mb-0 fw-semibold">Deskripsi Level</label>
+                                <label class="form-label mb-0 fw-semibold">Pengaturan Level & Deskripsi</label>
                                 @if (!$editingLevelDesc)
                                     <button type="button" class="btn btn-ghost-primary btn-sm"
                                         wire:click="startEditLevelDesc">
@@ -184,12 +184,24 @@
 
                             @if ($editingLevelDesc)
                                 <div>
-                                    <textarea class="form-control @error('levelDescriptionInput') is-invalid @enderror"
+                                    <textarea class="form-control mb-3 @error('levelDescriptionInput') is-invalid @enderror"
                                         wire:model="levelDescriptionInput" rows="3"
                                         wire:keydown.escape="cancelEditLevelDesc"></textarea>
                                     @error('levelDescriptionInput')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+
+                                    <div class="d-flex gap-3 mb-3">
+                                        <label class="form-check form-switch mb-0">
+                                            <input class="form-check-input" type="checkbox" wire:model="editIsActiveForResearch">
+                                            <span class="form-check-label text-muted" style="font-size: 0.85rem;">Aktif untuk Penelitian</span>
+                                        </label>
+                                        <label class="form-check form-switch mb-0">
+                                            <input class="form-check-input" type="checkbox" wire:model="editIsActiveForCommunityService">
+                                            <span class="form-check-label text-muted" style="font-size: 0.85rem;">Aktif untuk Pengabdian</span>
+                                        </label>
+                                    </div>
+
                                     <div class="mt-2 btn-list">
                                         <button type="button" class="btn btn-primary btn-sm" wire:click="saveLevelDesc" wire:loading.class="btn-loading" wire:target="saveLevelDesc">
                                             <x-lucide-check class="icon me-1" /> Simpan
@@ -201,8 +213,21 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="p-3 rounded border">
+                                <div class="p-3 rounded border mb-3">
                                     {{ $this->selectedLevel->description ?: 'Belum ada deskripsi' }}
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <span class="text-muted me-2" style="font-size: 0.85rem;">Status Akses:</span>
+                                    @if($this->selectedLevel->is_active_for_research)
+                                        <span class="badge bg-success text-success-fg">Penelitian</span>
+                                    @else
+                                        <span class="badge bg-secondary text-secondary-fg">Penelitian</span>
+                                    @endif
+                                    @if($this->selectedLevel->is_active_for_community_service)
+                                        <span class="badge bg-success text-success-fg">Pengabdian</span>
+                                    @else
+                                        <span class="badge bg-secondary text-secondary-fg">Pengabdian</span>
+                                    @endif
                                 </div>
                             @endif
                         </div>

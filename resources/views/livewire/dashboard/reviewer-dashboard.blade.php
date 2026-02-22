@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="flex-fill overflow-hidden">
                                     <div class="fw-bold text-danger mb-0">TERLAMBAT ({{ $review->days_overdue }} Hari)</div>
-                                    <div class="text-truncate text-dark fw-bold" title="{{ $review->proposal->title }}">
+                                    <div class="text-wrap lh-base text-dark fw-bold" title="{{ $review->proposal->title }}">
                                         {{ $review->proposal->title }}
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="flex-fill overflow-hidden">
                                     <div class="fw-bold text-warning mb-0">REVIEW ULANG (PUTARAN {{ $review->round }})</div>
-                                    <div class="text-truncate text-dark fw-bold" title="{{ $review->proposal->title }}">
+                                    <div class="text-wrap lh-base text-dark fw-bold" title="{{ $review->proposal->title }}">
                                         {{ $review->proposal->title }}
                                     </div>
                                 </div>
@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="flex-fill overflow-hidden">
                                     <div class="fw-bold text-info mb-0">DEADLINE DEKAT ({{ $review->days_remaining }} Hari)</div>
-                                    <div class="text-truncate text-dark fw-bold" title="{{ $review->proposal->title }}">
+                                    <div class="text-wrap lh-base text-dark fw-bold" title="{{ $review->proposal->title }}">
                                         {{ $review->proposal->title }}
                                     </div>
                                 </div>
@@ -200,7 +200,7 @@
                                 @php $review = $researchReviewerStats->where('proposal_id', $research->id)->first(); @endphp
                                 <tr>
                                     <td class="ps-4">
-                                        <div class="fw-bold text-dark text-truncate" style="max-width: 250px;" title="{{ $research->title }}">
+                                        <div class="fw-bold text-dark text-wrap lh-base" title="{{ $research->title }}">
                                             {{ $research->title }}
                                         </div>
                                         <div class="small text-muted d-flex align-items-center mt-1">
@@ -255,7 +255,7 @@
                                 @php $review = $communityServiceReviewerStats->where('proposal_id', $pkm->id)->first(); @endphp
                                 <tr>
                                     <td class="ps-4">
-                                        <div class="fw-bold text-dark text-truncate" style="max-width: 250px;" title="{{ $pkm->title }}">
+                                        <div class="fw-bold text-dark text-wrap lh-base" title="{{ $pkm->title }}">
                                             {{ $pkm->title }}
                                         </div>
                                         <div class="small text-muted d-flex align-items-center mt-1">

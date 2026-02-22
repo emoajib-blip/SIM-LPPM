@@ -50,6 +50,16 @@
                                     </small>
                                 @endif
                             </div>
+                            <div class="mb-2 d-flex gap-2">
+                                <label class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" wire:model="newIsActiveForResearch">
+                                    <span class="form-check-label" style="font-size: 0.75rem;">Penelitian</span>
+                                </label>
+                                <label class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" wire:model="newIsActiveForCommunityService">
+                                    <span class="form-check-label" style="font-size: 0.75rem;">Pengabdian</span>
+                                </label>
+                            </div>
                             <div class="btn-list">
                                 <button type="button" class="btn btn-success btn-sm" wire:click="saveNewCluster"
                                     wire:loading.class="btn-loading" wire:target="saveNewCluster">
@@ -73,21 +83,33 @@
 
                                     @if ($editingClusterId === $level1->id)
                                         {{-- Edit Mode --}}
-                                        <div class="d-flex flex-grow-1 align-items-center gap-1" wire:click.stop>
-                                            <input type="text"
-                                                class="form-control form-control-sm @error('clusterNameInput') is-invalid @enderror"
-                                                wire:model="clusterNameInput" wire:keydown.enter="saveCluster"
-                                                wire:keydown.escape="cancelEditCluster" autofocus
-                                                style="font-size: 0.85rem;">
-                                            <button type="button" class="p-1 btn btn-success btn-sm"
-                                                wire:click="saveCluster" wire:loading.class="btn-loading"
-                                                wire:target="saveCluster">
-                                                <x-lucide-check class="icon" style="width: 14px; height: 14px;" />
-                                            </button>
-                                            <button type="button" class="p-1 btn btn-secondary btn-sm"
-                                                wire:click="cancelEditCluster">
-                                                <x-lucide-x class="icon" style="width: 14px; height: 14px;" />
-                                            </button>
+                                        <div class="d-flex flex-column flex-grow-1 gap-1 py-1" wire:click.stop>
+                                            <div class="d-flex align-items-center gap-1">
+                                                <input type="text"
+                                                    class="form-control form-control-sm @error('clusterNameInput') is-invalid @enderror"
+                                                    wire:model="clusterNameInput" wire:keydown.enter="saveCluster"
+                                                    wire:keydown.escape="cancelEditCluster" autofocus
+                                                    style="font-size: 0.85rem;">
+                                                <button type="button" class="p-1 btn btn-success btn-sm"
+                                                    wire:click="saveCluster" wire:loading.class="btn-loading"
+                                                    wire:target="saveCluster">
+                                                    <x-lucide-check class="icon" style="width: 14px; height: 14px;" />
+                                                </button>
+                                                <button type="button" class="p-1 btn btn-secondary btn-sm"
+                                                    wire:click="cancelEditCluster">
+                                                    <x-lucide-x class="icon" style="width: 14px; height: 14px;" />
+                                                </button>
+                                            </div>
+                                            <div class="d-flex gap-2 mt-1">
+                                                <label class="form-check form-switch mb-0">
+                                                    <input class="form-check-input" type="checkbox" wire:model="editIsActiveForResearch">
+                                                    <span class="form-check-label text-muted" style="font-size: 0.65rem;">Penelitian</span>
+                                                </label>
+                                                <label class="form-check form-switch mb-0">
+                                                    <input class="form-check-input" type="checkbox" wire:model="editIsActiveForCommunityService">
+                                                    <span class="form-check-label text-muted" style="font-size: 0.65rem;">Pengabdian</span>
+                                                </label>
+                                            </div>
                                         </div>
                                     @else
                                         {{-- Expand/Collapse Icon --}}
@@ -147,25 +169,37 @@
 
                                                     @if ($editingClusterId === $level2->id)
                                                         {{-- Edit Mode --}}
-                                                        <div class="d-flex flex-grow-1 align-items-center gap-1"
+                                                        <div class="d-flex flex-column flex-grow-1 gap-1 py-1"
                                                             wire:click.stop>
-                                                            <input type="text"
-                                                                class="form-control form-control-sm @error('clusterNameInput') is-invalid @enderror"
-                                                                wire:model="clusterNameInput"
-                                                                wire:keydown.enter="saveCluster"
-                                                                wire:keydown.escape="cancelEditCluster" autofocus
-                                                                style="font-size: 0.75rem;">
-                                                            <button type="button" class="p-1 btn btn-success btn-sm"
-                                                                wire:click="saveCluster">
-                                                                <x-lucide-check class="icon"
-                                                                    style="width: 12px; height: 12px;" />
-                                                            </button>
-                                                            <button type="button"
-                                                                class="p-1 btn btn-secondary btn-sm"
-                                                                wire:click="cancelEditCluster">
-                                                                <x-lucide-x class="icon"
-                                                                    style="width: 12px; height: 12px;" />
-                                                            </button>
+                                                            <div class="d-flex align-items-center gap-1">
+                                                                <input type="text"
+                                                                    class="form-control form-control-sm @error('clusterNameInput') is-invalid @enderror"
+                                                                    wire:model="clusterNameInput"
+                                                                    wire:keydown.enter="saveCluster"
+                                                                    wire:keydown.escape="cancelEditCluster" autofocus
+                                                                    style="font-size: 0.75rem;">
+                                                                <button type="button" class="p-1 btn btn-success btn-sm"
+                                                                    wire:click="saveCluster">
+                                                                    <x-lucide-check class="icon"
+                                                                        style="width: 12px; height: 12px;" />
+                                                                </button>
+                                                                <button type="button"
+                                                                    class="p-1 btn btn-secondary btn-sm"
+                                                                    wire:click="cancelEditCluster">
+                                                                    <x-lucide-x class="icon"
+                                                                        style="width: 12px; height: 12px;" />
+                                                                </button>
+                                                            </div>
+                                                            <div class="d-flex gap-2 mt-1">
+                                                                <label class="form-check form-switch mb-0">
+                                                                    <input class="form-check-input" type="checkbox" wire:model="editIsActiveForResearch">
+                                                                    <span class="form-check-label text-muted" style="font-size: 0.65rem;">Penelitian</span>
+                                                                </label>
+                                                                <label class="form-check form-switch mb-0">
+                                                                    <input class="form-check-input" type="checkbox" wire:model="editIsActiveForCommunityService">
+                                                                    <span class="form-check-label text-muted" style="font-size: 0.65rem;">Pengabdian</span>
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                     @else
                                                         {{-- Expand/Collapse Icon --}}
@@ -232,26 +266,38 @@
 
                                                                 @if ($editingClusterId === $level3->id)
                                                                     {{-- Edit Mode --}}
-                                                                    <div class="d-flex flex-grow-1 align-items-center gap-1"
+                                                                    <div class="d-flex flex-column flex-grow-1 gap-1 py-1"
                                                                         wire:click.stop>
-                                                                        <input type="text"
-                                                                            class="form-control form-control-sm @error('clusterNameInput') is-invalid @enderror"
-                                                                            wire:model="clusterNameInput"
-                                                                            wire:keydown.enter="saveCluster"
-                                                                            wire:keydown.escape="cancelEditCluster"
-                                                                            autofocus style="font-size: 0.7rem;">
-                                                                        <button type="button"
-                                                                            class="p-1 btn btn-success btn-sm"
-                                                                            wire:click="saveCluster">
-                                                                            <x-lucide-check class="icon"
-                                                                                style="width: 10px; height: 10px;" />
-                                                                        </button>
-                                                                        <button type="button"
-                                                                            class="p-1 btn btn-secondary btn-sm"
-                                                                            wire:click="cancelEditCluster">
-                                                                            <x-lucide-x class="icon"
-                                                                                style="width: 10px; height: 10px;" />
-                                                                        </button>
+                                                                        <div class="d-flex align-items-center gap-1">
+                                                                            <input type="text"
+                                                                                class="form-control form-control-sm @error('clusterNameInput') is-invalid @enderror"
+                                                                                wire:model="clusterNameInput"
+                                                                                wire:keydown.enter="saveCluster"
+                                                                                wire:keydown.escape="cancelEditCluster"
+                                                                                autofocus style="font-size: 0.7rem;">
+                                                                            <button type="button"
+                                                                                class="p-1 btn btn-success btn-sm"
+                                                                                wire:click="saveCluster">
+                                                                                <x-lucide-check class="icon"
+                                                                                    style="width: 10px; height: 10px;" />
+                                                                            </button>
+                                                                            <button type="button"
+                                                                                class="p-1 btn btn-secondary btn-sm"
+                                                                                wire:click="cancelEditCluster">
+                                                                                <x-lucide-x class="icon"
+                                                                                    style="width: 10px; height: 10px;" />
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="d-flex gap-2 mt-1">
+                                                                            <label class="form-check form-switch mb-0">
+                                                                                <input class="form-check-input" type="checkbox" wire:model="editIsActiveForResearch">
+                                                                                <span class="form-check-label text-muted" style="font-size: 0.65rem;">Penelitian</span>
+                                                                            </label>
+                                                                            <label class="form-check form-switch mb-0">
+                                                                                <input class="form-check-input" type="checkbox" wire:model="editIsActiveForCommunityService">
+                                                                                <span class="form-check-label text-muted" style="font-size: 0.65rem;">Pengabdian</span>
+                                                                            </label>
+                                                                        </div>
                                                                     </div>
                                                                 @else
                                                                     <span class="me-1">
@@ -338,16 +384,27 @@
                                     <div class="fw-semibold">{{ $this->selectedCluster->name }}</div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="mb-2">
-                                    <label class="mb-1 text-muted form-label">Level</label>
-                                    <div class="fw-semibold">{{ $this->selectedCluster->level }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="mb-2">
                                     <label class="mb-1 text-muted form-label">Jumlah Sub-Cluster</label>
                                     <div class="fw-semibold">{{ $this->selectedCluster->children->count() }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="mb-2">
+                                    <label class="mb-1 text-muted form-label">Status Akses</label>
+                                    <div class="d-flex gap-2 mt-1">
+                                        @if($this->selectedCluster->is_active_for_research)
+                                            <span class="badge bg-success text-success-fg">Penelitian</span>
+                                        @else
+                                            <span class="badge bg-secondary text-secondary-fg">Penelitian</span>
+                                        @endif
+                                        @if($this->selectedCluster->is_active_for_community_service)
+                                            <span class="badge bg-success text-success-fg">Pengabdian</span>
+                                        @else
+                                            <span class="badge bg-secondary text-secondary-fg">Pengabdian</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>

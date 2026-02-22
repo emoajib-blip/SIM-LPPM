@@ -15,6 +15,13 @@ class TktLevel extends Model
         'type',
         'level',
         'description',
+        'is_active_for_research',
+        'is_active_for_community_service',
+    ];
+
+    protected $casts = [
+        'is_active_for_research' => 'boolean',
+        'is_active_for_community_service' => 'boolean',
     ];
 
     public function indicators(): HasMany

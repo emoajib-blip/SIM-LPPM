@@ -97,7 +97,7 @@
                                     @forelse($recentResearch as $research)
                                         <tr>
                                             <td>
-                                                <div class="text-truncate" style="max-width: 250px;">
+                                                <div class="text-wrap lh-base">
                                                     {{ $research->title }}
                                                 </div>
                                             </td>
@@ -165,7 +165,7 @@
                                     @forelse($recentCommunityService as $communityService)
                                         <tr>
                                             <td>
-                                                <div class="text-truncate" style="max-width: 250px;">
+                                                <div class="text-wrap lh-base">
                                                     {{ $communityService->title }}
                                                 </div>
                                             </td>

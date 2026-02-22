@@ -21,9 +21,9 @@ class GetPartnerReportQuery
             ->when($type, fn ($q) => $q->where('type', $type))
             ->with(['media'])
             ->withCount([
-            'proposals' => fn ($q) => $q->when($period, fn ($q2) => $q2->where('start_year', $period)),
-            'proposals as approved_count' => fn ($q) => $q->whereIn('status', [ProposalStatus::APPROVED->value, ProposalStatus::COMPLETED->value])
-                ->when($period, fn ($q2) => $q2->where('start_year', $period)),
+                'proposals' => fn ($q) => $q->when($period, fn ($q2) => $q2->where('start_year', $period)),
+                'proposals as approved_count' => fn ($q) => $q->whereIn('status', [ProposalStatus::APPROVED->value, ProposalStatus::COMPLETED->value])
+                    ->when($period, fn ($q2) => $q2->where('start_year', $period)),
             ])
             ->withSum(
                 ['proposals as total_budget' => fn ($q) => $q->whereIn('status', [ProposalStatus::APPROVED->value, ProposalStatus::COMPLETED->value])

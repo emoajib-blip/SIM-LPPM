@@ -94,6 +94,7 @@ abstract class ProposalCreate extends Component
         return [
             'form.title' => 'Judul',
             'form.research_scheme_id' => 'Skema Penelitian',
+            'form.community_service_scheme_id' => 'Skema Pengabdian',
             'form.focus_area_id' => 'Bidang Fokus',
             'form.theme_id' => 'Tema',
             'form.topic_id' => 'Topik',
@@ -257,15 +258,21 @@ abstract class ProposalCreate extends Component
     }
 
     #[Computed]
+    public function communityServiceSchemes()
+    {
+        return app(MasterDataService::class)->communityServiceSchemes();
+    }
+
+    #[Computed]
     public function focusAreas()
     {
-        return app(MasterDataService::class)->focusAreas();
+        return app(MasterDataService::class)->focusAreas($this->getProposalType());
     }
 
     #[Computed]
     public function themes()
     {
-        return app(MasterDataService::class)->themes($this->form->focus_area_id ?: null);
+        return app(MasterDataService::class)->themes($this->form->focus_area_id ?: null, $this->getProposalType());
     }
 
     #[Computed]
@@ -273,7 +280,8 @@ abstract class ProposalCreate extends Component
     {
         return app(MasterDataService::class)->topics(
             $this->form->focus_area_id ?: null,
-            $this->form->theme_id ?: null
+            $this->form->theme_id ?: null,
+            $this->getProposalType()
         );
     }
 
@@ -286,25 +294,25 @@ abstract class ProposalCreate extends Component
     #[Computed]
     public function scienceClusters()
     {
-        return app(MasterDataService::class)->scienceClusters();
+        return app(MasterDataService::class)->scienceClusters($this->getProposalType());
     }
 
     #[Computed]
     public function clusterLevel1Options()
     {
-        return $this->scienceClusters->whereNull('parent_id');
+        return app(MasterDataService::class)->clusterLevel1Options($this->getProposalType());
     }
 
     #[Computed]
     public function clusterLevel2Options()
     {
-        return $this->scienceClusters->where('parent_id', $this->form->cluster_level1_id);
+        return app(MasterDataService::class)->clusterLevel2Options($this->form->cluster_level1_id ?: null, $this->getProposalType());
     }
 
     #[Computed]
     public function clusterLevel3Options()
     {
-        return $this->scienceClusters->where('parent_id', $this->form->cluster_level2_id);
+        return app(MasterDataService::class)->clusterLevel3Options($this->form->cluster_level2_id ?: null, $this->getProposalType());
     }
 
     #[Computed]
@@ -334,7 +342,7 @@ abstract class ProposalCreate extends Component
     #[Computed]
     public function tktTypes()
     {
-        return app(MasterDataService::class)->tktTypes();
+        return app(MasterDataService::class)->tktTypes($this->getProposalType());
     }
 
     #[Computed]

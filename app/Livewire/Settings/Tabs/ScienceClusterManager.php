@@ -40,6 +40,14 @@ class ScienceClusterManager extends Component
 
     public ?int $newClusterParentId = null;
 
+    public bool $newIsActiveForResearch = true;
+
+    public bool $newIsActiveForCommunityService = true;
+
+    public bool $editIsActiveForResearch = true;
+
+    public bool $editIsActiveForCommunityService = true;
+
     public ?int $deleteItemId = null;
 
     public string $deleteItemName = '';
@@ -200,6 +208,8 @@ class ScienceClusterManager extends Component
         $this->addingCluster = true;
         $this->newClusterName = '';
         $this->newClusterParentId = $parentId;
+        $this->newIsActiveForResearch = true;
+        $this->newIsActiveForCommunityService = true;
         $this->editingClusterId = null;
     }
 
@@ -208,6 +218,8 @@ class ScienceClusterManager extends Component
         $this->addingCluster = false;
         $this->newClusterName = '';
         $this->newClusterParentId = null;
+        $this->newIsActiveForResearch = true;
+        $this->newIsActiveForCommunityService = true;
     }
 
     public function saveNewCluster(): void
@@ -221,6 +233,8 @@ class ScienceClusterManager extends Component
         $data = [
             'name' => $this->newClusterName,
             'parent_id' => $this->newClusterParentId,
+            'is_active_for_research' => $this->newIsActiveForResearch,
+            'is_active_for_community_service' => $this->newIsActiveForCommunityService,
         ];
 
         if ($this->newClusterParentId) {
@@ -258,6 +272,8 @@ class ScienceClusterManager extends Component
 
         $this->editingClusterId = $clusterId;
         $this->clusterNameInput = $cluster->name;
+        $this->editIsActiveForResearch = $cluster->is_active_for_research;
+        $this->editIsActiveForCommunityService = $cluster->is_active_for_community_service;
         $this->addingCluster = false;
     }
 
@@ -281,7 +297,11 @@ class ScienceClusterManager extends Component
 
         $cluster = ScienceCluster::find($this->editingClusterId);
         if ($cluster) {
-            $cluster->update(['name' => $this->clusterNameInput]);
+            $cluster->update([
+                'name' => $this->clusterNameInput,
+                'is_active_for_research' => $this->editIsActiveForResearch,
+                'is_active_for_community_service' => $this->editIsActiveForCommunityService,
+            ]);
         }
 
         $this->editingClusterId = null;
@@ -336,6 +356,10 @@ class ScienceClusterManager extends Component
         $this->addingCluster = false;
         $this->newClusterName = '';
         $this->newClusterParentId = null;
+        $this->newIsActiveForResearch = true;
+        $this->newIsActiveForCommunityService = true;
+        $this->editIsActiveForResearch = true;
+        $this->editIsActiveForCommunityService = true;
     }
 
     public function updatedSearch(): void

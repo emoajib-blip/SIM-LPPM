@@ -19,6 +19,12 @@ class TopicManager extends Component
     #[Validate('required|exists:themes,id')]
     public ?int $themeId = null;
 
+    #[Validate('boolean')]
+    public bool $is_active_for_research = true;
+
+    #[Validate('boolean')]
+    public bool $is_active_for_community_service = true;
+
     public ?int $editingId = null;
 
     public string $modalTitle = '';
@@ -48,6 +54,8 @@ class TopicManager extends Component
         $data = [
             'name' => $this->name,
             'theme_id' => $this->themeId,
+            'is_active_for_research' => $this->is_active_for_research,
+            'is_active_for_community_service' => $this->is_active_for_community_service,
         ];
 
         if ($this->editingId) {
@@ -60,7 +68,7 @@ class TopicManager extends Component
 
         // close modal
         $this->dispatch('close-modal', modalId: 'modal-topic');
-        $this->reset(['name', 'themeId', 'editingId']);
+        $this->resetForm();
 
         session()->flash('success', $message);
         $this->toastSuccess($message);
@@ -71,6 +79,8 @@ class TopicManager extends Component
         $this->editingId = $topic->id;
         $this->name = $topic->name;
         $this->themeId = $topic->theme_id;
+        $this->is_active_for_research = $topic->is_active_for_research;
+        $this->is_active_for_community_service = $topic->is_active_for_community_service;
         $this->modalTitle = 'Edit Topik';
         $this->dispatch('open-modal', modalId: 'modal-topic');
     }
@@ -88,6 +98,8 @@ class TopicManager extends Component
     public function resetForm(): void
     {
         $this->reset(['name', 'themeId', 'editingId']);
+        $this->is_active_for_research = true;
+        $this->is_active_for_community_service = true;
     }
 
     public function handleConfirmDeleteAction(): void

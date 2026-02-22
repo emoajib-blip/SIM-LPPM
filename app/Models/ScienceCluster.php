@@ -16,6 +16,13 @@ class ScienceCluster extends Model
         'parent_id',
         'level',
         'name',
+        'is_active_for_research',
+        'is_active_for_community_service',
+    ];
+
+    protected $casts = [
+        'is_active_for_research' => 'boolean',
+        'is_active_for_community_service' => 'boolean',
     ];
 
     /**

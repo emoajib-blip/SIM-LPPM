@@ -20,6 +20,8 @@ class ProposalForm extends Form
 
     public string $research_scheme_id = '';
 
+    public string $community_service_scheme_id = '';
+
     #[Validate('required|exists:focus_areas,id')]
     public string $focus_area_id = '';
 
@@ -144,20 +146,20 @@ class ProposalForm extends Form
         $this->proposal = $proposal;
 
         // Load common proposal fields
-        $this->title = $proposal->title;
+        $this->title = $proposal->title ?? '';
         $this->research_scheme_id = $proposal->research_scheme_id ?? '';
-        $this->focus_area_id = $proposal->focus_area_id;
-        $this->theme_id = $proposal->theme_id;
-        $this->topic_id = $proposal->topic_id;
-        $this->keywords = $proposal->keywords->pluck('name')->toArray();
+        $this->focus_area_id = $proposal->focus_area_id ?? '';
+        $this->theme_id = $proposal->theme_id ?? '';
+        $this->topic_id = $proposal->topic_id ?? '';
+        $this->keywords = $proposal->keywords ? $proposal->keywords->pluck('name')->toArray() : [];
         $this->national_priority_id = $proposal->national_priority_id ?? '';
-        $this->cluster_level1_id = $proposal->cluster_level1_id;
+        $this->cluster_level1_id = $proposal->cluster_level1_id ?? '';
         $this->cluster_level2_id = $proposal->cluster_level2_id ?? '';
         $this->cluster_level3_id = $proposal->cluster_level3_id ?? '';
         $this->sbk_value = (string) $proposal->sbk_value;
         $this->duration_in_years = (string) $proposal->duration_in_years;
         $this->start_year = (string) ($proposal->start_year ?? date('Y'));
-        $this->summary = $proposal->summary;
+        $this->summary = $proposal->summary ?? '';
 
         // Load detailable-specific fields based on type
         $detailable = $proposal->detailable;
@@ -755,6 +757,8 @@ class ProposalForm extends Form
                         'identifier' => $member['nidn'], // Using nidn field as identifier (NIM)
                         'role' => 'mahasiswa',
                         'tasks' => $member['tugas'] ?? '',
+                        'study_program' => $member['study_program'] ?? '-',
+                        'institution' => $member['institution'] ?? 'ITSNU Pekalongan',
                     ];
 
                     continue;

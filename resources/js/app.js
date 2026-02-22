@@ -1,5 +1,5 @@
 import "@tabler/core/dist/libs/nouislider/dist/nouislider.min.js";
-import TomSelect from "@tabler/core/dist/libs/tom-select/dist/js/tom-select.base.js";
+import TomSelect from "@tabler/core/dist/libs/tom-select/dist/js/tom-select.complete.js";
 import * as Tabler from "@tabler/core/js/tabler";
 import NProgress from "nprogress";
 import "./theme-config";
@@ -159,6 +159,8 @@ const TOM_SELECT_CONFIG = {
     copyClassesToDropdown: false,
     dropdownParent: "body",
     controlInput: "<input>",
+    hideSelected: true,
+    persist: false,
     render: {
         item: (data, escapeFunc) => {
             if (data.customProperties) {
@@ -184,6 +186,9 @@ const TOM_SELECT_CONFIG = {
             }
             return "<div>" + escapeFunc(data.text) + "</div>";
         },
+        option_create: (data, escape) => {
+            return '<div class="create" style="display:none;">Add <strong>' + escape(data.input) + '</strong>...</div>';
+        }
     },
 };
 
@@ -203,28 +208,45 @@ document.addEventListener("alpine:init", () => {
             this.instance = new TomSelect(select, {
                 ...TOM_SELECT_CONFIG,
                 ...config,
+                createOnBlur: config.create || false,
+                plugins: isMultiple ? ['remove_button'] : [],
                 placeholder:
                     select.getAttribute("placeholder") ||
                     TOM_SELECT_CONFIG.placeholder,
                 onChange: (value) => {
+                    const wireModel = select.getAttribute("wire:model") || select.getAttribute("wire:model.live") || select.getAttribute("wire:model.blur");
+
+                    // Convert value to array for multiple, handle single
+                    let finalValue = value;
                     if (isMultiple) {
-                        // For multiple select, we need to handle the value as an array
-                        const values = Array.isArray(value) ? value : [value];
-                        // Update the underlying select options
-                        Array.from(select.options).forEach(option => {
-                            option.selected = values.includes(option.value);
-                        });
-                    } else {
-                        select.value = value;
+                        finalValue = Array.isArray(value) ? value : (value ? value.toString().split(',') : []);
                     }
 
-                    // Dispatch events for Livewire to pick up
-                    select.dispatchEvent(
-                        new Event("change", { bubbles: true }),
-                    );
+                    // Sync underlying select options
+                    if (isMultiple) {
+                        Array.from(select.options).forEach(option => {
+                            option.selected = finalValue.includes(option.value);
+                        });
+                    } else {
+                        select.value = finalValue;
+                    }
+
+                    // Force direct Livewire sync if model exists
+                    if (wireModel && this.$wire) {
+                        this.$wire.set(wireModel, finalValue);
+                    }
+
+                    // Re-dispatch events
+                    select.dispatchEvent(new Event("change", { bubbles: true }));
                     select.dispatchEvent(new Event("input", { bubbles: true }));
                 },
             });
+
+            // If it's a tagging field (create: true), hide the dropdown arrow
+            if (config.create) {
+                this.instance.wrapper.classList.add('hide-caret');
+                this.instance.control.classList.add('hide-caret');
+            }
 
             // Listen for Livewire updates to sync Tom Select
             const wireModel = select.getAttribute("wire:model") || select.getAttribute("wire:model.live") || select.getAttribute("wire:model.blur");

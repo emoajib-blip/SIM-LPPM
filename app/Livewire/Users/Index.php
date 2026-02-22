@@ -80,6 +80,7 @@ class Index extends Component
             'users' => $this->users(),
             'roleOptions' => $this->roleOptions(),
             'statusOptions' => $this->statusOptions(),
+            'userCounts' => $this->userCountsByRole(),
         ]);
     }
 
@@ -162,6 +163,26 @@ class Index extends Component
                 'label' => __('Pending verification'),
             ],
         ];
+    }
+
+    /**
+     * Get the count of users for each role.
+     *
+     * @return array<string, int>
+     */
+    protected function userCountsByRole(): array
+    {
+        $counts = Role::query()
+            ->withCount('users')
+            ->orderByDesc('users_count')
+            ->get()
+            ->mapWithKeys(fn (Role $role) => [$role->name => $role->users_count])
+            ->toArray();
+
+        // Add total count
+        $counts['total'] = User::count();
+
+        return $counts;
     }
 
     /**

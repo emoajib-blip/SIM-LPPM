@@ -1,20 +1,25 @@
 <div class="row row-cards">
+    {{-- Vetted by AI - Manual Review Required by Senior Engineer/Manager --}}
     {{-- Header Info --}}
     <div class="col-12">
-        <x-smart-insight
-            title="Export Data untuk SINTA Author Verification"
-            icon="database-export"
-            variant="primary"
-            badge="Format Resmi SINTA"
-            description="Unduh data penelitian dan pengabdian masyarakat dalam format Excel yang kompatibel langsung untuk diunggah ke portal SINTA Author Verification (https://sinta.kemdiktisaintek.go.id/authorverification). Pastikan semua proposal sudah berstatus Disetujui atau Selesai sebelum diekspor."
-        >
-            <a href="https://sinta.kemdiktisaintek.go.id/authorverification" target="_blank" class="badge bg-blue-lt p-2 px-3 fw-normal text-decoration-none">
-                <i class="ti ti-external-link me-1"></i> Buka Portal SINTA
-            </a>
-            <div class="badge bg-green-lt p-2 px-3 fw-normal">
-                <i class="ti ti-file-spreadsheet me-1"></i> Format Excel SINTA
+        <div class="card border-0 shadow-sm bg-primary-lt mb-1">
+            <div class="card-body py-3 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center">
+                    <div class="avatar avatar-md bg-white text-primary rounded shadow-sm me-3">
+                        <i class="ti ti-database-export fs-3"></i>
+                    </div>
+                    <div>
+                        <h2 class="mb-0 fw-bold text-primary">Export SINTA</h2>
+                        <div class="text-secondary small">
+                            <i class="ti ti-file-spreadsheet me-1"></i>Format Excel Kompatibel
+                        </div>
+                    </div>
+                </div>
+                <a href="https://sinta.kemdiktisaintek.go.id/authorverification" target="_blank" class="btn btn-primary shadow-sm">
+                    <i class="ti ti-external-link me-2"></i> Buka Portal SINTA
+                </a>
             </div>
-        </x-smart-insight>
+        </div>
     </div>
 
     {{-- Year Filter --}}

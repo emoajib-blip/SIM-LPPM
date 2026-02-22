@@ -410,6 +410,10 @@
                     </div>
                 @endif
             </div>
+
+            <div class="mt-3">
+                <livewire:users.activity-log-list :user="$user" />
+            </div>
         </div>
     </div>
 </div>

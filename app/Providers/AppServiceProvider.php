@@ -46,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         if ($this->isInstalled()) {
             View::composer('components.layouts.header', MenuComposer::class);
             Proposal::observe(ProposalObserver::class);
+            \Illuminate\Support\Facades\Event::subscribe(\App\Listeners\UserActivityListener::class);
         }
     }
 

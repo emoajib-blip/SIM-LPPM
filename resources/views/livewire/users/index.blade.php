@@ -42,6 +42,100 @@
 
     <x-tabler.alert />
 
+    <div class="row row-cards mb-3">
+        <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-primary text-white avatar">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
+                                    <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <div class="font-weight-medium">
+                                {{ $userCounts['total'] ?? 0 }} {{ __('Total Pengguna') }}
+                            </div>
+                            <div class="text-secondary">
+                                {{ __('Semua akun terdaftar') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @foreach(['dosen', 'reviewer', 'dekan', 'kepala lppm', 'rektor', 'admin lppm'] as $r)
+            @if(isset($userCounts[$r]))
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card card-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span class="bg-azure-lt text-azure avatar">
+                                        @if($r === 'dosen')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-school" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"></path>
+                                                <path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"></path>
+                                            </svg>
+                                        @elseif($r === 'reviewer')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M8 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
+                                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4"></path>
+                                                <path d="M15 19l2 2l4 -4"></path>
+                                            </svg>
+                                        @elseif($r === 'dekan')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-award" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M12 9m-6 0a6 6 0 1 0 12 0a6 6 0 1 0 -12 0"></path>
+                                                <path d="M12 15l3.4 5.89l1.59 -3.23l3.51 .05l-2.5 -4.71"></path>
+                                                <path d="M12 15l-3.4 5.89l-1.59 -3.23l-3.51 .05l2.5 -4.71"></path>
+                                            </svg>
+                                        @elseif($r === 'kepala lppm')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-briefcase" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M3 7m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"></path>
+                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                <path d="M12 12l0 .01"></path>
+                                                <path d="M3 13a20 20 0 0 0 18 0"></path>
+                                            </svg>
+                                        @elseif($r === 'rektor')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-crown" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4z"></path>
+                                            </svg>
+                                        @else
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37a1.724 1.724 0 0 0 2.572 -1.065z"></path>
+                                                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
+                                            </svg>
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <div class="font-weight-medium">
+                                        {{ $userCounts[$r] }} {{ str($r)->title() }}
+                                    </div>
+                                    <div class="text-secondary">
+                                        {{ __('Aktif dalam sistem') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endforeach
+    </div>
+
     <div class="card card-stacked">
         <div class="border-bottom card-body">
             <div class="align-items-end row g-3">
@@ -104,6 +198,7 @@
                             <th>{{ __('Original Password') }}</th>
                         @endif
                         <th class="text-center">{{ __('Status') }}</th>
+                        <th class="text-end">{{ __('Terakhir Aktif') }}</th>
                         <th class="text-end">{{ __('Bergabung') }}</th>
                         <th class="text-end"></th>
                     </tr>
@@ -117,12 +212,30 @@
                             </td>
                             <td>{{ $user->email }}</td>
                             <td>
-                                @if ($user->roles->isNotEmpty())
-                                    <x-tabler.badge color="primary">
-                                        {{ str($user->roles->first()->name)->title() }}
-                                    </x-tabler.badge>
-                                @else
-                                    <span class="text-secondary">{{ __('Tidak ada peran') }}</span>
+                                <div class="btn-list">
+                                    @forelse ($user->roles as $role)
+                                        <x-tabler.badge color="primary">
+                                            {{ str($role->name)->title() }}
+                                        </x-tabler.badge>
+                                    @empty
+                                        <span class="text-secondary">{{ __('Tidak ada peran') }}</span>
+                                    @endforelse
+                                </div>
+                                @if($user->identity?->faculty)
+                                    <div class="text-muted small mt-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M3 21l18 0"></path>
+                                            <path d="M9 8l1 0"></path>
+                                            <path d="M9 12l1 0"></path>
+                                            <path d="M9 16l1 0"></path>
+                                            <path d="M14 8l1 0"></path>
+                                            <path d="M14 12l1 0"></path>
+                                            <path d="M14 16l1 0"></path>
+                                            <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"></path>
+                                        </svg>
+                                        {{ $user->identity->faculty->name }}
+                                    </div>
                                 @endif
                             </td>
                             @if(auth()->user()->hasAnyRole(['admin lppm', 'superadmin']))
@@ -152,6 +265,15 @@
                                     <x-tabler.badge color="green">{{ __('Terverifikasi') }}</x-tabler.badge>
                                 @else
                                     <x-tabler.badge color="yellow">{{ __('Menunggu') }}</x-tabler.badge>
+                                @endif
+                            </td>
+                            <td class="text-secondary text-end">
+                                @if($user->last_active_at)
+                                    <span title="{{ $user->last_active_at->translatedFormat('d M Y H:i') }}">
+                                        {{ $user->last_active_at->diffForHumans() }}
+                                    </span>
+                                @else
+                                    <span class="text-muted small italic">-</span>
                                 @endif
                             </td>
                             <td class="text-secondary text-end">
