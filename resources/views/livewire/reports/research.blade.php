@@ -1,8 +1,6 @@
 <div>
     <x-slot:pageHeader>
-        <div class="mb-2">
-            <h2 class="page-title text-primary fw-bold">{{ __('Dashboard Analitik Penelitian') }}</h2>
-        </div>
+        {{-- Header empty as requested --}}
     </x-slot:pageHeader>
 
     <x-slot:pageActions>

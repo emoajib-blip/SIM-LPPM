@@ -1,4 +1,7 @@
 <div>
+    <x-slot:pageHeader>
+        {{-- Header empty as requested --}}
+    </x-slot:pageHeader>
 
 
     <x-slot:pageActions>

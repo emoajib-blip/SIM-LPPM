@@ -1,12 +1,6 @@
 <div>
     <x-slot:pageHeader>
-        <div class="mb-2">
-            <h2 class="page-title text-indigo fw-bold">{{ __('Dashboard Ekosistem Kemitraan') }}</h2>
-        </div>
-        <div class="mt-2 text-muted small d-flex align-items-center">
-            <i class="ti ti-heart-handshake me-1 text-indigo"></i>
-            {{ __('Visualisasi mencakup keterlibatan mitra dalam hibah dan status dokumen legal (MOU/PKS).') }}
-        </div>
+        {{-- Header empty as requested --}}
     </x-slot:pageHeader>
 
     <x-slot:pageActions>

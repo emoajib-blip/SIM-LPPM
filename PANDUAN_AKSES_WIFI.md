@@ -1,37 +1,58 @@
-# Panduan Akses Aplikasi dari Perangkat Lain di Jaringan WiFi yang Sama
+# 🌐 PANDUAN AKSES JARINGAN LOKAL (WI-FI)
+SIM LPPM ITSNU - Verifikasi & Uji Coba Tim
 
-Dokumen ini berisi langkah-langkah untuk menjalankan aplikasi SIM LPPM di komputer lokal (Mac/PC) agar dapat diakses oleh perangkat lain (seperti Handphone, Tablet, atau Laptop lain) yang terhubung dalam satu jaringan WiFi yang sama.
+Panduan ini digunakan agar aplikasi yang berjalan di laptop Host dapat diakses oleh laptop/perangkat lain yang berada dalam satu jaringan Wi-Fi/LAN yang sama.
 
-## 1. Mengetahui Alamat IP Lokal Komputer Anda
-Pertama, Anda perlu mengetahui alamat IP lokal komputer Anda di jaringan WiFi.
-- **Di Mac/Linux:** Buka terminal dan jalankan perintah `ifconfig` atau `ipconfig getifaddr en0`. (Sebagai contoh: `192.168.1.37`).
-- **Di Windows:** Buka Command Prompt dan jalankan perintah `ipconfig`. Cari baris `IPv4 Address`.
+---
 
-## 2. Menjalankan Server Backend (Laravel)
-Secara default, `php artisan serve` hanya melayani permintaan dari komputer itu sendiri (127.0.0.1). Agar bisa diakses dari luar, jalankan server dengan mengeksposnya ke semua antarmuka jaringan (`0.0.0.0`) atau secara spesifik ke IP lokal Anda.
+## 🛠️ Langkah 1: Mencari IP Address Host
+Buka **Terminal** di laptop pusat (Host), lalu ketik:
+```bash
+ipconfig getifaddr en0
+```
+*(Jika tidak muncul atau menggunakan kabel LAN, coba `en1`).*
+**Contoh hasil:** `192.168.1.37`
 
-Buka terminal di root project dan jalankan:
+---
+
+## ⚙️ Langkah 2: Update Konfigurasi Sistem
+Buka file `.env` di folder project, cari baris `APP_URL` dan sesuaikan dengan IP yang didapat:
+```env
+APP_URL=http://192.168.1.XX:8000
+```
+*(Ganti `192.168.1.XX` dengan kode IP Anda).*
+
+---
+
+## 🚀 Langkah 3: Menjalankan Server (Host)
+Bapak perlu membuka **dua (2) jendela Terminal** dan biarkan keduanya tetap berjalan:
+
+**Terminal 1 (Server Laravel):**
 ```bash
 php artisan serve --host=0.0.0.0 --port=8000
 ```
-*(Catatan: Anda juga bisa menggunakan spesifik IP lokal Anda, misal: `--host=192.168.1.37`)*
 
-## 3. Menjalankan Server Frontend (Vite)
-Aplikasi ini menggunakan Vite untuk memuat aset (CSS/JS). Secara default, server Vite juga diisolasi hanya untuk localhost. Anda harus mengeksposnya agar tampilan tidak "rusak" saat diakses perangkat lain.
-
-Buka terminal **baru/kedua** di root project dan jalankan perintah:
+**Terminal 2 (Aset & Styling):**
 ```bash
 npm run dev -- --host
 ```
 
-## 4. Mengakses Aplikasi dari Perangkat Lain
-1. Pastikan perangkat lain (misal: Handphone Anda) terhubung ke jaringan **WiFi yang sama** dengan komputer Anda.
-2. Buka web browser (Chrome/Safari) di Handphone tersebut.
-3. Kunjungi URL dengan format `http://[IP_LOKAL_ANDA]:8000`. 
-   
-   **Contoh:**
-   `http://192.168.1.37:8000`
+---
 
-### Troubleshooting
-- **Website tidak bisa dimuat sama sekali:** Pastikan Firewall di komputer Anda (Windows Defender Firewall / macOS Firewall) tidak memblokir koneksi masuk (incoming connections) untuk port 8000 atau PHP.
-- **Halaman dimuat tapi CSS/JS (tampilan) hancur:** Pastikan layanan Vite (`npm run dev`) sudah dijalankan dengan "flag" `--host`.
+## 💻 Langkah 4: Akses oleh User/Laptop Lain
+Beri tahu rekan tim/penguji untuk membuka browser dan mengetik alamat:
+> **ALAMAT:** `http://192.168.1.XX:8000`
+
+---
+
+## 🔍 Troubleshooting (Jika Gagal Akses)
+1. **Pastikan Wi-Fi Sama:** Laptop Host dan Laptop User harus terhubung ke SSID Wi-Fi yang sama.
+2. **Cek Firewall Mac:** 
+   - Masuk ke *System Settings > Network > Firewall*.
+   - Pastikan *Allow incoming connections* diaktifkan atau Firewall dimatikan sementara saat uji coba.
+3. **Internal Error Aset:** Jika tampilan berantakan (CSS tidak muncul), pastikan perintah `npm run dev -- --host` sudah berjalan dengan IP yang benar.
+4. **IP Berubah:** Jika laptop Host melakukan *restart* Wi-Fi, ulangi **Langkah 1** karena kemungkinan angka IP berubah.
+
+---
+*Vetted by AI - Manual Review Required by Senior Engineer/Manager*
+*"Efficiency is the goal, but Integrity is the foundation."*

@@ -1,16 +1,7 @@
 <div>
     {{-- Vetted by AI - Manual Review Required by Senior Engineer/Manager --}}
     <x-slot:pageHeader>
-        <div class="mb-2">
-            <h2 class="page-title text-indigo fw-bold">{{ __('Manajemen Arsip Data (Legacy)') }}</h2>
-            <div class="text-secondary">
-                {{ __('Pusat repositori penelitian dan pengabdian masyarakat tahun-tahun sebelumnya. Memastikan kontinuitas rekam jejak akademik ITSNU.') }}
-            </div>
-        </div>
-        <div class="mt-2 text-muted small d-flex align-items-center">
-            <i class="ti ti-archive me-1 text-indigo"></i>
-            {{ __('Data di bawah ini merupakan pindahan dari sistem lama atau import manual Excel.') }}
-        </div>
+        {{-- Header empty as requested --}}
     </x-slot:pageHeader>
 
     <x-slot:pageActions>

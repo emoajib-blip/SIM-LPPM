@@ -1,28 +1,6 @@
 <div class="row row-cards">
     {{-- Vetted by AI - Manual Review Required by Senior Engineer/Manager --}}
-    {{-- Header Info --}}
-    <div class="col-12">
-        <div class="card border-0 shadow-sm bg-primary-lt mb-1">
-            <div class="card-body py-3 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
-                <div class="d-flex align-items-center">
-                    <div class="avatar avatar-md bg-white text-primary rounded shadow-sm me-3">
-                        <i class="ti ti-database-export fs-3"></i>
-                    </div>
-                    <div>
-                        <h2 class="mb-0 fw-bold text-primary">Export SINTA</h2>
-                        <div class="text-secondary small">
-                            <i class="ti ti-file-spreadsheet me-1"></i>Format Excel Kompatibel
-                        </div>
-                    </div>
-                </div>
-                <a href="https://sinta.kemdiktisaintek.go.id/authorverification" target="_blank" class="btn btn-primary shadow-sm">
-                    <i class="ti ti-external-link me-2"></i> Buka Portal SINTA
-                </a>
-            </div>
-        </div>
-    </div>
-
-    {{-- Year Filter --}}
+    {{-- Year Filter & SINTA Portal --}}
     <div class="col-12">
         <div class="card border-0 shadow-sm">
             <div class="card-body d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -31,8 +9,11 @@
                     <div class="text-muted small">Pilih tahun anggaran data yang akan diekspor ke SINTA</div>
                 </div>
                 <div class="d-flex align-items-center gap-2">
+                    <a href="https://sinta.kemdiktisaintek.go.id/authorverification" target="_blank" class="btn btn-outline-primary btn-sm d-none d-sm-inline-flex" style="font-size: 0.75rem;">
+                        <i class="ti ti-external-link me-1"></i> Buka Portal SINTA
+                    </a>
                     <div class="input-group">
-                        <span class="input-group-text bg-transparent">
+                        <span class="input-group-text bg-white border-end-0">
                             <i class="ti ti-calendar-event text-primary"></i>
                         </span>
                         <select class="form-select" wire:model.live="selectedYear" style="min-width: 130px;">

@@ -34,68 +34,53 @@ class LecturerEligibilityService
         if ($currentMonth >= 9 || $currentMonth <= 2) {
             // We are in Ganjil semester
             $currentSemester = 'ganjil';
-            // Current cycle: (Year)/ (Year+1) or (Year-1)/ (Year)
             $prevSemester = 'genap';
             $prevYear = ($currentMonth >= 9) ? $currentYear : $currentYear - 1;
         } else {
             // We are in Genap semester
             $currentSemester = 'genap';
             $prevSemester = 'ganjil';
-            $prevYear = $currentYear - 1; // Ganjil started in the previous calendar year
+            $prevYear = $currentYear - 1;
         }
 
         $reasons = [];
 
+        // --- 1. Schedule Validation ---
+        $scheduleInfo = $this->getScheduleStatus();
+        if (! $scheduleInfo['research_open'] && ! $scheduleInfo['pkm_open']) {
+            $reasons[] = 'Sistem saat ini ditutup untuk pengajuan usulan baru (bukan periode pendaftaran).';
+        }
+
+        // --- 2. Historical Obligation Checks ---
         // Find all proposals where user was chairperson in the previous period
-        // We only care about approved/completed proposals that have reporting obligations
         $prevProposals = Proposal::where('submitter_id', $user->id)
             ->whereIn('status', [ProposalStatus::APPROVED, ProposalStatus::COMPLETED])
             ->where(function ($query) use ($prevYear, $prevSemester) {
-                // Match the month range logic from dashboards
                 if ($prevSemester === 'ganjil') {
-                    // Ganjil spans two years (Sept Y to Feb Y+1)
-                    // We look for creation in Sept-Dec of prevYear OR Jan-Feb of prevYear+1
                     $query->where(function ($q) use ($prevYear) {
                         $q->where(function ($sq) use ($prevYear) {
-                            $sq->whereYear('created_at', $prevYear)
-                                ->whereMonth('created_at', '>=', 9);
+                            $sq->whereYear('created_at', $prevYear)->whereMonth('created_at', '>=', 9);
                         })->orWhere(function ($sq) use ($prevYear) {
-                            $sq->whereYear('created_at', $prevYear + 1)
-                                ->whereMonth('created_at', '<=', 2);
+                            $sq->whereYear('created_at', $prevYear + 1)->whereMonth('created_at', '<=', 2);
                         });
                     });
                 } else {
-                    // Genap is within one calendar year (March to August)
-                    $query->whereYear('created_at', $prevYear)
-                        ->whereMonth('created_at', '>=', 3)
-                        ->whereMonth('created_at', '<=', 8);
+                    $query->whereYear('created_at', $prevYear)->whereMonth('created_at', '>=', 3)->whereMonth('created_at', '<=', 8);
                 }
             })
             ->get();
 
         foreach ($prevProposals as $proposal) {
-            // 1. Check for Final Report
-            // A final report must exist and be either approved or completed
-            $hasFinalReport = ProgressReport::where('proposal_id', $proposal->id)
-                ->where('reporting_period', 'final')
-                ->whereIn('status', ['approved', 'completed'])
-                ->exists();
-
+            // Check for Final Report
+            $hasFinalReport = ProgressReport::where('proposal_id', $proposal->id)->where('reporting_period', 'final')->whereIn('status', ['approved', 'completed'])->exists();
             if (! $hasFinalReport) {
-                $reasons[] = "Proposal '{$proposal->title}' periode ".ucfirst($prevSemester).' '.($prevSemester === 'ganjil' ? "$prevYear/".($prevYear + 1) : $prevYear).' belum memiliki Laporan Akhir yang disetujui.';
+                $reasons[] = "Proposal '{$proposal->title}' belum memiliki Laporan Akhir yang disetujui.";
             }
 
-            // 2. Check for Mandatory Outputs
-            // Get all target outputs defined for this proposal
+            // Check for Mandatory Outputs
             $targets = $proposal->outputs()->where('category', 'Wajib')->get();
             foreach ($targets as $target) {
-                // Check if there is a corresponding MandatoryOutput submitted in any report for this proposal
-                $isSubmitted = DB::table('mandatory_outputs')
-                    ->join('progress_reports', 'mandatory_outputs.progress_report_id', '=', 'progress_reports.id')
-                    ->where('progress_reports.proposal_id', $proposal->id)
-                    ->where('mandatory_outputs.proposal_output_id', $target->id)
-                    ->exists();
-
+                $isSubmitted = DB::table('mandatory_outputs')->join('progress_reports', 'mandatory_outputs.progress_report_id', '=', 'progress_reports.id')->where('progress_reports.proposal_id', $proposal->id)->where('mandatory_outputs.proposal_output_id', $target->id)->exists();
                 if (! $isSubmitted) {
                     $reasons[] = "Proposal '{$proposal->title}' belum memenuhi luaran wajib: {$target->type}.";
                 }
@@ -111,6 +96,29 @@ class LecturerEligibilityService
                 'checked_semester' => $prevSemester,
                 'checked_year' => $prevYear,
             ],
+            'schedule' => $scheduleInfo,
+        ];
+    }
+
+    /**
+     * Get the open/closed status for research and pkm based on admin settings.
+     */
+    public function getScheduleStatus(): array
+    {
+        $now = Carbon::now();
+
+        $resStart = \App\Models\Setting::where('key', 'research_proposal_start_date')->value('value');
+        $resEnd = \App\Models\Setting::where('key', 'research_proposal_end_date')->value('value');
+        $pkmStart = \App\Models\Setting::where('key', 'community_service_proposal_start_date')->value('value');
+        $pkmEnd = \App\Models\Setting::where('key', 'community_service_proposal_end_date')->value('value');
+
+        return [
+            'research_open' => $resStart && $resEnd && $now->between($resStart, $resEnd),
+            'research_dates' => ['start' => $resStart, 'end' => $resEnd],
+            'research_schemes' => \App\Models\ResearchScheme::pluck('name')->toArray(),
+            'pkm_open' => $pkmStart && $pkmEnd && $now->between($pkmStart, $pkmEnd),
+            'pkm_dates' => ['start' => $pkmStart, 'end' => $pkmEnd],
+            'pkm_schemes' => \App\Models\CommunityServiceScheme::pluck('name')->toArray(),
         ];
     }
 }

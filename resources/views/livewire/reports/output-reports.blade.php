@@ -1,8 +1,7 @@
 <x-slot:title>Laporan Luaran</x-slot:title>
-<x-slot:pageTitle>Laporan Luaran</x-slot:pageTitle>
-<x-slot:pageSubtitle>
-    Laporan semua luaran penelitian dan pengabdian masyarakat
-</x-slot:pageSubtitle>
+<x-slot:pageHeader>
+    {{-- Header empty as requested --}}
+</x-slot:pageHeader>
 
 <!-- Statistics Cards -->
 <div>
