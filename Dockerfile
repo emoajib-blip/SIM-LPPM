@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Application
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # 1. Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -23,13 +23,14 @@ RUN apt-get update && apt-get install -y \
 # 2. Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
-        pdo_mysql \
-        bcmath \
-        gd \
-        zip \
-        intl \
-        pcntl \
-        opcache
+    pdo_mysql \
+    bcmath \
+    gd \
+    zip \
+    intl \
+    pcntl \
+    opcache \
+    exif
 
 # 3. Configure Apache
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
@@ -45,6 +46,10 @@ WORKDIR /var/www/html
 
 # 6. Copy application files
 COPY . .
+
+# 7. Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
 RUN rm -rf public/build
 
 # 7. Copy built assets from builder stage

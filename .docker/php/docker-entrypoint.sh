@@ -4,9 +4,9 @@ set -e
 # Tunggu database siap (opsional tapi disarankan di entrypoint)
 # php artisan db:wait --timeout=30
 
+# Vendor check is now done in Dockerfile, but keeping a failsafe
 if [ ! -f "/var/www/html/vendor/autoload.php" ]; then
-    echo "Composer dependencies not found. Skipping artisan tasks."
-    exec "$@"
+    echo "Warning: Composer dependencies still missing!"
 fi
 
 LOCK_FILE="/var/www/html/storage/app/.installed"

@@ -8,9 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        Schema::dropIfExists('reviewer_profiles');
         Schema::create('reviewer_profiles', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
 
             // Flexible Institution Linking
             // If institution_id is set, use relation.
