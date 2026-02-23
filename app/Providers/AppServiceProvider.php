@@ -6,6 +6,7 @@ use App\Models\Proposal;
 use App\Observers\ProposalObserver;
 use App\View\Composers\MenuComposer;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -42,6 +43,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS if running behind an HTTPS proxy (Cloudflare)
+        if (request()->header('X-Forwarded-Proto') === 'https' || str_contains(config('app.url'), 'https://')) {
+            if (! in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1'])) {
+                URL::forceRootUrl(config('app.url'));
+                URL::forceScheme('https');
+            }
+        }
+
         // Only run observers when installed
         if ($this->isInstalled()) {
             View::composer('components.layouts.header', MenuComposer::class);
