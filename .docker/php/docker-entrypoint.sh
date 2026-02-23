@@ -15,6 +15,11 @@ if [ -f "$LOCK_FILE" ]; then
     echo "Installer lock found. Running migrations..."
     php artisan migrate --force
 
+    if [ "$DB_SEED" = "true" ]; then
+        echo "DB_SEED is true. Running seeders..."
+        php artisan db:seed --force
+    fi
+
     echo "Optimizing Laravel..."
     php artisan optimize:clear
     php artisan optimize

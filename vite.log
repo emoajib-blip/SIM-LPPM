@@ -2,30 +2,13 @@
 > dev
 > vite
 
-Port 5173 is in use, trying another one...
-Port 5174 is in use, trying another one...
 
-  VITE v7.0.6  ready in 440 ms
+  VITE v7.0.6  ready in 460 ms
 
-  ➜  Local:   http://localhost:5175/
+  ➜  Local:   http://localhost:5173/
   ➜  Network: use --host to expose
   ➜  press h + enter to show help
 
   LARAVEL v12.49.0  plugin v2.0.0
 
   ➜  APP_URL: http://localhost:8000
-12:34:01 AM [vite] full reload resources/views/livewire/admin-lppm/export-sinta.blade.php
-12:34:01 AM [vite] full reload resources/views/livewire/admin-lppm/export-sinta.blade.php
-12:34:12 AM [vite] full reload resources/views/livewire/admin-lppm/export-sinta.blade.php
-12:34:12 AM [vite] full reload resources/views/livewire/admin-lppm/export-sinta.blade.php
-12:36:41 AM [vite] full reload resources/views/livewire/admin/archive/manage-archives.blade.php
-12:36:41 AM [vite] full reload resources/views/livewire/admin/archive/manage-archives.blade.php
-12:36:52 AM [vite] full reload resources/views/livewire/admin/archive/manage-archives.blade.php
-12:36:52 AM [vite] full reload resources/views/livewire/admin/archive/manage-archives.blade.php
-12:37:48 AM [vite] full reload resources/views/livewire/admin/archive/manage-archives.blade.php
-12:37:48 AM [vite] full reload resources/views/livewire/admin/archive/manage-archives.blade.php
-12:37:48 AM [vite] full reload resources/views/livewire/admin/archive/manage-archives.blade.php
-12:38:56 AM [vite] full reload resources/views/livewire/admin-lppm/export-sinta.blade.php
-12:40:06 AM [vite] full reload resources/views/livewire/admin-lppm/export-sinta.blade.php
-12:41:32 AM [vite] full reload resources/views/livewire/admin-lppm/export-sinta.blade.php
-12:44:52 AM [vite] full reload resources/views/livewire/admin-lppm/export-sinta.blade.php
