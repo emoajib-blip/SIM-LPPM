@@ -1,27 +1,26 @@
 # Stage 1: Build Assets
-FROM oven/bun:latest AS asset-builder
+FROM node:20-alpine AS asset-builder
 WORKDIR /app
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+COPY package*.json ./
+RUN npm install
 COPY . .
-RUN bun run build
+RUN npm run build
 
 # Stage 2: Application
-FROM php:8.4-fpm-alpine
+FROM php:8.2-apache
 
-# Install system dependencies
-RUN apk add --no-cache \
+# 1. Install system dependencies
+RUN apt-get update && apt-get install -y \
     libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     libzip-dev \
-    icu-dev \
-    oniguruma-dev \
-    bash \
+    libicu-dev \
+    unzip \
     git \
-    linux-headers
+    && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
+# 2. Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
@@ -30,34 +29,43 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         zip \
         intl \
         pcntl \
-        opcache \
-        mbstring \
-    && docker-php-ext-enable opcache
+        opcache
 
-# Get Composer
+# 3. Configure Apache
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN a2enmod rewrite headers
+
+# 4. Get Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www
+# 5. Set working directory
+WORKDIR /var/www/html
 
-# Copy application files (excluding built assets)
+# 6. Copy application files
 COPY . .
 RUN rm -rf public/build
 
-# Copy built assets from builder stage
+# 7. Copy built assets from builder stage
 COPY --from=asset-builder /app/public/build ./public/build
 
-# Set permissions for Laravel
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
-    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+# 8. Set permissions for Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# PHP-FPM default configuration
-COPY .docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
+# 9. Cloud Run specific configuration
+# Cloud Run listens on 8080 by default
+RUN sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
-# Setup Entrypoint for Auto-Migration
+# 10. Optimized PHP production settings
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+EXPOSE 8080
+
+# Entrypoint to handle migrations & start apache
 COPY .docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-EXPOSE 9000
-CMD ["php-fpm"]
+CMD ["apache2-foreground"]
