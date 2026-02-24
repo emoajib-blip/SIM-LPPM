@@ -33,6 +33,10 @@ class ProposalExportController extends Controller
 
         $filename = 'Proposal_'.str_replace(' ', '_', substr($proposal->title, 0, 50)).'.pdf';
 
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
         return response()->download($pdfPath, $filename)->deleteFileAfterSend(true);
     }
 
@@ -54,6 +58,10 @@ class ProposalExportController extends Controller
         }
 
         $pdfPath = $this->pdfService->export($proposal);
+
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
 
         return response()->file($pdfPath, [
             'Content-Type' => 'application/pdf',

@@ -27,3 +27,16 @@ it('formats role names correctly', function () {
     expect(format_role_name('dosen'))->toBe('Dosen');
     expect(format_role_name('kepala lppm'))->toBe('Kepala Lppm');
 });
+
+it('format_name helper combines prefix and suffix correctly', function () {
+    expect(format_name('Dr.', 'Budi Santoso', 'M.Sc.'))
+        ->toBe('Dr. Budi Santoso, M.Sc.');
+
+    expect(format_name('Dr.', 'Dr. Budi', ''))
+        ->toBe('Dr. Budi');
+
+    expect(format_name('', 'Anna', 'S.T.'))
+        ->toBe('Anna, S.T.');
+
+    expect(format_name('', 'Candra', ''))->toBe('Candra');
+});

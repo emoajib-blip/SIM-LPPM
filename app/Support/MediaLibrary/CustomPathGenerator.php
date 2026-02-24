@@ -34,8 +34,13 @@ class CustomPathGenerator implements PathGenerator
         if ($model instanceof \App\Models\User) {
             $user = $model;
         } elseif (method_exists($model, 'submitter')) {
+            /** @var \App\Models\User|null $user */
+            // property access is intentional: Laravel relationship
+            // @phpstan-ignore-next-line
             $user = $model->submitter;
         } elseif (method_exists($model, 'user')) {
+            /** @var \App\Models\User|null $user */
+            // @phpstan-ignore-next-line
             $user = $model->user;
         }
 

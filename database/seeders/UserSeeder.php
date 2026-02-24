@@ -8,11 +8,15 @@ use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
+    use SeedHelper;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        // ensure no duplicate emails before we start creating users
+        $this->assertUnique(\App\Models\User::class, 'email');
         // Get institutions and study programs
         $institution = \App\Models\Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
             ?? \App\Models\Institution::first();
@@ -106,5 +110,8 @@ class UserSeeder extends Seeder
         $this->command->info('Users seeded successfully!');
         $this->command->info('Total users created: '.\App\Models\User::count());
         $this->command->info('Faculties used: '.$faculties->pluck('name')->implode(', '));
+
+        // sanity check again after seeding
+        $this->assertUnique(\App\Models\User::class, 'email');
     }
 }

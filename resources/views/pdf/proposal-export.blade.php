@@ -141,20 +141,13 @@
     </div>
 
     @php 
-        $sectionNum = 1; 
-        if (!function_exists('formatName')) {
-            function formatName($prefix, $name, $suffix) {
-                $fullName = trim($name);
-                if (!empty($prefix) && !str_starts_with($fullName, $prefix) && !str_contains($fullName, $prefix . ' ')) {
-                    $fullName = $prefix . ' ' . $fullName;
-                }
-                if (!empty($suffix) && !str_ends_with($fullName, $suffix) && !str_contains($fullName, ', ' . $suffix)) {
-                    $fullName = $fullName . ', ' . $suffix;
-                }
-                return trim($fullName, ' ,');
-            }
-        }
-        $submitterFullName = formatName($proposal->submitter->identity->title_prefix ?? '', $proposal->submitter->name, $proposal->submitter->identity->title_suffix ?? '');
+        $sectionNum = 1;
+        // use the shared helper instead of duplicating logic
+        $submitterFullName = format_name(
+            $proposal->submitter->identity->title_prefix ?? '',
+            $proposal->submitter->name,
+            $proposal->submitter->identity->title_suffix ?? ''
+        );
     @endphp
 
     {{-- 1. JUDUL --}}
@@ -254,7 +247,7 @@
                 @if($member->identity?->type === 'dosen' || $member->pivot->role === 'anggota' || $member->pivot->role === 'dosen')
                 <tr>
                     <td>
-                        <span class="font-bold">{{ strtoupper(formatName($member->identity->title_prefix ?? '', $member->name, $member->identity->title_suffix ?? '')) }}</span><br>
+                        <span class="font-bold">{{ strtoupper(format_name($member->identity->title_prefix ?? '', $member->name, $member->identity->title_suffix ?? '')) }}</span><br>
                         Anggota Pelaksana
                     </td>
                     <td>{{ $member->identity->institution->name ?? '-' }}</td>
@@ -565,7 +558,7 @@
         <tr>
             <td></td>
             <td style="padding-left: 20px;">a. Nama Lengkap</td>
-            <td>{{ formatName($member->identity->title_prefix ?? '', $member->name, $member->identity->title_suffix ?? '') }}</td>
+            <td>{{ format_name($member->identity->title_prefix ?? '', $member->name, $member->identity->title_suffix ?? '') }}</td>
         </tr>
         <tr>
             <td></td>

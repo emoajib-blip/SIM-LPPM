@@ -32,7 +32,6 @@ class CommunityService extends Component
         $this->period = $period;
     }
 
-    #[\Livewire\Attributes\On('report-export-pdf')]
     public function exportPdf()
     {
         $proposals = $this->getBaseQuery()->get();
@@ -49,7 +48,6 @@ class CommunityService extends Component
         ]);
     }
 
-    #[\Livewire\Attributes\On('report-export-excel')]
     public function exportExcel()
     {
         return \Maatwebsite\Excel\Facades\Excel::download(

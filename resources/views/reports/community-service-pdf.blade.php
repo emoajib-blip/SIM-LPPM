@@ -116,24 +116,14 @@
             $lppm = \App\Models\User::role('kepala lppm')->with('identity')->first();
             $rektor = \App\Models\User::role('rektor')->with('identity')->first();
             
-            $formatName = function ($user) {
-                if (!$user) return null;
-                $name = trim($user->name);
-                $prefix = trim($user->identity?->title_prefix);
-                $suffix = trim($user->identity?->title_suffix);
-                
-                if ($prefix && !str_contains($name, $prefix)) {
-                    $name = $prefix . ' ' . $name;
-                }
-                if ($suffix && !str_contains($name, $suffix)) {
-                    $name = $name . (str_starts_with($suffix, ',') ? '' : ', ') . $suffix;
-                }
-                return $name;
-            };
-
-            $lppmName = $formatName($lppm) ?? 'Kepala LPPM';
+            // use shared helper
+            $lppmName = $lppm
+                ? format_name($lppm->identity->title_prefix ?? '', $lppm->name, $lppm->identity->title_suffix ?? '')
+                : 'Kepala LPPM';
             $lppmNIDN = $lppm?->identity?->identity_id ?? '-';
-            $rektorName = $formatName($rektor) ?? 'Rektor';
+            $rektorName = $rektor
+                ? format_name($rektor->identity->title_prefix ?? '', $rektor->name, $rektor->identity->title_suffix ?? '')
+                : 'Rektor';
             $rektorNIDN = $rektor?->identity?->identity_id ?? '-';
         @endphp
         <table class="signature-table">

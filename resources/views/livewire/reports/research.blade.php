@@ -24,14 +24,14 @@
                 </ul>
             </div>
             <div class="hr-vertical mx-1 d-none d-md-block"></div>
-            <button onclick="Livewire.dispatch('report-export-excel')" class="btn btn-outline-success shadow-sm" wire:loading.attr="disabled">
+            <a href="{{ route('reports.research.excel', ['period' => $period]) }}" class="btn btn-outline-success shadow-sm" data-navigate-ignore="true">
                 <i class="ti ti-table me-2"></i>
                 {{ __('Unduh Excel') }}
-            </button>
-            <button onclick="Livewire.dispatch('report-export-pdf')" class="btn btn-outline-danger shadow-sm" wire:loading.attr="disabled">
+            </a>
+            <a href="{{ route('reports.research.pdf', ['period' => $period]) }}" class="btn btn-outline-danger shadow-sm" data-navigate-ignore="true">
                 <i class="ti ti-file-type-pdf me-2"></i>
                 {{ __('Unduh PDF') }}
-            </button>
+            </a>
         </div>
     </x-slot:pageActions>
 

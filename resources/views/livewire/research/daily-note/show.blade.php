@@ -190,8 +190,8 @@
                                                         <small>{{ $media->file_name }}</small>
                                                     </a>
                                                 @else
-                                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(15), ['media' => $media]) }}" target="_blank"
-                                                        class="text-decoration-none text-truncate"
+                                                    <a href="{{ URL::signedRoute('media.download', ['media' => $media]) }}" target="_blank"
+                                                        class="text-decoration-none text-truncate" data-navigate-ignore="true"
                                                         style="max-width: 150px;" title="{{ $media->file_name }}">
                                                         <x-lucide-file-text class="icon-inline me-1 text-muted icon" />
                                                         <small>{{ $media->file_name }}</small>

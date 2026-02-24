@@ -15,6 +15,10 @@ class SintaExportController extends Controller
         $year = $request->query('year', date('Y'));
         $filename = 'SINTA_Penelitian_'.$year.'_'.now()->format('YmdHis').'.xlsx';
 
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
         return Excel::download(new SintaResearchExport($year), $filename);
     }
 
@@ -22,6 +26,10 @@ class SintaExportController extends Controller
     {
         $year = $request->query('year', date('Y'));
         $filename = 'SINTA_PengabdianMasyarakat_'.$year.'_'.now()->format('YmdHis').'.xlsx';
+
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
 
         return Excel::download(new SintaCommunityServiceExport($year), $filename);
     }

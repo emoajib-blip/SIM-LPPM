@@ -33,7 +33,7 @@
                                 <strong>{{ $media->name }}</strong>
                                 <small class="ms-2 text-muted">({{ $media->human_readable_size }})</small>
                             </div>
-                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
                                 class="btn-outline-primary btn btn-sm">
                                 <x-lucide-download class="icon" />
                                 Download

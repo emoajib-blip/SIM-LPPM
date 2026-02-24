@@ -58,7 +58,6 @@ class OutputReports extends Component
         $this->resetPage();
     }
 
-    #[\Livewire\Attributes\On('report-export-pdf')]
     public function exportPdf()
     {
         $proposals = $this->getProposalsQuery()->get();
@@ -76,7 +75,6 @@ class OutputReports extends Component
         ]);
     }
 
-    #[\Livewire\Attributes\On('report-export-excel')]
     public function exportExcel()
     {
         return \Maatwebsite\Excel\Facades\Excel::download(

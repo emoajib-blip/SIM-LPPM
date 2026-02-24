@@ -134,7 +134,7 @@
                                 <strong>{{ $media->name }}</strong>
                                 <small class="text-muted ms-2">({{ $media->human_readable_size }})</small>
                             </div>
-                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-sm btn-primary">
+                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank" class="btn btn-sm btn-primary">
                                 <x-lucide-eye class="icon" /> Lihat
                             </a>
                         </div>
@@ -170,7 +170,7 @@
                                 <strong>{{ $media->name }}</strong>
                                 <small class="text-muted ms-2">({{ $media->human_readable_size }})</small>
                             </div>
-                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-sm btn-primary">
+                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank" class="btn btn-sm btn-primary">
                                 <x-lucide-eye class="icon" /> Lihat
                             </a>
                         </div>
@@ -206,7 +206,7 @@
                                 <strong>{{ $media->name }}</strong>
                                 <small class="text-muted ms-2">({{ $media->human_readable_size }})</small>
                             </div>
-                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-sm btn-primary">
+                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank" class="btn btn-sm btn-primary">
                                 <x-lucide-eye class="icon" /> Lihat
                             </a>
                         </div>
@@ -248,7 +248,7 @@
                                     <strong>{{ $media->name }}</strong>
                                     <small class="text-muted ms-2">({{ $media->human_readable_size }})</small>
                                 </div>
-                                <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-sm btn-primary">
+                                <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank" class="btn btn-sm btn-primary">
                                     <x-lucide-eye class="icon" /> Lihat
                                 </a>
                             </div>
@@ -327,7 +327,7 @@
                                             @php
                                                 $media = $rowMandatoryOutput->getFirstMedia('journal_article');
                                             @endphp
-                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank"
                                                 class="btn btn-sm btn-success">
                                                 <x-lucide-file-check class="icon icon-sm" />
                                                 Lihat Dokumen
@@ -435,7 +435,7 @@
                                                     @php
                                                         $media = $rowAdditionalOutput->getFirstMedia('book_document');
                                                     @endphp
-                                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                                                    <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
                                                         class="btn btn-sm btn-success">
                                                         <x-lucide-book class="icon icon-sm" />
                                                         Buku
@@ -448,7 +448,7 @@
                                                             'publication_certificate',
                                                         );
                                                     @endphp
-                                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                                                    <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank"
                                                         class="btn btn-sm btn-info">
                                                         <x-lucide-award class="icon icon-sm" />
                                                         Sertifikat
@@ -854,7 +854,7 @@
                                                 <small class="text-muted">({{ number_format($media->size / 1024, 2) }}
                                                     KB)</small>
                                             </div>
-                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
                                                 class="btn btn-sm btn-primary">
                                                 <x-lucide-download class="icon" /> Download
                                             </a>
@@ -1092,7 +1092,7 @@
                                             <div class="flex-fill text-truncate">
                                                 <strong>{{ $media->name }}</strong>
                                             </div>
-                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
                                                 class="btn btn-sm btn-primary">
                                                 <x-lucide-eye class="icon" /> Lihat
                                             </a>
@@ -1115,7 +1115,7 @@
                                             <div class="flex-fill text-truncate">
                                                 <strong>{{ $media->name }}</strong>
                                             </div>
-                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
+                                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
                                                 class="btn btn-sm btn-info">
                                                 <x-lucide-eye class="icon" /> Lihat
                                             </a>

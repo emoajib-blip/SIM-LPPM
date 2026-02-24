@@ -37,6 +37,20 @@ class UserActivityListener
     }
 
     /**
+     * Handle failed login attempts.
+     */
+    public function handleFailed($event): void
+    {
+        \App\Models\ActivityLog::create([
+            'user_id' => $event->user?->id,
+            'activity' => 'login_failed',
+            'description' => 'Gagal login. Email/Username: '.($event->credentials['email'] ?? ($event->credentials['username'] ?? 'unknown')),
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+    }
+
+    /**
      * Register the listeners for the subscriber.
      *
      * @return array<string, string>
@@ -46,6 +60,7 @@ class UserActivityListener
         return [
             \Illuminate\Auth\Events\Login::class => 'handleLogin',
             \Illuminate\Auth\Events\Logout::class => 'handleLogout',
+            \Illuminate\Auth\Events\Failed::class => 'handleFailed',
         ];
     }
 }

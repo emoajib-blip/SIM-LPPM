@@ -13,7 +13,7 @@
     <form wire:submit.prevent="save" class="card card-stacked" novalidate>
         <div class="card-body">
             <div class="row g-4">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="mb-3">
                         <label class="form-label" for="create-name">
                             Nama <span class="text-danger">*</span>
@@ -21,6 +21,28 @@
                         <input id="create-name" type="text" class="form-control @error('name') is-invalid @enderror"
                             wire:model="name" autocomplete="name" placeholder="Masukkan nama lengkap" required>
                         @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="title-prefix">Gelar Depan</label>
+                        <input id="title-prefix" type="text" class="form-control @error('title_prefix') is-invalid @enderror"
+                            wire:model="title_prefix" placeholder="misal: Dr., Prof.">
+                        @error('title_prefix')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="title-suffix">Gelar Belakang</label>
+                        <input id="title-suffix" type="text" class="form-control @error('title_suffix') is-invalid @enderror"
+                            wire:model="title_suffix" placeholder="misal: S.Kom., M.Kom.">
+                        @error('title_suffix')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -171,7 +193,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="mb-3">
                         <label class="form-label" for="sinta-id">
                             ID SINTA <span class="text-muted">(opsional)</span>
@@ -180,6 +202,72 @@
                             class="form-control @error('sinta_id') is-invalid @enderror" wire:model="sinta_id"
                             placeholder="mis., 1234567">
                         @error('sinta_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="form-label" for="scopus-id">ID Scopus</label>
+                        <input id="scopus-id" type="text" class="form-control @error('scopus_id') is-invalid @enderror" 
+                            wire:model="scopus_id" placeholder="Author ID (misal: 572101...)">
+                        @error('scopus_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="form-label" for="gs-id">ID Google Scholar</label>
+                        <input id="gs-id" type="text" class="form-control @error('google_scholar_id') is-invalid @enderror" 
+                            wire:model="google_scholar_id" placeholder="User ID">
+                        @error('google_scholar_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="form-label" for="wos-id">ID Web of Science</label>
+                        <input id="wos-id" type="text" class="form-control @error('wos_id') is-invalid @enderror" 
+                            wire:model="wos_id" placeholder="Researcher ID">
+                        @error('wos_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="scopus-h">Scopus H-Index</label>
+                        <input id="scopus-h" type="number" class="form-control @error('scopus_h_index') is-invalid @enderror" 
+                            wire:model="scopus_h_index" min="0">
+                        @error('scopus_h_index')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="gs-h">GS H-Index</label>
+                        <input id="gs-h" type="number" class="form-control @error('gs_h_index') is-invalid @enderror" 
+                            wire:model="gs_h_index" min="0">
+                        @error('gs_h_index')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="wos-h">WoS H-Index</label>
+                        <input id="wos-h" type="number" class="form-control @error('wos_h_index') is-invalid @enderror" 
+                            wire:model="wos_h_index" min="0">
+                        @error('wos_h_index')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

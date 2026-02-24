@@ -42,6 +42,22 @@ class Create extends Component
 
     public ?string $sinta_id = null;
 
+    public ?string $scopus_id = null;
+
+    public ?string $google_scholar_id = null;
+
+    public ?string $wos_id = null;
+
+    public string $title_prefix = '';
+
+    public string $title_suffix = '';
+
+    public int $scopus_h_index = 0;
+
+    public int $gs_h_index = 0;
+
+    public int $wos_h_index = 0;
+
     public ?string $type = null;
 
     public ?string $institution_id = '1';
@@ -80,6 +96,14 @@ class Create extends Component
                 'birthdate' => $validated['birthdate'],
                 'birthplace' => $validated['birthplace'],
                 'sinta_id' => $validated['sinta_id'],
+                'scopus_id' => $validated['scopus_id'],
+                'google_scholar_id' => $validated['google_scholar_id'],
+                'wos_id' => $validated['wos_id'],
+                'title_prefix' => $validated['title_prefix'],
+                'title_suffix' => $validated['title_suffix'],
+                'scopus_h_index' => $validated['scopus_h_index'],
+                'gs_h_index' => $validated['gs_h_index'],
+                'wos_h_index' => $validated['wos_h_index'],
                 'type' => $validated['type'],
                 'institution_id' => $finalInstitutionId,
                 'institution_name' => $finalInstitutionName,
@@ -136,6 +160,14 @@ class Create extends Component
             'birthdate' => ['nullable', 'date', 'before:today'],
             'birthplace' => ['nullable', 'string', 'max:255'],
             'sinta_id' => ['nullable', 'string', 'max:255'],
+            'scopus_id' => ['nullable', 'string', 'max:255'],
+            'google_scholar_id' => ['nullable', 'string', 'max:255'],
+            'wos_id' => ['nullable', 'string', 'max:255'],
+            'title_prefix' => ['nullable', 'string', 'max:255'],
+            'title_suffix' => ['nullable', 'string', 'max:255'],
+            'scopus_h_index' => ['nullable', 'integer', 'min:0'],
+            'gs_h_index' => ['nullable', 'integer', 'min:0'],
+            'wos_h_index' => ['nullable', 'integer', 'min:0'],
             'type' => ['required', Rule::in('dosen', 'mahasiswa', 'reviewer')],
 
             // Internal/Standard logic vs External Reviewer logic

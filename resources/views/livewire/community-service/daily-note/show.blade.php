@@ -70,15 +70,18 @@
                     <tbody>
                         @foreach ($budget_groups as $group)
                             @php 
-                                $groupNotes = $notes_list->where('budget_group_id', $group->id);
+                                                        $groupNotes = $notes_list->where('budget_group_id', $group->id);
                                 $groupUsed = $groupNotes->sum('amount');
                                 $groupBudget = isset($budget_summaries[$group->id]) ? $budget_summaries[$group->id]->total_budget : 0;
                                 $groupSisa = $groupBudget - $groupUsed;
                                 $percentage = $groupBudget > 0 ? min(100, round(($groupUsed / $groupBudget) * 100)) : 0;
-                                
+
                                 $progressClass = 'bg-blue';
-                                if ($percentage >= 90) { $progressClass = 'bg-red'; }
-                                elseif ($percentage >= 75) { $progressClass = 'bg-yellow'; }
+                                if ($percentage >= 90) {
+                                    $progressClass = 'bg-red';
+                                } elseif ($percentage >= 75) {
+                                    $progressClass = 'bg-yellow';
+                                }
                             @endphp
                             <tr>
                                 <td class="ps-3 fw-medium text-secondary">
@@ -190,8 +193,9 @@
                                                         <small>{{ $media->file_name }}</small>
                                                     </a>
                                                 @else
-                                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(15), ['media' => $media]) }}" target="_blank"
-                                                        class="text-decoration-none text-truncate"
+                                                    <a href="{{ URL::signedRoute('media.download', ['media' => $media]) }}" target="_blank"
+                                                        download="{{ $media->file_name ?? $media->name ?? 'download' }}"
+                                                        class="text-decoration-none text-truncate" data-navigate-ignore="true"
                                                         style="max-width: 150px;" title="{{ $media->file_name }}">
                                                         <x-lucide-file-text class="icon-inline me-1 text-muted icon" />
                                                         <small>{{ $media->file_name }}</small>
@@ -396,14 +400,14 @@
                                                     <div class="d-flex align-items-center gap-2 overflow-hidden">
                                                         @if (str_starts_with($media->mime_type, 'image/'))
                                                             @php $signedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]); @endphp
-                                                            <a href="{{ $signedUrl }}" target="_blank">
+                                                            <a href="{{ $signedUrl }}" target="_blank" download="{{ $media->file_name ?? $media->name ?? 'download' }}">
                                                                 <img src="{{ $signedUrl }}"
                                                                     class="rounded object-cover"
                                                                     style="width: 40px; height: 40px;">
                                                             </a>
                                                         @else
                                                             @php $signedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]); @endphp
-                                                            <a href="{{ $signedUrl }}" target="_blank">
+                                                            <a href="{{ $signedUrl }}" target="_blank" download="{{ $media->file_name ?? $media->name ?? 'download' }}">
                                                                 <x-lucide-file class="text-muted icon" />
                                                             </a>
                                                         @endif

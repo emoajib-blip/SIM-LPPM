@@ -90,7 +90,6 @@ class PartnerCollaboration extends Component
         ];
     }
 
-    #[\Livewire\Attributes\On('report-export-pdf')]
     public function exportPdf(GetPartnerReportQuery $action)
     {
         $partners = $action->handle($this->search, $this->typeFilter, $this->periodFilter)->get();
@@ -108,7 +107,6 @@ class PartnerCollaboration extends Component
         ]);
     }
 
-    #[\Livewire\Attributes\On('report-export-excel')]
     public function exportExcel()
     {
         return \Maatwebsite\Excel\Facades\Excel::download(

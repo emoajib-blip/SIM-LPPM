@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 @php $media = $form->proposal->detailable->getFirstMedia('approval_file'); @endphp
-                <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-sm btn-outline-primary">
                     <x-lucide-external-link class="icon" />
                     Lihat File
                 </a>
@@ -161,7 +161,7 @@
                                         {{-- MOU/PKS dari Admin --}}
                                         @if ($partner->hasMedia('mou_pks'))
                                             @php $media = $partner->getFirstMedia('mou_pks'); @endphp
-                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
                                                target="_blank"
                                                class="btn btn-sm btn-outline-primary" title="MOU/PKS">
                                                 <x-lucide-file-text class="icon" />

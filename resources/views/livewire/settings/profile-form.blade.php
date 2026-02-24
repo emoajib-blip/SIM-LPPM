@@ -6,8 +6,7 @@
             @if ($photo)
                 <span class="avatar avatar-xl" style="background-image: url({{ $photo->temporaryUrl() }})"></span>
             @elseif (auth()->user()->profile_picture)
-                <span class="avatar avatar-xl"
-                    style="background-image: url({{ auth()->user()->profile_picture }})"></span>
+                <span class="avatar avatar-xl" style="background-image: url({{ auth()->user()->profile_picture }})"></span>
             @else
                 <span class="avatar avatar-xl">
                     {{ auth()->user()->initials() }}
@@ -60,16 +59,16 @@
     <div class="mt-1 row g-3">
         <div class="col-md-6">
             <div class="form-label">Gelar Depan</div>
-            <input type="text" class="form-control @error('title_prefix') is-invalid @enderror" wire:model="title_prefix"
-                placeholder="misal: Dr., Prof." />
+            <input type="text" class="form-control @error('title_prefix') is-invalid @enderror"
+                wire:model="title_prefix" placeholder="misal: Dr., Prof." />
             @error('title_prefix')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
         <div class="col-md-6">
             <div class="form-label">Gelar Belakang</div>
-            <input type="text" class="form-control @error('title_suffix') is-invalid @enderror" wire:model="title_suffix"
-                placeholder="misal: S.Kom., M.Kom." />
+            <input type="text" class="form-control @error('title_suffix') is-invalid @enderror"
+                wire:model="title_suffix" placeholder="misal: S.Kom., M.Kom." />
             @error('title_suffix')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -79,8 +78,8 @@
     <div class="mt-1 row g-3">
         <div class="col-md">
             <div class="form-label">NIDN/NUPTK <span class="text-danger">*</span></div>
-            <input type="text" class="form-control @error('identity_id') is-invalid @enderror"
-                wire:model="identity_id" placeholder="Masukkan NIDN/NUPTK" />
+            <input type="text" class="form-control @error('identity_id') is-invalid @enderror" wire:model="identity_id"
+                placeholder="Masukkan NIDN/NUPTK" />
             @error('identity_id')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -88,15 +87,15 @@
         {{-- <div class="col-md">
             <div class="form-label">Tipe User <span class="text-danger">*</span></div>
             <div wire:ignore>
-                <select class="form-select @error('type') is-invalid @enderror" wire:model="type"
-                    x-data="tomSelect" placeholder="Pilih Tipe">
+                <select class="form-select @error('type') is-invalid @enderror" wire:model="type" x-data="tomSelect"
+                    placeholder="Pilih Tipe">
                     <option value="">Pilih Tipe</option>
                     <option value="dosen">Dosen</option>
                     <option value="mahasiswa">Mahasiswa</option>
                 </select>
             </div>
             @error('type')
-                <div class="invalid-feedback">{{ $message }}</div>
+            <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div> --}}
         <div class="col-md">
@@ -121,29 +120,46 @@
         </div>
         <div class="col-md">
             <div class="form-label">ID Google Scholar</div>
-            <input type="text" class="form-control @error('google_scholar_id') is-invalid @enderror" wire:model="google_scholar_id"
-                placeholder="User ID (misal: yW3_...)" />
+            <input type="text" class="form-control @error('google_scholar_id') is-invalid @enderror"
+                wire:model="google_scholar_id" placeholder="User ID (misal: yW3_...)" />
             <small class="text-muted">Gunakan kode user ID (dari URL profil).</small>
             @error('google_scholar_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="col-md">
+            <div class="form-label">ID Web of Science</div>
+            <input type="text" class="form-control @error('wos_id') is-invalid @enderror" wire:model="wos_id"
+                placeholder="ResearcherID (misal: A-1234-20...) " />
+            <small class="text-muted">Gunakan ResearcherID atau Author ID.</small>
+            @error('wos_id')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
     </div>
 
     <div class="mt-1 row g-3">
-        <div class="col-md">
+        <div class="col-md-4">
             <div class="form-label">Scopus H-Index</div>
-            <input type="number" class="form-control @error('scopus_h_index') is-invalid @enderror" wire:model="scopus_h_index"
-                placeholder="0" min="0" />
+            <input type="number" class="form-control @error('scopus_h_index') is-invalid @enderror"
+                wire:model="scopus_h_index" placeholder="0" min="0" />
             @error('scopus_h_index')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <div class="col-md">
+        <div class="col-md-4">
             <div class="form-label">GS H-Index</div>
             <input type="number" class="form-control @error('gs_h_index') is-invalid @enderror" wire:model="gs_h_index"
                 placeholder="0" min="0" />
             @error('gs_h_index')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="col-md-4">
+            <div class="form-label">WoS H-Index</div>
+            <input type="number" class="form-control @error('wos_h_index') is-invalid @enderror"
+                wire:model="wos_h_index" placeholder="0" min="0" />
+            @error('wos_h_index')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
@@ -161,8 +177,7 @@
         </div>
         <div class="col-md">
             <div class="form-label">Tanggal Lahir</div>
-            <input type="date" class="form-control @error('birthdate') is-invalid @enderror"
-                wire:model="birthdate" />
+            <input type="date" class="form-control @error('birthdate') is-invalid @enderror" wire:model="birthdate" />
             @error('birthdate')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -183,7 +198,8 @@
             <div class="form-label">Institusi</div>
             <div wire:ignore>
                 <select class="form-select @error('institution_id') is-invalid @enderror"
-                    wire:model.live="institution_id" x-data="tomSelectWithCreate" placeholder="Pilih atau ketik Institusi">
+                    wire:model.live="institution_id" x-data="tomSelectWithCreate"
+                    placeholder="Pilih atau ketik Institusi">
                     <option value="">Pilih atau ketik Institusi</option>
                     @foreach ($institutions as $institution)
                         <option value="{{ $institution['id'] }}">{{ $institution['name'] }}</option>

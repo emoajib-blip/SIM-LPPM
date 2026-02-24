@@ -92,14 +92,16 @@
                     </div>
                     <div class="col-md-4 text-end">
                         <div class="btn-group w-100">
-                            <button onclick="Livewire.dispatch('report-export-excel')" class="btn btn-outline-success" wire:loading.attr="disabled">
+                            <a href="{{ route('reports.output.excel', ['activeTab' => $activeTab, 'search' => $search, 'outputType' => $outputType]) }}"
+                                class="btn btn-outline-success" data-navigate-ignore="true">
                                 <x-lucide-table class="icon me-2" />
                                 {{ __('Excel') }}
-                            </button>
-                            <button onclick="Livewire.dispatch('report-export-pdf')" class="btn btn-outline-danger" wire:loading.attr="disabled">
+                            </a>
+                            <a href="{{ route('reports.output.pdf', ['activeTab' => $activeTab, 'search' => $search, 'outputType' => $outputType]) }}"
+                                class="btn btn-outline-danger" data-navigate-ignore="true">
                                 <x-lucide-file-text class="icon me-2" />
                                 {{ __('PDF') }}
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -129,7 +131,7 @@
                                 <div class="ms-3">
                                     @php
                                         $outputCount = 0;
-                                        foreach($proposal->progressReports as $report) {
+                                        foreach ($proposal->progressReports as $report) {
                                             $outputCount += $report->mandatoryOutputs->count() + $report->additionalOutputs->count();
                                         }
                                     @endphp
@@ -197,10 +199,9 @@
                                                         {{ $output->created_at->format('d/m/Y') }}
                                                     </td>
                                                     <td>
-                                                        <button type="button"
-                                                            wire:click="viewMandatoryOutput('{{ $output->id }}')"
-                                                            wire:loading.attr="disabled"
-                                                            class="btn btn-sm btn-icon btn-outline-info" title="Lihat Detail">
+                                                        <button type="button" wire:click="viewMandatoryOutput('{{ $output->id }}')"
+                                                            wire:loading.attr="disabled" class="btn btn-sm btn-icon btn-outline-info"
+                                                            title="Lihat Detail">
                                                             <x-lucide-eye class="icon" />
                                                         </button>
                                                     </td>
@@ -250,10 +251,9 @@
                                                         {{ $output->created_at->format('d/m/Y') }}
                                                     </td>
                                                     <td>
-                                                        <button type="button"
-                                                            wire:click="viewAdditionalOutput('{{ $output->id }}')"
-                                                            wire:loading.attr="disabled"
-                                                            class="btn btn-sm btn-icon btn-outline-info" title="Lihat Detail">
+                                                        <button type="button" wire:click="viewAdditionalOutput('{{ $output->id }}')"
+                                                            wire:loading.attr="disabled" class="btn btn-sm btn-icon btn-outline-info"
+                                                            title="Lihat Detail">
                                                             <x-lucide-eye class="icon" />
                                                         </button>
                                                     </td>
@@ -285,8 +285,7 @@
     </div>
     <!-- Modal: View Mandatory Output -->
     <x-tabler.modal id="modalMandatoryOutput" title="Lihat Luaran Wajib" size="xl" scrollable wire:ignore.self
-        wire:key="modal-mandatory"
-        onHide="closeMandatoryModal">
+        wire:key="modal-mandatory" onHide="closeMandatoryModal">
         <x-slot:body>
             @if ($mandatoryOutput = $this->mandatoryOutput())
                 @php
@@ -394,7 +393,9 @@
                                         <small>{{ $media->name }}</small><br>
                                         <small class="text-muted">({{ $media->human_readable_size }})</small>
                                     </div>
-                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-sm btn-primary">
+                                    <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                        download="{{ $media->file_name ?? $media->name ?? 'download' }}"
+                                        target="_blank" class="btn btn-sm btn-primary">
                                         <x-lucide-download class="icon" /> Download
                                     </a>
                                 </div>
@@ -408,8 +409,7 @@
 
     <!-- Modal: View Additional Output -->
     <x-tabler.modal id="modalAdditionalOutput" title="Lihat Luaran Tambahan" size="xl" scrollable
-        wire:key="modal-additional"
-        wire:ignore.self onHide="closeAdditionalModal">
+        wire:key="modal-additional" wire:ignore.self onHide="closeAdditionalModal">
         <x-slot:body>
             @if ($additionalOutput = $this->additionalOutput())
                 @php
@@ -505,7 +505,9 @@
                                         <small>{{ $media->name }}</small><br>
                                         <small class="text-muted">({{ $media->human_readable_size }})</small>
                                     </div>
-                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-sm btn-primary">
+                                    <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                        download="{{ $media->file_name ?? $media->name ?? 'download' }}"
+                                        target="_blank" class="btn btn-sm btn-primary">
                                         <x-lucide-download class="icon" /> Download
                                     </a>
                                 </div>

@@ -40,6 +40,14 @@ class Password extends Component
             'original_password' => $validated['password'],
         ]);
 
+        \App\Models\ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'password_update',
+            'description' => 'User memperbarui kata sandi',
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+
         $this->reset('current_password', 'password', 'password_confirmation');
 
         $this->dispatch('password-updated');

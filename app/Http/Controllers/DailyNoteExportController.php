@@ -37,6 +37,10 @@ class DailyNoteExportController extends Controller
 
         $filename = 'Catatan_Harian_'.str_replace(' ', '_', substr($proposal->title, 0, 50)).'.pdf';
 
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
         return $pdf->download($filename);
     }
 }

@@ -50,6 +50,13 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin lppm|superadmin'])->prefix('users')->name('users.')->group(function () {
         Route::livewire('/', UsersIndex::class)->name('index');
         Route::livewire('import', \App\Livewire\Users\Import::class)->name('import');
+        Route::get('import/template', function () {
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\UsersTemplateExport, 'template-import-users.xlsx');
+        })->name('import-template');
         Route::livewire('sync-sinta', \App\Livewire\AdminLppm\SyncSinta::class)->name('sync-sinta');
         Route::livewire('create', UsersCreate::class)->name('create');
         Route::livewire('{user}', UsersShow::class)->name('show');
@@ -150,6 +157,9 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('beban-kerja-reviewer', \App\Livewire\AdminLppm\ReviewerWorkload::class)->name('reviewer-workload');
         Route::livewire('monitoring-review', \App\Livewire\AdminLppm\ReviewMonitoring::class)->name('review-monitoring');
         Route::livewire('monev', \App\Livewire\AdminLppm\Monev\MonevIndex::class)->name('monev.index');
+        // route for global audit log access outside settings tab
+        Route::livewire('audit-log', \App\Livewire\Settings\AuditLog::class)
+            ->name('audit-log');
     });
 
     Route::livewire('settings', SettingsIndex::class)
@@ -177,7 +187,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),
@@ -210,8 +220,26 @@ Route::middleware(['auth'])->group(function () {
         ->name('daily-notes.export-pdf');
 
     Route::get('media/{media}/download', [\App\Http\Controllers\MediaDownloadController::class, 'download'])
-        ->middleware('signed')
+        ->middleware(['auth', 'signed'])
         ->name('media.download');
 });
 
 require __DIR__.'/auth.php';
+
+// Rute Ekspor Laporan via Standar HTTP (Bypass Livewire)
+Route::group(['middleware' => ['auth', 'verified', 'role:admin lppm|superadmin']], function () {
+    Route::get('/laporan-penelitian/export/pdf', [\App\Http\Controllers\ReportExportController::class, 'researchPdf'])->name('reports.research.pdf');
+    Route::get('/laporan-penelitian/export/excel', [\App\Http\Controllers\ReportExportController::class, 'researchExcel'])->name('reports.research.excel');
+
+    Route::get('/laporan-pkm/export/pdf', [\App\Http\Controllers\ReportExportController::class, 'pkmPdf'])->name('reports.pkm.pdf');
+    Route::get('/laporan-pkm/export/excel', [\App\Http\Controllers\ReportExportController::class, 'pkmExcel'])->name('reports.pkm.excel');
+
+    Route::get('/laporan-luaran/export/pdf', [\App\Http\Controllers\ReportExportController::class, 'outputPdf'])->name('reports.output.pdf');
+    Route::get('/laporan-luaran/export/excel', [\App\Http\Controllers\ReportExportController::class, 'outputExcel'])->name('reports.output.excel');
+
+    Route::get('/laporan-mitra/export/pdf', [\App\Http\Controllers\ReportExportController::class, 'partnerPdf'])->name('reports.partner.pdf');
+    Route::get('/laporan-mitra/export/excel', [\App\Http\Controllers\ReportExportController::class, 'partnerExcel'])->name('reports.partner.excel');
+
+    Route::livewire('accreditation-hub', \App\Livewire\Accreditation\Hub::class)
+        ->name('accreditation.hub');
+});

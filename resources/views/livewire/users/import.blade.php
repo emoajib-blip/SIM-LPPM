@@ -32,16 +32,17 @@
                     </div>
                 </div>
                 <div class="col-md-6 d-flex align-items-center">
-                    <button wire:click="downloadTemplate" class="btn btn-outline-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="icon">
+                    <a href="{{ route('users.import-template') }}" class="btn btn-outline-primary"
+                        data-navigate-ignore="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon">
                             <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
                             <path d="M7 11l5 5l5 -5"></path>
                             <path d="M12 4l0 12"></path>
                         </svg>
                         {{ __('Download Template') }}
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -86,10 +87,9 @@
                                                 </ul>
                                             @else
                                                 <span class="text-success">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                        height="16" viewBox="0 0 24 24" fill="none"
-                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round" class="icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" class="icon">
                                                         <path d="M5 12l5 5l10 -10"></path>
                                                     </svg>
                                                     {{ __('Valid') }}
@@ -109,14 +109,12 @@
                     </div>
 
                     <div class="d-flex justify-content-end mt-3">
-                        <button wire:click="import" class="btn btn-primary"
-                            @if (!empty($validationErrors) || empty($parsedData)) disabled @endif wire:loading.attr="disabled"
-                            wire:target="import">
+                        <button wire:click="import" class="btn btn-primary" @if (!empty($validationErrors) || empty($parsedData)) disabled @endif wire:loading.attr="disabled" wire:target="import">
                             <span wire:loading wire:target="import" class="spinner-border spinner-border-sm me-2"
                                 role="status"></span>
-                            <svg wire:loading.remove wire:target="import" xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                            <svg wire:loading.remove wire:target="import" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="icon">
                                 <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
                                 <path d="M7 9l5 -5l5 5"></path>
                                 <path d="M12 4l0 12"></path>

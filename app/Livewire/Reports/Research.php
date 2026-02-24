@@ -32,7 +32,6 @@ class Research extends Component
         $this->period = $period;
     }
 
-    #[\Livewire\Attributes\On('report-export-pdf')]
     public function exportPdf()
     {
         $proposals = Proposal::query()
@@ -54,7 +53,6 @@ class Research extends Component
         ]);
     }
 
-    #[\Livewire\Attributes\On('report-export-excel')]
     public function exportExcel()
     {
         return \Maatwebsite\Excel\Facades\Excel::download(

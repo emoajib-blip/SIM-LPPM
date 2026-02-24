@@ -13,7 +13,7 @@
     <form wire:submit.prevent="save" class="card card-stacked" novalidate>
         <div class="card-body">
             <div class="row g-4">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="mb-3">
                         <label class="form-label" for="user-name">
                             Nama <span class="text-danger">*</span>
@@ -26,13 +26,38 @@
                     </div>
                 </div>
 
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="title-prefix">Gelar Depan</label>
+                        <input id="title-prefix" type="text"
+                            class="form-control @error('title_prefix') is-invalid @enderror" wire:model="title_prefix"
+                            placeholder="misal: Dr., Prof.">
+                        @error('title_prefix')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="title-suffix">Gelar Belakang</label>
+                        <input id="title-suffix" type="text"
+                            class="form-control @error('title_suffix') is-invalid @enderror" wire:model="title_suffix"
+                            placeholder="misal: S.Kom., M.Kom.">
+                        @error('title_suffix')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label" for="user-username">
                             Username
                         </label>
-                        <input id="user-username" type="text" class="form-control @error('username') is-invalid @enderror"
-                            wire:model="username" autocomplete="username" placeholder="Masukkan username">
+                        <input id="user-username" type="text"
+                            class="form-control @error('username') is-invalid @enderror" wire:model="username"
+                            autocomplete="username" placeholder="Masukkan username">
                         @error('username')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -61,19 +86,35 @@
                                     <div class="d-flex align-items-center gap-2">
                                         <strong>Password Asli Tersimpan:</strong>
                                         <div class="d-flex align-items-center">
-                                            <code class="text-azure" x-show="show">{{ $this->user->original_password }}</code>
+                                            <code class="text-azure"
+                                                x-show="show">{{ $this->user->original_password }}</code>
                                             <span class="text-muted fst-italic" x-show="!show">********</span>
                                         </div>
-                                        <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" @click="show = !show" title="Toggle visibility">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" x-show="!show">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                        <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary"
+                                            @click="show = !show" title="Toggle visibility">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round" x-show="!show">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                <path
+                                                    d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                             </svg>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" x-show="show" style="display: none;">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 3.145 -3.594 5.27 -4.194" /><path d="M7.5 8l12.01 12.01" /><path d="M3 3l18 18" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round" x-show="show"
+                                                style="display: none;">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+                                                <path
+                                                    d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 3.145 -3.594 5.27 -4.194" />
+                                                <path d="M7.5 8l12.01 12.01" />
+                                                <path d="M3 3l18 18" />
                                             </svg>
                                         </button>
                                     </div>
-                                    <div class="text-muted small mt-1">Ini adalah password yang tersimpan saat pembuatan/import user.</div>
+                                    <div class="text-muted small mt-1">Ini adalah password yang tersimpan saat
+                                        pembuatan/import user.</div>
                                 </div>
                                 <span class="badge bg-yellow-lt">Visible to Admin</span>
                             </div>
@@ -82,7 +123,9 @@
                     <div class="alert alert-info d-flex align-items-center justify-content-between">
                         <div>Kosongkan jika tidak ingin mengubah password pengguna.</div>
                         <button type="button" class="btn btn-sm btn-outline-primary" wire:click="generatePassword">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wand" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wand" width="24"
+                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <path d="M6 21l15 -15l-3 -3l-15 15l3 3"></path>
                                 <path d="M15 6l3 3"></path>
@@ -98,12 +141,30 @@
                     <div class="mb-3" x-data="{ show: false }">
                         <label class="form-label">Password Baru</label>
                         <div class="input-group input-group-flat">
-                            <input :type="show ? 'text' : 'password'" class="form-control @error('password') is-invalid @enderror"
-                                wire:model="password" autocomplete="new-password" placeholder="Minimal 8 karakter">
+                            <input :type="show ? 'text' : 'password'"
+                                class="form-control @error('password') is-invalid @enderror" wire:model="password"
+                                autocomplete="new-password" placeholder="Minimal 8 karakter">
                             <span class="input-group-text">
-                                <a href="#" class="link-secondary" title="Tampilkan password" data-bs-toggle="tooltip" @click.prevent="show = !show">
-                                    <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
-                                    <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 3.145 -3.594 5.27 -4.194" /><path d="M7.5 8l12.01 12.01" /><path d="M3 3l18 18" /></svg>
+                                <a href="#" class="link-secondary" title="Tampilkan password" data-bs-toggle="tooltip"
+                                    @click.prevent="show = !show">
+                                    <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                        <path
+                                            d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                    </svg>
+                                    <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+                                        <path
+                                            d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 3.145 -3.594 5.27 -4.194" />
+                                        <path d="M7.5 8l12.01 12.01" />
+                                        <path d="M3 3l18 18" />
+                                    </svg>
                                 </a>
                             </span>
                             @error('password')
@@ -118,11 +179,29 @@
                         <label class="form-label">Konfirmasi Password</label>
                         <div class="input-group input-group-flat">
                             <input :type="show ? 'text' : 'password'" class="form-control"
-                                wire:model="password_confirmation" autocomplete="new-password" placeholder="Ulangi password baru">
+                                wire:model="password_confirmation" autocomplete="new-password"
+                                placeholder="Ulangi password baru">
                             <span class="input-group-text">
-                                <a href="#" class="link-secondary" title="Tampilkan password" data-bs-toggle="tooltip" @click.prevent="show = !show">
-                                    <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
-                                    <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 3.145 -3.594 5.27 -4.194" /><path d="M7.5 8l12.01 12.01" /><path d="M3 3l18 18" /></svg>
+                                <a href="#" class="link-secondary" title="Tampilkan password" data-bs-toggle="tooltip"
+                                    @click.prevent="show = !show">
+                                    <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                        <path
+                                            d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                    </svg>
+                                    <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+                                        <path
+                                            d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 3.145 -3.594 5.27 -4.194" />
+                                        <path d="M7.5 8l12.01 12.01" />
+                                        <path d="M3 3l18 18" />
+                                    </svg>
                                 </a>
                             </span>
                         </div>
@@ -138,12 +217,11 @@
                             @foreach ($this->roleOptions as $option)
                                 <label class="form-selectgroup-item">
                                     <input type="checkbox" name="role" value="{{ $option['value'] }}"
-                                        class="form-selectgroup-input" wire:model="selectedRoles"
-                                        @if (in_array($option['value'], $selectedRoles)) checked @endif>
+                                        class="form-selectgroup-input" wire:model="selectedRoles" @if (in_array($option['value'], $selectedRoles)) checked @endif>
                                     <span class="form-selectgroup-label">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon me-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="icon me-1">
                                             <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
                                             <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
                                         </svg>
@@ -169,8 +247,8 @@
                             ID Identitas <span class="text-danger">*</span>
                         </label>
                         <input id="identity-id" type="text"
-                            class="form-control @error('identity_id') is-invalid @enderror"
-                            wire:model="identity_id" placeholder="mis., NIP, NIDN, atau ID Karyawan" required>
+                            class="form-control @error('identity_id') is-invalid @enderror" wire:model="identity_id"
+                            placeholder="mis., NIP, NIDN, atau ID Karyawan" required>
                         @error('identity_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -196,8 +274,8 @@
                         <label class="form-label" for="birthdate">
                             Tanggal Lahir <span class="text-muted">(opsional)</span>
                         </label>
-                        <input id="birthdate" type="date"
-                            class="form-control @error('birthdate') is-invalid @enderror" wire:model="birthdate">
+                        <input id="birthdate" type="date" class="form-control @error('birthdate') is-invalid @enderror"
+                            wire:model="birthdate">
                         @error('birthdate')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -209,23 +287,90 @@
                         <label class="form-label" for="address">
                             Alamat <span class="text-muted">(opsional)</span>
                         </label>
-                        <textarea id="address" class="form-control @error('address') is-invalid @enderror" wire:model="address"
-                            rows="3" placeholder="Masukkan alamat lengkap Anda"></textarea>
+                        <textarea id="address" class="form-control @error('address') is-invalid @enderror"
+                            wire:model="address" rows="3" placeholder="Masukkan alamat lengkap Anda"></textarea>
                         @error('address')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="mb-3">
                         <label class="form-label" for="sinta-id">
                             ID SINTA <span class="text-muted">(opsional)</span>
                         </label>
-                        <input id="sinta-id" type="text"
-                            class="form-control @error('sinta_id') is-invalid @enderror" wire:model="sinta_id"
-                            placeholder="mis., 1234567">
+                        <input id="sinta-id" type="text" class="form-control @error('sinta_id') is-invalid @enderror"
+                            wire:model="sinta_id" placeholder="mis., 1234567">
                         @error('sinta_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="form-label" for="scopus-id">ID Scopus</label>
+                        <input id="scopus-id" type="text" class="form-control @error('scopus_id') is-invalid @enderror"
+                            wire:model="scopus_id" placeholder="Author ID (misal: 572101...)">
+                        @error('scopus_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="form-label" for="gs-id">ID Google Scholar</label>
+                        <input id="gs-id" type="text"
+                            class="form-control @error('google_scholar_id') is-invalid @enderror"
+                            wire:model="google_scholar_id" placeholder="User ID">
+                        @error('google_scholar_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="form-label" for="wos-id">ID Web of Science</label>
+                        <input id="wos-id" type="text" class="form-control @error('wos_id') is-invalid @enderror"
+                            wire:model="wos_id" placeholder="Researcher ID">
+                        @error('wos_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="scopus-h">Scopus H-Index</label>
+                        <input id="scopus-h" type="number"
+                            class="form-control @error('scopus_h_index') is-invalid @enderror"
+                            wire:model="scopus_h_index" min="0">
+                        @error('scopus_h_index')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="gs-h">GS H-Index</label>
+                        <input id="gs-h" type="number" class="form-control @error('gs_h_index') is-invalid @enderror"
+                            wire:model="gs_h_index" min="0">
+                        @error('gs_h_index')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="wos-h">WoS H-Index</label>
+                        <input id="wos-h" type="number" class="form-control @error('wos_h_index') is-invalid @enderror"
+                            wire:model="wos_h_index" min="0">
+                        @error('wos_h_index')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -260,13 +405,13 @@
                         </label>
                         <div wire:ignore>
                             <select id="institution" class="form-select @error('institution_id') is-invalid @enderror"
-                                wire:model.live="institution_id" 
-                                x-data="tomSelectWithCreate"
+                                wire:model.live="institution_id" x-data="tomSelectWithCreate"
                                 placeholder="Pilih institusi atau ketik baru...">
                                 <option value="">Pilih institusi... (Bisa ketik nama baru untuk Reviewer)</option>
                                 @foreach ($this->institutionOptions as $option)
                                     <option value="{{ $option['value'] }}">
-                                        {{ $option['label'] }}</option>
+                                        {{ $option['label'] }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -278,13 +423,15 @@
 
                 {{-- Hybrid institution handles this automatically via institution_id input --}}
                 @if($this->user->identity?->institution_name)
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Institusi Terdaftar (Manual)</label>
-                        <input type="text" class="form-control" value="{{ $this->user->identity->institution_name }}" disabled>
-                        <div class="form-text">Reviewer ini terdaftar dengan institusi luar yang belum diverifikasi.</div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Institusi Terdaftar (Manual)</label>
+                            <input type="text" class="form-control" value="{{ $this->user->identity->institution_name }}"
+                                disabled>
+                            <div class="form-text">Reviewer ini terdaftar dengan institusi luar yang belum diverifikasi.
+                            </div>
+                        </div>
                     </div>
-                </div>
                 @endif
 
                 <div class="col-md-6">
@@ -310,8 +457,7 @@
                         <label class="form-label" for="study-program">
                             Program Studi <span class="{{ $isReviewer ? 'd-none' : 'text-danger' }}">*</span>
                         </label>
-                        <select id="study-program"
-                            class="form-select @error('study_program_id') is-invalid @enderror"
+                        <select id="study-program" class="form-select @error('study_program_id') is-invalid @enderror"
                             wire:model="study_program_id" @disabled(empty($this->studyProgramOptions))>
                             <option value="">Pilih program studi...</option>
                             @foreach ($this->studyProgramOptions as $option)

@@ -23,11 +23,26 @@ class MediaDownloadController extends Controller
         }
 
         $path = $media->getPath();
-        $headers = [
-            'Content-Type' => $media->mime_type,
-        ];
 
-        return response()->file($path, $headers);
+        if (! file_exists($path)) {
+            abort(404, 'File fisik tidak ditemukan di server.');
+        }
+
+        // Sanitize filename: remove redundant dots before extension if any
+        // e.g. "manual.2024....docx" -> "manual.2024.docx"
+        $fileName = $media->file_name;
+        if (preg_match('/\.+(\.[^.]+)$/', $fileName)) {
+            $fileName = preg_replace('/\.+(\.[^.]+)$/', '$1', $fileName);
+        }
+
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        return response()->download($path, $fileName, [
+            'Content-Type' => $media->mime_type,
+            'Content-Disposition' => 'attachment; filename="'.str_replace('"', '\"', $fileName).'"',
+        ]);
     }
 
     protected function canAccessMedia($user, Media $media): bool
@@ -37,6 +52,12 @@ class MediaDownloadController extends Controller
         }
 
         $model = $media->model;
+
+        // Settings are global templates (e.g. Borang Monev, Surat Kesanggupan),
+        // they should be downloadable by any authenticated user.
+        if ($model instanceof \App\Models\Setting) {
+            return true;
+        }
 
         $proposalId = null;
 

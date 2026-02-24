@@ -39,6 +39,11 @@
                                 <x-lucide-palette class="me-2 icon" />
                                 Tampilan
                             </button>
+                            <button wire:click="setActiveTab('audit')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'audit' ? 'active' : '' }}">
+                                <x-lucide-eye class="me-2 icon" />
+                                Audit Log
+                            </button>
                         </div>
                     @endrole
                 </div>
@@ -66,6 +71,12 @@
                     @elseif ($activeTab === 'appearance')
                         <div>
                             <livewire:settings.appearance />
+                        </div>
+                    @elseif ($activeTab === 'audit')
+                        <div>
+                            <h2 class="mb-4">Audit Log</h2>
+                            <p class="mb-4 card-subtitle">Pantau aktivitas sistem untuk semua pengguna.</p>
+                            <livewire:settings.audit-log />
                         </div>
                     @elseif ($activeTab === 'security')
                         <div>

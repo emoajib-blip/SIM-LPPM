@@ -30,6 +30,36 @@ class Dashboard extends Component
 
     public function render()
     {
-        return view('livewire.dashboard.main-dashboard');
+        $titles = match ($this->roleName) {
+            'superadmin', 'admin lppm', 'admin lppm saintek', 'admin lppm dekabita' => [
+                'title' => 'Dashboard Admin',
+                'subtitle' => 'Ikhtisar performa dan aktivitas LPPM.',
+            ],
+            'kepala lppm' => [
+                'title' => 'Dashboard Kepala LPPM',
+                'subtitle' => 'Monitoring dan evaluasi strategi penelitian & PKM.',
+            ],
+            'dosen' => [
+                'title' => 'Dashboard Dosen',
+                'subtitle' => 'Kelola portofolio penelitian dan pengabdian masyarakat Anda.',
+            ],
+            'reviewer' => [
+                'title' => 'Dashboard Reviewer',
+                'subtitle' => 'Pantau tugas review proposal yang sedang berjalan.',
+            ],
+            'rektor', 'dekan' => [
+                'title' => 'Dashboard Eksekutif',
+                'subtitle' => 'Laporan ringkasan institusional dan pencapaian target.',
+            ],
+            default => [
+                'title' => 'Dashboard Utama',
+                'subtitle' => 'Selamat datang di Sistem Informasi LPPM.',
+            ],
+        };
+
+        return view('livewire.dashboard.main-dashboard', [
+            'pageTitle' => $titles['title'],
+            'pageSubtitle' => $titles['subtitle'],
+        ]);
     }
 }

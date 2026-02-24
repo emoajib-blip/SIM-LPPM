@@ -9,7 +9,13 @@
         <div class="row g-4">
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label class="form-label" for="macro_research_group">Kelompok Makro Riset</label>
+                    <label class="form-label d-flex align-items-center gap-2" for="macro_research_group">
+                        Kelompok Makro Riset
+                        <span class="text-muted" data-bs-toggle="tooltip"
+                            title="Pilihlah kelompok riset yang paling sesuai dengan fokus penelitian Anda untuk memudahkan pemetaan data SINTA.">
+                            <i class="ti ti-info-circle"></i>
+                        </span>
+                    </label>
                     <div wire:ignore>
                         <select id="macro_research_group"
                             class="form-select @error('form.macro_research_group_id') is-invalid @enderror"
@@ -60,9 +66,9 @@
                         <div class="mt-2">
                             <x-lucide-file-check class="text-success icon" />
                             @php $media = $form->proposal->detailable->getFirstMedia('substance_file'); @endphp
-                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
-                                target="_blank" class="text-decoration-none">
-                                {{ $form->proposal->detailable->getFirstMedia('substance_file')->name }}
+                            <a href="{{ URL::signedRoute('media.download', ['media' => $media]) }}" target="_blank"
+                                class="text-decoration-none" data-navigate-ignore="true">
+                                {{ $media->file_name }}
                             </a>
                         </div>
                     @endif
@@ -179,8 +185,7 @@
                                         placeholder="Keterangan (URL)">
                                 </td>
                                 <td>
-                                    <button type="button" wire:click="removeOutput({{ $index }})"
-                                        class="btn btn-sm btn-danger">
+                                    <button type="button" wire:click="removeOutput({{ $index }})" class="btn btn-sm btn-danger">
                                         <x-lucide-trash-2 class="icon" />
                                     </button>
                                 </td>

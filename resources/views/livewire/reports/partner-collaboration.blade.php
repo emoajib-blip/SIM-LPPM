@@ -102,12 +102,12 @@
                     </h3>
                     <div class="d-flex align-items-center gap-2">
                         <div class="btn-group btn-group-sm">
-                            <button onclick="Livewire.dispatch('report-export-excel')" class="btn btn-outline-success" title="Export Excel" wire:loading.attr="disabled">
+                            <a href="{{ route('reports.partner.excel', ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter]) }}" class="btn btn-outline-success" data-navigate-ignore="true" title="Export Excel">
                                 <x-lucide-table class="icon-sm me-1" /> Excel
-                            </button>
-                            <button onclick="Livewire.dispatch('report-export-pdf')" class="btn btn-outline-danger" title="Export PDF" wire:loading.attr="disabled">
+                            </a>
+                            <a href="{{ route('reports.partner.pdf', ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter]) }}" class="btn btn-outline-danger" data-navigate-ignore="true" title="Export PDF">
                                 <x-lucide-file-text class="icon-sm me-1" /> PDF
-                            </button>
+                            </a>
                         </div>
                         <span class="badge bg-blue-lt">{{ $partners->total() }} mitra</span>
                     </div>
@@ -169,8 +169,9 @@
                                     <td class="text-center">
                                         @if($partner->hasMedia('mou_pks'))
                                             @php $media = $partner->getFirstMedia('mou_pks'); @endphp
-                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
-                                               class="badge bg-green-lt text-green text-decoration-none" title="Lihat MOU/PKS">
+                                                          <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                                              download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank"
+                                                              class="badge bg-green-lt text-green text-decoration-none" title="Lihat MOU/PKS">
                                                 <x-lucide-file-check class="icon-sm me-1" />
                                                 Ada
                                             </a>
@@ -230,8 +231,9 @@
                         <div class="d-flex gap-2 align-items-center">
                             @if($selectedPartner?->hasMedia('mou_pks'))
                                 @php $media = $selectedPartner->getFirstMedia('mou_pks'); @endphp
-                                <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
-                                   class="btn btn-sm btn-outline-primary" title="Unduh MOU/PKS">
+                                          <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                              download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank"
+                                              class="btn btn-sm btn-outline-primary" title="Unduh MOU/PKS">
                                     <x-lucide-file-text class="icon" /> MOU/PKS
                                 </a>
                             @endif

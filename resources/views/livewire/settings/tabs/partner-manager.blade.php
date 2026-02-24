@@ -42,8 +42,8 @@
                             <td>
                                                             @if($item->hasMedia('mou_pks'))
                                     @php $media = $item->getFirstMedia('mou_pks'); @endphp
-                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
-                                       target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                                    download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                         <x-lucide-file-text class="icon" /> Lihat
                                     </a>
                                 @else
@@ -182,7 +182,8 @@
                                     <x-lucide-file-text class="icon text-primary" />
                                     File saat ini:
                                     @php $media = $p->getFirstMedia('mou_pks'); @endphp
-                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank">
+                                    <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                        download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank">
                                         {{ $p->getFirstMedia('mou_pks')->file_name }}
                                     </a>
                                 </div>

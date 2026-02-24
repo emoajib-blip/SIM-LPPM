@@ -21,6 +21,12 @@
                                     <span class="badge bg-green-lt">{{ __('Login') }}</span>
                                 @elseif($log->activity === 'logout')
                                     <span class="badge bg-red-lt">{{ __('Logout') }}</span>
+                                @elseif($log->activity === 'login_failed')
+                                    <span class="badge bg-orange-lt">{{ __('Login Gagal') }}</span>
+                                @elseif($log->activity === 'password_update')
+                                    <span class="badge bg-purple-lt">{{ __('Update Sandi') }}</span>
+                                @elseif($log->activity === 'profile_update')
+                                    <span class="badge bg-info-lt">{{ __('Update Profil') }}</span>
                                 @else
                                     <span class="badge bg-blue-lt">{{ $log->activity }}</span>
                                 @endif
@@ -28,14 +34,16 @@
                             <td data-label="Keterangan">
                                 <div class="text-secondary small">{{ $log->description }}</div>
                                 @if($log->url)
-                                    <div class="text-muted extra-small text-truncate" style="max-width: 250px;" title="{{ $log->url }}">
+                                    <div class="text-muted extra-small text-truncate" style="max-width: 250px;"
+                                        title="{{ $log->url }}">
                                         {{ $log->url }}
                                     </div>
                                 @endif
                             </td>
                             <td data-label="Alamat IP">
                                 <div class="small">{{ $log->ip_address }}</div>
-                                <div class="text-muted extra-small text-truncate" style="max-width: 150px;" title="{{ $log->user_agent }}">
+                                <div class="text-muted extra-small text-truncate" style="max-width: 150px;"
+                                    title="{{ $log->user_agent }}">
                                     {{ $log->user_agent }}
                                 </div>
                             </td>

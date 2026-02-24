@@ -61,9 +61,9 @@
                         <div class="mt-2">
                             <x-lucide-file-check class="text-success icon" />
                             @php $media = $form->proposal->detailable->getFirstMedia('substance_file'); @endphp
-                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
-                                target="_blank" class="text-decoration-none">
-                                {{ $form->proposal->detailable->getFirstMedia('substance_file')->name }}
+                            <a href="{{ URL::signedRoute('media.download', ['media' => $media]) }}" target="_blank"
+                                class="text-decoration-none" data-navigate-ignore="true">
+                                {{ $media->file_name }}
                             </a>
                         </div>
                     @endif
@@ -101,8 +101,8 @@
             </div>
         @else
             <div class="table-responsive" x-data="{
-                typesMap: @js(\App\Constants\ProposalConstants::PKM_OUTPUT_TYPES)
-            }">
+                    typesMap: @js(\App\Constants\ProposalConstants::PKM_OUTPUT_TYPES)
+                }">
                 <table class="table table-bordered">
                     @php
                         $duration = (int) ($form->duration_in_years ?? 1);
@@ -122,9 +122,9 @@
                     <tbody>
                         @foreach ($form->outputs as $index => $output)
                             <tr wire:key="output-{{ $index }}" x-data="{
-                                group: $wire.entangle('form.outputs.{{ $index }}.group'),
-                                type: $wire.entangle('form.outputs.{{ $index }}.type')
-                            }">
+                                        group: $wire.entangle('form.outputs.{{ $index }}.group'),
+                                        type: $wire.entangle('form.outputs.{{ $index }}.type')
+                                    }">
                                 <td>
                                     <select wire:model="form.outputs.{{ $index }}.year"
                                         class="form-select form-select-sm @error('form.outputs.' . $index . '.year') is-invalid @enderror">
@@ -178,8 +178,7 @@
                                         placeholder="Keterangan (URL)">
                                 </td>
                                 <td>
-                                    <button type="button" wire:click="removeOutput({{ $index }})"
-                                        class="btn btn-sm btn-danger">
+                                    <button type="button" wire:click="removeOutput({{ $index }})" class="btn btn-sm btn-danger">
                                         <x-lucide-trash-2 class="icon" />
                                     </button>
                                 </td>

@@ -11,7 +11,13 @@
         <div class="row g-4">
             <div class="col-md-12">
                 <div class="mb-3">
-                    <label class="form-label" for="title">Judul Proposal <span class="text-danger">*</span></label>
+                    <label class="form-label d-flex align-items-center gap-2" for="title">
+                        Judul Proposal <span class="text-danger">*</span>
+                        <span class="text-muted" data-bs-toggle="tooltip"
+                            title="Gunakan judul yang ringkas, spesifik, dan merepresentasikan substansi penelitian Anda (Maksimal 20 kata).">
+                            <i class="ti ti-info-circle"></i>
+                        </span>
+                    </label>
                     <input id="title" type="text" class="form-control @error('form.title') is-invalid @enderror"
                         wire:model="form.title" placeholder="Masukkan judul proposal penelitian" required>
                     @error('form.title')
@@ -22,13 +28,18 @@
 
             <div class="col-md-4">
                 <div class="">
-                    <label class="form-label" for="research_scheme">Skema Penelitian <span
-                            class="text-danger">*</span></label>
+                    <label class="form-label d-flex align-items-center gap-2" for="research_scheme">
+                        Skema Penelitian <span class="text-danger">*</span>
+                        <span class="text-muted" data-bs-toggle="tooltip"
+                            title="Pilihan skema menentukan pagu anggaran dan luaran wajib yang harus dipenuhi.">
+                            <i class="ti ti-info-circle"></i>
+                        </span>
+                    </label>
                     <div wire:ignore>
                         <select id="research_scheme"
                             class="form-select @error('form.research_scheme_id') is-invalid @enderror"
-                            wire:model="form.research_scheme_id" x-data="tomSelect"
-                            placeholder="Pilih skema penelitian" required>
+                            wire:model="form.research_scheme_id" x-data="tomSelect" placeholder="Pilih skema penelitian"
+                            required>
                             <option value="">-- Pilih Skema Penelitian --</option>
                             @foreach ($this->schemes as $scheme)
                                 <option value="{{ $scheme->id }}">{{ $scheme->name }}</option>
@@ -43,8 +54,7 @@
 
             <div class="col-md-4">
                 <div class="">
-                    <label class="form-label" for="start_year">Tahun Mulai <span
-                            class="text-danger">*</span></label>
+                    <label class="form-label" for="start_year">Tahun Mulai <span class="text-danger">*</span></label>
                     <input id="start_year" type="number"
                         class="form-control @error('form.start_year') is-invalid @enderror"
                         wire:model.live="form.start_year" min="2020" max="2050" placeholder="{{ date('Y') }}" required>
@@ -66,7 +76,8 @@
                     @enderror
                     @if ($form->start_year && $form->duration_in_years)
                         <small class="text-muted">
-                            Periode: {{ $form->start_year }} - {{ (int) $form->start_year + (int) $form->duration_in_years - 1 }}
+                            Periode: {{ $form->start_year }} -
+                            {{ (int) $form->start_year + (int) $form->duration_in_years - 1 }}
                         </small>
                     @endif
                 </div>
@@ -74,7 +85,13 @@
 
             <div class="col-md-4">
                 <div class="">
-                    <label class="form-label" for="focus_area">Bidang Fokus <span class="text-danger">*</span></label>
+                    <label class="form-label d-flex align-items-center gap-2" for="focus_area">
+                        Bidang Fokus <span class="text-danger">*</span>
+                        <span class="text-muted" data-bs-toggle="tooltip"
+                            title="Bidang fokus disesuaikan dengan Rencana Induk Penelitian (RIP) Institusi.">
+                            <i class="ti ti-info-circle"></i>
+                        </span>
+                    </label>
                     <div wire:ignore>
                         <select id="focus_area" class="form-select @error('form.focus_area_id') is-invalid @enderror"
                             wire:model.live="form.focus_area_id" x-data="tomSelect" placeholder="Pilih bidang fokus"
@@ -221,8 +238,9 @@
 
         <div class="mb-3">
             <label class="form-label" for="summary">Ringkasan <span class="text-danger">*</span></label>
-            <textarea id="summary" class="form-control @error('form.summary') is-invalid @enderror" wire:model="form.summary"
-                rows="4" placeholder="Masukkan ringkasan proposal (minimal 100 karakter)" required></textarea>
+            <textarea id="summary" class="form-control @error('form.summary') is-invalid @enderror"
+                wire:model="form.summary" rows="4" placeholder="Masukkan ringkasan proposal (minimal 100 karakter)"
+                required></textarea>
             @error('form.summary')
                 <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror
@@ -233,9 +251,7 @@
             <label class="form-label" for="keywords">Kata Kunci (Keywords) <span class="text-danger">*</span></label>
             <div wire:ignore>
                 <select id="keywords" class="form-select @error('form.keywords') is-invalid @enderror"
-                    wire:model.live="form.keywords"
-                    x-data="tomSelect({create: true, maxItems: 5})" 
-                    multiple
+                    wire:model.live="form.keywords" x-data="tomSelect({create: true, maxItems: 5})" multiple
                     placeholder="Ketik lalu Enter untuk menambahkan kata kunci (Maks 5)" required>
                     @foreach ($form->keywords as $keyword)
                         <option value="{{ $keyword }}" selected>{{ $keyword }}</option>
@@ -302,34 +318,34 @@
                 </button>
 
                 @if (!empty($form->tkt_results))
-                    @php
-                        $currentTkt = 0;
-                        // Get level numbers from TktLevel model using the level_id keys
-                        // since 'level' is no longer stored in tkt_results
-                        foreach ($form->tkt_results as $levelId => $data) {
-                            if (($data['percentage'] ?? 0) >= 80) {
-                                $tktLevel = \App\Models\TktLevel::find($levelId);
-                                if ($tktLevel) {
-                                    $currentTkt = max($currentTkt, $tktLevel->level);
+                        @php
+                            $currentTkt = 0;
+                            // Get level numbers from TktLevel model using the level_id keys
+                            // since 'level' is no longer stored in tkt_results
+                            foreach ($form->tkt_results as $levelId => $data) {
+                                if (($data['percentage'] ?? 0) >= 80) {
+                                    $tktLevel = \App\Models\TktLevel::find($levelId);
+                                    if ($tktLevel) {
+                                        $currentTkt = max($currentTkt, $tktLevel->level);
+                                    }
                                 }
                             }
-                        }
-                        $isWithinTarget = $targetRange
-                            ? $currentTkt >= $targetRange[0] && $currentTkt <= $targetRange[1]
-                            : null;
-                    @endphp
-                    <x-tabler.badge class="fs-3" :color="$isWithinTarget === true
-                        ? 'success'
-                        : ($isWithinTarget === false
-                            ? 'warning'
-                            : 'secondary')">
-                        TKT Saat Ini: Level {{ $currentTkt }}
-                        @if ($isWithinTarget === true)
-                            <i class="ti ti-check ms-1"></i>
-                        @elseif ($isWithinTarget === false)
-                            <i class="ti ti-alert-triangle ms-1"></i>
-                        @endif
-                    </x-tabler.badge>
+                            $isWithinTarget = $targetRange
+                                ? $currentTkt >= $targetRange[0] && $currentTkt <= $targetRange[1]
+                                : null;
+                        @endphp
+                        <x-tabler.badge class="fs-3" :color="$isWithinTarget === true
+                    ? 'success'
+                    : ($isWithinTarget === false
+                        ? 'warning'
+                        : 'secondary')">
+                            TKT Saat Ini: Level {{ $currentTkt }}
+                            @if ($isWithinTarget === true)
+                                <i class="ti ti-check ms-1"></i>
+                            @elseif ($isWithinTarget === false)
+                                <i class="ti ti-alert-triangle ms-1"></i>
+                            @endif
+                        </x-tabler.badge>
                 @endif
             </div>
             @error('form.tkt_results')
@@ -345,7 +361,7 @@
                 wire:model="form.background" rows="5"
                 placeholder="Jelaskan latar belakang penelitian (minimal 200 karakter)"></textarea>
             @error('form.background')
-                <div class="d-block invalid-feedback">{{ $message }}</div>
+            <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror
             <small class="text-muted">Minimum 200 karakter</small>
         </div>
@@ -353,9 +369,10 @@
         <div class="mb-3">
             <label class="form-label" for="methodology">Metodologi</label>
             <textarea id="methodology" class="form-control @error('form.methodology') is-invalid @enderror"
-                wire:model="form.methodology" rows="5" placeholder="Jelaskan metodologi penelitian (minimal 200 karakter)"></textarea>
+                wire:model="form.methodology" rows="5"
+                placeholder="Jelaskan metodologi penelitian (minimal 200 karakter)"></textarea>
             @error('form.methodology')
-                <div class="d-block invalid-feedback">{{ $message }}</div>
+            <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror
             <small class="text-muted">Minimum 200 karakter</small>
         </div> --}}
@@ -372,8 +389,8 @@
 
         <div class="mb-3">
             <label class="form-label">Ketua Peneliti</label>
-            <input type="text" class="form-control @error('author_name') is-invalid @enderror"
-                wire:model="author_name" placeholder="Nama Ketua Peneliti" required disabled />
+            <input type="text" class="form-control @error('author_name') is-invalid @enderror" wire:model="author_name"
+                placeholder="Nama Ketua Peneliti" required disabled />
             @error('author_name')
                 <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror

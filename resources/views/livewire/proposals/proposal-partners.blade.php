@@ -76,8 +76,9 @@
                                     <td>
                                         @if ($partner->hasMedia('commitment_letter'))
                                             @php $media = $partner->getFirstMedia('commitment_letter'); @endphp
-                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
-                                                target="_blank" class="btn btn-sm btn-primary">
+                                                <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                                    download="{{ $media->file_name ?? $media->name ?? 'download' }}"
+                                                    target="_blank" class="btn btn-sm btn-primary">
                                                 <x-lucide-download class="icon" />
                                                 Unduh
                                             </a>
@@ -115,7 +116,8 @@
                         </div>
                     </div>
                     @php $media = $proposal->detailable->getFirstMedia('approval_file'); @endphp
-                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank" class="btn btn-primary">
+                            <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                download="{{ $media->file_name ?? $media->name ?? 'download' }}" target="_blank" class="btn btn-primary">
                         <x-lucide-external-link class="icon me-1" />
                         Lihat Dokumen
                     </a>

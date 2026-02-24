@@ -112,3 +112,37 @@ if (! function_exists('generate_qr_code_data_uri')) {
         return 'data:image/svg+xml;base64,'.base64_encode($svg);
     }
 }
+
+if (! function_exists('format_name')) {
+    /**
+     * Build a full display name from a base name plus optional academic
+     * prefixes/suffixes.  This is the canonical implementation used by all of
+     * the PDF/report templates.  It mirrors the logic that used to be copied
+     * verbatim into several views so that there is now a single place to make
+     * adjustments (e.g. stripping dots or handling multiple titles) and so that
+     * new views cannot accidentally forget to include the behaviour.
+     *
+     * @param  string  $prefix  gelar depan ("Dr.", "Prof.", etc.)
+     * @param  string  $name  nama pokok
+     * @param  string  $suffix  gelar belakang (", S.T.", ", M.Sc.", etc.)
+     * @return string nama lengkap dengan gelar kalau tersedia
+     */
+    function format_name(string $prefix, string $name, string $suffix): string
+    {
+        $full = trim($name);
+
+        if (! empty($prefix)
+            && ! str_starts_with($full, $prefix)
+            && ! str_contains($full, $prefix.' ')) {
+            $full = $prefix.' '.$full;
+        }
+
+        if (! empty($suffix)
+            && ! str_ends_with($full, $suffix)
+            && ! str_contains($full, ', '.$suffix)) {
+            $full = $full.', '.$suffix;
+        }
+
+        return trim($full, ' ,');
+    }
+}

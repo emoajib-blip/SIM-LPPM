@@ -42,6 +42,22 @@ class Edit extends Component
 
     public ?string $sinta_id = null;
 
+    public ?string $scopus_id = null;
+
+    public ?string $google_scholar_id = null;
+
+    public ?string $wos_id = null;
+
+    public string $title_prefix = '';
+
+    public string $title_suffix = '';
+
+    public int $scopus_h_index = 0;
+
+    public int $gs_h_index = 0;
+
+    public int $wos_h_index = 0;
+
     public ?string $type = null;
 
     public ?string $institution_id = null;
@@ -76,6 +92,14 @@ class Edit extends Component
             $this->birthdate = $user->identity->birthdate?->format('Y-m-d');
             $this->birthplace = $user->identity->birthplace ?? '';
             $this->sinta_id = $user->identity->sinta_id ?? '';
+            $this->scopus_id = $user->identity->scopus_id ?? '';
+            $this->google_scholar_id = $user->identity->google_scholar_id ?? '';
+            $this->wos_id = $user->identity->wos_id ?? '';
+            $this->title_prefix = $user->identity->title_prefix ?? '';
+            $this->title_suffix = $user->identity->title_suffix ?? '';
+            $this->scopus_h_index = $user->identity->scopus_h_index ?? 0;
+            $this->gs_h_index = $user->identity->gs_h_index ?? 0;
+            $this->wos_h_index = $user->identity->wos_h_index ?? 0;
             $this->type = $user->identity->type ?? '';
             $this->institution_id = $user->identity->institution_id ?? '';
             // Load from column first
@@ -106,6 +130,14 @@ class Edit extends Component
             'birthdate' => ['nullable', 'date', 'before:today'],
             'birthplace' => ['nullable', 'string', 'max:255'],
             'sinta_id' => ['nullable', 'string', 'max:255'],
+            'scopus_id' => ['nullable', 'string', 'max:255'],
+            'google_scholar_id' => ['nullable', 'string', 'max:255'],
+            'wos_id' => ['nullable', 'string', 'max:255'],
+            'title_prefix' => ['nullable', 'string', 'max:255'],
+            'title_suffix' => ['nullable', 'string', 'max:255'],
+            'scopus_h_index' => ['nullable', 'integer', 'min:0'],
+            'gs_h_index' => ['nullable', 'integer', 'min:0'],
+            'wos_h_index' => ['nullable', 'integer', 'min:0'],
             'type' => ['required', Rule::in('dosen', 'mahasiswa', 'reviewer')],
 
             // Internal vs External logic
@@ -205,6 +237,14 @@ class Edit extends Component
                     'birthdate' => $validated['birthdate'],
                     'birthplace' => $validated['birthplace'],
                     'sinta_id' => $validated['sinta_id'],
+                    'scopus_id' => $validated['scopus_id'],
+                    'google_scholar_id' => $validated['google_scholar_id'],
+                    'wos_id' => $validated['wos_id'],
+                    'title_prefix' => $validated['title_prefix'],
+                    'title_suffix' => $validated['title_suffix'],
+                    'scopus_h_index' => $validated['scopus_h_index'],
+                    'gs_h_index' => $validated['gs_h_index'],
+                    'wos_h_index' => $validated['wos_h_index'],
                     'type' => $validated['type'],
                     'institution_id' => $finalInstitutionId,
                     'institution_name' => $finalInstitutionName,

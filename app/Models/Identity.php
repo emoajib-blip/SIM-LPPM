@@ -16,6 +16,7 @@ class Identity extends Model
         'sinta_id',
         'scopus_id',
         'google_scholar_id',
+        'wos_id',
         'type',
         'address',
         'birthdate',

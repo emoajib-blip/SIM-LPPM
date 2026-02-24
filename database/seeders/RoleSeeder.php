@@ -7,11 +7,15 @@ use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
+    use SeedHelper;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        // sanity check: make sure no duplicate role names are already present
+        $this->assertUnique(Role::class, 'name');
         // there are 8 roles
         $roles = [
             'superadmin', // for it admin / developer only
@@ -32,5 +36,7 @@ class RoleSeeder extends Seeder
                 ]
             );
         }
+        // final check after creation to ensure uniqueness still holds
+        $this->assertUnique(Role::class, 'name');
     }
 }

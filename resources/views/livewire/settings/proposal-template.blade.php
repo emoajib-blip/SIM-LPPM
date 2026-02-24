@@ -12,239 +12,127 @@
     </div>
     <div class="page-body">
         <div class="container-xl">
+            {{-- show a global note about file requirements --}}
+            <div class="alert alert-info">
+                Unggah dokumen <strong>DOC/DOCX/PDF</strong> maksimum 10&nbsp;MB untuk masing‑masing template.
+            </div>
+
+            <p class="text-secondary small mb-4">
+                Halaman ini memungkinkan admin LPPM mengganti berkas template standar yang
+                digunakan oleh dosen ketika membuat proposal dan laporan. Nama file di bawah akan
+                muncul sebagai link unduhan sehingga dosen bisa membuka atau menyalin formatnya.
+                Jika belum ada berkas, upload terlebih dahulu di kolom yang tersedia.
+            </p>
+
+            @php
+                $proposalTemplates = [
+                    [
+                        'title' => 'Template Penelitian',
+                        'media' => 'researchTemplateMedia',
+                        'uploadModel' => 'research_template',
+                        'saveAction' => 'saveResearchTemplate',
+                        'downloadAction' => 'downloadResearchTemplate',
+                    ],
+                    [
+                        'title' => 'Template Pengabdian Masyarakat',
+                        'media' => 'communityServiceTemplateMedia',
+                        'uploadModel' => 'community_service_template',
+                        'saveAction' => 'saveCommunityServiceTemplate',
+                        'downloadAction' => 'downloadCommunityServiceTemplate',
+                    ],
+                ];
+            @endphp
+
             <div class="row row-cards">
-                <!-- Research Template -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Template Penelitian</h3>
-                        </div>
-                        <div class="card-body">
-                            @if (session('success_research'))
-                                <div class="alert alert-success">
-                                    {{ session('success_research') }}
-                                </div>
-                            @endif
-                            @if (session('error_research'))
-                                <div class="alert alert-danger">
-                                    {{ session('error_research') }}
-                                </div>
-                            @endif
+                @foreach($proposalTemplates as $template)
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ $template['title'] }}</h3>
+                                <p class="text-muted small mb-0">
+                                    {{ $template['title'] == 'Template Penelitian' ? 'Digunakan untuk proposal penelitian.' : 'Digunakan untuk proposal pengabdian masyarakat.' }}
+                                </p>
+                            </div>
+                            <div class="card-body">
+                                <form wire:submit.prevent="{{ $template['saveAction'] }}">
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" wire:model="{{ $template['uploadModel'] }}">
+                                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">Unggah</button>
+                                    </div>
+                                    @error($template['uploadModel'])<span class="text-danger">{{ $message }}</span>@enderror
+                                </form>
 
-                            <form wire:submit.prevent="saveResearchTemplate">
-                                <div class="mb-3" x-data="{ uploading: false, progress: 0 }"
-                                    x-on:livewire-upload-start="uploading = true"
-                                    x-on:livewire-upload-finish="uploading = false"
-                                    x-on:livewire-upload-error="uploading = false"
-                                    x-on:livewire-upload-progress="progress = $event.detail.progress">
-                                    <label class="form-label">Unggah Template Baru</label>
-                                    <input type="file" class="form-control" wire:model="research_template">
-                                    @error('research_template')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-
-                                    <div class="progress mt-2" x-show="uploading" style="display: none;">
-                                        <div class="progress-bar" role="progressbar" :style="`width: ${progress}%`"
-                                            :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
-                                            <span class="visually-hidden" x-text="`${progress}% Complete`"></span>
+                                @if($this->{$template['media']})
+                                    <div class="mt-2">
+                                        <button wire:click="{{ $template['downloadAction'] }}" class="btn btn-link btn-sm p-0">
+                                            <x-lucide-download class="icon icon-sm" />
+                                            {{ $this->{$template['media']}->file_name }}
+                                        </button>
+                                        <div class="text-secondary small">
+                                            {{ $this->{$template['media']}->human_readable_size }} &middot; terakhir diubah
+                                            {{ $this->{$template['media']}->updated_at->format('Y-m-d') }}
                                         </div>
                                     </div>
-                                </div>
-                                <div class="mt-2">
-                                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                                        <span wire:loading.remove wire:target="saveResearchTemplate">Unggah</span>
-                                        <span wire:loading wire:target="saveResearchTemplate">Mengunggah...</span>
-                                    </button>
-                                </div>
-                            </form>
-
-                            @if ($this->researchTemplateMedia)
-                                <div class="mt-3">
-                                    <label class="form-label">Template Saat Ini</label>
-                                    <button wire:click="downloadResearchTemplate" class="btn btn-outline-primary">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="icon icon-tabler icon-tabler-download" width="24" height="24"
-                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
-                                            <path d="M7 11l5 5l5 -5"></path>
-                                            <path d="M12 4l0 12"></path>
-                                        </svg>
-                                        {{ $this->researchTemplateMedia->file_name }}
-                                    </button>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Community Service Template -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Template Pengabdian Masyarakat</h3>
-                        </div>
-                        <div class="card-body">
-                            @if (session('success_community_service'))
-                                <div class="alert alert-success">
-                                    {{ session('success_community_service') }}
-                                </div>
-                            @endif
-                            @if (session('error_community_service'))
-                                <div class="alert alert-danger">
-                                    {{ session('error_community_service') }}
-                                </div>
-                            @endif
-
-                            <form wire:submit.prevent="saveCommunityServiceTemplate">
-                                <div class="mb-3" x-data="{ uploading: false, progress: 0 }"
-                                    x-on:livewire-upload-start="uploading = true"
-                                    x-on:livewire-upload-finish="uploading = false"
-                                    x-on:livewire-upload-error="uploading = false"
-                                    x-on:livewire-upload-progress="progress = $event.detail.progress">
-                                    <label class="form-label">Unggah Template Baru</label>
-                                    <input type="file" class="form-control" wire:model="community_service_template">
-                                    @error('community_service_template')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-
-                                    <div class="progress mt-2" x-show="uploading" style="display: none;">
-                                        <div class="progress-bar" role="progressbar" :style="`width: ${progress}%`"
-                                            :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
-                                            <span class="visually-hidden" x-text="`${progress}% Complete`"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-2">
-                                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                                        <span wire:loading.remove
-                                            wire:target="saveCommunityServiceTemplate">Unggah</span>
-                                        <span wire:loading
-                                            wire:target="saveCommunityServiceTemplate">Mengunggah...</span>
-                                    </button>
-                                </div>
-                            </form>
-
-                            @if ($this->communityServiceTemplateMedia)
-                                <div class="mt-3">
-                                    <label class="form-label">Template Saat Ini</label>
-                                    <button wire:click="downloadCommunityServiceTemplate"
-                                        class="btn btn-outline-primary">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="icon icon-tabler icon-tabler-download" width="24" height="24"
-                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
-                                            <path d="M7 11l5 5l5 -5"></path>
-                                            <path d="M12 4l0 12"></path>
-                                        </svg>
-                                        {{ $this->communityServiceTemplateMedia->file_name }}
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
             <div class="row row-cards mt-3">
                 <div class="col-12">
                     <h2 class="page-title mb-3">Template Laporan (Kemajuan & Akhir)</h2>
+                    <p class="text-secondary small mb-4">
+                        Empat berkas berikut digunakan saat dosen membuat laporan kemajuan dan akhir
+                        untuk penelitian ataupun pengabdian; klik nama file untuk mengunduh template
+                        yang sedang aktif.
+                    </p>
                 </div>
+                @php
+                    $reportSections = [
+                        'Laporan Penelitian' => [
+                            ['label' => 'Template Laporan Kemajuan', 'media' => 'researchProgressReportTemplateMedia', 'uploadModel' => 'research_progress_report_template', 'saveAction' => 'saveResearchProgressReportTemplate', 'downloadAction' => 'downloadResearchProgressReportTemplate'],
+                            ['label' => 'Template Laporan Akhir', 'media' => 'researchFinalReportTemplateMedia', 'uploadModel' => 'research_final_report_template', 'saveAction' => 'saveResearchFinalReportTemplate', 'downloadAction' => 'downloadResearchFinalReportTemplate'],
+                        ],
+                        'Laporan Pengabdian' => [
+                            ['label' => 'Template Laporan Kemajuan', 'media' => 'communityServiceProgressReportTemplateMedia', 'uploadModel' => 'community_service_progress_report_template', 'saveAction' => 'saveCommunityServiceProgressReportTemplate', 'downloadAction' => 'downloadCommunityServiceProgressReportTemplate'],
+                            ['label' => 'Template Laporan Akhir', 'media' => 'communityServiceFinalReportTemplateMedia', 'uploadModel' => 'community_service_final_report_template', 'saveAction' => 'saveCommunityServiceFinalReportTemplate', 'downloadAction' => 'downloadCommunityServiceFinalReportTemplate'],
+                        ],
+                    ];
+                @endphp
 
-                <!-- Research Report Templates -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Laporan Penelitian</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-4">
-                                <form wire:submit.prevent="saveResearchProgressReportTemplate">
-                                    <label class="form-label">Template Laporan Kemajuan</label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control" wire:model="research_progress_report_template">
-                                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">Simpan</button>
-                                    </div>
-                                    @error('research_progress_report_template') <span class="text-danger">{{ $message }}</span> @enderror
-                                </form>
-                                @if ($this->researchProgressReportTemplateMedia)
-                                    <div class="mt-2">
-                                        <button wire:click="downloadResearchProgressReportTemplate" class="btn btn-link btn-sm p-0">
-                                            <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->researchProgressReportTemplateMedia->file_name }}
-                                        </button>
-                                    </div>
-                                @endif
+                @foreach($reportSections as $sectionTitle => $templates)
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ $sectionTitle }}</h3>
                             </div>
-
-                            <div>
-                                <form wire:submit.prevent="saveResearchFinalReportTemplate">
-                                    <label class="form-label">Template Laporan Akhir</label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control" wire:model="research_final_report_template">
-                                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">Simpan</button>
+                            <div class="card-body">
+                                @foreach($templates as $template)
+                                    <div class="mb-4">
+                                        <form wire:submit.prevent="{{ $template['saveAction'] }}">
+                                            <label class="form-label">{{ $template['label'] }}</label>
+                                            <div class="input-group">
+                                                <input type="file" class="form-control" wire:model="{{ $template['uploadModel'] }}">
+                                            </div>
+                                            @error($template['uploadModel']) <span class="text-danger">{{ $message }}</span> @enderror
+                                        </form>
+                                        @if($this->{$template['media']})
+                                            <div class="mt-2">
+                                                <button wire:click="{{ $template['downloadAction'] }}" class="btn btn-link btn-sm p-0">
+                                                    <x-lucide-download class="icon icon-sm" />
+                                                    {{ $this->{$template['media']}->file_name }}
+                                                    <small class="text-muted">({{ $this->{$template['media']}->human_readable_size }})</small>
+                                                </button>
+                                            </div>
+                                        @endif
                                     </div>
-                                    @error('research_final_report_template') <span class="text-danger">{{ $message }}</span> @enderror
-                                </form>
-                                @if ($this->researchFinalReportTemplateMedia)
-                                    <div class="mt-2">
-                                        <button wire:click="downloadResearchFinalReportTemplate" class="btn btn-link btn-sm p-0">
-                                            <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->researchFinalReportTemplateMedia->file_name }}
-                                        </button>
-                                    </div>
-                                @endif
+                                @endforeach
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Community Service Report Templates -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Laporan Pengabdian</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-4">
-                                <form wire:submit.prevent="saveCommunityServiceProgressReportTemplate">
-                                    <label class="form-label">Template Laporan Kemajuan</label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control" wire:model="community_service_progress_report_template">
-                                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">Simpan</button>
-                                    </div>
-                                    @error('community_service_progress_report_template') <span class="text-danger">{{ $message }}</span> @enderror
-                                </form>
-                                @if ($this->communityServiceProgressReportTemplateMedia)
-                                    <div class="mt-2">
-                                        <button wire:click="downloadCommunityServiceProgressReportTemplate" class="btn btn-link btn-sm p-0">
-                                            <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->communityServiceProgressReportTemplateMedia->file_name }}
-                                        </button>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div>
-                                <form wire:submit.prevent="saveCommunityServiceFinalReportTemplate">
-                                    <label class="form-label">Template Laporan Akhir</label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control" wire:model="community_service_final_report_template">
-                                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">Simpan</button>
-                                    </div>
-                                    @error('community_service_final_report_template') <span class="text-danger">{{ $message }}</span> @enderror
-                                </form>
-                                @if ($this->communityServiceFinalReportTemplateMedia)
-                                    <div class="mt-2">
-                                        <button wire:click="downloadCommunityServiceFinalReportTemplate" class="btn btn-link btn-sm p-0">
-                                            <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->communityServiceFinalReportTemplateMedia->file_name }}
-                                        </button>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
             <div class="row row-cards mt-3">
@@ -307,9 +195,9 @@
                                     </form>
                                     @if ($this->proposalApprovalPageTemplateMedia)
                                         <div class="mt-2 text-end">
-                                            <button wire:click="downloadProposalApprovalPageTemplate" class="btn btn-link btn-sm p-0">
-                                                <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->proposalApprovalPageTemplateMedia->file_name }}
-                                            </button>
+                                            <a href="{{ \Illuminate\Support\Facades\URL::signedRoute('media.download', ['media' => $this->proposalApprovalPageTemplateMedia]) }}" class="btn btn-link btn-sm p-0" data-navigate-ignore="true" download="{{ $this->proposalApprovalPageTemplateMedia->file_name }}">
+            <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->proposalApprovalPageTemplateMedia->file_name }}
+        </a>
                                         </div>
                                     @endif
                                 </div>
@@ -336,9 +224,9 @@
                                     </form>
                                     @if ($this->reportApprovalPageTemplateMedia)
                                         <div class="mt-2 text-end">
-                                            <button wire:click="downloadReportApprovalPageTemplate" class="btn btn-link btn-sm p-0">
-                                                <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->reportApprovalPageTemplateMedia->file_name }}
-                                            </button>
+                                            <a href="{{ \Illuminate\Support\Facades\URL::signedRoute('media.download', ['media' => $this->reportApprovalPageTemplateMedia]) }}" class="btn btn-link btn-sm p-0" data-navigate-ignore="true" download="{{ $this->reportApprovalPageTemplateMedia->file_name }}">
+            <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->reportApprovalPageTemplateMedia->file_name }}
+        </a>
                                         </div>
                                     @endif
                                 </div>
@@ -360,98 +248,42 @@
                             <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <h4 class="mb-2">Surat Kesanggupan Mitra</h4>
-                                    <p class="text-secondary small mb-0">
-                                        Template ini dapat diunduh oleh dosen saat mengisi data mitra pada usulan baru.
-                                    </p>
-                                </div>
-                                <div class="col-md-6">
-                                    <form wire:submit.prevent="savePartnerCommitmentTemplate">
-                                        <div class="input-group">
-                                            <input type="file" class="form-control" wire:model="partner_commitment_template">
-                                            <button type="submit" class="btn btn-azure" wire:loading.attr="disabled">
-                                                Simpan
-                                            </button>
+                                        <div class="col-md-12">
+                                            <h2 class="page-title mb-3">Template Monev Internal</h2>
                                         </div>
-                                        @error('partner_commitment_template') <span class="text-danger small">{{ $message }}</span> @enderror
-                                    </form>
-                                    @if ($this->partnerCommitmentTemplateMedia)
-                                        <div class="mt-2 text-end">
-                                            <button wire:click="downloadPartnerCommitmentTemplate" class="btn btn-link btn-sm p-0">
-                                                <x-lucide-download class="icon icon-sm" /> Unduh: {{ $this->partnerCommitmentTemplateMedia->file_name }}
-                                            </button>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row row-cards mt-3">
-                <div class="col-12">
-                    <h2 class="page-title mb-3">Template Monev Internal</h2>
-                </div>
-                <!-- Monev Berita Acara -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Berita Acara Monev</h3>
-                        </div>
-                        <div class="card-body">
-                            <form wire:submit.prevent="saveMonevBeritaAcaraTemplate">
-                                <div class="mb-3">
-                                    <label class="form-label">Unggah Template Baru</label>
-                                    <input type="file" class="form-control" wire:model="monev_berita_acara_template">
-                                    @error('monev_berita_acara_template')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                                    Unggah
-                                </button>
-                            </form>
-                            @if ($this->monevBeritaAcaraTemplateMedia)
-                                <div class="mt-3">
-                                    <button wire:click="downloadMonevBeritaAcaraTemplate" class="btn btn-ghost-primary w-100">
-                                        Unduh: {{ $this->monevBeritaAcaraTemplateMedia->file_name }}
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Monev Borang -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Borang Monev</h3>
-                        </div>
-                        <div class="card-body">
-                            <form wire:submit.prevent="saveMonevBorangTemplate">
-                                <div class="mb-3">
-                                    <label class="form-label">Unggah Template Baru</label>
-                                    <input type="file" class="form-control" wire:model="monev_borang_template">
-                                    @error('monev_borang_template')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                                    Unggah
-                                </button>
-                            </form>
-                            @if ($this->monevBorangTemplateMedia)
-                                <div class="mt-3">
-                                    <button wire:click="downloadMonevBorangTemplate" class="btn btn-ghost-primary w-100">
-                                        Unduh: {{ $this->monevBorangTemplateMedia->file_name }}
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
+                                        @php
+                                            $monevTemplates = [
+                                                ['title' => 'Berita Acara Monev', 'media' => 'monevBeritaAcaraTemplateMedia', 'uploadModel' => 'monev_berita_acara_template', 'saveAction' => 'saveMonevBeritaAcaraTemplate', 'downloadAction' => 'downloadMonevBeritaAcaraTemplate'],
+                                                ['title' => 'Borang Monev', 'media' => 'monevBorangTemplateMedia', 'uploadModel' => 'monev_borang_template', 'saveAction' => 'saveMonevBorangTemplate', 'downloadAction' => 'downloadMonevBorangTemplate'],
+                                                ['title' => 'Rekap Penilaian Monev', 'media' => 'monevRekapPenilaianTemplateMedia', 'uploadModel' => 'monev_rekap_penilaian_template', 'saveAction' => 'saveMonevRekapPenilaianTemplate', 'downloadAction' => 'downloadMonevRekapPenilaianTemplate'],
+                                            ];
+                                        @endphp
+                                        @foreach($monevTemplates as $template)
+                                            <div class="col-md-4">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">{{ $template['title'] }}</h3>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <form wire:submit.prevent="{{ $template['saveAction'] }}">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Unggah Template Baru</label>
+                                                                <input type="file" class="form-control" wire:model="{{ $template['uploadModel'] }}">
+                                                                @error($template['uploadModel'])<span class="text-danger">{{ $message }}</span>@enderror
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">Unggah</button>
+                                                        </form>
+                                                        @if($this->{$template['media']})
+                                                            <div class="mt-3">
+                                                                <a href="{{ \Illuminate\Support\Facades\URL::signedRoute('media.download', ['media' => $this->{$template['media']}]) }}" class="btn btn-ghost-primary w-100" data-navigate-ignore="true" download="{{ $this->{$template['media']}->file_name }}">
+                                                                    Unduh: {{ $this->{$template['media']}->file_name }}
+                                                                </a>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                 <!-- Monev Rekap Penilaian -->
                 <div class="col-md-4">
                     <div class="card">
@@ -473,9 +305,9 @@
                             </form>
                             @if ($this->monevRekapPenilaianTemplateMedia)
                                 <div class="mt-3">
-                                    <button wire:click="downloadMonevRekapPenilaianTemplate" class="btn btn-ghost-primary w-100">
-                                        Unduh: {{ $this->monevRekapPenilaianTemplateMedia->file_name }}
-                                    </button>
+                                    <a href="{{ \Illuminate\Support\Facades\URL::signedRoute('media.download', ['media' => $this->monevRekapPenilaianTemplateMedia]) }}" class="btn btn-ghost-primary w-100" data-navigate-ignore="true" download="{{ $this->monevRekapPenilaianTemplateMedia->file_name }}">
+            Unduh: {{ $this->monevRekapPenilaianTemplateMedia->file_name }}
+        </a>
                                 </div>
                             @endif
                         </div>

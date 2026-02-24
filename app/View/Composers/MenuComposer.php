@@ -201,6 +201,13 @@ class MenuComposer
                     ],
                 ],
             ],
+            // Accreditation Hub - For all roles concerned with data audit
+            [
+                'title' => 'Akreditasi',
+                'icon' => 'certificate',
+                'route' => 'accreditation.hub',
+                'roles' => ['admin lppm', 'rektor', 'kepala lppm', 'dekan'],
+            ],
             // kelola pengguna - admin lppm
             [
                 'title' => 'Kelola Pengguna',

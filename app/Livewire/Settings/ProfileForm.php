@@ -34,6 +34,8 @@ class ProfileForm extends Component
 
     public string $google_scholar_id = '';
 
+    public string $wos_id = '';
+
     public string $address = '';
 
     public string $title_prefix = '';
@@ -53,6 +55,8 @@ class ProfileForm extends Component
     public int $scopus_h_index = 0;
 
     public int $gs_h_index = 0;
+
+    public int $wos_h_index = 0;
 
     public array $institutions = [];
 
@@ -78,6 +82,7 @@ class ProfileForm extends Component
             $this->sinta_id = $user->identity->sinta_id ?? '';
             $this->scopus_id = $user->identity->scopus_id ?? '';
             $this->google_scholar_id = $user->identity->google_scholar_id ?? '';
+            $this->wos_id = $user->identity->wos_id ?? '';
             $this->title_prefix = $user->identity->title_prefix ?? '';
             $this->title_suffix = $user->identity->title_suffix ?? '';
             $this->address = $user->identity->address ?? '';
@@ -88,6 +93,7 @@ class ProfileForm extends Component
             $this->study_program_id = $user->identity->study_program_id;
             $this->scopus_h_index = $user->identity->scopus_h_index ?? 0;
             $this->gs_h_index = $user->identity->gs_h_index ?? 0;
+            $this->wos_h_index = $user->identity->wos_h_index ?? 0;
         }
 
         // Load institutions for dropdown
@@ -163,6 +169,7 @@ class ProfileForm extends Component
             'sinta_id' => ['nullable', 'string', 'max:255'],
             'scopus_id' => ['nullable', 'string', 'max:255'],
             'google_scholar_id' => ['nullable', 'string', 'max:255'],
+            'wos_id' => ['nullable', 'string', 'max:255'],
             'title_prefix' => ['nullable', 'string', 'max:255'],
             'title_suffix' => ['nullable', 'string', 'max:255'],
             'address' => ['nullable', 'string'],
@@ -173,6 +180,7 @@ class ProfileForm extends Component
             'study_program_id' => ['nullable', 'exists:study_programs,id'],
             'scopus_h_index' => ['nullable', 'integer', 'min:0'],
             'gs_h_index' => ['nullable', 'integer', 'min:0'],
+            'wos_h_index' => ['nullable', 'integer', 'min:0'],
             'photo' => ['nullable', 'image', 'max:1024'],
         ]);
 
@@ -214,6 +222,7 @@ class ProfileForm extends Component
             'sinta_id' => $validated['sinta_id'] ?: null,
             'scopus_id' => $validated['scopus_id'] ?: null,
             'google_scholar_id' => $gsId,
+            'wos_id' => $validated['wos_id'] ?: null,
             'title_prefix' => $validated['title_prefix'] ?: null,
             'title_suffix' => $validated['title_suffix'] ?: null,
             'address' => $validated['address'] ?: null,
@@ -225,12 +234,20 @@ class ProfileForm extends Component
             'study_program_id' => $validated['study_program_id'] ?? null,
             'scopus_h_index' => $validated['scopus_h_index'] ?? 0,
             'gs_h_index' => $validated['gs_h_index'] ?? 0,
+            'wos_h_index' => $validated['wos_h_index'] ?? 0,
         ];
-
         $user->identity()->updateOrCreate(
             ['user_id' => $user->id],
             $identityData
         );
+
+        \App\Models\ActivityLog::create([
+            'user_id' => $user->id,
+            'activity' => 'profile_update',
+            'description' => 'User memperbarui informasi profil/identitas',
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
 
         $this->dispatch('profile-updated', name: $user->name);
 
@@ -293,6 +310,7 @@ class ProfileForm extends Component
             $this->sinta_id = $user->identity->sinta_id ?? '';
             $this->scopus_id = $user->identity->scopus_id ?? '';
             $this->google_scholar_id = $user->identity->google_scholar_id ?? '';
+            $this->wos_id = $user->identity->wos_id ?? '';
             $this->title_prefix = $user->identity->title_prefix ?? '';
             $this->title_suffix = $user->identity->title_suffix ?? '';
             $this->address = $user->identity->address ?? '';
@@ -303,6 +321,7 @@ class ProfileForm extends Component
             $this->study_program_id = $user->identity->study_program_id;
             $this->scopus_h_index = $user->identity->scopus_h_index ?? 0;
             $this->gs_h_index = $user->identity->gs_h_index ?? 0;
+            $this->wos_h_index = $user->identity->wos_h_index ?? 0;
 
             // Reload faculties based on institution
             if ($this->institution_id) {

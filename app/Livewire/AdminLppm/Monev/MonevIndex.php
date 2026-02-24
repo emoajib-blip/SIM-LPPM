@@ -83,15 +83,21 @@ class MonevIndex extends Component
             'notes' => 'nullable|string',
             'berita_acara' => [
                 $isNew || ! $this->selectedMonev?->hasMedia('berita_acara') ? 'required' : 'nullable',
-                'file', 'mimes:pdf,doc,docx', 'max:10240',
+                'file',
+                'mimes:pdf,doc,docx',
+                'max:10240',
             ],
             'borang' => [
                 $isNew || ! $this->selectedMonev?->hasMedia('borang') ? 'required' : 'nullable',
-                'file', 'mimes:pdf,doc,docx', 'max:10240',
+                'file',
+                'mimes:pdf,doc,docx',
+                'max:10240',
             ],
             'rekap_penilaian' => [
                 $isNew || ! $this->selectedMonev?->hasMedia('rekap_penilaian') ? 'required' : 'nullable',
-                'file', 'mimes:pdf,doc,docx', 'max:10240',
+                'file',
+                'mimes:pdf,doc,docx',
+                'max:10240',
             ],
         ], [
             'berita_acara.required' => 'File Berita Acara wajib diunggah.',
@@ -146,6 +152,24 @@ class MonevIndex extends Component
             return response()->download($setting->getFirstMedia('template')->getPath(), $setting->getFirstMedia('template')->file_name);
         }
         $this->toastError('Template belum tersedia.');
+    }
+
+    #[Computed]
+    public function monevBeritaAcaraMedia()
+    {
+        return Setting::where('key', 'monev_berita_acara_template')->first()?->getFirstMedia('template');
+    }
+
+    #[Computed]
+    public function monevBorangMedia()
+    {
+        return Setting::where('key', 'monev_borang_template')->first()?->getFirstMedia('template');
+    }
+
+    #[Computed]
+    public function monevRekapPenilaianMedia()
+    {
+        return Setting::where('key', 'monev_rekap_penilaian_template')->first()?->getFirstMedia('template');
     }
 
     #[Computed]

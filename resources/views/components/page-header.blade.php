@@ -2,6 +2,9 @@
 
 <div class="page-header d-print-none" aria-label="Page header">
     <div class="container-xl">
+        @isset($breadcrumbs)
+            <x-breadcrumb :items="$breadcrumbs" />
+        @endisset
         <div class="align-items-center row g-2">
             <div class="col-12 col-md">
                 <h2 class="page-title">{{ $title }}</h2>
