@@ -42,7 +42,7 @@ class AdminUserSeeder extends Seeder
                     'identity_id' => 'ADMIN',
                     'type' => 'dosen',
                     'institution_id' => $institution->id,
-                    'address' => $institution->short_name ?? 'Institution Address',
+                    'address' => 'ITSNU Pekalongan',
                     'birthdate' => '2000-01-01',
                     'birthplace' => 'Institution City',
                 ]);

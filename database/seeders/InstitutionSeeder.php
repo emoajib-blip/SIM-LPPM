@@ -64,7 +64,7 @@ class InstitutionSeeder extends Seeder
             ['071050', 'Universitas Islam Malang', 'pts'],
 
             // Internal / Local
-            ['0710XX', 'Institut Teknologi dan Sains Nahdlatul Ulama Pasuruan', 'pts'],
+            ['0710XX', 'Institut Teknologi dan Sains Nahdlatul Ulama Pekalongan', 'pts'],
         ];
 
         $payload = [];
