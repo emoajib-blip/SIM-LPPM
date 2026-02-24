@@ -218,12 +218,13 @@ class TktSeeder extends Seeder
 
         $levels = [];
         $indicators = [];
+        $levelCounter = 1;
 
         foreach ($data as $typeData) {
             foreach ($typeData['levels'] as $levelData) {
-                $levelId = (string) \Illuminate\Support\Str::uuid();
+                $currentLevelId = $levelCounter++;
                 $levels[] = [
-                    'id' => $levelId,
+                    'id' => $currentLevelId,
                     'type' => $typeData['type'],
                     'level' => $levelData['level'],
                     'description' => $levelData['description'],
@@ -233,8 +234,7 @@ class TktSeeder extends Seeder
 
                 foreach ($levelData['indicators'] as $indicatorData) {
                     $indicators[] = [
-                        'id' => (string) \Illuminate\Support\Str::uuid(),
-                        'tkt_level_id' => $levelId,
+                        'tkt_level_id' => $currentLevelId,
                         'code' => $indicatorData['code'],
                         'indicator' => $indicatorData['indicator'],
                         'created_at' => now(),
