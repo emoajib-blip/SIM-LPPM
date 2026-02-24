@@ -102,7 +102,7 @@ class AdminUserSeeder extends Seeder
         $adminLppm->assignRole('admin lppm');
 
         // Create Rektor
-        $rektor = User::firstOrCreate(
+        $rektor = User::updateOrCreate(
             ['email' => 'rektor@email.com'],
             [
                 'name' => 'Ali Imron',
@@ -123,9 +123,12 @@ class AdminUserSeeder extends Seeder
                 'title_suffix' => 'S.E., M.Si.',
             ]);
         } else {
-            // Update existing identity if needed
-            $rektor->identity->update([
+            $rektor->update([
                 'name' => 'Ali Imron',
+            ]);
+
+            // Update existing identity if needed
+            $rektor->identity?->update([
                 'title_prefix' => 'Dr.',
                 'title_suffix' => 'S.E., M.Si.',
             ]);
