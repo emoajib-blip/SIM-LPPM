@@ -31,40 +31,8 @@ class InstitutionSeeder extends Seeder
         // 2. Data Foundation: Top Indonesia Universities & Local Context
         // Format: [Code, Name, Type]
         $institutions = [
-            // Top PTN
-            ['001001', 'Universitas Gadjah Mada', 'ptn'],
-            ['001002', 'Universitas Indonesia', 'ptn'],
-            ['001003', 'Institut Teknologi Bandung', 'ptn'],
-            ['001004', 'Universitas Airlangga', 'ptn'],
-            ['001005', 'Institut Teknologi Sepuluh Nopember', 'ptn'],
-            ['001006', 'Institut Pertanian Bogor', 'ptn'],
-            ['001007', 'Universitas Diponegoro', 'ptn'],
-            ['001008', 'Universitas Brawijaya', 'ptn'],
-            ['001009', 'Universitas Hasanuddin', 'ptn'],
-            ['001010', 'Universitas Padjadjaran', 'ptn'],
-            ['001011', 'Universitas Sebelas Maret', 'ptn'],
-            ['001013', 'Universitas Andalas', 'ptn'],
-            ['001014', 'Universitas Sumatera Utara', 'ptn'],
-            ['001017', 'Universitas Riau', 'ptn'],
-            ['001026', 'Universitas Lampung', 'ptn'],
-
-            // PTN Jawa Timur
-            ['001025', 'Universitas Negeri Surabaya', 'ptn'],
-            ['001026', 'Universitas Negeri Malang', 'ptn'],
-            ['001023', 'Universitas Jember', 'ptn'],
-            ['001024', 'Universitas Trunojoyo Madura', 'ptn'],
-            ['002008', 'UPN Veteran Jawa Timur', 'ptn'],
-
-            // PTNU & Religious Base
-            ['211001', 'Universitas Islam Negeri Sunan Ampel', 'ptkin'],
-            ['211002', 'Universitas Islam Negeri Maulana Malik Ibrahim', 'ptkin'],
-            ['231002', 'UIN K.H. Achmad Siddiq Jember', 'ptkin'],
-            ['071095', 'Universitas Nahdlatul Ulama Surabaya', 'pts'],
-            ['071096', 'Universitas Nahdlatul Ulama Sidoarjo', 'pts'],
-            ['071050', 'Universitas Islam Malang', 'pts'],
-
             // Internal / Local
-            ['0710XX', 'Institut Teknologi dan Sains Nahdlatul Ulama Pekalongan', 'pts'],
+            ['062004', 'Institut Teknologi dan Sains Nahdlatul Ulama Pekalongan', 'university'],
         ];
 
         $payload = [];

@@ -101,6 +101,38 @@ class AdminUserSeeder extends Seeder
 
         $adminLppm->assignRole('admin lppm');
 
+        // Create Rektor
+        $rektor = User::firstOrCreate(
+            ['email' => 'rektor@email.com'],
+            [
+                'name' => 'Ali Imron',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        if (! $rektor->identity) {
+            $rektor->identity()->create([
+                'identity_id' => '0623098601',
+                'type' => 'dosen',
+                'institution_id' => $institution->id,
+                'address' => 'ITSNU Pekalongan',
+                'birthdate' => '1986-09-23',
+                'birthplace' => 'Pekalongan',
+                'title_prefix' => 'Dr.',
+                'title_suffix' => 'S.E., M.Si.',
+            ]);
+        } else {
+            // Update existing identity if needed
+            $rektor->identity->update([
+                'name' => 'Ali Imron',
+                'title_prefix' => 'Dr.',
+                'title_suffix' => 'S.E., M.Si.',
+            ]);
+        }
+
+        $rektor->assignRole('rektor');
+
         $this->command->info('Admin users seeded successfully!');
     }
 }
