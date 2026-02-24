@@ -23,6 +23,7 @@ if [ -f "$LOCK_FILE" ]; then
     echo "Optimizing Laravel..."
     php artisan optimize:clear
     php artisan optimize
+    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database || true
 else
     echo "Installer lock not found. Skipping migrations and optimize."
 fi
