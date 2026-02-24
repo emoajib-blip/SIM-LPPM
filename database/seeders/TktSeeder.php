@@ -216,22 +216,40 @@ class TktSeeder extends Seeder
             ],
         ];
 
+        $levels = [];
+        $indicators = [];
+
         foreach ($data as $typeData) {
             foreach ($typeData['levels'] as $levelData) {
-                $level = TktLevel::create([
+                $levelId = (string) \Illuminate\Support\Str::uuid();
+                $levels[] = [
+                    'id' => $levelId,
                     'type' => $typeData['type'],
                     'level' => $levelData['level'],
                     'description' => $levelData['description'],
-                ]);
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
 
                 foreach ($levelData['indicators'] as $indicatorData) {
-                    TktIndicator::create([
-                        'tkt_level_id' => $level->id,
+                    $indicators[] = [
+                        'id' => (string) \Illuminate\Support\Str::uuid(),
+                        'tkt_level_id' => $levelId,
                         'code' => $indicatorData['code'],
                         'indicator' => $indicatorData['indicator'],
-                    ]);
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                 }
             }
+        }
+
+        foreach (array_chunk($levels, 50) as $chunk) {
+            TktLevel::insert($chunk);
+        }
+
+        foreach (array_chunk($indicators, 50) as $chunk) {
+            TktIndicator::insert($chunk);
         }
     }
 }
