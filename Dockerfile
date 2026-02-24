@@ -56,8 +56,8 @@ RUN rm -rf public/build
 COPY --from=asset-builder /app/public/build ./public/build
 
 # 8. Set permissions for Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 # 9. Cloud Run specific configuration
 # Cloud Run listens on 8080 by default
