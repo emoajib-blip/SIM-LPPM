@@ -266,6 +266,79 @@
     </div>
 </div>
 
+<!-- Section: Sustainable Development Goals (SDGs) -->
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex align-items-center mb-4">
+            <x-lucide-globe class="icon me-3" />
+            <h3 class="card-title mb-0">1.4 Sustainable Development Goals (SDGs)</h3>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label d-flex align-items-center gap-2" for="sdgs">
+                Pilih SDGs yang Relevan <span class="text-danger">*</span>
+                <span class="text-muted" data-bs-toggle="tooltip"
+                    title="Pilih satu atau lebih SDGs yang berkaitan dengan usulan penelitian Anda. Data ini digunakan untuk perhitungan IKU-07.">
+                    <i class="ti ti-info-circle"></i>
+                </span>
+            </label>
+            <div wire:ignore>
+                <select id="sdgs" class="form-select @error('form.sdg_ids') is-invalid @enderror"
+                    wire:model.live="form.sdg_ids" x-data="tomSelect" multiple
+                    placeholder="Pilih kategori SDGs yang relevan" required>
+                    @foreach ($this->sdgs as $sdg)
+                        <option value="{{ $sdg->id }}">{{ $sdg->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @error('form.sdg_ids')
+                <div class="d-block invalid-feedback">{{ $message }}</div>
+            @enderror
+            <small class="text-muted">Dapat memilih lebih dari satu kategori.</small>
+        </div>
+    </div>
+</div>
+
+<!-- Section: Target IKU -->
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex align-items-center mb-4">
+            <x-lucide-target class="icon me-3" />
+            <h3 class="card-title mb-0">1.5 Pemetaan Target IKU</h3>
+        </div>
+
+        <div class="mb-0">
+            <label class="form-label d-flex align-items-center gap-2 mb-3">
+                Pilih Target IKU Kepmen 358 <span class="text-danger">*</span>
+                <span class="text-muted" data-bs-toggle="tooltip"
+                    title="Pilih IKU yang menjadi target luaran dari usulan ini. Gunakan CTRL/CMD + Klik untuk memilih lebih dari satu.">
+                    <i class="ti ti-info-circle"></i>
+                </span>
+            </label>
+
+            <div class="row g-3">
+                @foreach($this->masterIkus as $iku)
+                    <div class="col-md-12">
+                        <label
+                            class="form-check form-check-inline mb-0 p-3 border rounded w-100 cursor-pointer hover-shadow transition-all {{ in_array($iku->id, $form->targeted_iku_ids) ? 'border-primary bg-primary-lt' : '' }}">
+                            <input class="form-check-input" type="checkbox" value="{{ $iku->id }}"
+                                wire:model.live="form.targeted_iku_ids">
+                            <span class="form-check-label">
+                                <strong>{{ $iku->code }}</strong>: {{ $iku->name }}
+                                <div class="text-muted small mt-1">{{ $iku->description }}</div>
+                            </span>
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+
+            @error('form.targeted_iku_ids')
+                <div class="d-block invalid-feedback mt-2">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+</div>
+
 <!-- Section: Detail Penelitian -->
 <div class="card mb-3">
     <div class="card-body">

@@ -42,8 +42,9 @@ class ProposalTemplate extends Component
 
     public function mount()
     {
-        $this->proposal_approval_mode = Setting::where('key', 'proposal_approval_mode')->first()?->value ?? 'digital';
-        $this->report_approval_mode = Setting::where('key', 'report_approval_mode')->first()?->value ?? 'digital';
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->proposal_approval_mode = Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
+        $this->report_approval_mode = Setting::where('key', 'report_approval_mode')->value('value') ?? 'digital';
     }
 
     public function saveResearchTemplate()

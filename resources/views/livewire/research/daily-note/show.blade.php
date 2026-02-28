@@ -6,7 +6,7 @@
         <x-lucide-arrow-left class="me-2 icon" />
         Kembali
     </a>
-    <a href="{{ route('daily-notes.export-pdf', $proposal) }}" target="_blank" class="btn-outline-primary btn">
+    <a data-navigate-ignore="true" href="{{ route('daily-notes.export-pdf', $proposal) }}" target="_blank" class="btn-outline-primary btn">
         <x-lucide-download class="me-2 icon" />
         Unduh Catatan (PDF)
     </a>
@@ -179,7 +179,7 @@
                                             <div class="d-flex align-items-center gap-1">
                                                 @if (str_starts_with($media->mime_type, 'image/'))
                                                     @php
-                                                        $signedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(15), ['media' => $media]);
+                                                        $signedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]);
                                                     @endphp
                                                     <a href="#"
                                                         data-url="{{ $signedUrl }}"
@@ -190,7 +190,7 @@
                                                         <small>{{ $media->file_name }}</small>
                                                     </a>
                                                 @else
-                                                    <a href="{{ URL::signedRoute('media.download', ['media' => $media]) }}" target="_blank"
+                                                    <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
                                                         class="text-decoration-none text-truncate" data-navigate-ignore="true"
                                                         style="max-width: 150px;" title="{{ $media->file_name }}">
                                                         <x-lucide-file-text class="icon-inline me-1 text-muted icon" />

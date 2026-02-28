@@ -10,16 +10,21 @@ use Illuminate\Database\Eloquent\Model;
  *
  * Each year can have different budget caps for research and community service.
  * Used to enforce maximum budget constraints when creating/editing proposals.
+ *
+ * @property int $id
+ * @property int $year
+ * @property float $research_budget_cap
+ * @property float $community_service_budget_cap
  */
 class BudgetCap extends Model
 {
-    /** @use HasFactory<\Database\Factories\BudgetCapFactory> */
     use HasFactory;
 
     protected $fillable = [
         'year',
         'research_budget_cap',
         'community_service_budget_cap',
+        'scheme_caps',
     ];
 
     /**
@@ -33,15 +38,17 @@ class BudgetCap extends Model
             'year' => 'integer',
             'research_budget_cap' => 'decimal:2',
             'community_service_budget_cap' => 'decimal:2',
+            'scheme_caps' => 'array',
         ];
     }
 
     /**
-     * Get the budget cap for a specific year and proposal type.
+     * Get the budget cap for a specific year, type and selectively by scheme.
      *
      * @param  string  $type  'research' or 'community_service'
+     * @param  int|null  $schemeId  Optional scheme ID to check for specific caps
      */
-    public static function getCapForYear(int $year, string $type): ?float
+    public static function getCapForYear(int $year, string $type, ?int $schemeId = null): ?float
     {
         $budgetCap = self::where('year', $year)->first();
 
@@ -49,8 +56,14 @@ class BudgetCap extends Model
             return null;
         }
 
+        // 1. Check for specific scheme cap first natively
+        if ($schemeId && is_array($budgetCap->scheme_caps) && isset($budgetCap->scheme_caps[$type]) && isset($budgetCap->scheme_caps[$type][$schemeId])) {
+            return (float) $budgetCap->scheme_caps[$type][$schemeId];
+        }
+
+        // 2. Fallback to global generic cap
         return $type === 'research'
-            ? (float) $budgetCap->research_budget_cap
-            : (float) $budgetCap->community_service_budget_cap;
+            ? ($budgetCap->research_budget_cap !== null ? (float) $budgetCap->research_budget_cap : null)
+            : ($budgetCap->community_service_budget_cap !== null ? (float) $budgetCap->community_service_budget_cap : null);
     }
 }

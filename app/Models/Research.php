@@ -12,6 +12,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property string $id
+ * @property string|null $macro_research_group_id
+ * @property string|null $tkt_type
+ * @property string|null $background
+ * @property string|null $state_of_the_art
+ * @property string|null $methodology
+ * @property array|null $roadmap_data
+ * @property string|null $substance_file
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read \App\Models\MacroResearchGroup|null $macroResearchGroup
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TktLevel[] $tktLevels
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TktIndicator[] $tktIndicators
+ */
 class Research extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\ResearchFactory> */

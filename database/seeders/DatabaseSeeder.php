@@ -28,6 +28,9 @@ class DatabaseSeeder extends Seeder
             BudgetGroupSeeder::class,
             BudgetComponentSeeder::class,
             ReviewCriteriaSeeder::class,
+            IkuOutputTypeSeeder::class,
+            MasterIkuSeeder::class,
+            SdgSeeder::class,
 
             // 3. Hierarchical Data (Self-referencing)
             ScienceClusterSeeder::class,

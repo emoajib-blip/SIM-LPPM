@@ -9,6 +9,15 @@ use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
+/**
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read \Illuminate\Support\Collection|\App\Models\User[] $teamMembers
+ * @property-read \Illuminate\Support\Collection|\App\Models\User[] $pendingInvitations
+ * @property-read \Illuminate\Support\Collection|\App\Models\User[] $acceptedMembers
+ * @property-read \Illuminate\Support\Collection|\App\Models\User[] $rejectedMembers
+ * @property-read bool $allAccepted
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class TeamMemberInvitations extends Component
 {
     use HasToast;
@@ -76,7 +85,8 @@ class TeamMemberInvitations extends Component
             return;
         }
 
-        if ($member->pivot->status === 'accepted') {
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        if ($member->pivot->getAttribute('status') === 'accepted') {
             $this->toastInfo('Anda sudah menerima undangan');
 
             return;

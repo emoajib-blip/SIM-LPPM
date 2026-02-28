@@ -15,11 +15,26 @@
             }
         @endphp
 
+        @php
+            $user = auth()->user();
+            $eligibility = ['eligible' => true];
+            if ($user && $user->activeHasRole('dosen')) {
+                $eligibility = app(\App\Services\LecturerEligibilityService::class)->checkEligibility($user);
+            }
+        @endphp
+
         @if ($isWithinSchedule && auth()->user()->activeHasRole('dosen'))
-            <a href="{{ route('research.proposal.create') }}" wire:navigate.hover class="btn btn-primary">
-                <x-lucide-plus class="icon" />
-                Usulan Penelitian Baru
-            </a>
+            @if ($eligibility['eligible'])
+                <a href="{{ route('research.proposal.create') }}" wire:navigate.hover class="btn btn-primary">
+                    <x-lucide-plus class="icon" />
+                    Usulan Penelitian Baru
+                </a>
+            @else
+                <button class="btn btn-secondary" disabled title="Selesaikan tanggungan laporan Anda untuk mengusulkan baru">
+                    <x-lucide-lock class="icon" />
+                    Usulan Dikunci
+                </button>
+            @endif
         @endif
         <x-lecturer-eligibility-modal />
     </div>
@@ -295,8 +310,7 @@
                                     <td>
                                         <div class="flex-nowrap btn-list">
                                             <a href="{{ route('research.proposal.show', $proposal) }}"
-                                                class="btn btn-icon btn-ghost-primary" title="Lihat"
-                                                wire:navigate.hover>
+                                                class="btn btn-icon btn-ghost-primary" title="Lihat" wire:navigate.hover>
                                                 <x-lucide-eye class="icon" />
                                             </a>
                                         </div>

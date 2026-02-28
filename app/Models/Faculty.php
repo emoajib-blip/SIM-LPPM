@@ -7,6 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $institution_id
+ * @property string $name
+ * @property string|null $code
+ * @property string|null $dean_name
+ * @property string|null $dean_id
+ * @property string|null $dean_user_id
+ * @property-read \App\Models\User|null $deanUser
+ * @property-read \App\Models\Institution $institution
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\StudyProgram[] $studyPrograms
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Identity[] $identities
+ */
 class Faculty extends Model
 {
     use HasFactory;

@@ -118,8 +118,8 @@ class InstitutionManager extends Component
                 $baseName = $user->name;
 
                 // Get titles from identity table
-                $prefix = $identity?->title_prefix;
-                $suffix = $identity?->title_suffix;
+                $prefix = $identity->title_prefix;
+                $suffix = $identity->title_suffix;
 
                 // Construct full name with smart title handling
                 $fullName = $baseName;
@@ -135,7 +135,7 @@ class InstitutionManager extends Component
                 }
 
                 $this->lppmHeadName = trim($fullName);
-                $this->lppmHeadId = $identity?->identity_id ?? '';
+                $this->lppmHeadId = $identity->identity_id ?? '';
             }
         }
     }
@@ -160,7 +160,7 @@ class InstitutionManager extends Component
     public function confirmDelete(int $id): void
     {
         $this->deleteItemId = $id;
-        $this->deleteItemName = \App\Models\Institution::find($id)?->name ?? '';
+        $this->deleteItemName = \App\Models\Institution::find($id)->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-institution');
     }
 }

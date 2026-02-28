@@ -6,6 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $proposal_reviewer_id
+ * @property string $proposal_id
+ * @property string $user_id
+ * @property int $round
+ * @property string|null $review_notes
+ * @property string|null $recommendation
+ * @property int|null $total_score
+ * @property \Illuminate\Support\Carbon|null $started_at
+ * @property \Illuminate\Support\Carbon|null $completed_at
+ * @property-read \App\Models\ProposalReviewer $proposalReviewer
+ * @property-read \App\Models\Proposal $proposal
+ * @property-read \App\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewScore[] $scores
+ *
+ * @method \Illuminate\Database\Eloquent\Builder|static forProposal(string $proposalId)
+ * @method \Illuminate\Database\Eloquent\Builder|static forReviewer(string $userId)
+ * @method \Illuminate\Database\Eloquent\Builder|static forRound(int $round)
+ * @method \Illuminate\Database\Eloquent\Builder|static completed()
+ * @method \Illuminate\Database\Eloquent\Builder|static latestRound()
+ */
 class ReviewLog extends Model
 {
     protected $table = 'review_logs';

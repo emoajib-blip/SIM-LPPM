@@ -17,7 +17,7 @@ class ReviewOverdue extends Notification implements ShouldQueue
     public function __construct(
         public Proposal $proposal,
         public User $reviewer,
-        public string $daysOverdue
+        public int $daysOverdue
     ) {}
 
     public function via(object $notifiable): array

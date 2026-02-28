@@ -10,10 +10,25 @@ use App\Services\ProposalService;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
+/**
+ * @property-read bool $canEdit
+ * @property-read bool $canDelete
+ * @property-read string $statusLabel
+ * @property-read string $statusColor
+ *
+ * "Efficiency is the goal, but Integrity is the foundation."
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 abstract class ProposalShow extends Component
 {
-    use WithApproval;
-    use WithTeamManagement;
+    use WithApproval, WithTeamManagement {
+        WithApproval::toast insteadof WithTeamManagement;
+        WithApproval::toastSuccess insteadof WithTeamManagement;
+        WithApproval::toastError insteadof WithTeamManagement;
+        WithApproval::toastWarning insteadof WithTeamManagement;
+        WithApproval::toastInfo insteadof WithTeamManagement;
+        WithApproval::getDefaultToastTitle insteadof WithTeamManagement;
+    }
 
     public ProposalForm $form;
 
@@ -74,13 +89,13 @@ abstract class ProposalShow extends Component
     #[Computed]
     public function statusLabel(): string
     {
-        return $this->proposal->status?->label() ?? '';
+        return $this->proposal->status->label();
     }
 
     #[Computed]
     public function statusColor(): string
     {
-        return $this->proposal->status?->color() ?? 'secondary';
+        return $this->proposal->status->color();
     }
 
     #[Computed]

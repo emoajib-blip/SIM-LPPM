@@ -40,7 +40,7 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-sm-6 col-lg-4">
-                    <div class="card">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="subheader">Total Penelitian</div>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="col-sm-6 col-lg-4">
-                    <div class="card">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="subheader">Total PKM</div>
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="col-sm-6 col-lg-4">
-                    <div class="card">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="subheader">Total Proposal</div>
@@ -79,13 +79,16 @@
             <div class="mt-3 row row-cards">
                 <!-- Penelitian Terbaru -->
                 <div class="col-12 col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Penelitian Terbaru</h3>
+                    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                        <div class="card-header bg-transparent border-0 py-3 d-flex align-items-center">
+                            <div class="avatar bg-primary-lt text-primary shadow-sm avatar-sm me-3 border-0">
+                                <i class="ti ti-flask-2"></i>
+                            </div>
+                            <h3 class="card-title fw-bold mb-0">Penelitian Terbaru</h3>
                         </div>
                         <div class="table-responsive">
-                            <table class="card-table table table-vcenter">
-                                <thead>
+                            <table class="card-table table table-vcenter table-borderless table-hover">
+                                <thead class="bg-transparent text-muted">
                                     <tr>
                                         <th>Judul</th>
                                         <th>Pengaju</th>
@@ -113,20 +116,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @if ($research->status->value === 'approved')
-                                                    <x-tabler.badge color="success">Disetujui</x-tabler.badge>
-                                                @elseif($research->status->value === 'rejected')
-                                                    <x-tabler.badge color="danger">Ditolak</x-tabler.badge>
-                                                @elseif($research->status->value === 'submitted')
-                                                    <x-tabler.badge color="warning">Menunggu Review</x-tabler.badge>
-                                                @elseif($research->status->value === 'reviewed')
-                                                    <x-tabler.badge color="info">Sudah Direview</x-tabler.badge>
-                                                @elseif($research->status->value === 'completed')
-                                                    <x-tabler.badge color="success">Selesai</x-tabler.badge>
-                                                @else
-                                                    <x-tabler.badge
-                                                        color="secondary">{{ $research->status->label() }}</x-tabler.badge>
-                                                @endif
+                                                <span class="badge bg-{{ $research->status->color() }}-lt fw-bold px-2 py-1"><span class="badge bg-{{ $research->status->color() }} me-1"></span>{{ $research->status->label() }}</span>
                                             </td>
                                             <td class="text-muted">
                                                 {{ $research->created_at->format('d/m/Y H:i') }}
@@ -147,13 +137,16 @@
 
                 <!-- PKM Terbaru -->
                 <div class="col-12 col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">PKM Terbaru</h3>
+                    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                        <div class="card-header bg-transparent border-0 py-3 d-flex align-items-center">
+                            <div class="avatar bg-azure-lt text-azure shadow-sm avatar-sm me-3 border-0">
+                                <i class="ti ti-users-group"></i>
+                            </div>
+                            <h3 class="card-title fw-bold mb-0">PKM Terbaru</h3>
                         </div>
                         <div class="table-responsive">
-                            <table class="card-table table table-vcenter">
-                                <thead>
+                            <table class="card-table table table-vcenter table-borderless table-hover">
+                                <thead class="bg-transparent text-muted">
                                     <tr>
                                         <th>Judul</th>
                                         <th>Pengaju</th>
@@ -181,20 +174,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @if ($communityService->status->value === 'approved')
-                                                    <x-tabler.badge color="success">Disetujui</x-tabler.badge>
-                                                @elseif($communityService->status->value === 'rejected')
-                                                    <x-tabler.badge color="danger">Ditolak</x-tabler.badge>
-                                                @elseif($communityService->status->value === 'submitted')
-                                                    <x-tabler.badge color="warning">Menunggu Review</x-tabler.badge>
-                                                @elseif($communityService->status->value === 'reviewed')
-                                                    <x-tabler.badge color="info">Sudah Direview</x-tabler.badge>
-                                                @elseif($communityService->status->value === 'completed')
-                                                    <x-tabler.badge color="success">Selesai</x-tabler.badge>
-                                                @else
-                                                    <x-tabler.badge
-                                                        color="secondary">{{ $communityService->status->label() }}</x-tabler.badge>
-                                                @endif
+                                                <span class="badge bg-{{ $communityService->status->color() }}-lt fw-bold px-2 py-1"><span class="badge bg-{{ $communityService->status->color() }} me-1"></span>{{ $communityService->status->label() }}</span>
                                             </td>
                                             <td class="text-muted">
                                                 {{ $communityService->created_at->format('d/m/Y H:i') }}

@@ -6,17 +6,19 @@
     <x-slot:pageActions>
         <div class="btn-list">
             <div class="btn-group shadow-sm">
-                <button onclick="Livewire.dispatch('report-export-excel')" class="btn btn-white" wire:loading.attr="disabled">
+                <a href="{{ route('reports.partner.excel', ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter]) }}" class="btn btn-white" data-navigate-ignore="true">
                     <i class="ti ti-table me-2 text-success"></i>
-                    {{ __('Excel') }}
-                </button>
-                <button onclick="Livewire.dispatch('report-export-pdf')" class="btn btn-white" wire:loading.attr="disabled">
+                    <span>{{ __('Excel') }}</span>
+                </a>
+                <a href="{{ route('reports.partner.pdf', ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter]) }}" class="btn btn-white" data-navigate-ignore="true">
                     <i class="ti ti-file-type-pdf me-2 text-danger"></i>
-                    {{ __('PDF') }}
-                </button>
+                    <span>{{ __('PDF') }}</span>
+                </a>
             </div>
         </div>
     </x-slot:pageActions>
+
+
 
     <!-- Summary Cards with Visual Polish -->
     <div class="row g-3 mb-4">

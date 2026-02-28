@@ -11,6 +11,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property string $id
+ * @property string|null $macro_research_group_id
+ * @property string|null $partner_id
+ * @property string|null $partner_issue_summary
+ * @property string|null $solution_offered
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read \App\Models\MacroResearchGroup|null $macroResearchGroup
+ * @property-read \App\Models\Partner|null $partner
+ */
 class CommunityService extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\CommunityServiceFactory> */

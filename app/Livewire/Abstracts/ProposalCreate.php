@@ -15,6 +15,29 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+/**
+ * @property-read \Illuminate\Support\Collection $schemes
+ * @property-read \Illuminate\Support\Collection $communityServiceSchemes
+ * @property-read \Illuminate\Support\Collection $focusAreas
+ * @property-read \Illuminate\Support\Collection $themes
+ * @property-read \Illuminate\Support\Collection $topics
+ * @property-read \Illuminate\Support\Collection $nationalPriorities
+ * @property-read \Illuminate\Support\Collection $scienceClusters
+ * @property-read \Illuminate\Support\Collection $clusterLevel1Options
+ * @property-read \Illuminate\Support\Collection $clusterLevel2Options
+ * @property-read \Illuminate\Support\Collection $clusterLevel3Options
+ * @property-read \Illuminate\Support\Collection $macroResearchGroups
+ * @property-read \Illuminate\Support\Collection $partners
+ * @property-read \Illuminate\Support\Collection $masterIkus
+ * @property-read \Illuminate\Support\Collection $sdgs
+ * @property-read \Illuminate\Support\Collection $budgetGroups
+ * @property-read \Illuminate\Support\Collection $budgetComponents
+ * @property-read \Illuminate\Support\Collection $tktTypes
+ * @property-read string|null $templateUrl
+ * @property-read string|null $partnerCommitmentTemplateUrl
+ * @property-read string|null $proposalApprovalPageTemplateUrl
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 abstract class ProposalCreate extends Component
 {
     use \App\Livewire\Traits\HasReportTemplates;
@@ -47,7 +70,8 @@ abstract class ProposalCreate extends Component
 
     public function mount(?string $proposalId = null, ?\App\Models\Proposal $proposal = null): void
     {
-        $this->author_name = Auth::user()?->name ?? '';
+        $user = Auth::user();
+        $this->author_name = ($user instanceof \App\Models\User) ? $user->name : '';
 
         // Handle route model binding (if passed as object) or ID string
         $proposalToLoad = $proposal ?? ($proposalId ? \App\Models\Proposal::find($proposalId) : null);
@@ -73,12 +97,12 @@ abstract class ProposalCreate extends Component
     {
         $user = Auth::user();
 
-        if ($user->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita'])) {
+        if ($user instanceof \App\Models\User && $user->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita'])) {
             return true;
         }
 
         return $proposal->status === \App\Enums\ProposalStatus::DRAFT
-            && $proposal->submitter_id === $user->id;
+            && $proposal->submitter_id === $user->getAuthIdentifier();
     }
 
     abstract protected function getProposalType(): string;
@@ -88,6 +112,42 @@ abstract class ProposalCreate extends Component
     abstract protected function getShowRoute(string $proposalId): string;
 
     abstract protected function getStep2Rules(): array;
+
+    protected function getOutputValidationRules(): array
+    {
+        return [
+            'form.outputs' => [
+                'required',
+                'array',
+                'min:1',
+                function ($attribute, $value, $fail) {
+                    $wajibCount = collect($value)->where('category', 'Wajib')->count();
+                    if ($wajibCount < 1) {
+                        $fail('Minimal harus ada 1 luaran wajib untuk proposal penelitian.');
+                    }
+                },
+            ],
+            'form.outputs.*.year' => 'required|integer|min:1|max:10',
+            'form.outputs.*.category' => ['required', \Illuminate\Validation\Rule::in(\App\Constants\ProposalConstants::OUTPUT_CATEGORIES)],
+            'form.outputs.*.group' => ['required', \Illuminate\Validation\Rule::in(\App\Constants\ProposalConstants::RESEARCH_OUTPUT_GROUPS)],
+            'form.outputs.*.type' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    // Validate type matches group
+                    $index = (int) explode('.', $attribute)[2];
+                    $group = $this->form->outputs[$index]['group'] ?? null;
+                    if ($group && isset(\App\Constants\ProposalConstants::RESEARCH_OUTPUT_TYPES[$group])) {
+                        if (! in_array($value, \App\Constants\ProposalConstants::RESEARCH_OUTPUT_TYPES[$group])) {
+                            $fail('Luaran baris '.($index + 1).' tidak valid untuk kategori yang dipilih.');
+                        }
+                    }
+                },
+            ],
+            'form.outputs.*.status' => ['required', \Illuminate\Validation\Rule::in(\App\Constants\ProposalConstants::OUTPUT_STATUSES)],
+            'form.outputs.*.description' => 'required|string|max:2000',
+        ];
+    }
 
     public function validationAttributes(): array
     {
@@ -176,14 +236,22 @@ abstract class ProposalCreate extends Component
     {
         $this->form->validate();
 
+        $schemeId = $this->getProposalType() === 'research'
+            ? (int) $this->form->research_scheme_id
+            : (int) $this->form->community_service_scheme_id;
+
         app(BudgetValidationService::class)->validateBudgetGroupPercentages(
             $this->form->budget_items,
-            $this->getProposalType()
+            $this->getProposalType(),
+            null,
+            $schemeId
         );
 
         app(BudgetValidationService::class)->validateBudgetCap(
             $this->form->budget_items,
-            $this->getProposalType()
+            $this->getProposalType(),
+            null,
+            $schemeId
         );
 
         if ($this->form->proposal) {
@@ -217,14 +285,22 @@ abstract class ProposalCreate extends Component
 
         // Additional validation for budget in step 3 if items are present
         if ($this->currentStep === 3 && ! empty($this->form->budget_items)) {
+            $schemeId = $this->getProposalType() === 'research'
+                ? (int) $this->form->research_scheme_id
+                : (int) $this->form->community_service_scheme_id;
+
             app(BudgetValidationService::class)->validateBudgetGroupPercentages(
                 $this->form->budget_items,
-                $this->getProposalType()
+                $this->getProposalType(),
+                null,
+                $schemeId
             );
 
             app(BudgetValidationService::class)->validateBudgetCap(
                 $this->form->budget_items,
-                $this->getProposalType()
+                $this->getProposalType(),
+                null,
+                $schemeId
             );
         }
 
@@ -272,15 +348,15 @@ abstract class ProposalCreate extends Component
     #[Computed]
     public function themes()
     {
-        return app(MasterDataService::class)->themes($this->form->focus_area_id ?: null, $this->getProposalType());
+        return app(MasterDataService::class)->themes($this->form->focus_area_id ? (int) $this->form->focus_area_id : null, $this->getProposalType());
     }
 
     #[Computed]
     public function topics()
     {
         return app(MasterDataService::class)->topics(
-            $this->form->focus_area_id ?: null,
-            $this->form->theme_id ?: null,
+            $this->form->focus_area_id ? (int) $this->form->focus_area_id : null,
+            $this->form->theme_id ? (int) $this->form->theme_id : null,
             $this->getProposalType()
         );
     }
@@ -306,13 +382,13 @@ abstract class ProposalCreate extends Component
     #[Computed]
     public function clusterLevel2Options()
     {
-        return app(MasterDataService::class)->clusterLevel2Options($this->form->cluster_level1_id ?: null, $this->getProposalType());
+        return app(MasterDataService::class)->clusterLevel2Options($this->form->cluster_level1_id ? (int) $this->form->cluster_level1_id : null, $this->getProposalType());
     }
 
     #[Computed]
     public function clusterLevel3Options()
     {
-        return app(MasterDataService::class)->clusterLevel3Options($this->form->cluster_level2_id ?: null, $this->getProposalType());
+        return app(MasterDataService::class)->clusterLevel3Options($this->form->cluster_level2_id ? (int) $this->form->cluster_level2_id : null, $this->getProposalType());
     }
 
     #[Computed]
@@ -325,6 +401,18 @@ abstract class ProposalCreate extends Component
     public function partners()
     {
         return app(MasterDataService::class)->partners();
+    }
+
+    #[Computed]
+    public function masterIkus()
+    {
+        return app(MasterDataService::class)->masterIkus();
+    }
+
+    #[Computed]
+    public function sdgs()
+    {
+        return app(MasterDataService::class)->sdgs();
     }
 
     #[Computed]
@@ -403,6 +491,8 @@ abstract class ProposalCreate extends Component
                 'form.theme_id' => 'required|exists:themes,id',
                 'form.topic_id' => 'required|exists:topics,id',
                 'form.keywords' => 'required|array|min:1|max:5',
+                'form.sdg_ids' => 'required|array|min:1',
+                'form.targeted_iku_ids' => 'required|array|min:1',
                 'form.national_priority_id' => 'nullable|exists:national_priorities,id',
                 'form.cluster_level1_id' => 'required|exists:science_clusters,id',
                 'form.cluster_level2_id' => 'nullable|exists:science_clusters,id',
@@ -413,70 +503,103 @@ abstract class ProposalCreate extends Component
                 'form.summary' => 'required|string|min:100',
                 'form.author_tasks' => 'required|string',
                 'form.tkt_type' => $type === 'research' ? ['required', 'string', 'max:255', \Illuminate\Validation\Rule::in(app(\App\Services\MasterDataService::class)->tktTypes()->toArray())] : 'nullable',
-                'form.tkt_results' => $type === 'research' ? ['nullable', 'array', function ($attribute, $value, $fail) {
-                    if (empty($value)) {
-                        return;
-                    }
-
-                    // 1. Calculate achieved level
-                    $achievedLevel = 0;
-                    // Get level models to map IDs to integer levels
-                    $levels = \App\Models\TktLevel::whereIn('id', array_keys($value))->get();
-
-                    foreach ($levels as $level) {
-                        $data = $value[$level->id] ?? null;
-                        // Check if passed (percentage >= 80)
-                        if ($data && isset($data['percentage']) && $data['percentage'] >= 80) {
-                            $achievedLevel = max($achievedLevel, $level->level);
+                'form.tkt_results' => $type === 'research' ? [
+                    'nullable',
+                    'array',
+                    function ($attribute, $value, $fail) {
+                        if (empty($value)) {
+                            return;
                         }
-                    }
 
-                    // 2. Get required range for the scheme if selected
-                    if ($this->form->research_scheme_id) {
-                        $scheme = \App\Models\ResearchScheme::find($this->form->research_scheme_id);
-                        if ($scheme && $scheme->strata) {
-                            $range = \App\Livewire\Research\Proposal\Components\TktMeasurement::getTktRangeForStrata($scheme->strata);
+                        // 1. Calculate achieved level
+                        $achievedLevel = 0;
+                        // Get level models to map IDs to integer levels
+                        $levels = \App\Models\TktLevel::whereIn('id', array_keys($value))->get();
 
-                            // If range exists (not PKM), validate
-                            if ($range) {
-                                [$min, $max] = $range;
+                        foreach ($levels as $level) {
+                            $data = $value[$level->id] ?? null;
+                            // Check if passed (percentage >= 80)
+                            if ($data && isset($data['percentage']) && $data['percentage'] >= 80) {
+                                $achievedLevel = max($achievedLevel, $level->level);
+                            }
+                        }
 
-                                // Check if achieved level is within range
-                                if ($achievedLevel < $min || $achievedLevel > $max) {
-                                    $fail("TKT Saat Ini (Level $achievedLevel) tidak sesuai dengan Skema $scheme->strata (Target: Level $min - $max).");
+                        // 2. Get required range for the scheme if selected
+                        if ($this->form->research_scheme_id) {
+                            $scheme = \App\Models\ResearchScheme::find($this->form->research_scheme_id);
+                            if ($scheme && $scheme->strata) {
+                                $range = \App\Livewire\Research\Proposal\Components\TktMeasurement::getTktRangeForStrata($scheme->strata);
+
+                                // If range exists (not PKM), validate
+                                if ($range) {
+                                    [$min, $max] = $range;
+
+                                    // Check if achieved level is within range
+                                    if ($achievedLevel < $min || $achievedLevel > $max) {
+                                        $fail("TKT Saat Ini (Level $achievedLevel) tidak sesuai dengan Skema $scheme->strata (Target: Level $min - $max).");
+                                    }
                                 }
                             }
                         }
-                    }
-                }] : 'nullable',
+                    },
+                ] : 'nullable',
+                'form.eligibility_check' => [
+                    function ($attribute, $value, $fail) {
+                        $schemeId = $this->getProposalType() === 'research'
+                        ? $this->form->research_scheme_id
+                        : $this->form->community_service_scheme_id;
+
+                        if (! $schemeId) {
+                            return;
+                        }
+
+                        $scheme = $this->getProposalType() === 'research'
+                        ? \App\Models\ResearchScheme::find($schemeId)
+                        : \App\Models\CommunityServiceScheme::find($schemeId);
+
+                        if (! $scheme) {
+                            return;
+                        }
+
+                        $result = app(\App\Actions\Proposal\IdentityEligibilityAction::class)->execute(Auth::user(), $scheme);
+                        if (! $result['is_eligible']) {
+                            $fail($result['reason']);
+                        }
+                    },
+                ],
             ],
             2 => array_merge($this->getStep2Rules(), $type === 'research' ? [
-                'form.outputs' => ['required', 'array', 'min:1', function ($attribute, $value, $fail) {
-                    $wajibCount = collect($value)->where('category', 'Wajib')->count();
-                    if ($wajibCount < 1) {
-                        $fail('Minimal harus ada 1 luaran wajib untuk proposal penelitian.');
-                    }
-
-                    // Validate each row has required fields
-                    foreach ($value as $index => $item) {
-                        $rowNum = $index + 1;
-                        $errors = [];
-
-                        if (empty($item['group'])) {
-                            $errors[] = 'Kategori Luaran';
-                        }
-                        if (empty($item['type'])) {
-                            $errors[] = 'Luaran';
-                        }
-                        if (empty($item['status'])) {
-                            $errors[] = 'Status';
+                'form.outputs' => [
+                    'required',
+                    'array',
+                    'min:1',
+                    function ($attribute, $value, $fail) {
+                        $wajibCount = collect($value)->where('category', 'Wajib')->count();
+                        if ($wajibCount < 1) {
+                            $fail('Minimal harus ada 1 luaran wajib untuk proposal penelitian.');
                         }
 
-                        if (! empty($errors)) {
-                            $fail("Baris {$rowNum}: ".implode(', ', $errors).' wajib diisi.');
+                        // Validate each row has required fields
+                        foreach ($value as $index => $item) {
+                            $rowNum = $index + 1;
+                            $errors = [];
+
+                            if (empty($item['group'])) {
+                                $errors[] = 'Kategori Luaran';
+                            }
+                            if (empty($item['type'])) {
+                                $errors[] = 'Luaran';
+                            }
+                            if (empty($item['status'])) {
+                                $errors[] = 'Status';
+                            }
+
+                            if (! empty($errors)) {
+                                $fail("Baris {$rowNum}: ".implode(', ', $errors).' wajib diisi.');
+                            }
                         }
-                    }
-                }],
+                    },
+                ],
             ] : []),
             3 => [
                 'form.budget_items' => ['required', 'array', 'min:1'],

@@ -88,12 +88,12 @@ class SendWeeklySummaries extends Command
                 ->count(),
             'total_research' => Proposal::where('detailable_type', \App\Models\Research::class)->count(),
             'total_community_service' => Proposal::where('detailable_type', \App\Models\CommunityService::class)->count(),
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             'avg_review_time' => round(
                 \App\Models\ProposalReviewer::whereBetween('updated_at', [$weekStart, $weekEnd])
                     ->where('status', 'completed')
                     ->selectRaw('AVG(DATEDIFF(updated_at, created_at)) as avg_days')
-                    ->pluck('avg_days')
-                    ->first() ?? 0
+                    ->value('avg_days') ?? 0
             ),
         ]);
     }

@@ -5,7 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string|null $short_name
+ * @property string|null $code
+ * @property string|null $type
+ * @property string|null $address
+ * @property string|null $phone
+ * @property string|null $email
+ * @property string|null $website
+ * @property string|null $lppm_head_name
+ * @property string|null $lppm_head_id
+ * @property string|null $lppm_head_user_id
+ * @property bool $is_verified
+ * @property-read \App\Models\User|null $lppmHeadUser
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Faculty[] $faculties
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\StudyProgram[] $studyPrograms
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Identity[] $identities
+ */
 class Institution extends Model
 {
     /** @use HasFactory<\Database\Factories\InstitutionFactory> */
@@ -29,7 +49,8 @@ class Institution extends Model
     /**
      * Get the user who is the head of LPPM for this institution.
      */
-    public function lppmHeadUser()
+    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+    public function lppmHeadUser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'lppm_head_user_id');
     }
@@ -45,7 +66,7 @@ class Institution extends Model
     /**
      * Get all study programs for the institution (through faculties).
      */
-    public function studyPrograms(): HasMany
+    public function studyPrograms(): HasManyThrough
     {
         return $this->hasManyThrough(StudyProgram::class, Faculty::class);
     }

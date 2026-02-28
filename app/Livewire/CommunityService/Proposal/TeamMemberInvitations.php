@@ -9,6 +9,14 @@ use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
+/**
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $teamMembers
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $pendingInvitations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $acceptedMembers
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $rejectedMembers
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 class TeamMemberInvitations extends Component
 {
     use HasToast;
@@ -37,19 +45,22 @@ class TeamMemberInvitations extends Component
     #[Computed]
     public function pendingInvitations()
     {
-        return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'pending');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        return $this->teamMembers->filter(fn ($member) => $member->pivot->getAttribute('status') === 'pending');
     }
 
     #[Computed]
     public function acceptedMembers()
     {
-        return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'accepted');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        return $this->teamMembers->filter(fn ($member) => $member->pivot->getAttribute('status') === 'accepted');
     }
 
     #[Computed]
     public function rejectedMembers()
     {
-        return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'rejected');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        return $this->teamMembers->filter(fn ($member) => $member->pivot->getAttribute('status') === 'rejected');
     }
 
     #[Computed]
@@ -76,7 +87,8 @@ class TeamMemberInvitations extends Component
             return;
         }
 
-        if ($member->pivot->status === 'accepted') {
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        if ($member->pivot->getAttribute('status') === 'accepted') {
             $this->toastInfo('Anda sudah menerima undangan');
 
             return;

@@ -9,6 +9,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property string $id
+ * @property string $proposal_id
+ * @property \Illuminate\Support\Carbon $monev_date
+ * @property int $progress_percentage
+ * @property string|null $notes
+ * @property-read \App\Models\Proposal $proposal
+ *
+ * "Efficiency is the goal, but Integrity is the foundation."
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 class ProposalMonev extends Model implements HasMedia
 {
     use HasFactory, HasUuids, InteractsWithMedia;

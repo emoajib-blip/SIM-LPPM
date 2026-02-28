@@ -11,6 +11,13 @@ use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
+/**
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read bool $canApprove
+ * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $pendingReviewers
+ * @property-read \Illuminate\Support\Collection $reviewSummary
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ApprovalButton extends Component
 {
     use HasToast;

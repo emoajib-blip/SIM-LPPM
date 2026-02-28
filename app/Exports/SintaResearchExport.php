@@ -23,8 +23,8 @@ class SintaResearchExport implements FromCollection, ShouldAutoSize, WithHeading
         protected ?string $year = null
     ) {
         $institution = \App\Models\Institution::first();
-        $this->institutionName = $institution?->name ?? 'Institut Teknologi dan Sains Nahdlatul Ulama Pekalongan';
-        $this->institutionCode = $institution?->code ?? '062004';
+        $this->institutionName = $institution->name ?? 'Institut Teknologi dan Sains Nahdlatul Ulama Pekalongan';
+        $this->institutionCode = $institution->code ?? '062004';
     }
 
     public function collection()
@@ -70,11 +70,21 @@ class SintaResearchExport implements FromCollection, ShouldAutoSize, WithHeading
             'kategori_sumber_dana',
             'negara_sumber_dana',
             'sumber_dana',
-            'sinta_id_member1', 'nidn_member1', 'nama_member1',
-            'sinta_id_member2', 'nidn_member_sinta2', 'nama_member_sinta2',
-            'sinta_id_member3', 'nidn_member_sinta3', 'nama_member_sinta3',
-            'sinta_id_member4', 'nidn_member_sinta4', 'nama_member_sinta4',
-            'sinta_id_member5', 'nidn_member_sinta5', 'nama_member_sinta5',
+            'sinta_id_member1',
+            'nidn_member1',
+            'nama_member1',
+            'sinta_id_member2',
+            'nidn_member_sinta2',
+            'nama_member_sinta2',
+            'sinta_id_member3',
+            'nidn_member_sinta3',
+            'nama_member_sinta3',
+            'sinta_id_member4',
+            'nidn_member_sinta4',
+            'nama_member_sinta4',
+            'sinta_id_member5',
+            'nidn_member_sinta5',
+            'nama_member_sinta5',
         ];
     }
 
@@ -84,7 +94,7 @@ class SintaResearchExport implements FromCollection, ShouldAutoSize, WithHeading
         $no++;
 
         $ketua = $proposal->submitter;
-        $identity = $ketua?->identity;
+        $identity = $ketua->identity;
 
         // Budget: sbk_value or sum of budget_items
         $dana = ($proposal->sbk_value ?? 0) > 0
@@ -92,29 +102,29 @@ class SintaResearchExport implements FromCollection, ShouldAutoSize, WithHeading
             : $proposal->budgetItems->sum('total_price');
 
         // TKT level from detailable
-        $tkt = $proposal->detailable?->tkt_type ?? '-';
+        $tkt = $proposal->detailable->tkt_type ?? '-';
 
         // Team members (up to 5)
         $members = $proposal->teamMembers
-            ->filter(fn ($m) => $m->identity?->identity_id !== $identity?->identity_id)
+            ->filter(fn ($m) => $m->identity && $m->identity->identity_id !== $identity?->identity_id)
             ->values()
             ->take(5);
 
         $row = [
             $no,
-            $identity?->sinta_id ?? '',
-            $ketua?->name ?? '',
-            $identity?->identity_id ?? '',
+            $identity->sinta_id ?? '',
+            $ketua->name,
+            $identity->identity_id ?? '',
             $this->institutionName,
             $this->institutionCode,
             $proposal->title,
-            $proposal->researchScheme?->code ?? $proposal->researchScheme?->name ?? '',
+            $proposal->researchScheme->code ?? $proposal->researchScheme->name ?? '',
             $proposal->start_year ?? date('Y'),
             $proposal->start_year ?? date('Y'),
             $proposal->start_year ?? date('Y'),
             1, // lama_kegiatan default 1 tahun
-            $proposal->detailable?->macro_research_group_id ? 'Ilmu Komputer & Informatika' : 'Multidisiplin',
-            $proposal->researchScheme?->name ?? 'Penelitian Internal',
+            $proposal->detailable->macro_research_group_id ? 'Ilmu Komputer & Informatika' : 'Multidisiplin',
+            $proposal->researchScheme->name ?? 'Penelitian Internal',
             'didanai',
             $dana,
             '',  // afiliasi_sinta_id institusi (optional)
@@ -129,9 +139,9 @@ class SintaResearchExport implements FromCollection, ShouldAutoSize, WithHeading
         // Add up to 5 team members
         for ($i = 0; $i < 5; $i++) {
             $member = $members->get($i);
-            $row[] = $member?->identity?->sinta_id ?? '';
-            $row[] = $member?->identity?->identity_id ?? '';
-            $row[] = $member?->name ?? '';
+            $row[] = $member->identity->sinta_id ?? '';
+            $row[] = $member->identity->identity_id ?? '';
+            $row[] = $member->name ?? '';
         }
 
         return $row;

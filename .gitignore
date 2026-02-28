@@ -50,3 +50,7 @@ CLAUDE.md
 /public/vendor
 .env.old
 .env.backup*
+
+# Database
+/database/*.sqlite
+/database/*.sqlite-journal

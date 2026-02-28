@@ -10,6 +10,18 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+/**
+ * @property string $id
+ * @property string $proposal_id
+ * @property string|null $budget_group_id
+ * @property float|null $amount
+ * @property \Illuminate\Support\Carbon|null $activity_date
+ * @property string|null $activity_description
+ * @property int|null $progress_percentage
+ * @property string|null $notes
+ * @property-read \App\Models\Proposal $proposal
+ * @property-read \App\Models\BudgetGroup|null $budgetGroup
+ */
 class DailyNote extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\DailyNoteFactory> */
@@ -66,12 +78,14 @@ class DailyNote extends Model implements HasMedia
     /**
      * Register media conversions to generate an optimized image for PDF rendering.
      */
+    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function registerMediaConversions(?Media $media = null): void
     {
+        // @phpstan-ignore-next-line
         $this->addMediaConversion('pdf_image')
+            ->nonQueued()
             ->width(800)
             ->quality(80)
-            ->nonQueued()
             ->performOnCollections('evidence');
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Proposal;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -27,38 +28,24 @@ class Research extends Component
     /**
      * Update the selected reporting period.
      */
+    #[On('set-period')]
     public function setPeriod(string $period): void
     {
         $this->period = $period;
     }
 
-    public function exportPdf()
+    #[On('export-pdf')]
+    public function exportPdf(): void
     {
-        $proposals = Proposal::query()
-            ->where('detailable_type', 'App\Models\Research')
-            ->where('start_year', $this->period)
-            ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme', 'budgetItems'])
-            ->latest()
-            ->get();
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.research-pdf', [
-            'proposals' => $proposals,
-            'period' => $this->period,
-        ])->setPaper('a4', 'landscape');
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'laporan-penelitian-'.$this->period.'-'.now()->format('YmdHis').'.pdf', [
-            'Content-Type' => 'application/pdf',
-        ]);
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('reports.research.pdf', ['period' => $this->period]));
     }
 
-    public function exportExcel()
+    #[On('export-excel')]
+    public function exportExcel(): void
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(
-            new \App\Exports\ResearchReportExport($this->period),
-            'laporan-penelitian-'.$this->period.'-'.now()->format('YmdHis').'.xlsx'
-        );
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('reports.research.excel', ['period' => $this->period]));
     }
 
     /**
@@ -258,12 +245,12 @@ class Research extends Component
             ->where('start_year', $this->period)
             ->with(['submitter.identity.faculty'])
             ->get()
-            ->groupBy(fn ($p) => $p->submitter?->identity?->faculty_id)
+            ->groupBy(fn ($p) => $p->submitter->identity->faculty_id)
             ->map(function ($proposals) {
                 $first = $proposals->first();
 
                 return [
-                    'name' => $first->submitter?->identity?->faculty?->name ?? __('Pusat/Lainnya'),
+                    'name' => $first->submitter->identity->faculty->name ?? __('Pusat/Lainnya'),
                     'count' => $proposals->count(),
                 ];
             })

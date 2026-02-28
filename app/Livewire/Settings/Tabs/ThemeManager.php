@@ -122,7 +122,7 @@ class ThemeManager extends Component
     public function confirmDelete(int $id): void
     {
         $this->deleteItemId = $id;
-        $this->deleteItemName = \App\Models\Theme::find($id)?->name ?? '';
+        $this->deleteItemName = \App\Models\Theme::find($id)->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-theme');
     }
 }

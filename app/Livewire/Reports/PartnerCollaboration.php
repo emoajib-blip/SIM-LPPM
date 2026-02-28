@@ -9,6 +9,7 @@ use App\Models\Proposal;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -73,7 +74,9 @@ class PartnerCollaboration extends Component
     {
         $total = Partner::count();
         $withMou = Partner::whereHas('media', fn ($q) => $q->where('collection_name', 'mou_pks'))->count();
-        $withProposal = Partner::whereHas('proposals', fn ($q) => $q->when($this->periodFilter, fn ($q2) => $q2->where('start_year', $this->periodFilter))
+        $withProposal = Partner::whereHas(
+            'proposals',
+            fn ($q) => $q->when($this->periodFilter, fn ($q2) => $q2->where('start_year', $this->periodFilter))
         )->count();
 
         $activeBudget = Proposal::query()
@@ -83,40 +86,35 @@ class PartnerCollaboration extends Component
             ->sum('sbk_value');
 
         return [
-            ['label' => 'Total Mitra Terdaftar',   'value' => $total,       'icon' => 'handshake',    'variant' => 'bg-blue-lt text-blue'],
-            ['label' => 'Mitra Ber-MOU/PKS',       'value' => $withMou,     'icon' => 'file-check',   'variant' => 'bg-green-lt text-green'],
-            ['label' => 'Mitra Aktif (Ada Proposal)', 'value' => $withProposal, 'icon' => 'users',        'variant' => 'bg-purple-lt text-purple'],
-            ['label' => 'Total Dana Kerjasama',    'value' => 'Rp '.number_format($activeBudget, 0, ',', '.'), 'icon' => 'currency-dollar', 'variant' => 'bg-yellow-lt text-yellow'],
+            ['label' => 'Total Mitra Terdaftar', 'value' => $total, 'icon' => 'handshake', 'variant' => 'bg-blue-lt text-blue'],
+            ['label' => 'Mitra Ber-MOU/PKS', 'value' => $withMou, 'icon' => 'file-check', 'variant' => 'bg-green-lt text-green'],
+            ['label' => 'Mitra Aktif (Ada Proposal)', 'value' => $withProposal, 'icon' => 'users', 'variant' => 'bg-purple-lt text-purple'],
+            ['label' => 'Total Dana Kerjasama', 'value' => 'Rp '.number_format($activeBudget, 0, ',', '.'), 'icon' => 'currency-dollar', 'variant' => 'bg-yellow-lt text-yellow'],
         ];
     }
 
-    public function exportPdf(GetPartnerReportQuery $action)
+    #[On('export-pdf')]
+    public function exportPdf(): void
     {
-        $partners = $action->handle($this->search, $this->typeFilter, $this->periodFilter)->get();
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.partner-collaboration-pdf', [
-            'partners' => $partners,
-            'periodFilter' => $this->periodFilter,
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $url = route('reports.partner.pdf', [
+            'search' => $this->search,
             'typeFilter' => $this->typeFilter,
-        ])->setPaper('a4', 'landscape');
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'laporan-mitra-'.now()->format('Y-m-d').'.pdf', [
-            'Content-Type' => 'application/pdf',
+            'periodFilter' => $this->periodFilter,
         ]);
+        $this->dispatch('download-file', url: $url);
     }
 
-    public function exportExcel()
+    #[On('export-excel')]
+    public function exportExcel(): void
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(
-            new \App\Exports\PartnerCollaborationExport(
-                $this->search,
-                $this->typeFilter,
-                $this->periodFilter
-            ),
-            'laporan-mitra-'.now()->format('Y-m-d').'.xlsx'
-        );
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $url = route('reports.partner.excel', [
+            'search' => $this->search,
+            'typeFilter' => $this->typeFilter,
+            'periodFilter' => $this->periodFilter,
+        ]);
+        $this->dispatch('download-file', url: $url);
     }
 
     public function render(GetPartnerReportQuery $action): View

@@ -13,7 +13,20 @@ class CommunityServiceScheme extends Model
     protected $fillable = [
         'name',
         'strata',
+        'eligibility_rules',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'eligibility_rules' => 'array',
+        ];
+    }
 
     /**
      * Get all proposals using this community service scheme.

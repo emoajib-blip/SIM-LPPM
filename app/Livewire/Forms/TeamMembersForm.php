@@ -193,7 +193,9 @@ class TeamMembersForm extends Component
         $this->member_name = '';
         $this->member_email = '';
         $this->member_type = 'dosen';
-        $this->member_institution = \App\Models\Institution::where('name', 'like', '%Pekalongan%')->first()?->name ?? 'ITSNU Pekalongan';
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $institution = \App\Models\Institution::where('name', 'like', '%Pekalongan%')->first();
+        $this->member_institution = $institution !== null ? $institution->name : 'ITSNU Pekalongan';
         $this->member_study_program = '';
         $this->memberFound = false;
         $this->isManual = false;

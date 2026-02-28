@@ -9,7 +9,7 @@
             <div class="dropdown">
                 <button class="btn btn-white dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <i class="ti ti-calendar-event me-2 text-success"></i>
+                    <i class="ti ti-calendar-event me-2 text-primary"></i>
                     {{ __('Periode') }}: <span class="fw-bold ms-1">{{ $period }}</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
@@ -18,7 +18,7 @@
                         <li>
                             <button type="button"
                                 class="dropdown-item d-flex justify-content-between align-items-center {{ $period === $availablePeriod ? 'active' : '' }}"
-                                wire:click="setPeriod('{{ $availablePeriod }}')">
+                                onclick="Livewire.dispatch('set-period', { period: '{{ $availablePeriod }}' })">
                                 {{ $availablePeriod }}
                                 @if($period === $availablePeriod) <i class="ti ti-check ms-2"></i> @endif
                             </button>
@@ -30,12 +30,12 @@
             <a href="{{ route('reports.pkm.excel', ['period' => $period]) }}" class="btn btn-outline-success shadow-sm"
                 data-navigate-ignore="true">
                 <i class="ti ti-table me-2"></i>
-                {{ __('Unduh Excel') }}
+                <span>{{ __('Unduh Excel') }}</span>
             </a>
             <a href="{{ route('reports.pkm.pdf', ['period' => $period]) }}" class="btn btn-outline-danger shadow-sm"
                 data-navigate-ignore="true">
                 <i class="ti ti-file-type-pdf me-2"></i>
-                {{ __('Unduh PDF') }}
+                <span>{{ __('Unduh PDF') }}</span>
             </a>
         </div>
     </x-slot:pageActions>
@@ -170,7 +170,8 @@
                                 <tr>
                                     <td>
                                         <div class="fw-semibold text-truncate" style="max-width: 180px;">
-                                            {{ $faculty['name'] }}</div>
+                                            {{ $faculty['name'] }}
+                                        </div>
                                     </td>
                                     <td class="text-center">
                                         <span class="badge bg-green-lt">{{ $faculty['count'] }}</span>
@@ -278,7 +279,8 @@
                                             <div class="small fw-bold">{{ $pkm->submitter->identity->faculty->name ?? '-' }}
                                             </div>
                                             <div class="small text-muted">
-                                                {{ $pkm->submitter->identity->studyProgram->name ?? '-' }}</div>
+                                                {{ $pkm->submitter->identity->studyProgram->name ?? '-' }}
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="text-muted small mb-1">

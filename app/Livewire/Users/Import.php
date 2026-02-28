@@ -131,9 +131,10 @@ class Import extends Component
         }
     }
 
-    public function downloadTemplate()
+    public function downloadTemplate(): void
     {
-        return Excel::download(new \App\Exports\UsersTemplateExport, 'template-import-users.xlsx');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('users.import-template'));
     }
 
     public function render()

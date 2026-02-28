@@ -38,7 +38,7 @@ class Show extends Component
         $this->config = $this->getConfig($type);
 
         $this->checkAccess();
-        $this->loadReport();
+        $this->loadReport($type);
 
         // Determine report type for ReportForm
         $reportType = str_contains($type, 'final') ? 'final' : 'progress';

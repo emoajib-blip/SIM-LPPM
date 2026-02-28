@@ -15,11 +15,26 @@
             }
         @endphp
 
+        @php
+            $user = auth()->user();
+            $eligibility = ['eligible' => true];
+            if ($user && $user->activeHasRole('dosen')) {
+                $eligibility = app(\App\Services\LecturerEligibilityService::class)->checkEligibility($user);
+            }
+        @endphp
+
         @if ($isWithinSchedule && auth()->user()->activeHasRole('dosen'))
-            <a href="{{ route('community-service.proposal.create') }}" wire:navigate.hover class="btn btn-primary">
-                <x-lucide-plus class="icon" />
-                Usulan Pengabdian Baru
-            </a>
+            @if ($eligibility['eligible'])
+                <a href="{{ route('community-service.proposal.create') }}" wire:navigate.hover class="btn btn-primary">
+                    <x-lucide-plus class="icon" />
+                    Usulan Pengabdian Baru
+                </a>
+            @else
+                <button class="btn btn-secondary" disabled title="Selesaikan tanggungan laporan Anda untuk mengusulkan baru">
+                    <x-lucide-lock class="icon" />
+                    Usulan Dikunci
+                </button>
+            @endif
         @endif
         <x-lecturer-eligibility-modal />
     </div>
@@ -35,7 +50,8 @@
         $isKepala = $user->activeHasRole('kepala lppm');
     @endphp
 
-    <div class="collapse shadow-sm border-0 alert alert-info alert-dismissible fade show" id="pkmIndexInfo" role="alert">
+    <div class="collapse shadow-sm border-0 alert alert-info alert-dismissible fade show" id="pkmIndexInfo"
+        role="alert">
         <div class="d-flex">
             <div>
                 <x-lucide-info class="me-2 alert-icon icon" />
@@ -67,8 +83,8 @@
     </div>
 
     <div class="mb-3">
-        <button class="btn btn-ghost-info btn-sm" type="button" data-bs-toggle="collapse"
-            data-bs-target="#pkmIndexInfo" aria-expanded="false" aria-controls="pkmIndexInfo">
+        <button class="btn btn-ghost-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#pkmIndexInfo"
+            aria-expanded="false" aria-controls="pkmIndexInfo">
             <x-lucide-info class="me-1 icon" />
             Bantuan Penggunaan
         </button>
@@ -261,8 +277,7 @@
                             <td style="max-width: 250px;">
                                 <div class="text-reset fw-bold">{{ $proposal->title }}</div>
                                 <div class="mt-1">
-                                    <x-tabler.badge variant="outline" class="text-uppercase"
-                                        style="font-size: 0.65rem;">
+                                    <x-tabler.badge variant="outline" class="text-uppercase" style="font-size: 0.65rem;">
                                         {{ $proposal->focusArea?->name ?? '—' }}
                                     </x-tabler.badge>
                                 </div>

@@ -8,6 +8,10 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+/**
+ * @property-read \App\Models\User $user
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 #[Layout('components.layouts.app', ['title' => 'User Details', 'pageTitle' => '', 'pageSubtitle' => 'User profile and metadata overview'])]
 class Show extends Component
 {

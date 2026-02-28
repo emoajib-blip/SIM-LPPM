@@ -1,5 +1,5 @@
 <div>
-    <x-slot:pageActions>
+    <div class="d-flex justify-content-end mb-4">
         <div class="d-flex align-items-center gap-2">
             <div class="dropdown">
                 <a href="#" class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-    </x-slot:pageActions>
+    </div>
 
     <!-- Urgent Action Section -->
     @if($overdueReviews->isNotEmpty() || $dueSoonReviews->isNotEmpty() || $reReviewNeeded->isNotEmpty())
@@ -24,7 +24,7 @@
             <!-- Overdue Alerts -->
             @foreach($overdueReviews as $review)
                 <div class="col-md-6 col-lg-4">
-                    <div class="card bg-danger-lt border-danger shadow-sm overflow-hidden border-0 border-start border-4">
+                    <div class="card bg-danger-lt border-danger shadow-sm overflow-hidden border-0 border-start border-4" style="border-radius: 12px;">
                         <div class="card-body">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="avatar bg-danger text-danger-fg shadow-sm">
@@ -49,7 +49,7 @@
             <!-- Re-Review Needed -->
             @foreach($reReviewNeeded as $review)
                 <div class="col-md-6 col-lg-4">
-                    <div class="card bg-warning-lt border-warning shadow-sm overflow-hidden border-0 border-start border-4">
+                    <div class="card bg-warning-lt border-warning shadow-sm overflow-hidden border-0 border-start border-4" style="border-radius: 12px;">
                         <div class="card-body">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="avatar bg-warning text-warning-fg shadow-sm">
@@ -74,7 +74,7 @@
             <!-- Due Soon -->
             @foreach($dueSoonReviews as $review)
                 <div class="col-md-6 col-lg-4">
-                    <div class="card bg-info-lt border-info shadow-sm overflow-hidden border-0 border-start border-4">
+                    <div class="card bg-info-lt border-info shadow-sm overflow-hidden border-0 border-start border-4" style="border-radius: 12px;">
                         <div class="card-body">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="avatar bg-info text-info-fg shadow-sm">
@@ -104,12 +104,12 @@
     <div class="row row-deck row-cards mb-4">
         <!-- Research Stats -->
         <div class="col-md-6">
-            <div class="card card-stacked glass-card border-0 shadow-sm overflow-hidden" style="border-top: 3px solid #206bc4;">
+            <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-4">
                         <div class="subheader text-primary fw-bold">Statistik Penelitian</div>
-                        <div class="ms-auto text-primary opacity-50">
-                            <i class="ti ti-microscope fs-2"></i>
+                        <div class="ms-auto text-primary bg-primary-lt rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <i class="ti ti-microscope fs-3"></i>
                         </div>
                     </div>
                     <div class="row g-3">
@@ -139,12 +139,12 @@
 
         <!-- PKM Stats -->
         <div class="col-md-6">
-            <div class="card card-stacked glass-card border-0 shadow-sm overflow-hidden" style="border-top: 3px solid #0ca678;">
+            <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-4">
                         <div class="subheader text-green fw-bold">Statistik Pengabdian (PKM)</div>
-                        <div class="ms-auto text-green opacity-50">
-                            <i class="ti ti-users fs-2"></i>
+                        <div class="ms-auto text-green bg-green-lt rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <i class="ti ti-users fs-3"></i>
                         </div>
                     </div>
                     <div class="row g-3">
@@ -176,7 +176,7 @@
     <!-- Active Review Task Tables -->
     <div class="row row-cards">
         <div class="col-lg-6">
-            <div class="card glass-card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px;">
                 <div class="card-header bg-transparent border-0 py-3 d-flex align-items-center">
                     <div class="avatar bg-primary-lt text-primary shadow-sm avatar-sm me-3 border-0">
                         <i class="ti ti-flask-2"></i>
@@ -188,7 +188,7 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-vcenter card-table table-hover table-borderless">
-                        <thead class="bg-light-lt">
+                        <thead class="bg-transparent text-muted">
                             <tr>
                                 <th class="ps-4">Judul & Pengaju</th>
                                 <th class="text-center">Status</th>
@@ -208,9 +208,8 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <x-tabler.badge :color="$review?->status->color() ?? 'secondary'" class="fw-normal">
-                                            {{ $review?->status->label() ?? 'Pending' }}
-                                        </x-tabler.badge>
+                                        @php $badgeColor = $review?->status->color() ?? 'secondary'; $badgeLabel = $review?->status->label() ?? 'Pending'; @endphp
+                                        <span class="badge bg-{{ $badgeColor }}-lt fw-bold px-2 py-1"><span class="badge bg-{{ $badgeColor }} me-1"></span>{{ $badgeLabel }}</span>
                                         @if($review && $review->round > 1)
                                             <div class="small text-muted mt-1">Putaran {{ $review->round }}</div>
                                         @endif
@@ -231,7 +230,7 @@
         </div>
 
         <div class="col-lg-6">
-            <div class="card glass-card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px;">
                 <div class="card-header bg-transparent border-0 py-3 d-flex align-items-center">
                     <div class="avatar bg-green-lt text-green shadow-sm avatar-sm me-3 border-0">
                         <i class="ti ti-users-group"></i>
@@ -243,7 +242,7 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-vcenter card-table table-hover table-borderless">
-                        <thead class="bg-light-lt">
+                        <thead class="bg-transparent text-muted">
                             <tr>
                                 <th class="ps-4">Judul & Pengaju</th>
                                 <th class="text-center">Status</th>
@@ -263,9 +262,8 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <x-tabler.badge :color="$review?->status->color() ?? 'secondary'" class="fw-normal">
-                                            {{ $review?->status->label() ?? 'Pending' }}
-                                        </x-tabler.badge>
+                                        @php $badgeColor = $review?->status->color() ?? 'secondary'; $badgeLabel = $review?->status->label() ?? 'Pending'; @endphp
+                                        <span class="badge bg-{{ $badgeColor }}-lt fw-bold px-2 py-1"><span class="badge bg-{{ $badgeColor }} me-1"></span>{{ $badgeLabel }}</span>
                                         @if($review && $review->round > 1)
                                             <div class="small text-muted mt-1">Putaran {{ $review->round }}</div>
                                         @endif

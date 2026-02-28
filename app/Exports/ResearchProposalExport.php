@@ -16,7 +16,7 @@ class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
         $this->year = $year;
     }
 
-    public function query()
+    public function query(): \Illuminate\Database\Eloquent\Builder
     {
         return Proposal::where('detailable_type', \App\Models\Research::class)
             ->whereYear('created_at', $this->year)
@@ -92,9 +92,9 @@ class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
             if ($i < $teamMembers->count()) {
                 $member = $teamMembers[$i];
                 $memberIdentity = $member->identity;
-                $memberData[] = $memberIdentity?->sinta_id ?? '';
-                $memberData[] = $memberIdentity?->identity_id ?? '';
-                $memberData[] = $member->name ?? '';
+                $memberData[] = $memberIdentity->sinta_id ?? '';
+                $memberData[] = $memberIdentity->identity_id ?? '';
+                $memberData[] = $member->name;
             } else {
                 // Empty slots for members not present
                 $memberData[] = '';
@@ -103,26 +103,27 @@ class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
             }
         }
 
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         return [
             $no,
-            $submitterIdentity?->sinta_id ?? '',
-            $submitter->name ?? '',
-            $submitterIdentity?->identity_id ?? '',
-            $submitterIdentity?->institution_name ?? '',
+            $submitterIdentity->sinta_id ?? '',
+            $submitter->name,
+            $submitterIdentity->identity_id ?? '',
+            $submitterIdentity->institution_name ?? '',
             '', // kd_pt_ketua - not available in current schema
             $proposal->title ?? '',
-            $proposal->researchScheme?->name ?? '',
+            $proposal->researchScheme->name ?? '',
             $proposal->created_at->year ?? '',
             $proposal->created_at->year ?? '',
             $proposal->created_at->year ?? '',
             $proposal->duration_in_years ?? '',
-            $proposal->focusArea?->name ?? '',
-            $proposal->researchScheme?->name ?? '',
-            $proposal->status->label() ?? '',
-            $proposal->budgetItems()->sum('total_price') ?? 0,
-            $submitterIdentity?->sinta_id ?? '',
-            $submitterIdentity?->institution_name ?? '',
-            $research?->final_tkt_target ?? '',
+            $proposal->focusArea->name ?? '',
+            $proposal->researchScheme->name ?? '',
+            $proposal->status->label(),
+            $proposal->budgetItems->sum('total_price'),
+            $submitterIdentity->sinta_id ?? '',
+            $submitterIdentity->institution_name ?? '',
+            $research->final_tkt_target ?? '',
             '', // nama_program_hibah - not available
             '', // kategori_sumber_dana - not available
             'ID', // negara_sumber_dana - default ID

@@ -92,15 +92,13 @@
                     </div>
                     <div class="col-md-4 text-end">
                         <div class="btn-group w-100">
-                            <a href="{{ route('reports.output.excel', ['activeTab' => $activeTab, 'search' => $search, 'outputType' => $outputType]) }}"
-                                class="btn btn-outline-success" data-navigate-ignore="true">
+                            <a href="{{ route('reports.output.excel', ['activeTab' => $activeTab, 'search' => $search, 'outputType' => $outputType]) }}" class="btn btn-outline-success" data-navigate-ignore="true">
                                 <x-lucide-table class="icon me-2" />
-                                {{ __('Excel') }}
+                                <span>{{ __('Excel') }}</span>
                             </a>
-                            <a href="{{ route('reports.output.pdf', ['activeTab' => $activeTab, 'search' => $search, 'outputType' => $outputType]) }}"
-                                class="btn btn-outline-danger" data-navigate-ignore="true">
+                            <a href="{{ route('reports.output.pdf', ['activeTab' => $activeTab, 'search' => $search, 'outputType' => $outputType]) }}" class="btn btn-outline-danger" data-navigate-ignore="true">
                                 <x-lucide-file-text class="icon me-2" />
-                                {{ __('PDF') }}
+                                <span>{{ __('PDF') }}</span>
                             </a>
                         </div>
                     </div>

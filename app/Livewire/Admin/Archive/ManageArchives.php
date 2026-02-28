@@ -3,8 +3,6 @@
 namespace App\Livewire\Admin\Archive;
 
 use App\Enums\ProposalStatus;
-use App\Exports\ArchiveDataExport;
-use App\Exports\ArchiveTemplateExport;
 use App\Imports\HistoricalProposalImport;
 use App\Models\Proposal;
 use Livewire\Attributes\Layout;
@@ -150,16 +148,21 @@ class ManageArchives extends Component
     }
 
     #[On('request-template-download')]
-    public function downloadTemplate()
+    public function downloadTemplate(): void
     {
-        return Excel::download(new ArchiveTemplateExport, 'template_import_arsip.xlsx');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('admin.archives.template'));
     }
 
     #[On('request-export-data')]
-    public function exportData()
+    public function exportData(): void
     {
-        $filename = 'Export_Arsip_Kegiatan_'.date('Ymd_His').'.xlsx';
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $url = route('admin.archives.export', [
+            'search' => $this->search,
+            'yearFilter' => $this->yearFilter,
+        ]);
 
-        return Excel::download(new ArchiveDataExport($this->search, $this->yearFilter), $filename);
+        $this->dispatch('download-file', url: $url);
     }
 }

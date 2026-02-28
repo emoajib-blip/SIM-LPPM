@@ -49,10 +49,9 @@
                                 <div class="mb-3 h1">{{ $stats['total_proposals'] ?? 0 }}</div>
                                 <div class="d-flex mb-2">
                                     <div class="text-muted">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="me-1 text-muted icon"
-                                            width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="me-1 text-muted icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" />
                                             <path d="M12 12c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" />
@@ -173,17 +172,16 @@
                                     @php
                                         $approvalRate =
                                             $stats['total_proposals'] > 0
-                                                ? round(
-                                                    ($stats['approved_proposals'] / $stats['total_proposals']) * 100,
-                                                    1,
-                                                )
-                                                : 0;
+                                            ? round(
+                                                ($stats['approved_proposals'] / $stats['total_proposals']) * 100,
+                                                1,
+                                            )
+                                            : 0;
                                     @endphp
                                     {{ $approvalRate }}%
                                 </div>
                                 <div class="progress progress-sm">
-                                    <div class="progress-bar" role="progressbar"
-                                        style="width: {{ $approvalRate }}%">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ $approvalRate }}%">
                                         <span class="sr-only">{{ $approvalRate }}%</span>
                                     </div>
                                 </div>
@@ -438,14 +436,14 @@
                                                     </div>
                                                     <div class="flex-fill ms-2">
                                                         <div class="font-weight-medium">
-                                                            {{ $proposal->submitter->name }}</div>
+                                                            {{ $proposal->submitter->name }}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
                                                 @if ($proposal->detailable_type === 'App\Models\Research')
-                                                    <x-tabler.badge color="primary"
-                                                        class="me-1">Penelitian</x-tabler.badge>
+                                                    <x-tabler.badge color="primary" class="me-1">Penelitian</x-tabler.badge>
                                                 @else
                                                     <x-tabler.badge color="info" class="me-1">PKM</x-tabler.badge>
                                                 @endif

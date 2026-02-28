@@ -7,9 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int|null $parent_id
+ * @property int $level
+ * @property string $name
+ * @property bool $is_active_for_research
+ * @property bool $is_active_for_community_service
+ * @property-read \App\Models\ScienceCluster|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ScienceCluster[] $children
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 class ScienceCluster extends Model
 {
-    /** @use HasFactory<\Database\Factories\ScienceClusterFactory> */
     use HasFactory;
 
     protected $fillable = [

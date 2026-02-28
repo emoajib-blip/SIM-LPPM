@@ -56,5 +56,4 @@ Beri tahu rekan tim/penguji untuk membuka browser dan mengetik alamat:
 ---
 *Vetted by AI - Manual Review Required by Senior Engineer/Manager*
 *"Efficiency is the goal, but Integrity is the foundation."*
-
-cd '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main' && php artisan serve --host=127.0.0.1 --port=8000
+cd '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main' && php artisan serve --host=127.0.0.1 --port=8000 serve

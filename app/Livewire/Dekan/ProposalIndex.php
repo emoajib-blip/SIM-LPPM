@@ -11,6 +11,14 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+/**
+ * @property-read ?int $dekanFacultyId
+ * @property-read \Illuminate\Contracts\Pagination\LengthAwarePaginator $proposals
+ * @property-read array $statusStats
+ * @property-read array $availableYears
+ * @property-read ?string $facultyName
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ProposalIndex extends Component
 {
     use WithPagination;
@@ -41,7 +49,7 @@ class ProposalIndex extends Component
      * Get Dekan's faculty ID for scoping proposals.
      */
     #[Computed]
-    public function dekanFacultyId(): ?string
+    public function dekanFacultyId(): ?int
     {
         return Auth::user()?->identity?->faculty_id;
     }

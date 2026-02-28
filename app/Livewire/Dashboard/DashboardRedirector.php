@@ -34,6 +34,7 @@ class DashboardRedirector extends Component
 
     public function render()
     {
-        return view('livewire.dashboard.dashboard-redirector');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        return view('livewire.dashboard.main-dashboard');
     }
 }

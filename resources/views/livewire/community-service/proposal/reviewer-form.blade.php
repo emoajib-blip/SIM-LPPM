@@ -76,7 +76,7 @@
                                                                 Total Skor:
                                                                 {{ number_format($review->scores->where('round', $review->round)->sum('value'), 0) }}
                                                             </div>
-                                                            <a href="{{ route('reviewers.export-pdf', $review->id) }}"
+                                                            <a data-navigate-ignore="true" href="{{ route('reviewers.export-pdf', $review->id) }}"
                                                                 target="_blank"
                                                                 class="px-2 py-1 btn btn-sm btn-ghost-danger">
                                                                 <x-lucide-file-text class="me-1 icon icon-sm" />

@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $code
+ * @property string $name
+ * @property string|null $description
+ * @property float|null $percentage
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BudgetComponent[] $components
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BudgetItem[] $budgetItems
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class BudgetGroup extends Model
 {
     /** @use HasFactory<\Database\Factories\BudgetGroupFactory> */

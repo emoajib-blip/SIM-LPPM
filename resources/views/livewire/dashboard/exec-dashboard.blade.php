@@ -1,8 +1,9 @@
 <div>
-    <x-slot:pageActions>
+    <div class="d-flex justify-content-end mb-4">
         <div class="d-flex align-items-center gap-2">
             <div class="dropdown">
-                <a href="#" class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                <a href="#" class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2"
+                    data-bs-toggle="dropdown">
                     <i class="ti ti-calendar-event fs-2"></i>
                     <span>Tahun: {{ $selectedYear }}</span>
                 </a>
@@ -16,9 +17,11 @@
                 </div>
             </div>
             <div class="dropdown">
-                <a href="#" class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                <a href="#" class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2"
+                    data-bs-toggle="dropdown">
                     <i class="ti ti-layers-intersect fs-2"></i>
-                    <span>Semester: {{ $selectedSemester === 'all' ? 'Semua' : 'Semester ' . ucfirst($selectedSemester) }}</span>
+                    <span>Semester:
+                        {{ $selectedSemester === 'all' ? 'Semua' : 'Semester ' . ucfirst($selectedSemester) }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
                     <a href="#" class="dropdown-item {{ $selectedSemester === 'all' ? 'active' : '' }}"
@@ -36,19 +39,19 @@
                 </div>
             </div>
         </div>
-    </x-slot:pageActions>
+    </div>
 
 
 
     <!-- Executive KPI Cards -->
     <div class="row row-deck row-cards mb-4">
         <div class="col-sm-6 col-lg-3">
-            <div class="card card-stacked glass-card border-0 shadow-sm overflow-hidden" style="border-left: 4px solid #206bc4;">
+            <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <div class="subheader text-primary fw-bold">Total Penelitian</div>
-                        <div class="ms-auto text-primary opacity-50">
-                            <i class="ti ti-microscope fs-2"></i>
+                        <div class="ms-auto text-primary bg-primary-lt rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <i class="ti ti-microscope fs-3"></i>
                         </div>
                     </div>
                     <div class="h1 mb-1 fw-bold text-primary">{{ $stats['total_research'] ?? 0 }}</div>
@@ -58,12 +61,12 @@
         </div>
 
         <div class="col-sm-6 col-lg-3">
-            <div class="card card-stacked glass-card border-0 shadow-sm overflow-hidden" style="border-left: 4px solid #4591ed;">
+            <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <div class="subheader text-azure fw-bold">Total PKM</div>
-                        <div class="ms-auto text-azure opacity-50">
-                            <i class="ti ti-users-group fs-2"></i>
+                        <div class="ms-auto text-azure bg-azure-lt rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <i class="ti ti-users-group fs-3"></i>
                         </div>
                     </div>
                     <div class="h1 mb-1 fw-bold text-azure">{{ $stats['total_community_service'] ?? 0 }}</div>
@@ -73,7 +76,7 @@
         </div>
 
         <div class="col-sm-6 col-lg-3">
-            <div class="card card-stacked glass-card border-0 shadow-sm overflow-hidden" style="border-left: 4px solid #0ca678;">
+            <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <div class="subheader text-green fw-bold">Penelitian Disetujui</div>
@@ -93,7 +96,7 @@
         </div>
 
         <div class="col-sm-6 col-lg-3">
-            <div class="card card-stacked glass-card border-0 shadow-sm overflow-hidden" style="border-left: 4px solid #ae3ec9;">
+            <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <div class="subheader text-purple fw-bold">PKM Disetujui</div>
@@ -116,7 +119,7 @@
     <!-- Periodic Summary Table -->
     <div class="row row-cards mb-4">
         <div class="col-12">
-            <div class="card glass-card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px;">
                 <div class="card-header bg-transparent border-0 py-3">
                     <div class="d-flex align-items-center">
                         <div class="avatar bg-success-lt text-success shadow-sm avatar-sm me-3 border-0">
@@ -127,7 +130,7 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-vcenter card-table table-hover table-borderless">
-                        <thead class="bg-light-lt">
+                        <thead class="bg-transparent text-muted">
                             <tr>
                                 <th class="ps-4">Tahun / Semester</th>
                                 <th class="text-center">Total Res.</th>
@@ -146,7 +149,8 @@
                                     </td>
                                     <td class="text-center fw-bold">{{ $item['research_total'] }}</td>
                                     <td class="text-center">
-                                        <div class="badge bg-green-lt p-1 px-2 fw-normal">{{ $item['research_approved'] }}</div>
+                                        <div class="badge bg-green-lt p-1 px-2 fw-normal">{{ $item['research_approved'] }}
+                                        </div>
                                     </td>
                                     <td class="text-center fw-bold">{{ $item['pkm_total'] }}</td>
                                     <td class="text-center">
@@ -169,7 +173,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">Tidak ada data historis tersedia</td>
+                                    <td colspan="6" class="text-center py-5 text-muted">Tidak ada data historis tersedia
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -182,7 +187,7 @@
     <!-- Recent Approved Proposals -->
     <div class="row row-cards">
         <div class="col-lg-6">
-            <div class="card glass-card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px;">
                 <div class="card-header bg-transparent border-0 py-3 d-flex align-items-center">
                     <div class="avatar bg-primary-lt text-primary shadow-sm avatar-sm me-3 border-0">
                         <i class="ti ti-flask-2"></i>
@@ -191,7 +196,7 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-vcenter card-table table-hover table-borderless">
-                        <thead class="bg-light-lt">
+                        <thead class="bg-transparent text-muted">
                             <tr>
                                 <th class="ps-4">Judul & Peneliti</th>
                                 <th class="text-end pe-4">Tanggal</th>
@@ -205,7 +210,9 @@
                                             {{ $research->title }}
                                         </div>
                                         <div class="small text-muted d-flex align-items-center mt-1">
-                                            <div class="avatar avatar-xs me-2 border-0 shadow-sm bg-primary-lt">{{ $research->submitter?->initials() }}</div>
+                                            <div class="avatar avatar-xs me-2 border-0 shadow-sm bg-primary-lt">
+                                                {{ $research->submitter?->initials() }}
+                                            </div>
                                             {{ $research->submitter?->name }}
                                         </div>
                                     </td>
@@ -225,7 +232,7 @@
         </div>
 
         <div class="col-lg-6">
-            <div class="card glass-card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px;">
                 <div class="card-header bg-transparent border-0 py-3 d-flex align-items-center">
                     <div class="avatar bg-azure-lt text-azure shadow-sm avatar-sm me-3 border-0">
                         <i class="ti ti-users-group"></i>
@@ -234,7 +241,7 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-vcenter card-table table-hover table-borderless">
-                        <thead class="bg-light-lt">
+                        <thead class="bg-transparent text-muted">
                             <tr>
                                 <th class="ps-4">Judul & Pengaju</th>
                                 <th class="text-end pe-4">Tanggal</th>
@@ -248,7 +255,9 @@
                                             {{ $communityService->title }}
                                         </div>
                                         <div class="small text-muted d-flex align-items-center mt-1">
-                                            <div class="avatar avatar-xs me-2 border-0 shadow-sm bg-azure-lt">{{ $communityService->submitter?->initials() }}</div>
+                                            <div class="avatar avatar-xs me-2 border-0 shadow-sm bg-azure-lt">
+                                                {{ $communityService->submitter?->initials() }}
+                                            </div>
                                             {{ $communityService->submitter?->name }}
                                         </div>
                                     </td>

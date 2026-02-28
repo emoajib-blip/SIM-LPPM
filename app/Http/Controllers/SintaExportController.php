@@ -12,25 +12,39 @@ class SintaExportController extends Controller
 {
     public function downloadResearch(Request $request)
     {
-        $year = $request->query('year', date('Y'));
-        $filename = 'SINTA_Penelitian_'.$year.'_'.now()->format('YmdHis').'.xlsx';
+        try {
+            $year = $request->query('year', date('Y'));
+            $filename = 'SINTA_Penelitian_'.$year.'_'.now()->format('YmdHis').'.xlsx';
 
-        if (ob_get_level()) {
-            ob_end_clean();
+            while (ob_get_level() > 0) {
+                @ob_end_clean();
+
+            }
+
+            return Excel::download(new SintaResearchExport($year), $filename);
+        } catch (\Exception $e) {
+            \Log::error('SINTA Research Export Error: '.$e->getMessage());
+
+            return back()->with('error', 'Gagal mengunduh Excel SINTA Penelitian: '.$e->getMessage());
         }
-
-        return Excel::download(new SintaResearchExport($year), $filename);
     }
 
     public function downloadPkm(Request $request)
     {
-        $year = $request->query('year', date('Y'));
-        $filename = 'SINTA_PengabdianMasyarakat_'.$year.'_'.now()->format('YmdHis').'.xlsx';
+        try {
+            $year = $request->query('year', date('Y'));
+            $filename = 'SINTA_PengabdianMasyarakat_'.$year.'_'.now()->format('YmdHis').'.xlsx';
 
-        if (ob_get_level()) {
-            ob_end_clean();
+            while (ob_get_level() > 0) {
+                @ob_end_clean();
+
+            }
+
+            return Excel::download(new SintaCommunityServiceExport($year), $filename);
+        } catch (\Exception $e) {
+            \Log::error('SINTA PKM Export Error: '.$e->getMessage());
+
+            return back()->with('error', 'Gagal mengunduh Excel SINTA PKM: '.$e->getMessage());
         }
-
-        return Excel::download(new SintaCommunityServiceExport($year), $filename);
     }
 }

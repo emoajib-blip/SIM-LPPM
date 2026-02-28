@@ -41,7 +41,7 @@ class ProposalService
 
         DB::transaction(function () use ($proposal) {
             $proposal->teamMembers()->detach();
-            $proposal->detailable?->delete();
+            $proposal->detailable->delete();
             $proposal->delete();
         });
     }
@@ -184,7 +184,7 @@ class ProposalService
 
     public function validateProposalBeforeSubmit(Proposal $proposal): void
     {
-        if ($proposal->status !== ProposalStatus::DRAFT->value) {
+        if ($proposal->status->value !== ProposalStatus::DRAFT->value) {
             throw new \Exception('Hanya proposal dengan status draft yang dapat disubmit.');
         }
 

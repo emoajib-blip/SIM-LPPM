@@ -11,6 +11,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property string $id
+ * @property string $proposal_id
+ * @property string|null $summary_update
+ * @property int|null $reporting_year
+ * @property string|null $reporting_period
+ * @property string|null $status
+ * @property string|null $submitted_by
+ * @property \Illuminate\Support\Carbon|null $submitted_at
+ * @property-read \App\Models\Proposal $proposal
+ * @property-read \App\Models\User|null $submitter
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Keyword[] $keywords
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MandatoryOutput[] $mandatoryOutputs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AdditionalOutput[] $additionalOutputs
+ */
 class ProgressReport extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\ProgressReportFactory> */

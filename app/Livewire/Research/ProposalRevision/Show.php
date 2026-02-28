@@ -67,7 +67,8 @@ class Show extends Component
         $this->form->setProposal($proposal);
 
         // Initialize form values
-        $this->macroResearchGroupId = (string) ($proposal->detailable?->macro_research_group_id ?? '');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->macroResearchGroupId = (string) ($proposal->detailable->macro_research_group_id ?? '');
     }
 
     /**
@@ -104,6 +105,8 @@ class Show extends Component
         $this->validate();
 
         try {
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+            /** @var \App\Models\Research $research */
             $research = $this->form->proposal->detailable;
 
             // Update macro research group

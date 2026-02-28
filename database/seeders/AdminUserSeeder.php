@@ -57,10 +57,10 @@ class AdminUserSeeder extends Seeder
 
         // Create Superadmin (default)
         $superadmin = User::firstOrCreate(
-            ['email' => 'superadmin@email.com'],
+            ['email' => env('SUPERADMIN_EMAIL', 'superadmin@email.com')],
             [
-                'name' => 'Super Administrator',
-                'password' => Hash::make('password'), // Change in production!
+                'name' => env('SUPERADMIN_NAME', 'Super Administrator'),
+                'password' => Hash::make(env('INITIAL_ADMIN_PASSWORD', 'password')),
                 'email_verified_at' => now(),
             ]
         );
@@ -80,10 +80,10 @@ class AdminUserSeeder extends Seeder
 
         // Create Admin LPPM
         $adminLppm = User::firstOrCreate(
-            ['email' => 'admin-lppm@email.com'],
+            ['email' => env('ADMIN_LPPM_EMAIL', 'admin-lppm@email.com')],
             [
-                'name' => 'Admin LPPM',
-                'password' => Hash::make('password'), // Change in production!
+                'name' => env('ADMIN_LPPM_NAME', 'Admin LPPM'),
+                'password' => Hash::make(env('INITIAL_ADMIN_PASSWORD', 'password')),
                 'email_verified_at' => now(),
             ]
         );
@@ -103,10 +103,10 @@ class AdminUserSeeder extends Seeder
 
         // Create Rektor
         $rektor = User::updateOrCreate(
-            ['email' => 'rektor@email.com'],
+            ['email' => env('REKTOR_EMAIL', 'rektor@email.com')],
             [
-                'name' => 'Ali Imron',
-                'password' => Hash::make('password'),
+                'name' => env('REKTOR_NAME', 'Ali Imron'),
+                'password' => Hash::make(env('INITIAL_ADMIN_PASSWORD', 'password')),
                 'email_verified_at' => now(),
             ]
         );

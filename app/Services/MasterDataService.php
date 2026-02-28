@@ -6,11 +6,14 @@ use App\Models\BudgetComponent;
 use App\Models\BudgetGroup;
 use App\Models\CommunityServiceScheme;
 use App\Models\FocusArea;
+use App\Models\IkuOutputType;
 use App\Models\MacroResearchGroup;
+use App\Models\MasterIku;
 use App\Models\NationalPriority;
 use App\Models\Partner;
 use App\Models\ResearchScheme;
 use App\Models\ScienceCluster;
+use App\Models\Sdg;
 use App\Models\Setting;
 use App\Models\Theme;
 use App\Models\TktLevel;
@@ -130,6 +133,11 @@ class MasterDataService
         return $this->cache['partners'] ??= Partner::all();
     }
 
+    public function sdgs(): Collection
+    {
+        return $this->cache['sdgs'] ??= Sdg::all();
+    }
+
     public function budgetGroups(): Collection
     {
         return $this->cache['budget_groups'] ??= BudgetGroup::with('components')->get();
@@ -196,8 +204,21 @@ class MasterDataService
         return null;
     }
 
+    public function ikuOutputTypes(): Collection
+    {
+        return $this->cache['iku_output_types'] ??= IkuOutputType::where('is_active', true)->get();
+    }
+
     public function clearCache(): void
     {
         $this->cache = [];
+    }
+
+    /**
+     * Get all active IKU Master Data.
+     */
+    public function masterIkus(): Collection
+    {
+        return MasterIku::where('is_active', true)->orderBy('code')->get();
     }
 }

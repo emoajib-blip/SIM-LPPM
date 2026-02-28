@@ -141,14 +141,75 @@
         </div>
     </div>
 
+    <!-- Upload Logo -->
+    <div class="mt-5 mb-4 border-top pt-4 border-muted">
+        <h3 class="card-title">Pengaturan Logo Dashboard</h3>
+        <p class="form-hint">Ubah logo yang ditampilkan pada navbar aplikasi Anda.</p>
+        <form wire:submit="saveLogo" enctype="multipart/form-data">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <span class="avatar avatar-xl form-imagecheck-image">
+                        <img src="{{ $currentLogo }}" alt="Logo Aplikasi" style="object-fit: contain;">
+                    </span>
+                </div>
+                <div class="col">
+                    <input type="file" class="form-control" wire:model="logo"
+                        accept="image/png, image/jpeg, image/jpg, image/webp">
+                    <div class="mt-2 text-muted small">Max file size is 2MB. Recommended dimensions: 200x200px.</div>
+                </div>
+            </div>
+
+            <div wire:loading wire:target="logo" class="mt-2 text-primary small">Mengunggah...</div>
+
+            @error('logo') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+
+            @if (session()->has('success_logo'))
+                <div class="alert alert-success mt-3">
+                    {{ session('success_logo') }}
+                </div>
+            @endif
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="saveLogo, logo">
+                    Simpan Logo
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Teks Aplikasi/Brand -->
+    <div class="mt-5 mb-4 border-top pt-4 border-muted">
+        <h3 class="card-title">Pengaturan Nama Aplikasi</h3>
+        <p class="form-hint">Ubah nama sistem atau instansi yang ditampilkan di sebelah logo pada atas menu aplikasi
+            Anda.</p>
+        <form wire:submit="saveSettings">
+            <div class="mb-3">
+                <label class="form-label">Nama Aplikasi</label>
+                <input type="text" class="form-control" wire:model="dashboardName" placeholder="Contoh: SIM LPPM ITSNU">
+            </div>
+
+            @if (session()->has('success_settings'))
+                <div class="alert alert-success mt-2">
+                    {{ session('success_settings') }}
+                </div>
+            @endif
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">
+                    Simpan Nama Aplikasi
+                </button>
+            </div>
+        </form>
+    </div>
+
     <div class="bg-transparent mt-auto card-footer">
         <div class="justify-content-end btn-list">
             <button type="button" class="btn" @click="resetTheme()">
                 <x-lucide-rotate-ccw class="icon icon-1" />
-                Reset Perubahan
+                Reset Perubahan Tema
             </button>
             <button type="button" class="btn btn-primary" @click="saveTheme()">
-                Simpan Preferensi
+                Simpan Preferensi Tema
             </button>
         </div>
     </div>

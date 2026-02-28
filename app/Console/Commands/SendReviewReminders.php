@@ -7,6 +7,10 @@ use App\Services\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
+/**
+ * Send review reminders to reviewers 3 days before deadline
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 class SendReviewReminders extends Command
 {
     protected $signature = 'reviews:send-reminders';
@@ -21,19 +25,20 @@ class SendReviewReminders extends Command
 
         $reviewers = ProposalReviewer::query()
             ->where('status', 'pending')
-            ->whereBetween('deadline', [$threeDay, $threeDayEnd])
-            ->with(['proposal', 'reviewer'])
+            ->whereBetween('deadline_at', [$threeDay, $threeDayEnd])
+            ->with(['proposal', 'user'])
             ->get();
 
+        /** @var ProposalReviewer $review */
         foreach ($reviewers as $review) {
-            $daysRemaining = $review->deadline->diffInDays(now());
+            $daysRemaining = $review->deadline_at ? (int) $review->deadline_at->diffInDays(now()) : 0;
             $notificationService->notifyReviewReminder(
                 $review->proposal,
-                $review->reviewer,
+                $review->user,
                 $daysRemaining
             );
 
-            $this->info("Reminder sent to {$review->reviewer->name} for proposal: {$review->proposal->title}");
+            $this->info("Reminder sent to {$review->user->name} for proposal: {$review->proposal->title}");
         }
 
         $this->info("Sent {$reviewers->count()} review reminders");

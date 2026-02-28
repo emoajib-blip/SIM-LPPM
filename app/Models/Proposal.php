@@ -12,6 +12,56 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property string $id
+ * @property string $title
+ * @property string $submitter_id
+ * @property string|null $detailable_id
+ * @property string|null $detailable_type
+ * @property string|null $research_scheme_id
+ * @property string|null $community_service_scheme_id
+ * @property string|null $focus_area_id
+ * @property string|null $theme_id
+ * @property string|null $topic_id
+ * @property string|null $national_priority_id
+ * @property string|null $cluster_level1_id
+ * @property string|null $cluster_level2_id
+ * @property string|null $cluster_level3_id
+ * @property float|null $sbk_value
+ * @property int|null $duration_in_years
+ * @property int|null $start_year
+ * @property string|null $summary
+ * @property \App\Enums\ProposalStatus $status
+ * @property array|null $student_members
+ * @property-read \App\Models\User $submitter
+ * @property-read \Illuminate\Database\Eloquent\Model|\App\Models\Research|\App\Models\CommunityService $detailable
+ * @property-read \App\Models\ResearchScheme|null $researchScheme
+ * @property-read \App\Models\CommunityServiceScheme|null $communityServiceScheme
+ * @property-read \App\Models\FocusArea|null $focusArea
+ * @property-read \App\Models\Theme|null $theme
+ * @property-read \App\Models\Topic|null $topic
+ * @property-read \App\Models\NationalPriority|null $nationalPriority
+ * @property-read \App\Models\ScienceCluster|null $clusterLevel1
+ * @property-read \App\Models\ScienceCluster|null $clusterLevel2
+ * @property-read \App\Models\ScienceCluster|null $clusterLevel3
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Sdg[] $sdgs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MasterIku[] $targetedIkus
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalMonev[] $monevs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $teamMembers
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Keyword[] $keywords
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalOutput[] $outputs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BudgetItem[] $budgetItems
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Partner[] $partners
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ActivitySchedule[] $activitySchedules
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResearchStage[] $researchStages
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalReviewer[] $reviewers
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProgressReport[] $progressReports
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DailyNote[] $dailyNotes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalStatusLog[] $statusLogs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewLog[] $reviewLogs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalActivity[] $activities
+ * @property-read \App\Models\User $user
+ */
 class Proposal extends Model
 {
     /** @use HasFactory<\Database\Factories\ProposalFactory> */
@@ -64,6 +114,22 @@ class Proposal extends Model
             'status' => ProposalStatus::class,
             'student_members' => 'array',
         ];
+    }
+
+    /**
+     * Get the SDGs for the proposal.
+     */
+    public function sdgs(): BelongsToMany
+    {
+        return $this->belongsToMany(Sdg::class, 'proposal_sdg');
+    }
+
+    /**
+     * Get the targeted IKUs for the proposal.
+     */
+    public function targetedIkus(): BelongsToMany
+    {
+        return $this->belongsToMany(MasterIku::class, 'proposal_target_iku');
     }
 
     /**

@@ -6,7 +6,8 @@
     <x-slot:pageActions>
         <div class="btn-list">
             <div class="dropdown">
-                <button class="btn btn-white dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-white dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
                     <i class="ti ti-calendar-event me-2 text-primary"></i>
                     {{ __('Periode') }}: <span class="fw-bold ms-1">{{ $period }}</span>
                 </button>
@@ -14,8 +15,9 @@
                     <li class="dropdown-header">{{ __('Pilih Tahun Anggaran') }}</li>
                     @foreach ($periods as $availablePeriod)
                         <li>
-                            <button type="button" class="dropdown-item d-flex justify-content-between align-items-center {{ $period === $availablePeriod ? 'active' : '' }}"
-                                wire:click="setPeriod('{{ $availablePeriod }}')">
+                            <button type="button"
+                                class="dropdown-item d-flex justify-content-between align-items-center {{ $period === $availablePeriod ? 'active' : '' }}"
+                                onclick="Livewire.dispatch('set-period', { period: '{{ $availablePeriod }}' })">
                                 {{ $availablePeriod }}
                                 @if($period === $availablePeriod) <i class="ti ti-check ms-2"></i> @endif
                             </button>
@@ -26,11 +28,11 @@
             <div class="hr-vertical mx-1 d-none d-md-block"></div>
             <a href="{{ route('reports.research.excel', ['period' => $period]) }}" class="btn btn-outline-success shadow-sm" data-navigate-ignore="true">
                 <i class="ti ti-table me-2"></i>
-                {{ __('Unduh Excel') }}
+                <span>{{ __('Unduh Excel') }}</span>
             </a>
             <a href="{{ route('reports.research.pdf', ['period' => $period]) }}" class="btn btn-outline-danger shadow-sm" data-navigate-ignore="true">
                 <i class="ti ti-file-type-pdf me-2"></i>
-                {{ __('Unduh PDF') }}
+                <span>{{ __('Unduh PDF') }}</span>
             </a>
         </div>
     </x-slot:pageActions>
@@ -41,7 +43,8 @@
             <div class="col-sm-6 col-xl-4">
                 <div class="card card-stacked shadow-sm border-0">
                     <div class="d-flex align-items-center gap-3 card-body">
-                        <div class="p-3 bg-opacity-10 {{ str_replace('bg-', 'bg-opacity-10 text-', explode(' ', $card['variant'])[0]) }} rounded-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                        <div class="p-3 bg-opacity-10 {{ str_replace('bg-', 'bg-opacity-10 text-', explode(' ', $card['variant'])[0]) }} rounded-3 d-flex align-items-center justify-content-center"
+                            style="width: 56px; height: 56px;">
                             <i class="ti ti-{{ $card['icon'] }} fs-1"></i>
                         </div>
                         <div>
@@ -80,7 +83,8 @@
                                 <tr>
                                     <td>
                                         <div class="fw-semibold">{{ $scheme['name'] }}</div>
-                                        <div class="text-muted small">Rp {{ number_format($scheme['budget'], 0, ',', '.') }}</div>
+                                        <div class="text-muted small">Rp {{ number_format($scheme['budget'], 0, ',', '.') }}
+                                        </div>
                                     </td>
                                     <td class="text-center">
                                         <span class="badge bg-blue-lt">{{ $scheme['count'] }}</span>
@@ -162,7 +166,8 @@
                             @forelse ($faculties as $faculty)
                                 <tr>
                                     <td>
-                                        <div class="fw-semibold text-truncate" style="max-width: 180px;">{{ $faculty['name'] }}</div>
+                                        <div class="fw-semibold text-truncate" style="max-width: 180px;">
+                                            {{ $faculty['name'] }}</div>
                                     </td>
                                     <td class="text-center">
                                         <span class="badge bg-green-lt">{{ $faculty['count'] }}</span>
@@ -249,22 +254,28 @@
                                         <td>{{ ($proposals->currentPage() - 1) * $proposals->perPage() + $index + 1 }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <span class="avatar avatar-sm avatar-rounded me-2" style="background-image: url({{ $research->submitter->profile_picture }})"></span>
+                                                <span class="avatar avatar-sm avatar-rounded me-2"
+                                                    style="background-image: url({{ $research->submitter->profile_picture }})"></span>
                                                 <div class="flex-fill">
-                                                    <div class="font-weight-medium text-wrap" style="max-width: 400px;" title="{{ $research->title }}">
-                                                        <a href="{{ route('research.proposal.show', $research) }}" class="text-reset" wire:navigate.hover>
+                                                    <div class="font-weight-medium text-wrap" style="max-width: 400px;"
+                                                        title="{{ $research->title }}">
+                                                        <a href="{{ route('research.proposal.show', $research) }}"
+                                                            class="text-reset" wire:navigate.hover>
                                                             {{ $research->title }}
                                                         </a>
                                                     </div>
                                                     <div class="text-muted small">
-                                                        {{ $research->submitter->name }} ({{ $research->submitter->identity->nidn ?? '-' }})
+                                                        {{ $research->submitter->name }}
+                                                        ({{ $research->submitter->identity->nidn ?? '-' }})
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="small fw-bold">{{ $research->submitter->identity->faculty->name ?? '-' }}</div>
-                                            <div class="small text-muted">{{ $research->submitter->identity->studyProgram->name ?? '-' }}</div>
+                                            <div class="small fw-bold">
+                                                {{ $research->submitter->identity->faculty->name ?? '-' }}</div>
+                                            <div class="small text-muted">
+                                                {{ $research->submitter->identity->studyProgram->name ?? '-' }}</div>
                                         </td>
                                         <td>
                                             <div class="text-muted small mb-1">
@@ -280,10 +291,9 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <a href="{{ route('research.proposal.show', $research) }}" 
-                                               class="btn btn-sm btn-icon btn-outline-info" 
-                                               title="Lihat Detail Detail" 
-                                               wire:navigate.hover>
+                                            <a href="{{ route('research.proposal.show', $research) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info" title="Lihat Detail Detail"
+                                                wire:navigate.hover>
                                                 <x-lucide-eye class="icon" />
                                             </a>
                                         </td>
@@ -307,4 +317,4 @@
             </div>
         </div>
 
-</div>
+    </div>

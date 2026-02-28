@@ -23,6 +23,8 @@ use Laravel\Fortify\Features;
 Route::livewire('install', InstallerWizard::class)
     ->name('install');
 
+Route::get('/health-check', \App\Http\Controllers\HealthCheckController::class)->name('health.check');
+
 Route::redirect('/', 'dashboard', 302);
 
 Route::livewire('dashboard', Dashboard::class)
@@ -65,11 +67,11 @@ Route::middleware(['auth'])->group(function () {
 
     // SINTA Export Page (Livewire)
     Route::livewire('export-sinta', \App\Livewire\AdminLppm\ExportSinta::class)
-        ->middleware(['role:admin lppm|superadmin'])
+        ->middleware(['permission:module_export_sinta'])
         ->name('export-sinta');
 
     // SINTA Export Direct Downloads (HTTP Controller — proper file response)
-    Route::middleware(['role:admin lppm|superadmin'])->prefix('export-sinta')->name('export-sinta.')->group(function () {
+    Route::middleware(['permission:module_export_sinta'])->prefix('export-sinta')->name('export-sinta.')->group(function () {
         Route::get('research', [\App\Http\Controllers\SintaExportController::class, 'downloadResearch'])
             ->name('research');
         Route::get('pkm', [\App\Http\Controllers\SintaExportController::class, 'downloadPkm'])
@@ -77,7 +79,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Research Routes
-    Route::middleware(['role:dosen|kepala lppm|reviewer|admin lppm|rektor|dekan'])->prefix('research')->name('research.')->group(function () {
+    Route::middleware(['permission:module_penelitian'])->prefix('research')->name('research.')->group(function () {
         Route::livewire('/', \App\Livewire\Research\Proposal\Index::class)->name('proposal.index');
 
         // Only dosen can create proposals
@@ -104,8 +106,13 @@ Route::middleware(['auth'])->group(function () {
         Route::livewire('daily-note/{proposal}', \App\Livewire\Research\DailyNote\Show::class)->name('daily-note.show');
     });
 
+    // Policy & Recognition Routes
+    Route::middleware(['permission:module_rekognisi'])->prefix('recognition')->name('recognition.')->group(function () {
+        Route::livewire('policy-involvement', \App\Livewire\Lecturer\PolicyInvolvement\Index::class)->name('policy-involvement.index');
+    });
+
     // Community Service Routes
-    Route::middleware(['role:dosen|kepala lppm|reviewer|admin lppm|rektor|dekan'])->prefix('community-service')->name('community-service.')->group(function () {
+    Route::middleware(['permission:module_pengabdian'])->prefix('community-service')->name('community-service.')->group(function () {
         Route::livewire('/', \App\Livewire\CommunityService\Proposal\Index::class)->name('proposal.index');
 
         // Only dosen can create proposals
@@ -133,13 +140,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Dekan Routes
-    Route::middleware(['role:dekan'])->prefix('dekan')->name('dekan.')->group(function () {
+    Route::middleware(['permission:module_persetujuan_dekan'])->prefix('dekan')->name('dekan.')->group(function () {
         Route::livewire('proposals', DekanProposalIndex::class)->name('proposals.index');
         Route::livewire('riwayat-persetujuan', \App\Livewire\Dekan\ApprovalHistory::class)->name('approval-history');
     });
 
     // Review Routes
-    Route::middleware(['role:reviewer'])->prefix('review')->name('review.')->group(function () {
+    Route::middleware(['permission:module_review'])->prefix('review')->name('review.')->group(function () {
         Route::livewire('research', ReviewResearch::class)->name('research');
         Route::livewire('community-service', ReviewCommunityService::class)->name('community-service');
         Route::livewire('riwayat-review', \App\Livewire\Review\ReviewHistory::class)->name('review-history');
@@ -152,11 +159,18 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Admin LPPM Routes
-    Route::middleware(['role:admin lppm'])->prefix('admin-lppm')->name('admin-lppm.')->group(function () {
-        Route::livewire('penugasan-reviewer', \App\Livewire\AdminLppm\ReviewerAssignment::class)->name('assign-reviewers');
-        Route::livewire('beban-kerja-reviewer', \App\Livewire\AdminLppm\ReviewerWorkload::class)->name('reviewer-workload');
-        Route::livewire('monitoring-review', \App\Livewire\AdminLppm\ReviewMonitoring::class)->name('review-monitoring');
-        Route::livewire('monev', \App\Livewire\AdminLppm\Monev\MonevIndex::class)->name('monev.index');
+    Route::prefix('admin-lppm')->name('admin-lppm.')->group(function () {
+        // Reviewer Management
+        Route::middleware(['permission:module_reviewer_management'])->group(function () {
+            Route::livewire('penugasan-reviewer', \App\Livewire\AdminLppm\ReviewerAssignment::class)->name('assign-reviewers');
+            Route::livewire('beban-kerja-reviewer', \App\Livewire\AdminLppm\ReviewerWorkload::class)->name('reviewer-workload');
+            Route::livewire('monitoring-review', \App\Livewire\AdminLppm\ReviewMonitoring::class)->name('review-monitoring');
+        });
+
+        // Monev
+        Route::livewire('monev', \App\Livewire\AdminLppm\Monev\MonevIndex::class)
+            ->middleware('permission:module_monev')
+            ->name('monev.index');
         // route for global audit log access outside settings tab
         Route::livewire('audit-log', \App\Livewire\Settings\AuditLog::class)
             ->name('audit-log');
@@ -168,13 +182,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Archive Management
     Route::livewire('admin/archives', \App\Livewire\Admin\Archive\ManageArchives::class)
-        ->middleware(['role:admin lppm|superadmin'])
+        ->middleware(['permission:module_arsip_data'])
         ->name('admin.archives');
 
     Route::redirect('settings/profile', '/settings')->name('settings.profile');
     Route::livewire('settings/password', Password::class)->name('settings.password');
     Route::livewire('settings/appearance', Appearance::class)
-        ->middleware(['role:admin lppm|superadmin'])
+        ->middleware(['permission:module_pengaturan'])
         ->name('settings.appearance');
 
     Route::middleware(['role:admin lppm|superadmin'])->group(function () {
@@ -210,7 +224,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('proposals/{proposal}/preview-pdf', [\App\Http\Controllers\ProposalExportController::class, 'preview'])
         ->name('proposals.preview-pdf');
 
-    Route::get('reports/{proposal}/export-pdf', [\App\Http\Controllers\ReportExportController::class, 'download'])
+    Route::get('reports/{proposal}/export-pdf', [\App\Http\Controllers\ProposalExportController::class, 'downloadReport'])
         ->name('reports.export-pdf');
 
     Route::get('reviewers/{proposalReviewer}/export-pdf', [\App\Http\Controllers\ReviewExportController::class, 'download'])
@@ -219,15 +233,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('daily-notes/{proposal}/export-pdf', [\App\Http\Controllers\DailyNoteExportController::class, 'download'])
         ->name('daily-notes.export-pdf');
 
-    Route::get('media/{media}/download', [\App\Http\Controllers\MediaDownloadController::class, 'download'])
-        ->middleware(['auth', 'signed'])
+    Route::get('media/{media:uuid}/download', [\App\Http\Controllers\MediaDownloadController::class, 'download'])
+        ->middleware(['auth'])
         ->name('media.download');
 });
 
 require __DIR__.'/auth.php';
 
 // Rute Ekspor Laporan via Standar HTTP (Bypass Livewire)
-Route::group(['middleware' => ['auth', 'verified', 'role:admin lppm|superadmin']], function () {
+Route::group(['middleware' => ['auth', 'verified', 'permission:module_laporan']], function () {
     Route::get('/laporan-penelitian/export/pdf', [\App\Http\Controllers\ReportExportController::class, 'researchPdf'])->name('reports.research.pdf');
     Route::get('/laporan-penelitian/export/excel', [\App\Http\Controllers\ReportExportController::class, 'researchExcel'])->name('reports.research.excel');
 
@@ -240,6 +254,22 @@ Route::group(['middleware' => ['auth', 'verified', 'role:admin lppm|superadmin']
     Route::get('/laporan-mitra/export/pdf', [\App\Http\Controllers\ReportExportController::class, 'partnerPdf'])->name('reports.partner.pdf');
     Route::get('/laporan-mitra/export/excel', [\App\Http\Controllers\ReportExportController::class, 'partnerExcel'])->name('reports.partner.excel');
 
-    Route::livewire('accreditation-hub', \App\Livewire\Accreditation\Hub::class)
-        ->name('accreditation.hub');
+    Route::get('/admin/dashboard/export-research', [\App\Http\Controllers\ReportExportController::class, 'dashboardResearchExport'])->name('admin.dashboard.export-research');
+
+    Route::get('/iku/verification', \App\Livewire\Iku\IkuVerification::class)->name('accreditation.verification');
+});
+
+// Archive Export Routes - Should match archive module permission
+Route::group(['middleware' => ['auth', 'verified', 'permission:module_arsip_data']], function () {
+    Route::get('/admin/archives/export', [\App\Http\Controllers\ReportExportController::class, 'archiveExport'])->name('admin.archives.export');
+    Route::get('/admin/archives/template', [\App\Http\Controllers\ReportExportController::class, 'archiveTemplate'])->name('admin.archives.template');
+});
+
+// IKU Dashboard and Exports
+Route::group(['middleware' => ['auth', 'verified', 'permission:module_iku']], function () {
+    Route::get('/iku', \App\Livewire\Iku\IkuDashboard::class)->name('accreditation.hub');
+    Route::get('/reports/iku', \App\Livewire\Reports\IkuReport::class)->name('reports.iku');
+
+    Route::get('/admin/iku/export-pdf', [\App\Http\Controllers\ReportExportController::class, 'ikuPdf'])->name('admin.iku.export-pdf');
+    Route::get('/admin/iku/export-excel', [\App\Http\Controllers\ReportExportController::class, 'ikuExcel'])->name('admin.iku.export-excel');
 });

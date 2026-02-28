@@ -11,6 +11,12 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
+/**
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read \Illuminate\Support\Collection|\App\Models\User[] $availableReviewers
+ * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $currentReviewers
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerAssignment extends Component
 {
     use HasToast;
@@ -76,7 +82,7 @@ class ReviewerAssignment extends Component
             ->where('user_id', $reviewerId)
             ->first();
 
-        if ($reviewer) {
+        if ($reviewer instanceof \App\Models\ProposalReviewer) {
             $reviewer->delete();
             session()->flash('success', 'Reviewer berhasil dihapus');
             $this->toastSuccess('Reviewer berhasil dihapus');

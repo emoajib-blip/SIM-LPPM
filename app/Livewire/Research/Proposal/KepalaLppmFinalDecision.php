@@ -14,6 +14,13 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+/**
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read bool $canDecide
+ * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $pendingReviewers
+ * @property-read \Illuminate\Support\Collection $reviewSummary
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class KepalaLppmFinalDecision extends Component
 {
     use HasToast;
@@ -146,10 +153,12 @@ class KepalaLppmFinalDecision extends Component
             // Send notifications
             $this->sendNotifications($proposal, $this->decision, $user);
 
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             $message = match ($this->decision) {
                 'completed' => 'Proposal berhasil disetujui dan selesai.',
                 'rejected' => 'Proposal telah ditolak.',
                 'revision_needed' => 'Proposal memerlukan perbaikan dan dikembalikan ke pengusul.',
+                default => 'Keputusan berhasil diproses.',
             };
 
             session()->flash('success', $message);

@@ -47,15 +47,22 @@ class Show extends Component
         // Check access
         $this->checkAccess();
 
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Load existing final report
-        $finalReport = $proposal->progressReports()->finalReports()->latest()->first();
+        /** @var \App\Models\ProgressReport|null $finalReport */
+        $finalReport = $proposal->progressReports()
+            ->where('reporting_period', 'final')
+            ->latest()
+            ->first();
 
         if ($finalReport) {
             $this->progressReport = $finalReport;
             $this->isFinalReportDraft = true;
         } else {
             // Fallback to latest progress report for pre-filling data, but it's NOT a final draft
-            $this->progressReport = $proposal->progressReports()->latest()->first();
+            /** @var \App\Models\ProgressReport|null $latestReport */
+            $latestReport = $proposal->progressReports()->latest()->first();
+            $this->progressReport = $latestReport;
             $this->isFinalReportDraft = false;
         }
 
@@ -150,7 +157,8 @@ class Show extends Component
     {
         // Save mandatory output files
         foreach ($this->form->mandatoryOutputs as $proposalOutputId => $data) {
-            if (empty($proposalOutputId) || (! is_string($proposalOutputId) && ! is_numeric($proposalOutputId))) {
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+            if (empty($proposalOutputId)) {
                 continue;
             }
 
@@ -170,7 +178,7 @@ class Show extends Component
 
         // Save additional output files
         foreach ($this->form->additionalOutputs as $proposalOutputId => $data) {
-            if (empty($proposalOutputId) || (! is_string($proposalOutputId) && ! is_numeric($proposalOutputId))) {
+            if (empty($proposalOutputId)) {
                 continue;
             }
 
@@ -438,8 +446,7 @@ class Show extends Component
             session()->flash('success', $message);
             $this->toastSuccess($message);
             $this->dispatch('close-modal', modalId: 'modalAdditionalOutput');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            throw $e;
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {

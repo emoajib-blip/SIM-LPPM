@@ -66,13 +66,111 @@
                     <label class="form-label">Strata</label>
                     <select wire:model="strata" class="form-control">
                         <option value="">Select strata</option>
-                        <option value="Dasar">Dasar</option>
-                        <option value="Terapan">Terapan</option>
-                        <option value="Pengembangan">Pengembangan</option>
+                        @foreach($strataOptions as $opt)
+                            <option value="{{ $opt->name }}">{{ $opt->name }}</option>
+                        @endforeach
                     </select>
                     @error('strata')
                         <div class="d-block invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <hr class="my-4">
+                <h4 class="mb-3 text-primary">Info Eligibilitas (Kriteria Pengusul)</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">Jabatan Fungsional Minimal / Diperbolehkan</label>
+                    <div class="row g-2">
+                        @foreach($functionalPositionOptions as $position)
+                            <div class="col-6">
+                                <label class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox"
+                                        wire:model="allowed_functional_positions" value="{{ $position }}">
+                                    <span class="form-check-label">{{ $position }}</span>
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Minimal Skor SINTA</label>
+                            <input type="number" wire:model="min_sinta_score" class="form-control"
+                                placeholder="Kosongkan jika tidak ada">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Min. Skor Scopus</label>
+                            <input type="number" wire:model="min_scopus_score" class="form-control"
+                                placeholder="H-Index">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Min. Mahasiswa</label>
+                            <input type="number" wire:model="min_students_involved" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Maks. Usulan (Ketua)</label>
+                            <input type="number" wire:model="max_proposals_as_head" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Maks. Usulan (Anggota)</label>
+                            <input type="number" wire:model="max_proposals_as_member" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Minimal Anggota</label>
+                            <input type="number" wire:model="min_members" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Maksimal Anggota</label>
+                            <input type="number" wire:model="max_members" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center mb-3">
+                    <div class="col-md-6">
+                        <label class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" wire:model.live="require_cross_prodi">
+                            <span class="form-check-label">Wajib Lintas Prodi (Anggota)</span>
+                        </label>
+                    </div>
+                    @if($require_cross_prodi)
+                        <div class="col-md-6">
+                            <div class="input-group input-group-flat">
+                                <span class="input-group-text">Min anggota lintas prodi:</span>
+                                <input type="number" wire:model="min_cross_prodi_members" class="form-control ps-1" min="1">
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Blokir jika punya Tunggakan Laporan/Luaran</label>
+                    <select wire:model="pending_report_block_role" class="form-select">
+                        <option value="none">Tidak Ada Blokir</option>
+                        <option value="leader">Hanya Ketua</option>
+                        <option value="member">Hanya Anggota</option>
+                        <option value="both">Keduanya (Ketua & Anggota)</option>
+                    </select>
                 </div>
             </form>
         </x-slot:body>

@@ -13,6 +13,25 @@ use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
+/**
+ * @property-read \Illuminate\Support\Collection|\App\Models\ReviewCriteria[] $activeCriterias
+ * @property-read float $totalScore
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read \App\Models\ProposalReviewer|null $myReview
+ * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $allReviews
+ * @property-read bool $canReview
+ * @property-read bool $needsAction
+ * @property-read bool $hasReviewed
+ * @property-read bool $needsReReview
+ * @property-read bool $canEditReview
+ * @property-read int $reviewRound
+ * @property-read mixed $deadline
+ * @property-read bool $isOverdue
+ * @property-read int|null $daysRemaining
+ * @property-read \Illuminate\Support\Collection|\App\Models\ReviewLog[] $previousRoundLogs
+ * @property-read \Illuminate\Support\Collection|\App\Models\ReviewLog[] $allReviewLogs
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerForm extends Component
 {
     use HasToast;
@@ -38,7 +57,9 @@ class ReviewerForm extends Component
             $this->recommendation = $myReview->recommendation ?? '';
 
             // Load existing scores
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             $existingScores = $myReview->scores()->where('round', $myReview->round)->get();
+            /** @var \App\Models\ReviewScore $score */
             foreach ($existingScores as $score) {
                 $this->scores[$score->review_criteria_id] = [
                     'score' => $score->score,
@@ -207,7 +228,10 @@ class ReviewerForm extends Component
     #[Computed]
     public function reviewRound(): int
     {
-        return $this->myReview?->round ?? 1;
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $currentRound = $this->myReview->round ?? 1;
+
+        return $currentRound;
     }
 
     #[Computed]

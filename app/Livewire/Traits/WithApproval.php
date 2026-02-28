@@ -34,6 +34,7 @@ trait WithApproval
             $newStatus = match ($this->approvalDecision) {
                 'approved' => ProposalStatus::UNDER_REVIEW,
                 'rejected' => ProposalStatus::REJECTED,
+                default => throw new \Exception('Keputusan persetujuan tidak valid.'),
             };
 
             if (! $proposal->status->canTransitionTo($newStatus)) {
@@ -44,7 +45,7 @@ trait WithApproval
             $proposal->update(['status' => $newStatus->value]);
 
             if ($newStatus === ProposalStatus::UNDER_REVIEW) {
-                $dekan = $proposal->submitter->identity->faculty->dekan;
+                $dekan = $proposal->submitter->identity->faculty->deanUser;
                 if ($dekan) {
                     $this->notificationService()->notifyDekanApprovalDecision(
                         $proposal,
@@ -85,6 +86,7 @@ trait WithApproval
                 'approved' => ProposalStatus::APPROVED,
                 'need_fix' => ProposalStatus::NEED_ASSIGNMENT,
                 'rejected' => ProposalStatus::REJECTED,
+                default => throw new \Exception('Keputusan dekan tidak valid.'),
             };
 
             if (! $proposal->status->canTransitionTo($newStatus)) {

@@ -33,6 +33,10 @@ class MonevInternalTest extends TestCase
         $this->adminLppm = User::factory()->create(['name' => 'Admin LPPM']);
         $this->adminLppm->assignRole('admin lppm');
 
+        // Dynamically create and assign the required permission for the test
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'module_monev']);
+        $this->adminLppm->givePermissionTo('module_monev');
+
         $this->dosen = User::factory()->create(['name' => 'Dosen Pengusul']);
         $this->dosen->assignRole('dosen');
 

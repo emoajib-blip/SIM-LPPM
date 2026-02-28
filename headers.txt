@@ -1,0 +1,13 @@
+HTTP/2 302 
+x-powered-by: PHP/8.4.18
+cache-control: no-cache, private
+location: dashboard
+set-cookie: XSRF-TOKEN=eyJpdiI6IlFVTlRXQmhoRUJDZUdkRGdITk9tZ2c9PSIsInZhbHVlIjoiS09pTVp3YzMyTGdIQ3Vaa2dPWWZPNkxKa2RVeWJGcEhQNkpab2pOczA3Y2JNRGJLVXNGUWFCRFBtN0w0Y2N3Ujh4SXp0Z3gvcEVyVGx0cGVCT2FaMkRyeHB5VjcxQnQ4czB6N0dQY0c0c2FPQmFINnozSzZLR3pNYVRKWmxMa1kiLCJtYWMiOiJiMGUxN2U3YjkzMmI5NjY1NmYxN2E4NWQxMzRjNGM0ZDkyNzFlYjZlMWNjMGFmZWQzMDgzOTEzZjljYjQ5NDg1IiwidGFnIjoiIn0%3D; expires=Wed, 25 Feb 2026 00:51:17 GMT; Max-Age=7200; path=/; secure; samesite=lax
+set-cookie: laravel_session=eyJpdiI6Ikt6Q29WNlMvNG1jTVhGbXNKY0NOMGc9PSIsInZhbHVlIjoiVkRzMXdPMWJDZXo4MGZJVDNiRFNxSWFqcXFwb0dIbHB2bXVESVVQNkRobU1VMUpMeXUxTm94YnBVUkJzT09JNmNaeXNDSm1Zak1XNEhwMXdJdDFTVk5jZk8wZjljMkJlMGJXcmtHNzRBYmJxY2xUdmFVS2d2bkprbDhnRVVEQlgiLCJtYWMiOiI4YWQ3NDE1ZWUzOTYwNmQ3Njg0ZmM2ZjdmYjQzMDA0OTExODZmY2UxMTFhZWI1ZTA3MDc1Nzk2ZjhhMjg1OTJiIiwidGFnIjoiIn0%3D; expires=Wed, 25 Feb 2026 00:51:17 GMT; Max-Age=7200; path=/; secure; httponly; samesite=lax
+content-type: text/html; charset=utf-8
+x-cloud-trace-context: abd67f51d2120ff531afcdccf5eb7be6;o=1
+date: Tue, 24 Feb 2026 22:51:17 GMT
+server: Google Frontend
+content-length: 282
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+

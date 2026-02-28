@@ -6,6 +6,60 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property string|null $identity_id
+ * @property string $user_id
+ * @property string|null $sinta_id
+ * @property string|null $scopus_id
+ * @property string|null $google_scholar_id
+ * @property string|null $wos_id
+ * @property string|null $type
+ * @property string|null $address
+ * @property \Illuminate\Support\Carbon|null $birthdate
+ * @property string|null $birthplace
+ * @property int|null $institution_id
+ * @property string|null $institution_name
+ * @property int|null $study_program_id
+ * @property int|null $faculty_id
+ * @property string|null $profile_picture
+ * @property string|null $last_education
+ * @property string|null $functional_position
+ * @property string|null $title_prefix
+ * @property string|null $title_suffix
+ * @property float|null $sinta_score_v2_overall
+ * @property float|null $sinta_score_v2_3yr
+ * @property float|null $sinta_score_v3_overall
+ * @property float|null $sinta_score_v3_3yr
+ * @property float|null $affil_score_v3_overall
+ * @property float|null $affil_score_v3_3yr
+ * @property int|null $scopus_documents
+ * @property int|null $scopus_citations
+ * @property int|null $scopus_cited_documents
+ * @property int|null $scopus_h_index
+ * @property int|null $scopus_g_index
+ * @property int|null $scopus_i10_index
+ * @property int|null $gs_documents
+ * @property int|null $gs_citations
+ * @property int|null $gs_cited_documents
+ * @property int|null $gs_h_index
+ * @property int|null $gs_g_index
+ * @property int|null $gs_i10_index
+ * @property int|null $wos_documents
+ * @property int|null $wos_citations
+ * @property int|null $wos_cited_documents
+ * @property int|null $wos_h_index
+ * @property int|null $wos_g_index
+ * @property int|null $wos_i10_index
+ * @property int|null $garuda_documents
+ * @property int|null $garuda_citations
+ * @property int|null $garuda_cited_documents
+ * @property bool $is_active
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\Institution|null $institution
+ * @property-read \App\Models\StudyProgram|null $studyProgram
+ * @property-read \App\Models\Faculty|null $faculty
+ */
 class Identity extends Model
 {
     use HasFactory;
@@ -76,6 +130,34 @@ class Identity extends Model
     {
         return [
             'birthdate' => 'date',
+            'is_active' => 'boolean',
+            'sinta_score_v2_overall' => 'float',
+            'sinta_score_v2_3yr' => 'float',
+            'sinta_score_v3_overall' => 'float',
+            'sinta_score_v3_3yr' => 'float',
+            'affil_score_v3_overall' => 'float',
+            'affil_score_v3_3yr' => 'float',
+            'scopus_documents' => 'integer',
+            'scopus_citations' => 'integer',
+            'scopus_cited_documents' => 'integer',
+            'scopus_h_index' => 'integer',
+            'scopus_g_index' => 'integer',
+            'scopus_i10_index' => 'integer',
+            'gs_documents' => 'integer',
+            'gs_citations' => 'integer',
+            'gs_cited_documents' => 'integer',
+            'gs_h_index' => 'integer',
+            'gs_g_index' => 'integer',
+            'gs_i10_index' => 'integer',
+            'wos_documents' => 'integer',
+            'wos_citations' => 'integer',
+            'wos_cited_documents' => 'integer',
+            'wos_h_index' => 'integer',
+            'wos_g_index' => 'integer',
+            'wos_i10_index' => 'integer',
+            'garuda_documents' => 'integer',
+            'garuda_citations' => 'integer',
+            'garuda_cited_documents' => 'integer',
         ];
     }
 

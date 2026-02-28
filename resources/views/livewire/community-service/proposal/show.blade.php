@@ -30,7 +30,8 @@
             <x-lucide-eye class="icon" />
             Pratinjau Proposal
         </a>
-        <a href="{{ route('proposals.export-pdf', $proposal) }}" target="_blank" class="btn-outline-primary btn">
+        <a data-navigate-ignore="true" href="{{ route('proposals.export-pdf', $proposal) }}" target="_blank"
+            class="btn-outline-primary btn">
             <x-lucide-download class="icon" />
             Unduh Proposal (PDF)
         </a>
@@ -45,11 +46,16 @@
     @php
         $user = auth()->user();
         $role = 'guest';
-        if ($user->hasRole('reviewer')) $role = 'reviewer';
-        elseif ($user->hasRole('dekan')) $role = 'dekan';
-        elseif ($user->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita'])) $role = 'admin';
-        elseif ($user->hasRole('kepala lppm')) $role = 'kepala';
-        elseif ($user->id === $proposal->submitter_id) $role = 'dosen';
+        if ($user->hasRole('reviewer'))
+            $role = 'reviewer';
+        elseif ($user->hasRole('dekan'))
+            $role = 'dekan';
+        elseif ($user->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita']))
+            $role = 'admin';
+        elseif ($user->hasRole('kepala lppm'))
+            $role = 'kepala';
+        elseif ($user->id === $proposal->submitter_id)
+            $role = 'dosen';
     @endphp
 
     <div class="col-md-12">
@@ -109,7 +115,7 @@
         <!-- Section 5: Workflow & Aksi -->
         <div id="section-workflow" x-show="currentStep === 5">
             @include('livewire.community-service.proposal.components.workflow-actions', ['proposal' => $proposal])
-            
+
             <!-- History Section -->
             <div class="row mt-4">
                 <div class="col-md-6">

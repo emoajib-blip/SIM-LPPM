@@ -49,15 +49,19 @@ class Show extends Component
         // Check access
         $this->checkAccess();
 
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Load existing final report
-        $finalReport = $proposal->progressReports()->finalReports()->latest()->first();
+        /** @var \App\Models\ProgressReport|null $finalReport */
+        $finalReport = $proposal->progressReports()->where('reporting_period', 'final')->latest()->first();
 
         if ($finalReport) {
             $this->progressReport = $finalReport;
             $this->isFinalReportDraft = true;
         } else {
             // Fallback to latest progress report for pre-filling data
-            $this->progressReport = $proposal->progressReports()->latest()->first();
+            /** @var \App\Models\ProgressReport|null $latestReport */
+            $latestReport = $proposal->progressReports()->latest()->first();
+            $this->progressReport = $latestReport;
             $this->isFinalReportDraft = false;
         }
 
@@ -151,8 +155,9 @@ class Show extends Component
     protected function saveOutputFiles($report): void
     {
         // Save mandatory output files
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         foreach ($this->mandatoryOutputs as $proposalOutputId => $data) {
-            if (empty($proposalOutputId) || (! is_string($proposalOutputId) && ! is_numeric($proposalOutputId))) {
+            if (empty($proposalOutputId)) {
                 continue;
             }
 
@@ -172,7 +177,7 @@ class Show extends Component
 
         // Save additional output files
         foreach ($this->additionalOutputs as $proposalOutputId => $data) {
-            if (empty($proposalOutputId) || (! is_string($proposalOutputId) && ! is_numeric($proposalOutputId))) {
+            if (empty($proposalOutputId)) {
                 continue;
             }
 

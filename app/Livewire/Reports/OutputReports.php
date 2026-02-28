@@ -7,6 +7,7 @@ use App\Models\MandatoryOutput;
 use App\Models\Proposal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -58,33 +59,26 @@ class OutputReports extends Component
         $this->resetPage();
     }
 
-    public function exportPdf()
+    #[On('export-pdf')]
+    public function exportPdf(): void
     {
-        $proposals = $this->getProposalsQuery()->get();
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.output-reports-pdf', [
-            'proposals' => $proposals,
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('reports.output.pdf', [
             'activeTab' => $this->activeTab,
+            'search' => $this->search,
             'outputType' => $this->outputType,
-        ])->setPaper('a4', 'landscape');
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'laporan-luaran-'.$this->activeTab.'-'.now()->format('YmdHis').'.pdf', [
-            'Content-Type' => 'application/pdf',
-        ]);
+        ]));
     }
 
-    public function exportExcel()
+    #[On('export-excel')]
+    public function exportExcel(): void
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(
-            new \App\Exports\OutputReportExport(
-                $this->activeTab,
-                $this->search,
-                $this->outputType
-            ),
-            'laporan-luaran-'.$this->activeTab.'-'.now()->format('YmdHis').'.xlsx'
-        );
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('reports.output.excel', [
+            'activeTab' => $this->activeTab,
+            'search' => $this->search,
+            'outputType' => $this->outputType,
+        ]));
     }
 
     protected function getProposalsQuery()

@@ -57,7 +57,7 @@ class ReviewExportController extends Controller
         $filename = 'Penilaian_Reviewer_'.str_replace(' ', '_', substr($proposal->title, 0, 30)).'.pdf';
 
         if (ob_get_level()) {
-            ob_end_clean();
+
         }
 
         return $pdf->download($filename);

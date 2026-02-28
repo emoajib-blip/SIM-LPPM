@@ -51,94 +51,94 @@
                                         </div>
 
                                         @if ($review->recommendation)
-                                            <div
-                                                class="rounded-2 {{ $review->recommendation === 'approved'
-                                                    ? 'bg-success-lt'
-                                                    : ($review->recommendation === 'rejected'
-                                                        ? 'bg-danger-lt'
-                                                        : 'bg-warning-lt') }} my-2 p-2">
-                                                <div class="d-flex align-items-center justify-content-between mb-1">
-                                                    <div class="d-flex align-items-center small fw-bold">
-                                                        @if ($review->recommendation === 'approved')
-                                                            <x-lucide-check-circle class="me-1 text-success icon" />
-                                                            Rekomendasi: Disetujui
-                                                        @elseif($review->recommendation === 'rejected')
-                                                            <x-lucide-x-circle class="me-1 text-danger icon" />
-                                                            Rekomendasi: Ditolak
-                                                        @else
-                                                            <x-lucide-refresh-cw class="me-1 text-warning icon" />
-                                                            Rekomendasi: Perlu Revisi
-                                                        @endif
-                                                    </div>
-                                                    @if ($review->isCompleted())
-                                                        <div class="d-flex align-items-center gap-3">
-                                                            <div class="text-dark small fw-bold">
-                                                                Total Skor:
-                                                                {{ number_format($review->scores->where('round', $review->round)->sum('value'), 0) }}
-                                                            </div>
-                                                            <a href="{{ route('reviewers.export-pdf', $review->id) }}"
-                                                                target="_blank"
-                                                                class="px-2 py-1 btn btn-sm btn-ghost-danger">
-                                                                <x-lucide-file-text class="me-1 icon icon-sm" />
-                                                                Export PDF
-                                                            </a>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                @if ($review->review_notes)
-                                                    <p class="mb-1 text-body small" style="white-space: pre-line;">
-                                                        {{ $review->review_notes }}</p>
-                                                @endif
+                                                                    <div
+                                                                        class="rounded-2 {{ $review->recommendation === 'approved'
+                                            ? 'bg-success-lt'
+                                            : ($review->recommendation === 'rejected'
+                                                ? 'bg-danger-lt'
+                                                : 'bg-warning-lt') }} my-2 p-2">
+                                                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                                                            <div class="d-flex align-items-center small fw-bold">
+                                                                                @if ($review->recommendation === 'approved')
+                                                                                    <x-lucide-check-circle class="me-1 text-success icon" />
+                                                                                    Rekomendasi: Disetujui
+                                                                                @elseif($review->recommendation === 'rejected')
+                                                                                    <x-lucide-x-circle class="me-1 text-danger icon" />
+                                                                                    Rekomendasi: Ditolak
+                                                                                @else
+                                                                                    <x-lucide-refresh-cw class="me-1 text-warning icon" />
+                                                                                    Rekomendasi: Perlu Revisi
+                                                                                @endif
+                                                                            </div>
+                                                                            @if ($review->isCompleted())
+                                                                                <div class="d-flex align-items-center gap-3">
+                                                                                    <div class="text-dark small fw-bold">
+                                                                                        Total Skor:
+                                                                                        {{ number_format($review->scores->where('round', $review->round)->sum('value'), 0) }}
+                                                                                    </div>
+                                                                                    <a data-navigate-ignore="true" href="{{ route('reviewers.export-pdf', $review->id) }}"
+                                                                                        target="_blank"
+                                                                                        class="px-2 py-1 btn btn-sm btn-ghost-danger">
+                                                                                        <x-lucide-file-text class="me-1 icon icon-sm" />
+                                                                                        Export PDF
+                                                                                    </a>
+                                                                                </div>
+                                                                            @endif
+                                                                        </div>
+                                                                        @if ($review->review_notes)
+                                                                            <p class="mb-1 text-body small" style="white-space: pre-line;">
+                                                                                {{ $review->review_notes }}</p>
+                                                                        @endif
 
-                                                @if ($review->isCompleted())
-                                                    <div class="mt-2 pt-2 border-dark-subtle border-top">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-borderless table-sm mb-0 small">
-                                                                <thead class="text-muted">
-                                                                    <tr>
-                                                                        <th>Kriteria</th>
-                                                                        <th>Catatan / Acuan</th>
-                                                                        <th class="text-center">Skor</th>
-                                                                        <th class="text-center">Bobot</th>
-                                                                        <th class="text-end">Nilai</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($review->scores->where('round', $review->round) as $s)
-                                                                        <tr>
-                                                                            <td class="text-wrap">
-                                                                                {{ $s->criteria->criteria }}</td>
-                                                                            <td class="italic text-wrap small">
-                                                                                {{ $s->acuan }}</td>
-                                                                            <td class="text-center">{{ $s->score }}
-                                                                            </td>
-                                                                            <td class="text-center">
-                                                                                {{ number_format($s->weight_snapshot, 0) }}%
-                                                                            </td>
-                                                                            <td class="text-end fw-bold">
-                                                                                {{ number_format($s->value, 0) }}</td>
-                                                                        </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                                <tfoot>
-                                                                    @php $rs = $review->scores->where('round', $review->round); @endphp
-                                                                    <tr class="border-top fw-bold">
-                                                                        <td colspan="2" class="text-end">TOTAL:</td>
-                                                                        <td class="text-center">{{ $rs->sum('score') }}
-                                                                        </td>
-                                                                        <td class="text-center">
-                                                                            {{ number_format($rs->sum('weight_snapshot'), 0) }}%
-                                                                        </td>
-                                                                        <td class="text-primary text-end">
-                                                                            {{ number_format($rs->sum('value'), 0) }}
-                                                                        </td>
-                                                                    </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            </div>
+                                                                        @if ($review->isCompleted())
+                                                                            <div class="mt-2 pt-2 border-dark-subtle border-top">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table table-borderless table-sm mb-0 small">
+                                                                                        <thead class="text-muted">
+                                                                                            <tr>
+                                                                                                <th>Kriteria</th>
+                                                                                                <th>Catatan / Acuan</th>
+                                                                                                <th class="text-center">Skor</th>
+                                                                                                <th class="text-center">Bobot</th>
+                                                                                                <th class="text-end">Nilai</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            @foreach ($review->scores->where('round', $review->round) as $s)
+                                                                                                <tr>
+                                                                                                    <td class="text-wrap">
+                                                                                                        {{ $s->criteria->criteria }}</td>
+                                                                                                    <td class="italic text-wrap small">
+                                                                                                        {{ $s->acuan }}</td>
+                                                                                                    <td class="text-center">{{ $s->score }}
+                                                                                                    </td>
+                                                                                                    <td class="text-center">
+                                                                                                        {{ number_format($s->weight_snapshot, 0) }}%
+                                                                                                    </td>
+                                                                                                    <td class="text-end fw-bold">
+                                                                                                        {{ number_format($s->value, 0) }}</td>
+                                                                                                </tr>
+                                                                                            @endforeach
+                                                                                        </tbody>
+                                                                                        <tfoot>
+                                                                                            @php $rs = $review->scores->where('round', $review->round); @endphp
+                                                                                            <tr class="border-top fw-bold">
+                                                                                                <td colspan="2" class="text-end">TOTAL:</td>
+                                                                                                <td class="text-center">{{ $rs->sum('score') }}
+                                                                                                </td>
+                                                                                                <td class="text-center">
+                                                                                                    {{ number_format($rs->sum('weight_snapshot'), 0) }}%
+                                                                                                </td>
+                                                                                                <td class="text-primary text-end">
+                                                                                                    {{ number_format($rs->sum('value'), 0) }}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tfoot>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
                                         @endif
 
                                         <div class="d-flex align-items-center justify-content-between mt-2">
@@ -513,23 +513,23 @@
                                 </label>
                                 <div class="row g-2">
                                     @foreach ([
-        'approved' => ['label' => 'Disetujui', 'color' => 'success', 'icon' => 'check-circle'],
-        'revision_needed' => ['label' => 'Butuh Revisi', 'color' => 'warning', 'icon' => 'refresh-cw'],
-        'rejected' => ['label' => 'Ditolak', 'color' => 'danger', 'icon' => 'x-circle'],
-    ] as $value => $meta)
-                                        <div class="col-md-4">
-                                            <label class="w-100 form-selectgroup-item">
-                                                <input type="radio" wire:model="recommendation"
-                                                    value="{{ $value }}" class="form-selectgroup-input">
-                                                <div class="d-flex align-items-center p-3 form-selectgroup-label">
-                                                    <x-dynamic-component :component="'lucide-' . $meta['icon']"
-                                                        class="icon text-{{ $meta['color'] }} me-3" />
-                                                    <div class="text-start">
-                                                        <div class="font-weight-medium">{{ $meta['label'] }}</div>
+                                            'approved' => ['label' => 'Disetujui', 'color' => 'success', 'icon' => 'check-circle'],
+                                            'revision_needed' => ['label' => 'Butuh Revisi', 'color' => 'warning', 'icon' => 'refresh-cw'],
+                                            'rejected' => ['label' => 'Ditolak', 'color' => 'danger', 'icon' => 'x-circle'],
+                                        ] as $value => $meta)
+                                            <div class="col-md-4">
+                                                <label class="w-100 form-selectgroup-item">
+                                                    <input type="radio" wire:model="recommendation"
+                                                        value="{{ $value }}" class="form-selectgroup-input">
+                                                    <div class="d-flex align-items-center p-3 form-selectgroup-label">
+                                                        <x-dynamic-component :component="'lucide-' . $meta['icon']"
+                                                            class="icon text-{{ $meta['color'] }} me-3" />
+                                                        <div class="text-start">
+                                                            <div class="font-weight-medium">{{ $meta['label'] }}</div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </label>
-                                        </div>
+                                                </label>
+                                            </div>
                                     @endforeach
                                 </div>
                                 @error('recommendation')

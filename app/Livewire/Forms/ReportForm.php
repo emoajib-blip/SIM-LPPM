@@ -103,6 +103,7 @@ class ReportForm extends Form
     {
         $this->proposal = $proposal;
         $this->reportingYear = (int) date('Y');
+        $this->keywordsInput = $proposal->keywords->pluck('name')->implode('; ');
 
         if ($this->type === 'final') {
             $this->reportingPeriod = 'final';
@@ -167,8 +168,9 @@ class ReportForm extends Form
                 // Media / Video / Product
                 'media_name' => $output->media_name,
                 'media_url' => $output->media_url,
+                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 'publication_date' => $output->publication_date
-                    ? (is_string($output->publication_date) ? $output->publication_date : $output->publication_date->format('Y-m-d'))
+                    ? $output->publication_date->format('Y-m-d')
                     : null,
                 'video_url' => $output->video_url,
                 'platform' => $output->platform,
@@ -219,8 +221,9 @@ class ReportForm extends Form
                 'inventors' => $output->inventors,
                 'media_name' => $output->media_name,
                 'media_url' => $output->media_url,
+                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 'publication_date' => $output->publication_date
-                    ? (is_string($output->publication_date) ? $output->publication_date : $output->publication_date->format('Y-m-d'))
+                    ? $output->publication_date->format('Y-m-d')
                     : null,
                 'video_url' => $output->video_url,
                 'platform' => $output->platform,
@@ -241,6 +244,9 @@ class ReportForm extends Form
     public function initializeNewReport(): void
     {
         $this->ensureProposalInitialized();
+
+        $this->summaryUpdate = $this->proposal->summary ?? '';
+        $this->keywordsInput = $this->proposal->keywords->pluck('name')->implode('; ');
 
         foreach ($this->proposal->outputs->where('category', 'Wajib') as $output) {
             $this->mandatoryOutputs[$output->id] = $this->getEmptyMandatoryOutput();
@@ -263,6 +269,7 @@ class ReportForm extends Form
             'issn' => '',
             'eissn' => '',
             'indexing_body' => '',
+            'rank' => '',
             'journal_url' => '',
             'article_title' => '',
             'volume' => '',
@@ -317,6 +324,8 @@ class ReportForm extends Form
             'journal_title' => '',
             'issn' => '',
             'eissn' => '',
+            'indexing_body' => '',
+            'rank' => '',
             'volume' => '',
             'issue_number' => '',
             'doi' => '',
@@ -365,8 +374,9 @@ class ReportForm extends Form
     public function validateMandatoryOutput(int $outputId): void
     {
         $output = \App\Models\ProposalOutput::find($outputId);
-        $type = strtolower($output?->type ?? '');
-        $group = strtolower($output?->group ?? '');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $type = strtolower($output->type ?? '');
+        $group = strtolower($output->group ?? '');
 
         // Common validation
         $rules = [
@@ -413,8 +423,9 @@ class ReportForm extends Form
     public function validateAdditionalOutput(int $outputId): void
     {
         $output = \App\Models\ProposalOutput::find($outputId);
-        $type = strtolower($output?->type ?? '');
-        $group = strtolower($output?->group ?? '');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $type = strtolower($output->type ?? '');
+        $group = strtolower($output->group ?? '');
 
         // Common validation
         $rules = [
@@ -500,13 +511,12 @@ class ReportForm extends Form
     {
         $report = $this->save($existingReport);
 
-        if ($report) {
-            $report->update([
-                'status' => 'submitted',
-                'submitted_by' => Auth::id(),
-                'submitted_at' => now(),
-            ]);
-        }
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $report->update([
+            'status' => 'submitted',
+            'submitted_by' => Auth::id(),
+            'submitted_at' => now(),
+        ]);
 
         return $report;
     }
@@ -535,7 +545,8 @@ class ReportForm extends Form
     protected function saveMandatoryOutputs(): void
     {
         foreach ($this->mandatoryOutputs as $proposalOutputId => $data) {
-            if (empty($proposalOutputId) || (! is_string($proposalOutputId) && ! is_numeric($proposalOutputId))) {
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+            if (empty($proposalOutputId)) {
                 continue;
             }
 
@@ -551,6 +562,7 @@ class ReportForm extends Form
                 'issn' => $data['issn'] ?? null,
                 'eissn' => $data['eissn'] ?? null,
                 'indexing_body' => $data['indexing_body'] ?? null,
+                'rank' => $data['rank'] ?? null,
                 'journal_url' => $data['journal_url'] ?? null,
                 'article_title' => $data['article_title'] ?? null,
                 'publication_year' => ! empty($data['publication_year']) ? $data['publication_year'] : null,
@@ -592,7 +604,8 @@ class ReportForm extends Form
     protected function saveAdditionalOutputs(): void
     {
         foreach ($this->additionalOutputs as $proposalOutputId => $data) {
-            if (empty($proposalOutputId) || (! is_string($proposalOutputId) && ! is_numeric($proposalOutputId))) {
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+            if (empty($proposalOutputId)) {
                 continue;
             }
 
@@ -614,6 +627,8 @@ class ReportForm extends Form
                 'journal_title' => $data['journal_title'] ?? null,
                 'issn' => $data['issn'] ?? null,
                 'eissn' => $data['eissn'] ?? null,
+                'indexing_body' => $data['indexing_body'] ?? null,
+                'rank' => $data['rank'] ?? null,
                 'volume' => $data['volume'] ?? null,
                 'issue_number' => $data['issue_number'] ?? null,
                 'doi' => $data['doi'] ?? null,
@@ -811,6 +826,7 @@ class ReportForm extends Form
                 'issn' => $data['issn'] ?? null,
                 'eissn' => $data['eissn'] ?? null,
                 'indexing_body' => $data['indexing_body'] ?? null,
+                'rank' => $data['rank'] ?? null,
                 'journal_url' => $data['journal_url'] ?? null,
                 'article_title' => $data['article_title'] ?? null,
                 'volume' => $data['volume'] ?? null,
@@ -927,6 +943,8 @@ class ReportForm extends Form
                 'journal_title' => $data['journal_title'] ?? null,
                 'issn' => $data['issn'] ?? null,
                 'eissn' => $data['eissn'] ?? null,
+                'indexing_body' => $data['indexing_body'] ?? null,
+                'rank' => $data['rank'] ?? null,
                 'volume' => $data['volume'] ?? null,
                 'issue_number' => $data['issue_number'] ?? null,
                 'doi' => $data['doi'] ?? null,

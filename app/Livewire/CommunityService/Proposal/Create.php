@@ -5,6 +5,9 @@ namespace App\Livewire\CommunityService\Proposal;
 use App\Constants\ProposalConstants;
 use App\Livewire\Abstracts\ProposalCreate;
 
+/**
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 class Create extends ProposalCreate
 {
     public function mount(?string $proposalId = null, ?\App\Models\Proposal $proposal = null): void
@@ -65,32 +68,41 @@ class Create extends ProposalCreate
     protected function getStep2Rules(): array
     {
         // Check if file already exists (edit mode)
-        $hasFile = $this->form->proposal &&
-                   $this->form->proposal->detailable &&
-                   $this->form->proposal->detailable->hasMedia('substance_file');
+        $detailable = $this->form->proposal?->detailable;
+        $hasFile = $detailable instanceof \Spatie\MediaLibrary\HasMedia &&
+            $detailable->hasMedia('substance_file');
 
         return [
             'form.macro_research_group_id' => 'required|exists:macro_research_groups,id',
             'form.substance_file' => $hasFile ? 'nullable|file|mimes:pdf,doc,docx|max:10240' : 'required|file|mimes:pdf,doc,docx|max:10240',
-            'form.outputs' => ['required', 'array', 'min:1', function ($attribute, $value, $fail) {
-                $wajibCount = collect($value)->where('category', 'Wajib')->count();
-                if ($wajibCount < 1) {
-                    $fail('Minimal harus ada 1 luaran wajib untuk proposal pengabdian masyarakat.');
-                }
-            }],
+            'form.outputs' => [
+                'required',
+                'array',
+                'min:1',
+                function ($attribute, $value, $fail) {
+                    $wajibCount = collect($value)->where('category', 'Wajib')->count();
+                    if ($wajibCount < 1) {
+                        $fail('Minimal harus ada 1 luaran wajib untuk proposal pengabdian masyarakat.');
+                    }
+                },
+            ],
             'form.outputs.*.year' => 'required|integer|min:1|max:10',
             'form.outputs.*.category' => ['required', \Illuminate\Validation\Rule::in(ProposalConstants::OUTPUT_CATEGORIES)],
             'form.outputs.*.group' => ['required', \Illuminate\Validation\Rule::in(ProposalConstants::PKM_OUTPUT_GROUPS)],
-            'form.outputs.*.type' => ['required', 'string', function ($attribute, $value, $fail) {
-                // Validate type matches group
-                $index = explode('.', $attribute)[2];
-                $group = $this->form->outputs[$index]['group'] ?? null;
-                if ($group && isset(ProposalConstants::PKM_OUTPUT_TYPES[$group])) {
-                    if (! in_array($value, ProposalConstants::PKM_OUTPUT_TYPES[$group])) {
-                        $fail('Luaran baris '.($index + 1).' tidak valid untuk kategori yang dipilih.');
+            'form.outputs.*.type' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    // Validate type matches group
+                    $index = (int) explode('.', $attribute)[2];
+                    $group = $this->form->outputs[$index]['group'] ?? null;
+                    if ($group && isset(ProposalConstants::PKM_OUTPUT_TYPES[$group])) {
+                        if (! in_array($value, ProposalConstants::PKM_OUTPUT_TYPES[$group])) {
+                            $fail('Luaran baris '.($index + 1).' tidak valid untuk kategori yang dipilih.');
+                        }
                     }
-                }
-            }],
+                },
+            ],
             'form.outputs.*.status' => ['required', \Illuminate\Validation\Rule::in(ProposalConstants::OUTPUT_STATUSES)],
             'form.outputs.*.description' => 'required|string|max:2000',
         ];

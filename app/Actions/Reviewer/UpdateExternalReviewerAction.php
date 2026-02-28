@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateExternalReviewerAction
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(User $user, array $data): User
     {
         return DB::transaction(function () use ($user, $data) {

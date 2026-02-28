@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Notifications;
 
+use App\Models\Proposal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -19,9 +20,18 @@ class NotificationDropdown extends Component
 
         $unreadCount = $user->unreadNotifications()->count();
 
+        $pendingInvitationsCount = Proposal::whereHas('teamMembers', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 'pending');
+        })->count();
+
+        $totalBadgeCount = $unreadCount + $pendingInvitationsCount;
+
         return view('livewire.notifications.notification-dropdown', [
             'unreadNotifications' => $unreadNotifications,
             'unreadCount' => $unreadCount,
+            'pendingInvitationsCount' => $pendingInvitationsCount,
+            'totalBadgeCount' => $totalBadgeCount,
         ]);
     }
 

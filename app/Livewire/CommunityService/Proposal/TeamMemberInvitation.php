@@ -98,6 +98,7 @@ class TeamMemberInvitation extends Component
 
     public function render(): View
     {
-        return view('livewire.community-service.proposal.team-member-invitation');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        return view('livewire.community-service.proposal.team-member-invitations');
     }
 }

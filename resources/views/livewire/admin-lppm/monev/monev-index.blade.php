@@ -48,17 +48,17 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     @if($this->monevBeritaAcaraMedia)
-                                        <a href="{{ \Illuminate\Support\Facades\URL::signedRoute('media.download', ['media' => $this->monevBeritaAcaraMedia]) }}"
+                                        <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $this->monevBeritaAcaraMedia]) }}"
                                             class="dropdown-item" data-navigate-ignore="true"
                                             download="{{ $this->monevBeritaAcaraMedia->file_name }}">Berita Acara</a>
                                     @endif
                                     @if($this->monevBorangMedia)
-                                        <a href="{{ \Illuminate\Support\Facades\URL::signedRoute('media.download', ['media' => $this->monevBorangMedia]) }}"
+                                        <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $this->monevBorangMedia]) }}"
                                             class="dropdown-item" data-navigate-ignore="true"
                                             download="{{ $this->monevBorangMedia->file_name }}">Borang Monev</a>
                                     @endif
                                     @if($this->monevRekapPenilaianMedia)
-                                        <a href="{{ \Illuminate\Support\Facades\URL::signedRoute('media.download', ['media' => $this->monevRekapPenilaianMedia]) }}"
+                                        <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $this->monevRekapPenilaianMedia]) }}"
                                             class="dropdown-item" data-navigate-ignore="true"
                                             download="{{ $this->monevRekapPenilaianMedia->file_name }}">Rekap Penilaian</a>
                                     @endif

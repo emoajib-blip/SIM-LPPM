@@ -147,8 +147,9 @@ class Show extends Component
     protected function saveOutputFiles($report): void
     {
         // Save mandatory output files
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         foreach ($this->mandatoryOutputs as $proposalOutputId => $data) {
-            if (empty($proposalOutputId) || (! is_string($proposalOutputId) && ! is_numeric($proposalOutputId))) {
+            if (empty($proposalOutputId)) {
                 continue;
             }
 
@@ -168,7 +169,7 @@ class Show extends Component
 
         // Save additional output files
         foreach ($this->additionalOutputs as $proposalOutputId => $data) {
-            if (empty($proposalOutputId) || (! is_string($proposalOutputId) && ! is_numeric($proposalOutputId))) {
+            if (empty($proposalOutputId)) {
                 continue;
             }
 

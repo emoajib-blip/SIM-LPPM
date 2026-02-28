@@ -46,7 +46,7 @@ class LecturerEligibilityService
         $reasons = [];
 
         // --- 1. Schedule Validation ---
-        $scheduleInfo = $this->getScheduleStatus();
+        $scheduleInfo = $this->getScheduleStatus($user);
         if (! $scheduleInfo['research_open'] && ! $scheduleInfo['pkm_open']) {
             $reasons[] = 'Sistem saat ini ditutup untuk pengajuan usulan baru (bukan periode pendaftaran).';
         }
@@ -70,6 +70,7 @@ class LecturerEligibilityService
             })
             ->get();
 
+        /** @var \App\Models\Proposal $proposal */
         foreach ($prevProposals as $proposal) {
             // Check for Final Report
             $hasFinalReport = ProgressReport::where('proposal_id', $proposal->id)->where('reporting_period', 'final')->whereIn('status', ['approved', 'completed'])->exists();
@@ -79,6 +80,7 @@ class LecturerEligibilityService
 
             // Check for Mandatory Outputs
             $targets = $proposal->outputs()->where('category', 'Wajib')->get();
+            /** @var \App\Models\ProposalOutput $target */
             foreach ($targets as $target) {
                 $isSubmitted = DB::table('mandatory_outputs')->join('progress_reports', 'mandatory_outputs.progress_report_id', '=', 'progress_reports.id')->where('progress_reports.proposal_id', $proposal->id)->where('mandatory_outputs.proposal_output_id', $target->id)->exists();
                 if (! $isSubmitted) {
@@ -103,7 +105,7 @@ class LecturerEligibilityService
     /**
      * Get the open/closed status for research and pkm based on admin settings.
      */
-    public function getScheduleStatus(): array
+    public function getScheduleStatus(?User $user = null): array
     {
         $now = Carbon::now();
 
@@ -112,13 +114,32 @@ class LecturerEligibilityService
         $pkmStart = \App\Models\Setting::where('key', 'community_service_proposal_start_date')->value('value');
         $pkmEnd = \App\Models\Setting::where('key', 'community_service_proposal_end_date')->value('value');
 
+        $researchSchemes = \App\Models\ResearchScheme::all();
+        $pkmSchemes = \App\Models\CommunityServiceScheme::all();
+
+        if ($user) {
+            $eligibilityAction = app(\App\Actions\Proposal\IdentityEligibilityAction::class);
+
+            $researchSchemes = $researchSchemes->filter(function ($scheme) use ($user, $eligibilityAction) {
+                $result = $eligibilityAction->execute($user, $scheme);
+
+                return $result['is_eligible'];
+            });
+
+            $pkmSchemes = $pkmSchemes->filter(function ($scheme) use ($user, $eligibilityAction) {
+                $result = $eligibilityAction->execute($user, $scheme);
+
+                return $result['is_eligible'];
+            });
+        }
+
         return [
             'research_open' => $resStart && $resEnd && $now->between($resStart, $resEnd),
             'research_dates' => ['start' => $resStart, 'end' => $resEnd],
-            'research_schemes' => \App\Models\ResearchScheme::pluck('name')->toArray(),
+            'research_schemes' => $researchSchemes->pluck('name')->toArray(),
             'pkm_open' => $pkmStart && $pkmEnd && $now->between($pkmStart, $pkmEnd),
             'pkm_dates' => ['start' => $pkmStart, 'end' => $pkmEnd],
-            'pkm_schemes' => \App\Models\CommunityServiceScheme::pluck('name')->toArray(),
+            'pkm_schemes' => $pkmSchemes->pluck('name')->toArray(),
         ];
     }
 }

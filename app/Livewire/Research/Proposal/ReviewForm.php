@@ -58,6 +58,7 @@ class ReviewForm extends Component
 
     public function render(): View
     {
-        return view('livewire.research.proposal.review-form');
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        return view('livewire.research.proposal.reviewer-form');
     }
 }

@@ -28,7 +28,7 @@ class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, With
         $this->yearFilter = $yearFilter;
     }
 
-    public function query()
+    public function query(): Builder
     {
         return Proposal::query()
             ->with(['submitter.identity', 'budgetItems', 'detailable'])

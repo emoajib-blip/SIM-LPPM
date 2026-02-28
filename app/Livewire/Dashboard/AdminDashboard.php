@@ -2,19 +2,16 @@
 
 namespace App\Livewire\Dashboard;
 
-use App\Exports\ResearchProposalExport;
 use App\Models\BudgetItem;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
 use App\Models\ProposalMonev;
-use App\Models\ProposalReviewer;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Maatwebsite\Excel\Facades\Excel;
 
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 #[Layout('components.layouts.app', ['title' => 'Dashboard Admin', 'pageTitle' => 'Dashboard Utama', 'pageSubtitle' => 'Ikhtisar performa dan aktivitas LPPM'])]
@@ -51,12 +48,22 @@ class AdminDashboard extends Component
         $this->loadAnalytics();
     }
 
-    public function exportResearch()
+    public function exportResearch(): void
     {
-        return Excel::download(
-            new ResearchProposalExport($this->selectedYear),
-            "research-proposals-{$this->selectedYear}.xlsx"
-        );
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('admin.dashboard.export-research', ['period' => $this->selectedYear]));
+    }
+
+    public function exportIkuPdf(): void
+    {
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('admin.iku.export-pdf', ['period' => $this->selectedYear]));
+    }
+
+    public function exportIkuExcel(): void
+    {
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('admin.iku.export-excel', ['period' => $this->selectedYear]));
     }
 
     private function getAvailableYears(): array
@@ -125,17 +132,21 @@ class AdminDashboard extends Component
         // Budget from budget_items (sbk_value is always null/0, real budget lives in budget_items)
         // Filter by start_year (tahun pelaksanaan) — konsisten dengan filter utama
         $researchBudget = (int) BudgetItem::query()
-            ->whereHas('proposal', fn ($q) => $q
-                ->where('detailable_type', 'App\Models\Research')
-                ->where('start_year', $this->selectedYear)
-                ->whereIn('status', ['approved', 'completed'])
+            ->whereHas(
+                'proposal',
+                fn ($q) => $q
+                    ->where('detailable_type', 'App\Models\Research')
+                    ->where('start_year', $this->selectedYear)
+                    ->whereIn('status', ['approved', 'completed'])
             )->sum('total_price');
 
         $pkmBudget = (int) BudgetItem::query()
-            ->whereHas('proposal', fn ($q) => $q
-                ->where('detailable_type', 'App\Models\CommunityService')
-                ->where('start_year', $this->selectedYear)
-                ->whereIn('status', ['approved', 'completed'])
+            ->whereHas(
+                'proposal',
+                fn ($q) => $q
+                    ->where('detailable_type', 'App\Models\CommunityService')
+                    ->where('start_year', $this->selectedYear)
+                    ->whereIn('status', ['approved', 'completed'])
             )->sum('total_price');
 
         // FIX ENUM BUG: Laravel Collection whereIn compares by ==, but status
@@ -164,34 +175,60 @@ class AdminDashboard extends Component
 
     private function loadProcessStats(string $yearFilter): void
     {
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        // Baseline: Retrieve all proposals for the selected start_year
+        $proposalsThisYear = Proposal::where('start_year', $yearFilter)->get();
+        $proposalsThisYearIds = $proposalsThisYear->pluck('id');
+
+        // New Metrics: Draft & Approval Stages
+        $totalDraft = $proposalsThisYear->where('status.value', 'draft')->count();
+        $waitingDean = $proposalsThisYear->where('status.value', 'submitted')->count();
+        $waitingLppm = $proposalsThisYear->whereIn('status.value', ['approved', 'reviewed'])->count();
+
         // 1. Review Status
-        $reviewers = ProposalReviewer::whereHas('proposal', function ($query) use ($yearFilter) {
-            $query->where('start_year', $yearFilter);
-        })->get();
+        // Total Review = Proposals that have progressed past submission (i.e. currently in review or decided)
+        $totalReview = Proposal::whereIn('id', $proposalsThisYearIds)
+            ->whereIn('status', ['reviewed', 'approved', 'rejected', 'completed'])
+            ->count();
 
-        $totalReview = $reviewers->count();
-        $completedReview = $reviewers->filter(fn ($r) => $r->status?->value === 'completed' || $r->status === 'completed')->count();
+        // Completed Review = Proposals that have a final decision
+        $completedReview = Proposal::whereIn('id', $proposalsThisYearIds)
+            ->whereIn('status', ['approved', 'rejected', 'completed'])
+            ->count();
 
-        // Proposals that are funded (approved/completed) require Monev and Reports
-        $activeProposals = Proposal::where('start_year', $yearFilter)
-            ->whereIn('status', ['approved', 'completed'])
-            ->get();
+        // 2 & 3. activeProposals: Only funded proposals (approved/completed) require Monev, Reports, and Outputs
+        $activeProposals = $proposalsThisYear->filter(function ($p) {
+            return in_array($p->status->value, ['approved', 'completed']);
+        });
         $activeProposalIds = $activeProposals->pluck('id');
 
         // 2. Monev Status
         $totalMonev = $activeProposals->count();
-        // Completed Monev corresponds to the number of distinct proposals that have a monev record
+        // Completed Monev corresponds to the number of distinct active proposals that have a monev record
         $completedMonev = ProposalMonev::whereIn('proposal_id', $activeProposalIds)->distinct('proposal_id')->count();
 
         // 3. Reporting Status (Progress & Final Report)
         $totalReports = $activeProposals->count();
-        // A report is considered submitted/completed if it exists and has one of the tracking statuses
+        // A report is considered submitted/completed if it exists and has one of the defined statuses
         $submittedReports = ProgressReport::whereIn('proposal_id', $activeProposalIds)
             ->whereIn('status', ['submitted', 'approved', 'revised', 'completed'])
             ->distinct('proposal_id')
             ->count();
 
+        // 4. Output Tracking (Luaran)
+        // Target: Total outputs promised in funded proposals
+        $targetOutputs = \App\Models\ProposalOutput::whereIn('proposal_id', $activeProposalIds)->count();
+
+        // Achieved: Total outputs uploaded for funded proposals (via progress reports)
+        $progressReportIds = ProgressReport::whereIn('proposal_id', $activeProposalIds)->pluck('id');
+        $achievedOutputs = \App\Models\MandatoryOutput::whereIn('progress_report_id', $progressReportIds)->count()
+            + \App\Models\AdditionalOutput::whereIn('progress_report_id', $progressReportIds)->count();
+
         $this->processStats = [
+            'draft_total' => $totalDraft,
+            'dean_waiting' => $waitingDean,
+            'lppm_waiting' => $waitingLppm,
+
             'review_total' => $totalReview,
             'review_completed' => $completedReview,
             'review_progress' => $totalReview > 0 ? ($completedReview / $totalReview) * 100 : 0,
@@ -203,6 +240,10 @@ class AdminDashboard extends Component
             'report_total' => $totalReports,
             'report_submitted' => $submittedReports,
             'report_progress' => $totalReports > 0 ? ($submittedReports / $totalReports) * 100 : 0,
+
+            'output_target' => $targetOutputs,
+            'output_achieved' => $achievedOutputs,
+            'output_progress' => $targetOutputs > 0 ? min(100, ($achievedOutputs / $targetOutputs) * 100) : 0,
         ];
     }
 

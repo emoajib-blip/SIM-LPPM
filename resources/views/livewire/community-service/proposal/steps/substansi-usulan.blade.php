@@ -61,7 +61,7 @@
                         <div class="mt-2">
                             <x-lucide-file-check class="text-success icon" />
                             @php $media = $form->proposal->detailable->getFirstMedia('substance_file'); @endphp
-                            <a href="{{ URL::signedRoute('media.download', ['media' => $media]) }}" target="_blank"
+                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}" target="_blank"
                                 class="text-decoration-none" data-navigate-ignore="true">
                                 {{ $media->file_name }}
                             </a>

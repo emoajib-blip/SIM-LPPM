@@ -15,6 +15,11 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+/**
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read bool $canApprove
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class KepalaLppmInitialApproval extends Component
 {
     use HasToast;

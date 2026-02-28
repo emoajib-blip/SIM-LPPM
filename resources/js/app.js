@@ -814,6 +814,23 @@ const registerGlobalLivewireListeners = () => {
                 ).show();
         }
     });
+
+    // Global listener for file downloads to bypass Livewire intercepted blobs
+    const handleDownload = (url) => {
+        if (url) {
+            console.log("Triggering download:", url);
+            window.location.assign(url);
+        }
+    };
+
+    window.Livewire.on("download-file", (data) => {
+        const config = Array.isArray(data) ? data[0] : data;
+        handleDownload(config.url || config);
+    });
+
+    window.addEventListener("download-file", (event) => {
+        handleDownload(event.detail?.url || event.url);
+    });
 };
 
 window.addEventListener("open-modal", handleOpenModalEvent);

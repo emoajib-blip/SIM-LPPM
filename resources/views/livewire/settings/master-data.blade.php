@@ -46,18 +46,41 @@
                                 <x-lucide-atom class="icon me-2" />
                                 Klaster Sains
                             </button>
-                             <button wire:click="setActiveTab('tkt')"
-                                 class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'tkt' ? 'active' : '' }}">
-                                 <x-lucide-ruler class="icon me-2" />
-                                 TKT
-                             </button>
-                             <button wire:click="setActiveTab('review-criteria')"
-                                 class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'review-criteria' ? 'active' : '' }}">
-                                 <x-lucide-list-checks class="icon me-2" />
-                                 Kriteria Penilaian
-                             </button>
-                         </div>
-                     @endif
+                            <button wire:click="setActiveTab('tkt')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'tkt' ? 'active' : '' }}">
+                                <x-lucide-ruler class="icon me-2" />
+                                TKT
+                            </button>
+                            <button wire:click="setActiveTab('review-criteria')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'review-criteria' ? 'active' : '' }}">
+                                <x-lucide-list-checks class="icon me-2" />
+                                Kriteria Penilaian
+                            </button>
+                            <button wire:click="setActiveTab('iku-output-types')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'iku-output-types' ? 'active' : '' }}">
+                                <x-lucide-list class="icon me-2" />
+                                Jenis Luaran IKU
+                            </button>
+                            <button wire:click="setActiveTab('sdgs')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'sdgs' ? 'active' : '' }}">
+                                <x-lucide-globe class="icon me-2" />
+                                SDG
+                            </button>
+                            <button wire:click="setActiveTab('strata')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'strata' ? 'active' : '' }}">
+                                <x-lucide-layers class="icon me-2" />
+                                Strata
+                            </button>
+                        </div>
+                        <h4 class="subheader mt-4">Manajemen Akses</h4>
+                        <div class="list-group list-group-transparent">
+                            <button wire:click="setActiveTab('rbac-matrix')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'rbac-matrix' ? 'active' : '' }}">
+                                <x-lucide-shield class="icon me-2" />
+                                Matriks Hak Akses (RBAC)
+                            </button>
+                        </div>
+                    @endif
 
                     @if ($group === 'academic-structure')
                         <h4 class="subheader">Struktur Akademik</h4>
@@ -124,9 +147,9 @@
                     <div class="alert-icon">
 
                         <!-- Download SVG icon from http://tabler.io/icons/icon/info-circle -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="icon alert-icon icon-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon alert-icon icon-2">
                             <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
                             <path d="M12 9h.01"></path>
                             <path d="M11 12h1v4h1"></path>
@@ -196,15 +219,31 @@
                         <div>
                             <livewire:settings.tabs.budget-cap-manager />
                         </div>
-                     @elseif ($activeTab === 'tkt')
-                         <div>
-                             <livewire:settings.tabs.tkt-manager />
-                         </div>
-                     @elseif ($activeTab === 'review-criteria')
-                         <div>
-                             <livewire:settings.review-criteria-manager />
-                         </div>
-                     @endif
+                    @elseif ($activeTab === 'tkt')
+                        <div>
+                            <livewire:settings.tabs.tkt-manager />
+                        </div>
+                    @elseif ($activeTab === 'review-criteria')
+                        <div>
+                            <livewire:settings.review-criteria-manager />
+                        </div>
+                    @elseif ($activeTab === 'iku-output-types')
+                        <div>
+                            <livewire:settings.tabs.iku-output-type-manager />
+                        </div>
+                    @elseif ($activeTab === 'sdgs')
+                        <div>
+                            <livewire:settings.tabs.sdg-manager />
+                        </div>
+                    @elseif ($activeTab === 'rbac-matrix')
+                        <div>
+                            <livewire:settings.role-permission-matrix />
+                        </div>
+                    @elseif ($activeTab === 'strata')
+                        <div>
+                            <livewire:settings.tabs.strata-manager />
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

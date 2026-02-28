@@ -194,7 +194,6 @@ class InstallationService
                     'create_admin' => $this->createAdminUser($config['admin'] ?? []),
                     'storage_link' => $this->createStorageLink(),
                     'finalize' => $this->finalizeInstallation(),
-                    default => null,
                 };
             };
 

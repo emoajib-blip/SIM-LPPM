@@ -22,11 +22,13 @@
 
             <div class="col-md-4">
                 <div class="">
-                    <label class="form-label" for="community_service_scheme">Skema Pengabdian <span class="text-danger">*</span></label>
+                    <label class="form-label" for="community_service_scheme">Skema Pengabdian <span
+                            class="text-danger">*</span></label>
                     <div wire:ignore>
-                        <select id="community_service_scheme" class="form-select @error('form.community_service_scheme_id') is-invalid @enderror"
-                            wire:model.live="form.community_service_scheme_id" x-data="tomSelect" placeholder="Pilih skema pengabdian"
-                            required>
+                        <select id="community_service_scheme"
+                            class="form-select @error('form.community_service_scheme_id') is-invalid @enderror"
+                            wire:model.live="form.community_service_scheme_id" x-data="tomSelect"
+                            placeholder="Pilih skema pengabdian" required>
                             <option value="">-- Pilih Skema Pengabdian --</option>
                             @foreach ($this->communityServiceSchemes as $scheme)
                                 <option value="{{ $scheme->id }}">{{ $scheme->name }} ({{ $scheme->strata }})</option>
@@ -64,7 +66,8 @@
                     @enderror
                     @if ($form->start_year && $form->duration_in_years)
                         <small class="text-muted">
-                            Periode: {{ $form->start_year }} - {{ (int) $form->start_year + (int) $form->duration_in_years - 1 }}
+                            Periode: {{ $form->start_year }} -
+                            {{ (int) $form->start_year + (int) $form->duration_in_years - 1 }}
                         </small>
                     @endif
                 </div>
@@ -221,8 +224,9 @@
 
         <div class="mb-3">
             <label class="form-label" for="summary">Ringkasan Proposal <span class="text-danger">*</span></label>
-            <textarea id="summary" class="form-control @error('form.summary') is-invalid @enderror" wire:model="form.summary"
-                rows="4" placeholder="Masukkan ringkasan proposal (minimal 100 karakter)" required></textarea>
+            <textarea id="summary" class="form-control @error('form.summary') is-invalid @enderror"
+                wire:model="form.summary" rows="4" placeholder="Masukkan ringkasan proposal (minimal 100 karakter)"
+                required></textarea>
             @error('form.summary')
                 <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror
@@ -233,9 +237,7 @@
             <label class="form-label" for="keywords">Kata Kunci (Keywords) <span class="text-danger">*</span></label>
             <div wire:ignore>
                 <select id="keywords" class="form-select @error('form.keywords') is-invalid @enderror"
-                    wire:model.live="form.keywords"
-                    x-data="tomSelect({create: true, maxItems: 5})" 
-                    multiple
+                    wire:model.live="form.keywords" x-data="tomSelect({create: true, maxItems: 5})" multiple
                     placeholder="Ketik lalu Enter untuk menambahkan kata kunci (Maks 5)" required>
                     @foreach ($form->keywords as $keyword)
                         <option value="{{ $keyword }}" selected>{{ $keyword }}</option>
@@ -249,10 +251,66 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label" for="partner_issue_summary">Masalah Mitra <span class="text-danger">*</span></label>
-            <textarea id="partner_issue_summary" class="form-control @error('form.partner_issue_summary') is-invalid @enderror"
-                wire:model="form.partner_issue_summary" rows="4" placeholder="Jelaskan masalah yang dihadapi mitra (minimal 50 karakter)"
-                required></textarea>
+            <label class="form-label d-flex align-items-center gap-2" for="sdgs">
+                Sustainable Development Goals (SDGs) <span class="text-danger">*</span>
+                <span class="text-muted" data-bs-toggle="tooltip"
+                    title="Pilih satu atau lebih SDGs yang berkaitan dengan usulan pengabdian Anda. Data ini digunakan untuk perhitungan IKU-07.">
+                    <i class="ti ti-info-circle"></i>
+                </span>
+            </label>
+            <div wire:ignore>
+                <select id="sdgs" class="form-select @error('form.sdg_ids') is-invalid @enderror"
+                    wire:model.live="form.sdg_ids" x-data="tomSelect" multiple
+                    placeholder="Pilih kategori SDGs yang relevan" required>
+                    @foreach ($this->sdgs as $sdg)
+                        <option value="{{ $sdg->id }}">{{ $sdg->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @error('form.sdg_ids')
+                <div class="d-block invalid-feedback">{{ $message }}</div>
+            @enderror
+            <small class="text-muted">Dapat memilih lebih dari satu kategori SDGs.</small>
+        </div>
+
+        <!-- Section: Target IKU -->
+        <div class="mb-3">
+            <label class="form-label d-flex align-items-center gap-2 mb-3">
+                Pilih Target IKU Kepmen 358 <span class="text-danger">*</span>
+                <span class="text-muted" data-bs-toggle="tooltip"
+                    title="Pilih IKU yang menjadi target luaran dari usulan ini.">
+                    <i class="ti ti-info-circle"></i>
+                </span>
+            </label>
+
+            <div class="row g-3">
+                @foreach($this->masterIkus as $iku)
+                    <div class="col-md-12">
+                        <label
+                            class="form-check form-check-inline mb-0 p-3 border rounded w-100 cursor-pointer hover-shadow transition-all {{ in_array($iku->id, $form->targeted_iku_ids) ? 'border-primary bg-primary-lt' : '' }}">
+                            <input class="form-check-input" type="checkbox" value="{{ $iku->id }}"
+                                wire:model.live="form.targeted_iku_ids">
+                            <span class="form-check-label">
+                                <strong>{{ $iku->code }}</strong>: {{ $iku->name }}
+                                <div class="text-muted small mt-1">{{ $iku->description }}</div>
+                            </span>
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+
+            @error('form.targeted_iku_ids')
+                <div class="d-block invalid-feedback mt-2">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="partner_issue_summary">Masalah Mitra <span
+                    class="text-danger">*</span></label>
+            <textarea id="partner_issue_summary"
+                class="form-control @error('form.partner_issue_summary') is-invalid @enderror"
+                wire:model="form.partner_issue_summary" rows="4"
+                placeholder="Jelaskan masalah yang dihadapi mitra (minimal 50 karakter)" required></textarea>
             @error('form.partner_issue_summary')
                 <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror
@@ -260,10 +318,11 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label" for="solution_offered">Solusi yang Ditawarkan <span class="text-danger">*</span></label>
+            <label class="form-label" for="solution_offered">Solusi yang Ditawarkan <span
+                    class="text-danger">*</span></label>
             <textarea id="solution_offered" class="form-control @error('form.solution_offered') is-invalid @enderror"
-                wire:model="form.solution_offered" rows="4" placeholder="Jelaskan solusi yang ditawarkan (minimal 50 karakter)"
-                required></textarea>
+                wire:model="form.solution_offered" rows="4"
+                placeholder="Jelaskan solusi yang ditawarkan (minimal 50 karakter)" required></textarea>
             @error('form.solution_offered')
                 <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror
@@ -282,8 +341,8 @@
 
         <div class="mb-3">
             <label class="form-label">Ketua Pengabdian</label>
-            <input type="text" class="form-control @error('author_name') is-invalid @enderror"
-                wire:model="author_name" placeholder="Nama Ketua Pengabdian" required disabled />
+            <input type="text" class="form-control @error('author_name') is-invalid @enderror" wire:model="author_name"
+                placeholder="Nama Ketua Pengabdian" required disabled />
             @error('author_name')
                 <div class="d-block invalid-feedback">{{ $message }}</div>
             @enderror

@@ -11,14 +11,17 @@ class BudgetValidationService
     public function validateBudgetGroupPercentages(
         array $budgetItems,
         string $proposalType,
-        ?int $currentYear = null
+        ?int $currentYear = null,
+        ?int $schemeId = null
     ): void {
+        $proposalType = str_replace('-', '_', $proposalType);
+
         if (empty($budgetItems)) {
             return;
         }
 
         $currentYear ??= (int) date('Y');
-        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType);
+        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, $schemeId);
 
         if ($budgetCap === null || $budgetCap <= 0) {
             throw ValidationException::withMessages([
@@ -65,8 +68,11 @@ class BudgetValidationService
     public function validateBudgetCap(
         array $budgetItems,
         string $proposalType,
-        ?int $currentYear = null
+        ?int $currentYear = null,
+        ?int $schemeId = null
     ): void {
+        $proposalType = str_replace('-', '_', $proposalType);
+
         if (empty($budgetItems)) {
             return;
         }
@@ -78,7 +84,7 @@ class BudgetValidationService
         }
 
         $currentYear ??= (int) date('Y');
-        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType);
+        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, $schemeId);
 
         if ($budgetCap === null) {
             return;
@@ -105,10 +111,12 @@ class BudgetValidationService
         return collect($budgetItems)->sum(fn ($item) => (float) ($item['total'] ?? 0));
     }
 
-    public function getBudgetSummary(array $budgetItems, string $proposalType, ?int $currentYear = null): array
+    public function getBudgetSummary(array $budgetItems, string $proposalType, ?int $currentYear = null, ?int $schemeId = null): array
     {
+        $proposalType = str_replace('-', '_', $proposalType);
+
         $currentYear ??= (int) date('Y');
-        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType) ?? 0;
+        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, $schemeId) ?? 0;
         $totalBudget = $this->calculateTotalBudget($budgetItems);
         $remainingBudget = max(0, $budgetCap - $totalBudget);
 

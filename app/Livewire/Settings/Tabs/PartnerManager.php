@@ -150,7 +150,7 @@ class PartnerManager extends Component
     public function confirmDelete(string $id): void
     {
         $this->deleteItemId = $id;
-        $this->deleteItemName = Partner::find($id)?->name ?? '';
+        $this->deleteItemName = Partner::find($id)->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-partner');
     }
 }

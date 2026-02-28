@@ -30,7 +30,7 @@ trait HasReportTemplates
     #[Computed]
     public function reportApprovalMode(): string
     {
-        return Setting::where('key', 'report_approval_mode')->first()?->value ?? 'digital';
+        return Setting::where('key', 'report_approval_mode')->value('value') ?? 'digital';
     }
 
     /**
@@ -39,7 +39,7 @@ trait HasReportTemplates
     #[Computed]
     public function proposalApprovalMode(): string
     {
-        return Setting::where('key', 'proposal_approval_mode')->first()?->value ?? 'digital';
+        return Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
     }
 
     protected function getReportType(): string

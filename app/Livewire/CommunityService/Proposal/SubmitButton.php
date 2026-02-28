@@ -11,6 +11,13 @@ use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
+/**
+ * @property-read \App\Models\Proposal|null $proposal
+ * @property-read bool $canSubmit
+ * @property-read \Illuminate\Support\Collection|\App\Models\User[] $pendingMembers
+ * @property-read \Illuminate\Support\Collection|\App\Models\User[] $rejectedMembers
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class SubmitButton extends Component
 {
     use HasToast;

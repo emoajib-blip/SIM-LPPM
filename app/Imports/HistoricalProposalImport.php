@@ -81,10 +81,7 @@ class HistoricalProposalImport implements SkipsEmptyRows, ToCollection, WithHead
 
             // ── Wrap semua dalam satu transaction ────────────────────────────
             try {
-                DB::transaction(function () use (
-                    $row, $ketua, $dosenAnggota, $studentMembers,
-                    $researchSchemeId, $dana, $durasi
-                ) {
+                DB::transaction(function () use ($row, $ketua, $dosenAnggota, $studentMembers, $researchSchemeId, $dana, $durasi) {
                     // 1. Buat detail record (Research / CommunityService)
                     $type = strtolower(trim((string) $row['skema']));
                     $isAbmas = str_contains($type, 'abmas')
@@ -216,8 +213,9 @@ class HistoricalProposalImport implements SkipsEmptyRows, ToCollection, WithHead
         foreach ($entries as $entry) {
             // Format: "Nama Mahasiswa|NIM" atau hanya "Nama Mahasiswa"
             $parts = array_map('trim', explode('|', $entry));
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             $result[] = [
-                'name' => $parts[0] ?? $entry,
+                'name' => $parts[0], // Offset 0 always exists after explode
                 'nim' => $parts[1] ?? null,
                 'tasks' => $parts[2] ?? null, // opsional: tugas mahasiswa
             ];

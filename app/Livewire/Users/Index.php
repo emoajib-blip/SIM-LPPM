@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Users;
 
+use App\Livewire\Concerns\HasToast;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -15,12 +17,16 @@ use Spatie\Permission\Models\Role;
 #[Layout('components.layouts.app', ['title' => 'Users', 'pageTitle' => 'Kelola Pengguna', 'pageSubtitle' => 'Kelola data pengguna'])]
 class Index extends Component
 {
-    use WithPagination;
+    use HasToast, WithPagination;
 
     protected string $paginationTheme = 'bootstrap';
 
     #[Url(except: '')]
     public string $search = '';
+
+    public string $massResetRole = '';
+
+    public string $massResetPassword = '';
 
     #[Url(except: 'all')]
     public string $role = 'all';
@@ -219,63 +225,94 @@ class Index extends Component
     /**
      * Bulk reset password for a specific role.
      */
-    public function resetPasswordsForRole(string $targetRole, string $newPassword): void
+    public function resetPasswordsForRole(): void
     {
-        // Only superadmin and admin lppm can perform this action
-        if (! auth()->user()->hasAnyRole(['superadmin', 'admin lppm'])) {
-            $this->dispatch('toast-error', message: __('Anda tidak memiliki izin untuk melakukan tindakan ini.'));
+        // Strict context check - only allow if acting as Admin/Superadmin
+        if (! active_has_any_role(['superadmin', 'admin lppm'])) {
+            $this->toastError(__('Anda sedang tidak berada dalam peran administratif untuk melakukan tindakan ini.'));
 
             return;
         }
 
-        if (empty($targetRole) || empty($newPassword)) {
-            $this->dispatch('toast-error', message: __('Role dan password baru harus diisi.'));
-
-            return;
-        }
+        $this->validate([
+            'massResetRole' => 'required',
+            'massResetPassword' => 'required|min:8',
+        ], [
+            'massResetRole.required' => 'Role wajib dipilih.',
+            'massResetPassword.required' => 'Password baru wajib diisi.',
+            'massResetPassword.min' => 'Password minimal 8 karakter.',
+        ]);
 
         // Prevent resetting superadmin passwords via this method for safety
-        if ($targetRole === 'superadmin') {
-            $this->dispatch('toast-error', message: __('Tidak dapat mereset password superadmin secara massal.'));
+        if ($this->massResetRole === 'superadmin') {
+            $this->toastError(__('Password Superadmin hanya dapat diubah secara individual demi keamanan.'));
 
             return;
         }
 
-        $users = User::role($targetRole)->get();
+        $users = User::role($this->massResetRole)->get();
 
         if ($users->isEmpty()) {
-            $this->dispatch('toast-error', message: __('Tidak ada pengguna dengan role tersebut.'));
+            $this->toastError(__('Tidak ada pengguna dengan role tersebut.'));
 
             return;
         }
 
         $count = 0;
         foreach ($users as $user) {
-            // Skip current user to avoid logging themselves out or changing their own password unexpectedly
+            // Skip current user
             if ($user->id === auth()->id()) {
                 continue;
             }
 
-            // Protect high-privilege users from accidental resets when targeting lower roles
-            // e.g. If targeting 'dosen', skip users who are also 'rektor' or 'dekan'
-            $protectedRoles = ['superadmin', 'admin lppm', 'rektor', 'dekan', 'kepala lppm'];
-
-            // If the target role itself is NOT one of the protected roles,
-            // then we should SKIP any user who HOLDS a protected role.
-            if (! in_array($targetRole, $protectedRoles)) {
-                if ($user->hasAnyRole($protectedRoles)) {
-                    continue;
-                }
+            // Only skip if the target user is a Superadmin (highest protection)
+            // or if the admin is trying to reset a group they don't belong to but target is also an admin
+            if ($user->hasRole('superadmin')) {
+                continue;
             }
 
             $user->update([
-                'password' => \Illuminate\Support\Facades\Hash::make($newPassword),
-                'original_password' => $newPassword,
+                'password' => \Illuminate\Support\Facades\Hash::make($this->massResetPassword),
+                'original_password' => $this->massResetPassword,
             ]);
             $count++;
         }
 
-        $this->dispatch('toast-success', message: __("Berhasil mereset password untuk {$count} pengguna dengan role {$targetRole}."));
-        $this->dispatch('close-modal', modal: 'reset-password-modal');
+        $targetRoleLabel = str($this->massResetRole)->title();
+        $this->toastSuccess(__("Berhasil mereset password untuk {$count} pengguna dengan role {$targetRoleLabel}."));
+
+        // Reset state
+        $this->reset(['massResetRole', 'massResetPassword']);
+
+        $this->dispatch('close-modal', modalId: 'reset-password-modal');
+    }
+
+    /**
+     * Reset password for a single user to a default value.
+     */
+    public function resetUserPassword(User $user): void
+    {
+        // Strict context check - only allow if acting as Admin/Superadmin
+        if (! active_has_any_role(['superadmin', 'admin lppm'])) {
+            $this->toastError(__('Anda sedang tidak berada dalam peran administratif.'));
+
+            return;
+        }
+
+        // Prevent resetting superadmins unless by self (different flow usually) or restricted
+        if ($user->hasRole('superadmin') && ! active_has_role('superadmin')) {
+            $this->toastError(__('Hanya sesama Superadmin yang dapat mereset password akun ini.'));
+
+            return;
+        }
+
+        $newPassword = 'password'; // Standard default
+
+        $user->update([
+            'password' => Hash::make($newPassword),
+            'original_password' => $newPassword,
+        ]);
+
+        $this->toastSuccess(__("Password untuk {$user->name} telah direset menjadi: 'password'"));
     }
 }

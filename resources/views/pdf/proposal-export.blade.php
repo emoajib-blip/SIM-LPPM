@@ -144,9 +144,9 @@
         $sectionNum = 1;
         // use the shared helper instead of duplicating logic
         $submitterFullName = format_name(
-            $proposal->submitter->identity->title_prefix ?? '',
+            $proposal->submitter->identity?->title_prefix ?? '',
             $proposal->submitter->name,
-            $proposal->submitter->identity->title_suffix ?? ''
+            $proposal->submitter->identity?->title_suffix ?? ''
         );
     @endphp
 
@@ -232,11 +232,11 @@
                     <span class="font-bold">{{ strtoupper($submitterFullName) }}</span><br>
                     Ketua Pengusul
                 </td>
-                <td>{{ $proposal->submitter->identity->institution->name ?? '-' }}</td>
-                <td>{{ $proposal->submitter->identity->studyProgram->name ?? '-' }}</td>
+                <td>{{ $proposal->submitter->identity?->institution->name ?? '-' }}</td>
+                <td>{{ $proposal->submitter->identity?->studyProgram->name ?? '-' }}</td>
                 <td>{{ $proposal->teamMembers->firstWhere('id', $proposal->submitter_id)->pivot->tasks ?? '-' }}</td>
-                <td class="text-center">{{ $proposal->submitter->identity->sinta_id ?? '-' }}</td>
-                <td class="text-center">{{ $proposal->submitter->identity->scopus_h_index ?? '-' }}</td>
+                <td class="text-center">{{ $proposal->submitter->identity?->sinta_id ?? '-' }}</td>
+                <td class="text-center">{{ $proposal->submitter->identity?->scopus_h_index ?? '-' }}</td>
                 <td>{{ $proposal->clusterLevel1->name ?? '-' }}</td>
             </tr>
             {{-- Anggota Dosen --}}
@@ -247,14 +247,14 @@
                 @if($member->identity?->type === 'dosen' || $member->pivot->role === 'anggota' || $member->pivot->role === 'dosen')
                 <tr>
                     <td>
-                        <span class="font-bold">{{ strtoupper(format_name($member->identity->title_prefix ?? '', $member->name, $member->identity->title_suffix ?? '')) }}</span><br>
+                        <span class="font-bold">{{ strtoupper(format_name($member->identity?->title_prefix ?? '', $member->name, $member->identity?->title_suffix ?? '')) }}</span><br>
                         Anggota Pelaksana
                     </td>
-                    <td>{{ $member->identity->institution->name ?? '-' }}</td>
-                    <td>{{ $member->identity->studyProgram->name ?? '-' }}</td>
+                    <td>{{ $member->identity?->institution?->name ?? 'ITSNU Pekalongan' }}</td>
+                    <td>{{ $member->identity?->studyProgram?->name ?? '-' }}</td>
                     <td>{{ $member->pivot->tasks ?? '-' }}</td>
-                    <td class="text-center">{{ $member->identity->sinta_id ?? '-' }}</td>
-                    <td class="text-center">{{ $member->identity->scopus_h_index ?? '-' }}</td>
+                    <td class="text-center">{{ $member->identity?->sinta_id ?? '-' }}</td>
+                    <td class="text-center">{{ $member->identity?->scopus_h_index ?? '-' }}</td>
                     <td>{{ $proposal->clusterLevel1->name ?? '-' }}</td>
                 </tr>
                 @endif

@@ -30,7 +30,7 @@ class MenuComposer
             [
                 'title' => 'Penelitian',
                 'icon' => 'puzzle',
-                'roles' => ['dosen', 'kepala lppm', 'admin lppm', 'rektor', 'dekan'],
+                'permission' => 'module_penelitian',
                 'children' => [
                     [
                         'title' => 'Usulan',
@@ -62,7 +62,7 @@ class MenuComposer
             [
                 'title' => 'Pengabdian',
                 'icon' => 'gift',
-                'roles' => ['dosen', 'kepala lppm', 'admin lppm', 'rektor', 'dekan'],
+                'permission' => 'module_pengabdian',
                 'children' => [
                     [
                         'title' => 'Usulan',
@@ -91,6 +91,12 @@ class MenuComposer
                     ],
                 ],
             ],
+            [
+                'title' => 'Rekognisi & Kebijakan',
+                'icon' => 'award',
+                'route' => 'recognition.policy-involvement.index',
+                'permission' => 'module_rekognisi',
+            ],
             // Kepala LPPM menu
             // [
             //     'title' => 'Persetujuan Usulan',
@@ -104,32 +110,32 @@ class MenuComposer
                 'title' => 'Persetujuan Dekan',
                 'icon' => 'clipboard-check',
                 'route' => 'dekan.proposals.index',
-                'roles' => ['dekan'],
+                'permission' => 'module_persetujuan_dekan',
             ],
             [
                 'title' => 'Riwayat Persetujuan',
                 'icon' => 'history',
                 'route' => 'dekan.approval-history',
-                'roles' => ['dekan'],
+                'permission' => 'module_persetujuan_dekan',
             ],
             // Kepala LPPM menus
             [
                 'title' => 'Persetujuan Awal',
                 'icon' => 'checkbox',
                 'route' => 'kepala-lppm.initial-approval',
-                'roles' => ['kepala lppm'],
+                'permission' => 'module_persetujuan_awal',
             ],
             [
                 'title' => 'Persetujuan Akhir',
                 'icon' => 'circle-check',
                 'route' => 'kepala-lppm.final-decision',
-                'roles' => ['kepala lppm'],
+                'permission' => 'module_persetujuan_akhir',
             ],
             // Admin LPPM - Reviewer Management Group
             [
                 'title' => 'Reviewer',
                 'icon' => 'user-check',
-                'roles' => ['admin lppm'],
+                'permission' => 'module_reviewer_management',
                 'children' => [
                     [
                         'title' => 'Penugasan Reviewer',
@@ -152,32 +158,32 @@ class MenuComposer
                 'title' => 'Monev Internal',
                 'icon' => 'presentation-analytics',
                 'route' => 'admin-lppm.monev.index',
-                'roles' => ['admin lppm'],
+                'permission' => 'module_monev',
             ],
             // Reviewer menu
             [
                 'title' => 'Review Penelitian',
                 'icon' => 'lifebuoy',
                 'route' => 'review.research',
-                'roles' => ['reviewer'],
+                'permission' => 'module_review',
             ],
             [
                 'title' => 'Review Pengabdian',
                 'icon' => 'lifebuoy',
                 'route' => 'review.community-service',
-                'roles' => ['reviewer'],
+                'permission' => 'module_review',
             ],
             [
                 'title' => 'Riwayat Review',
                 'icon' => 'history',
                 'route' => 'review.review-history',
-                'roles' => ['reviewer'],
+                'permission' => 'module_review',
             ],
             // Laporan - Reports menu (+ kepala lppm for decision-making)
             [
                 'title' => 'Laporan',
                 'icon' => 'file-analytics',
-                'roles' => ['admin lppm', 'rektor', 'kepala lppm'],
+                'permission' => 'module_laporan',
                 'children' => [
                     [
                         'title' => 'Laporan Penelitian',
@@ -199,20 +205,37 @@ class MenuComposer
                         'icon' => 'handshake',
                         'route' => 'reports.partners',
                     ],
+                    [
+                        'title' => 'Laporan Capaian IKU',
+                        'icon' => 'gauge',
+                        'route' => 'reports.iku',
+                    ],
                 ],
             ],
-            // Accreditation Hub - For all roles concerned with data audit
+            // IKU Dashboard - For all roles concerned with data audit
             [
-                'title' => 'Akreditasi',
-                'icon' => 'certificate',
+                'title' => 'IKU',
+                'icon' => 'gauge',
                 'route' => 'accreditation.hub',
-                'roles' => ['admin lppm', 'rektor', 'kepala lppm', 'dekan'],
+                'permission' => 'module_iku',
+                'children' => [
+                    [
+                        'title' => 'Dashboard Capaian',
+                        'route' => 'accreditation.hub',
+                    ],
+                    [
+                        'title' => 'Verifikasi Luaran',
+                        'route' => 'accreditation.verification',
+                        // Keep strict internal check for the sub-link if needed, or rely on routing
+                        'roles' => ['admin lppm'],
+                    ],
+                ],
             ],
             // kelola pengguna - admin lppm
             [
                 'title' => 'Kelola Pengguna',
                 'icon' => 'users',
-                'roles' => ['admin lppm', 'superadmin'],
+                'permission' => 'module_kelola_pengguna',
                 'children' => [
                     [
                         'title' => 'Daftar Pengguna',
@@ -243,21 +266,21 @@ class MenuComposer
                 'title' => 'Arsip Data',
                 'icon' => 'archive',
                 'route' => 'admin.archives',
-                'roles' => ['admin lppm', 'superadmin'],
+                'permission' => 'module_arsip_data',
             ],
             // Export SINTA - admin lppm
             [
                 'title' => 'Export SINTA',
                 'icon' => 'database-export',
                 'route' => 'export-sinta',
-                'roles' => ['admin lppm', 'superadmin'],
+                'permission' => 'module_export_sinta',
             ],
             // settings:
             // - master data - admin lppm
             [
                 'title' => 'Pengaturan',
                 'icon' => 'settings',
-                'roles' => ['admin lppm', 'superadmin'],
+                'permission' => 'module_pengaturan',
                 'children' => [
                     [
                         'title' => 'Master Data',
@@ -310,8 +333,15 @@ class MenuComposer
     protected function formatItem(array $item, ?User $user): ?array
     {
         $allowedRoles = $item['roles'] ?? null;
+        $requiredPermission = $item['permission'] ?? null;
 
+        // Legacy check for sub-items that might still use roles
         if ($allowedRoles !== null && (! $user || ! active_has_any_role($allowedRoles))) {
+            return null;
+        }
+
+        // New Dynamic RBAC Check
+        if ($requiredPermission !== null && (! $user || ! active_can($requiredPermission))) {
             return null;
         }
 
@@ -359,8 +389,14 @@ class MenuComposer
     protected function formatDropdownItem(array $item, ?User $user): ?array
     {
         $allowedRoles = $item['roles'] ?? null;
+        $requiredPermission = $item['permission'] ?? null;
 
         if ($allowedRoles !== null && (! $user || ! active_has_any_role($allowedRoles))) {
+            return null;
+        }
+
+        // New Dynamic RBAC Check
+        if ($requiredPermission !== null && (! $user || ! active_can($requiredPermission))) {
             return null;
         }
 

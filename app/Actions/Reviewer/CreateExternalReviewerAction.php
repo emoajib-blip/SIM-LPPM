@@ -15,6 +15,9 @@ use Illuminate\Validation\ValidationException;
  */
 class CreateExternalReviewerAction
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function execute(array $data): User
     {
         return DB::transaction(function () use ($data) {

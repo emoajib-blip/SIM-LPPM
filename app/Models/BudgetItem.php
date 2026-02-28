@@ -6,6 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property string $proposal_id
+ * @property int $year
+ * @property int $budget_group_id
+ * @property int $budget_component_id
+ * @property string|null $group
+ * @property string|null $component
+ * @property string|null $item_description
+ * @property int $volume
+ * @property float $unit_price
+ * @property float $total_price
+ * @property-read \App\Models\Proposal $proposal
+ * @property-read \App\Models\BudgetGroup $budgetGroup
+ * @property-read \App\Models\BudgetComponent|null $budgetComponent
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class BudgetItem extends Model
 {
     /** @use HasFactory<\Database\Factories\BudgetItemFactory> */

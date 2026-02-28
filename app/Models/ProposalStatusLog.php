@@ -4,14 +4,24 @@ namespace App\Models;
 
 use App\Enums\ProposalStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property string $id
+ * @property string $proposal_id
+ * @property string|null $user_id
+ * @property \App\Enums\ProposalStatus|null $status_before
+ * @property \App\Enums\ProposalStatus $status_after
+ * @property string|null $body
+ * @property string|null $notes
+ * @property \Illuminate\Support\Carbon $at
+ * @property-read \App\Models\Proposal $proposal
+ * @property-read \App\Models\User|null $user
+ */
 class ProposalStatusLog extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProposalStatusLogFactory> */
-    use HasFactory, HasUuids;
+    use HasUuids;
 
     /**
      * The type of the auto-incrementing ID's primary key.

@@ -43,8 +43,6 @@ class DosenDashboard extends Component
 
     public $availableYears = [];
 
-    public $pendingInvitations = [];
-
     public function mount(): void
     {
         $this->user = Auth::user();
@@ -88,16 +86,7 @@ class DosenDashboard extends Component
         // Load recent proposals
         $this->loadRecentProposals($yearFilter);
 
-        // Load pending invitations
-        $this->loadPendingInvitations();
-    }
-
-    private function loadPendingInvitations(): void
-    {
-        $this->pendingInvitations = Proposal::whereHas('teamMembers', function ($q) {
-            $q->where('user_id', $this->user->id)
-                ->where('status', 'pending');
-        })->with('submitter.identity')->latest()->get();
+        // Pending invitations moved to NotificationCenter
     }
 
     /**
@@ -197,10 +186,11 @@ class DosenDashboard extends Component
     public function openEditMetricsModal(): void
     {
         $identity = $this->user->identity;
-        $this->sinta_score_v3_overall = $identity?->sinta_score_v3_overall ?? 0;
-        $this->scopus_h_index = $identity?->scopus_h_index ?? 0;
-        $this->gs_h_index = $identity?->gs_h_index ?? 0;
-        $this->wos_h_index = $identity?->wos_h_index ?? 0;
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->sinta_score_v3_overall = $identity->sinta_score_v3_overall ?? 0;
+        $this->scopus_h_index = $identity->scopus_h_index ?? 0;
+        $this->gs_h_index = $identity->gs_h_index ?? 0;
+        $this->wos_h_index = $identity->wos_h_index ?? 0;
 
         $this->showEditMetricsModal = true;
     }

@@ -118,7 +118,7 @@ class FocusAreaManager extends Component
     public function confirmDelete(int $id): void
     {
         $this->deleteItemId = $id;
-        $this->deleteItemName = \App\Models\FocusArea::find($id)?->name ?? '';
+        $this->deleteItemName = \App\Models\FocusArea::find($id)->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-focus-area');
     }
 }

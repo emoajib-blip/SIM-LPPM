@@ -35,30 +35,34 @@ class CleanupDummyData extends Command
             }
         }
 
-        // wrap in transaction for safety
-        DB::transaction(function () {
-            $this->info('Deleting users...');
-            User::whereDoesntHave('roles', function ($q) {
-                $q->whereIn('name', ['superadmin', 'admin lppm']);
-            })->each(function (User $user) {
-                $user->delete();
-            });
+        // disable foreign key checks to allow truncation
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-            // optionally truncate other tables used by dummy data
-            $tables = [
-                'proposals',
-                'research',
-                'community_services',
-                'progress_reports',
-                'proposal_outputs',
-                'additional_outputs',
-                // add other relevant tables as needed
-            ];
-
-            foreach ($tables as $table) {
-                DB::table($table)->truncate();
-            }
+        $this->info('Deleting users...');
+        User::whereDoesntHave('roles', function ($q) {
+            $q->whereIn('name', ['superadmin', 'admin lppm']);
+        })->each(function (User $user) {
+            $user->delete();
         });
+
+        // optionally truncate other tables used by dummy data
+        $tables = [
+            'proposals',
+            'research',
+            'community_services',
+            'progress_reports',
+            'proposal_outputs',
+            'additional_outputs',
+            'activity_schedules',
+            // add other relevant tables as needed
+        ];
+
+        foreach ($tables as $table) {
+            DB::table($table)->truncate();
+        }
+
+        // re-enable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->info('Dummy data removed. Only superadmin and admin lppm remain.');
 

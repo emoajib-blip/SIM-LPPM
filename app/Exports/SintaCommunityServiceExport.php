@@ -23,8 +23,8 @@ class SintaCommunityServiceExport implements FromCollection, ShouldAutoSize, Wit
         protected ?string $year = null
     ) {
         $institution = \App\Models\Institution::first();
-        $this->institutionName = $institution?->name ?? 'Institut Teknologi dan Sains Nahdlatul Ulama Pekalongan';
-        $this->institutionCode = $institution?->code ?? '062004';
+        $this->institutionName = $institution->name ?? 'Institut Teknologi dan Sains Nahdlatul Ulama Pekalongan';
+        $this->institutionCode = $institution->code ?? '062004';
     }
 
     public function collection()
@@ -70,11 +70,21 @@ class SintaCommunityServiceExport implements FromCollection, ShouldAutoSize, Wit
             'kategori_sumber_dana',
             'negara_sumber_dana',
             'sumber_dana',
-            'sinta_id_member1', 'nidn_member1', 'nama_member1',
-            'sinta_id_member2', 'nidn_member_sinta2', 'nama_member_sinta2',
-            'sinta_id_member3', 'nidn_member_sinta3', 'nama_member_sinta3',
-            'sinta_id_member4', 'nidn_member_sinta4', 'nama_member_sinta4',
-            'sinta_id_member5', 'nidn_member_sinta5', 'nama_member_sinta5',
+            'sinta_id_member1',
+            'nidn_member1',
+            'nama_member1',
+            'sinta_id_member2',
+            'nidn_member_sinta2',
+            'nama_member_sinta2',
+            'sinta_id_member3',
+            'nidn_member_sinta3',
+            'nama_member_sinta3',
+            'sinta_id_member4',
+            'nidn_member_sinta4',
+            'nama_member_sinta4',
+            'sinta_id_member5',
+            'nidn_member_sinta5',
+            'nama_member_sinta5',
         ];
     }
 
@@ -84,7 +94,7 @@ class SintaCommunityServiceExport implements FromCollection, ShouldAutoSize, Wit
         $no++;
 
         $ketua = $proposal->submitter;
-        $identity = $ketua?->identity;
+        $identity = $ketua->identity;
 
         $dana = ($proposal->sbk_value ?? 0) > 0
             ? $proposal->sbk_value
@@ -92,25 +102,25 @@ class SintaCommunityServiceExport implements FromCollection, ShouldAutoSize, Wit
 
         // Exclude ketua from members list
         $members = $proposal->teamMembers
-            ->filter(fn ($m) => $m->identity?->identity_id !== $identity?->identity_id)
+            ->filter(fn ($m) => $m->identity && $m->identity->identity_id !== $identity?->identity_id)
             ->values()
             ->take(5);
 
         $row = [
             $no,
-            $identity?->sinta_id ?? '',
-            $ketua?->name ?? '',
-            $identity?->identity_id ?? '',
+            $identity->sinta_id ?? '',
+            $ketua->name,
+            $identity->identity_id ?? '',
             $this->institutionName,
             $this->institutionCode,
             $proposal->title,
-            $proposal->researchScheme?->code ?? $proposal->researchScheme?->name ?? '',
+            $proposal->researchScheme->code ?? $proposal->researchScheme->name ?? '',
             $proposal->start_year ?? date('Y'),
             $proposal->start_year ?? date('Y'),
             $proposal->start_year ?? date('Y'),
             1,
             'Pemberdayaan Masyarakat',
-            $proposal->researchScheme?->name ?? 'Pengabdian Kepada Masyarakat Internal',
+            $proposal->researchScheme->name ?? 'Pengabdian Kepada Masyarakat Internal',
             'didanai',
             $dana,
             '',
@@ -125,9 +135,9 @@ class SintaCommunityServiceExport implements FromCollection, ShouldAutoSize, Wit
         // Add up to 5 team members
         for ($i = 0; $i < 5; $i++) {
             $member = $members->get($i);
-            $row[] = $member?->identity?->sinta_id ?? '';
-            $row[] = $member?->identity?->identity_id ?? '';
-            $row[] = $member?->name ?? '';
+            $row[] = $member->identity->sinta_id ?? '';
+            $row[] = $member->identity->identity_id ?? '';
+            $row[] = $member->name ?? '';
         }
 
         return $row;

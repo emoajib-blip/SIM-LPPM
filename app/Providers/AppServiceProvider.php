@@ -56,6 +56,9 @@ class AppServiceProvider extends ServiceProvider
             View::composer('components.layouts.header', MenuComposer::class);
             Proposal::observe(ProposalObserver::class);
             \Illuminate\Support\Facades\Event::subscribe(\App\Listeners\UserActivityListener::class);
+
+            // Register Policies
+            \Illuminate\Support\Facades\Gate::policy(\Spatie\MediaLibrary\MediaCollections\Models\Media::class, \App\Policies\MediaPolicy::class);
         }
     }
 

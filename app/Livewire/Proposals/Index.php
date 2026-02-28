@@ -7,6 +7,10 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
 
+/**
+ * @property-read array $statusStats
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class Index extends Component
 {
     public string $statusFilter = 'all';

@@ -5,6 +5,51 @@
 
     <x-tabler.alert />
 
+    @if($pendingInvitations->count() > 0)
+        <!-- Premium Invitation Alert -->
+        <div class="card bg-warning-lt border-warning shadow-sm mb-4 overflow-hidden border-0 border-start border-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <div class="avatar bg-warning text-warning-fg shadow-sm">
+                            <i class="ti ti-user-plus fs-2"></i>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <h4 class="fw-bold mb-1">Undangan Kolaborasi Baru!</h4>
+                        <div class="text-muted">
+                            Anda memiliki {{ count($pendingInvitations) }} undangan anggota tim yang perlu dikonfirmasi.
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="list-group list-group-flush border rounded-3 bg-white bg-opacity-50">
+                        @foreach($pendingInvitations as $invitation)
+                            @php
+                                $type = $invitation->detailable_type === 'App\Models\Research' ? 'Penelitian' : 'Pengabdian';
+                                $route = $invitation->detailable_type === 'App\Models\Research' ? 'research.proposal.show' : 'community-service.proposal.show';
+                                $variant = $invitation->detailable_type === 'App\Models\Research' ? 'primary' : 'azure';
+                            @endphp
+                            <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div>
+                                    <span class="badge bg-{{ $variant }}-lt mb-1">{{ $type }}</span>
+                                    <div class="fw-bold text-dark">{{ Str::limit($invitation->title, 100) }}</div>
+                                    <div class="small text-muted mt-1">
+                                        <i class="ti ti-user me-1"></i> Ketua: {{ $invitation->submitter->name }}
+                                    </div>
+                                </div>
+                                <a href="{{ route($route, $invitation) }}" class="btn btn-primary btn-sm rounded-pill px-3"
+                                    wire:navigate.hover>
+                                    Konfirmasi <i class="ti ti-chevron-right ms-1"></i>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="card">
         <div class="card-header">
             <div class="d-flex align-items-center justify-content-between">

@@ -101,7 +101,7 @@ class InstallCommand extends Command
 
     private function registerPromptFallbacks(): void
     {
-        $isInteractive = $this->input?->isInteractive() ?? true;
+        $isInteractive = $this->input->isInteractive();
         $isWindows = function_exists('windows_os') ? windows_os() : false;
         $shouldFallback = ! $isInteractive || $isWindows || app()->runningUnitTests();
 
@@ -751,13 +751,12 @@ class InstallCommand extends Command
             $addMore = confirm('Add another faculty?', default: count($faculties) < 2);
         }
 
-        if (empty($faculties)) {
-            warning('No faculties configured. Using defaults.');
-            $faculties = [
-                ['name' => 'SAINTEK', 'code' => 'SAINTEK'],
-                ['name' => 'DEKABITA', 'code' => 'DEKABITA'],
-            ];
-        }
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        warning('No faculties configured. Using defaults.');
+        $faculties = [
+            ['name' => 'SAINTEK', 'code' => 'SAINTEK'],
+            ['name' => 'DEKABITA', 'code' => 'DEKABITA'],
+        ];
 
         $this->newLine();
 

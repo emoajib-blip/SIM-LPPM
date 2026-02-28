@@ -6,15 +6,34 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $strata
+ * @property array<string, mixed>|null $eligibility_rules
+ *                                                        Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 class ResearchScheme extends Model
 {
-    /** @use HasFactory<\Database\Factories\ResearchSchemeFactory> */
     use HasFactory;
 
     protected $fillable = [
         'name',
         'strata',
+        'eligibility_rules',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'eligibility_rules' => 'array',
+        ];
+    }
 
     /**
      * Get all proposals using this research scheme.

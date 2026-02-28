@@ -17,7 +17,10 @@ class MandatoryOutputFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'journal_title' => $this->faker->sentence(),
+            'article_title' => $this->faker->sentence(),
+            'status_type' => 'published',
+            'publication_year' => date('Y'),
         ];
     }
 }

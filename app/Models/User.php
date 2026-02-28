@@ -18,6 +18,23 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property string $id
+ * @property string $name
+ * @property string $username
+ * @property string $email
+ * @property string $password
+ * @property string|null $original_password
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property-read \App\Models\Identity|null $identity
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $submittedProposals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $proposals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResearchStage[] $researchStages
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalReviewer[] $reviews
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PolicyInvolvement[] $policyInvolvements
+ * @property-read \Illuminate\Database\Eloquent\Relations\Pivot $pivot
+ */
+// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -90,6 +107,14 @@ class User extends Authenticatable implements HasMedia
     }
 
     /**
+     * Get all policy involvements for the user.
+     */
+    public function policyInvolvements(): HasMany
+    {
+        return $this->hasMany(PolicyInvolvement::class, 'user_id');
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
@@ -130,7 +155,7 @@ class User extends Authenticatable implements HasMedia
     public function profilePicture(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => $this->getFirstMediaUrl('avatar') ?: ($this->identity?->profile_picture
+            get: fn ($value) => $this->getFirstMediaUrl('avatar') ?: ($this->identity->profile_picture
                 ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?s=128&d=identicon'),
         );
     }

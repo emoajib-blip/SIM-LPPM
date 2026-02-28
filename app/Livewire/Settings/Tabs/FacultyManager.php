@@ -88,7 +88,9 @@ class FacultyManager extends Component
         $this->editingId = $faculty->id;
         $this->name = $faculty->name;
         $this->code = $faculty->code;
-        $this->institutionId = $faculty->institution_id;
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+
+        $this->institutionId = $faculty->institution_id !== null ? (int) $faculty->institution_id : null;
         $this->deanName = $faculty->dean_name ?? '';
         $this->deanId = $faculty->dean_id ?? '';
         $this->deanUserId = $faculty->dean_user_id;
@@ -122,8 +124,8 @@ class FacultyManager extends Component
                 $baseName = $user->name;
 
                 // Get titles from identity table
-                $prefix = $identity?->title_prefix;
-                $suffix = $identity?->title_suffix;
+                $prefix = $identity->title_prefix;
+                $suffix = $identity->title_suffix;
 
                 // Construct full name with smart title handling
                 $fullName = $baseName;
@@ -139,7 +141,7 @@ class FacultyManager extends Component
                 }
 
                 $this->deanName = trim($fullName);
-                $this->deanId = $identity?->identity_id ?? '';
+                $this->deanId = $identity->identity_id ?? '';
             }
         }
     }
@@ -164,7 +166,7 @@ class FacultyManager extends Component
     public function confirmDelete(int $id): void
     {
         $this->deleteItemId = $id;
-        $this->deleteItemName = \App\Models\Faculty::find($id)?->name ?? '';
+        $this->deleteItemName = \App\Models\Faculty::find($id)->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-faculty');
     }
 }

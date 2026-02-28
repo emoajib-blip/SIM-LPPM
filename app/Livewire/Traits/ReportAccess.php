@@ -61,10 +61,21 @@ trait ReportAccess
     }
 
     /**
-     * Load latest progress report for the proposal
+     * Load latest progress report for the proposal, filtered by type
      */
-    protected function loadReport(): void
+    protected function loadReport(string $type = 'progress'): void
     {
-        $this->progressReport = $this->proposal->progressReports()->latest()->first();
+        $query = $this->proposal->progressReports();
+
+        if (str_contains($type, 'final')) {
+            /** @var ProgressReport|null $report */
+            $report = $query->where('reporting_period', 'final')->latest()->first();
+            $this->progressReport = $report;
+        } else {
+            // For progress, we take anything that isn't 'final' (semester_1, semester_2, annual)
+            /** @var ProgressReport|null $report */
+            $report = $query->where('reporting_period', '!=', 'final')->latest()->first();
+            $this->progressReport = $report;
+        }
     }
 }

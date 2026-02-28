@@ -6,9 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Research[] $research
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CommunityService[] $communityServices
+ */
 class MacroResearchGroup extends Model
 {
-    /** @use HasFactory<\Database\Factories\MacroResearchGroupFactory> */
+    /** @method static \Database\Factories\MacroResearchGroupFactory factory(...$parameters) */
     use HasFactory;
 
     protected $fillable = [

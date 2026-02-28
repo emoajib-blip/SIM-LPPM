@@ -14,6 +14,10 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
+/**
+ * @property-read \App\Models\User $user
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 #[Layout('components.layouts.app', ['title' => 'Edit User', 'pageTitle' => 'Edit User', 'pageSubtitle' => 'Update the user profile and role assignments'])]
 class Edit extends Component
 {

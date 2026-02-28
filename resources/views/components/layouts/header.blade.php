@@ -10,9 +10,16 @@
             <!-- END NAVBAR TOGGLER -->
             <!-- BEGIN NAVBAR LOGO -->
             <div class="pe-0 pe-md-3 navbar-brand navbar-brand-autodark d-none-navbar-horizontal">
-                <a href="/" aria-label="{{ config('app.name') }}">
-                    <img src="/logo.png" alt="LPPM ITSNU Pekalongan" width="45" height="45">
-                    <span>{{ config('app.name') }}</span>
+                @php
+                    $appName = \App\Models\Setting::where('key', 'dashboard_name')->value('value') ?? config('app.name');
+                @endphp
+                <a href="/" aria-label="{{ $appName }}">
+                    @php
+                        $customLogo = \App\Models\Setting::where('key', 'app_logo')->first()?->getFirstMediaUrl('logo');
+                        $logoUrl = $customLogo ?: '/logo.png';
+                    @endphp
+                    <img src="{{ current(explode('?', $logoUrl)) }}?v={{ time() }}" alt="{{ $appName }}" width="45" height="45">
+                    <span>{{ $appName }}</span>
                 </a>
             </div>
             <!-- END NAVBAR LOGO -->

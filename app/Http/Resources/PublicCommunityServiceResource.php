@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
+ * @mixin \App\Models\CommunityService
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class PublicCommunityServiceResource extends JsonResource

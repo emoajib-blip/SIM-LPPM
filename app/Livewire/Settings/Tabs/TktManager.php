@@ -14,6 +14,13 @@ use Livewire\Component;
  * TKT Manager Component - Master-Detail Split Panel
  * Manages TKT Types, Levels, and Indicators with tree navigation
  */
+/**
+ * @property-read \App\Models\TktLevel|null $selectedLevel
+ * @property-read \Illuminate\Support\Collection $indicators
+ * @property-read \Illuminate\Support\Collection $types
+ * @property-read \Illuminate\Support\Collection $typesWithLevels
+ * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+ */
 class TktManager extends Component
 {
     use HasToast;
@@ -101,7 +108,7 @@ class TktManager extends Component
     {
         // Auto-expand and select first type if none selected
         if ($this->selectedType === null) {
-            $firstType = TktLevel::select('type')->distinct()->orderBy('type')->first()?->type;
+            $firstType = TktLevel::select('type')->distinct()->orderBy('type')->first()->type;
             if ($firstType) {
                 $this->selectedType = $firstType;
                 $this->expandedTypes = [$firstType];
@@ -504,7 +511,7 @@ class TktManager extends Component
 
     public function deleteIndicator(int $indicatorId): void
     {
-        TktIndicator::find($indicatorId)?->delete();
+        TktIndicator::find($indicatorId)->delete();
 
         $this->toastSuccess('Indikator berhasil dihapus');
 

@@ -100,12 +100,18 @@ class ProposalForm extends Form
     #[Validate('nullable|array')]
     public array $outputs = [];
 
+    #[Validate('nullable|array')]
+    public array $sdg_ids = [];
+
+    #[Validate('nullable|array')]
+    public array $targeted_iku_ids = [];
+
     // Step 3: RAB (Budget)
     #[Validate('nullable|array')]
     public array $budget_items = [];
 
-    // Budget validation errors
-    public array $budgetValidationErrors = [];
+    // Eligibility Check dummy field
+    public string $eligibility_check = '';
 
     // Step 4: Dokumen Pendukung (Partners)
     #[Validate('nullable|array')]
@@ -136,6 +142,8 @@ class ProposalForm extends Form
             'budgetItems.budgetGroup',
             'partners',
             'reviewers.user',
+            'sdgs',
+            'targetedIkus',
         ]);
 
         $proposal->loadMorph('detailable', [
@@ -151,6 +159,8 @@ class ProposalForm extends Form
         $this->focus_area_id = $proposal->focus_area_id ?? '';
         $this->theme_id = $proposal->theme_id ?? '';
         $this->topic_id = $proposal->topic_id ?? '';
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+
         $this->keywords = $proposal->keywords ? $proposal->keywords->pluck('name')->toArray() : [];
         $this->national_priority_id = $proposal->national_priority_id ?? '';
         $this->cluster_level1_id = $proposal->cluster_level1_id ?? '';
@@ -160,9 +170,13 @@ class ProposalForm extends Form
         $this->duration_in_years = (string) $proposal->duration_in_years;
         $this->start_year = (string) ($proposal->start_year ?? date('Y'));
         $this->summary = $proposal->summary ?? '';
+        $this->sdg_ids = $proposal->sdgs->pluck('id')->toArray();
+        $this->targeted_iku_ids = $proposal->targetedIkus->pluck('id')->toArray();
 
         // Load detailable-specific fields based on type
         $detailable = $proposal->detailable;
+
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
         if ($detailable) {
             if ($detailable instanceof Research) {
@@ -171,12 +185,14 @@ class ProposalForm extends Form
                 $this->macro_research_group_id = (string) ($detailable->macro_research_group_id ?? '');
                 $this->tkt_type = $detailable->tkt_type ?? '';
                 // Load TKT results from pivot
+                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 $this->tkt_results = $detailable->tktLevels->mapWithKeys(function ($level) {
-                    return [$level->id => ['percentage' => $level->pivot->percentage]];
+                    return [$level->id => ['percentage' => $level->pivot->getAttribute('percentage')]];
                 })->toArray();
                 // Load TKT indicator scores
+                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 $this->tkt_indicator_scores = $detailable->tktIndicators->mapWithKeys(function ($indicator) {
-                    return [$indicator->id => $indicator->pivot->score];
+                    return [$indicator->id => $indicator->pivot->getAttribute('score')];
                 })->toArray();
                 $this->background = $detailable->background ?? '';
                 $this->state_of_the_art = $detailable->state_of_the_art ?? '';
@@ -210,16 +226,18 @@ class ProposalForm extends Form
         // Load team members (excluding ketua/submitter - only load anggota)
         $this->members = $proposal->teamMembers
             ->filter(function ($member) {
+                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 // Only include non-ketua members (anggota)
-                return $member->pivot->role !== 'ketua';
+                return $member->pivot->getAttribute('role') !== 'ketua';
             })
             ->map(function ($member) {
                 return [
                     'name' => $member->name,
                     'nidn' => $member->identity?->identity_id,
-                    'tugas' => $member->pivot->tasks,
-                    'role' => $member->pivot->role,
-                    'status' => $member->pivot->status ?? 'pending', // Include status field
+                    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+                    'tugas' => $member->pivot->getAttribute('tasks'),
+                    'role' => $member->pivot->getAttribute('role'),
+                    'status' => $member->pivot->getAttribute('status') ?? 'pending',
                 ];
             })
             ->values()
@@ -228,10 +246,13 @@ class ProposalForm extends Form
         // Load student members from JSON column
         if (! empty($proposal->student_members)) {
             $studentMembersJSON = $proposal->student_members;
-            // Ensure array format
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+
             if (is_string($studentMembersJSON)) {
                 $studentMembersJSON = json_decode($studentMembersJSON, true);
             }
+
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
             if (is_array($studentMembersJSON)) {
                 foreach ($studentMembersJSON as $student) {
@@ -276,7 +297,8 @@ class ProposalForm extends Form
                 'group' => $item->group,
                 'component' => $item->component,
                 'item' => $item->item_description,
-                'unit' => $item->budgetComponent?->unit ?? '',
+                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+                'unit' => $item->budgetComponent->unit ?? '',
                 'volume' => $item->volume,
                 'unit_price' => $item->unit_price,
                 'total' => $item->total_price,
@@ -372,6 +394,8 @@ class ProposalForm extends Form
         $this->attachBudgetItems($proposal);
         $this->attachPartners($proposal);
         $this->attachKeywords($proposal);
+        $this->attachSdgs($proposal);
+        $this->attachTargetedIkus($proposal);
 
         // Attach TKT Levels
         if (! empty($this->tkt_results)) {
@@ -456,6 +480,8 @@ class ProposalForm extends Form
         $this->attachBudgetItems($proposal);
         $this->attachPartners($proposal);
         $this->attachKeywords($proposal);
+        $this->attachSdgs($proposal);
+        $this->attachTargetedIkus($proposal);
 
         return $proposal;
     }
@@ -472,6 +498,8 @@ class ProposalForm extends Form
         DB::transaction(function (): void {
             // Update detailable based on type
             $detailable = $this->proposal->detailable;
+
+            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
             if ($detailable) {
                 if ($detailable instanceof Research) {
@@ -595,6 +623,11 @@ class ProposalForm extends Form
 
             // Update keywords (sync)
             $this->attachKeywords($this->proposal);
+
+            // Update SDGs (sync)
+            $this->attachSdgs($this->proposal);
+
+            $this->attachTargetedIkus($this->proposal);
         });
     }
 
@@ -606,7 +639,8 @@ class ProposalForm extends Form
         if ($this->proposal) {
             DB::transaction(function (): void {
                 $this->proposal->teamMembers()->detach();
-                $this->proposal->detailable?->delete();
+                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+                $this->proposal->detailable->delete();
                 $this->proposal->delete();
             });
         }
@@ -635,6 +669,27 @@ class ProposalForm extends Form
             'duration_in_years' => 'required|integer|min:1|max:10',
             'start_year' => 'required|integer|min:2020|max:2050',
             'summary' => 'required|string|min:100',
+            'eligibility_check' => [
+                function ($attribute, $value, $fail) {
+                    $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
+                    if (! $schemeId) {
+                        return;
+                    }
+
+                    $scheme = $this->research_scheme_id
+                        ? \App\Models\ResearchScheme::find($schemeId)
+                        : \App\Models\CommunityServiceScheme::find($schemeId);
+
+                    if (! $scheme) {
+                        return;
+                    }
+
+                    $result = app(\App\Actions\Proposal\IdentityEligibilityAction::class)->execute(Auth::user(), $scheme);
+                    if (! $result['is_eligible']) {
+                        $fail($result['reason']);
+                    }
+                },
+            ],
         ];
 
         if ($isCommunityService) {
@@ -657,42 +712,46 @@ class ProposalForm extends Form
         // $rules['tkt_type'] = 'nullable|string|max:255';
         // $rules['roadmap_data'] = 'nullable|array';
 
-        $rules['tkt_results'] = ['nullable', 'array', function ($attribute, $value, $fail) {
-            if (empty($value)) {
-                return;
-            }
-
-            // 1. Calculate achieved level
-            $achievedLevel = 0;
-            // Get level models to map IDs to integer levels
-            $levels = \App\Models\TktLevel::whereIn('id', array_keys($value))->get();
-
-            foreach ($levels as $level) {
-                $data = $value[$level->id] ?? null;
-                // Check if passed (percentage >= 80)
-                if ($data && isset($data['percentage']) && $data['percentage'] >= 80) {
-                    $achievedLevel = max($achievedLevel, $level->level);
+        $rules['tkt_results'] = [
+            'nullable',
+            'array',
+            function ($attribute, $value, $fail) {
+                if (empty($value)) {
+                    return;
                 }
-            }
 
-            // 2. Get required range for the scheme if selected
-            if ($this->research_scheme_id) {
-                $scheme = ResearchScheme::find($this->research_scheme_id);
-                if ($scheme && $scheme->strata) {
-                    $range = \App\Livewire\Research\Proposal\Components\TktMeasurement::getTktRangeForStrata($scheme->strata);
+                // 1. Calculate achieved level
+                $achievedLevel = 0;
+                // Get level models to map IDs to integer levels
+                $levels = \App\Models\TktLevel::whereIn('id', array_keys($value))->get();
 
-                    // If range exists (not PKM), validate
-                    if ($range) {
-                        [$min, $max] = $range;
+                foreach ($levels as $level) {
+                    $data = $value[$level->id] ?? null;
+                    // Check if passed (percentage >= 80)
+                    if ($data && isset($data['percentage']) && $data['percentage'] >= 80) {
+                        $achievedLevel = max($achievedLevel, $level->level);
+                    }
+                }
 
-                        // Check if achieved level is within range
-                        if ($achievedLevel < $min || $achievedLevel > $max) {
-                            $fail("TKT Saat Ini (Level $achievedLevel) tidak sesuai dengan Skema $scheme->strata (Target: Level $min - $max).");
+                // 2. Get required range for the scheme if selected
+                if ($this->research_scheme_id) {
+                    $scheme = ResearchScheme::find($this->research_scheme_id);
+                    if ($scheme && $scheme->strata) {
+                        $range = \App\Livewire\Research\Proposal\Components\TktMeasurement::getTktRangeForStrata($scheme->strata);
+
+                        // If range exists (not PKM), validate
+                        if ($range) {
+                            [$min, $max] = $range;
+
+                            // Check if achieved level is within range
+                            if ($achievedLevel < $min || $achievedLevel > $max) {
+                                $fail("TKT Saat Ini (Level $achievedLevel) tidak sesuai dengan Skema $scheme->strata (Target: Level $min - $max).");
+                            }
                         }
                     }
                 }
-            }
-        }];
+            },
+        ];
         // } elseif ($isCommunityService) {
         // For CommunityService, background and methodology can be null or shorter
         // $rules['background'] = 'nullable|string|min:50';
@@ -803,7 +862,9 @@ class ProposalForm extends Form
                     // Preserve status if already exists, otherwise default to pending
                     $status = ! empty($member['is_manual']) ? 'accepted' : 'pending';
                     if (isset($existingMembers[$userId])) {
-                        $status = $existingMembers[$userId]->pivot->status;
+                        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+                        // @phpstan-ignore-next-line
+                        $status = $existingMembers[$userId]->pivot->getAttribute('status');
                     }
 
                     $syncData[$userId] = [
@@ -898,6 +959,24 @@ class ProposalForm extends Form
             $proposal->keywords()->sync($keywordIds);
         } else {
             $proposal->keywords()->detach();
+        }
+    }
+
+    private function attachSdgs(Proposal $proposal): void
+    {
+        if (! empty($this->sdg_ids)) {
+            $proposal->sdgs()->sync($this->sdg_ids);
+        } else {
+            $proposal->sdgs()->detach();
+        }
+    }
+
+    private function attachTargetedIkus(Proposal $proposal): void
+    {
+        if (! empty($this->targeted_iku_ids)) {
+            $proposal->targetedIkus()->sync($this->targeted_iku_ids);
+        } else {
+            $proposal->targetedIkus()->detach();
         }
     }
 

@@ -63,11 +63,24 @@ class InstallerMiddleware
     }
 
     /**
-     * Check if application is installed - only check lock file.
+     * Check if application is installed.
+     * Uses a combination of lock file (fast) and database check (robust for serverless).
      */
     private function isInstalled(): bool
     {
-        return File::exists($this->getLockFilePath());
+        // 1. Check lock file (Fastest, works on persistent disks)
+        if (File::exists($this->getLockFilePath())) {
+            return true;
+        }
+
+        // 2. Fallback for Cloud Run: Check if database is already provisioned
+        try {
+            // We check for a core table that should exist if installed
+            return \Illuminate\Support\Facades\Schema::hasTable('users') &&
+                \App\Models\User::exists();
+        } catch (\Exception) {
+            return false;
+        }
     }
 
     private function ensureInstallerKey(bool $force = false): void

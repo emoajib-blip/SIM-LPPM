@@ -17,7 +17,7 @@ class ReviewReminder extends Notification implements ShouldQueue
     public function __construct(
         public Proposal $proposal,
         public User $reviewer,
-        public string $daysRemaining
+        public int $daysRemaining
     ) {}
 
     public function via(object $notifiable): array

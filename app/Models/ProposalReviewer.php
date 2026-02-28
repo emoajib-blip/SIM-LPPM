@@ -7,6 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $proposal_id
+ * @property string $user_id
+ * @property \App\Enums\ReviewStatus $status
+ * @property string|null $review_notes
+ * @property string|null $recommendation
+ * @property int|null $round
+ * @property \Illuminate\Support\Carbon|null $assigned_at
+ * @property \Illuminate\Support\Carbon|null $deadline_at
+ * @property \Illuminate\Support\Carbon|null $started_at
+ * @property \Illuminate\Support\Carbon|null $completed_at
+ * @property-read \App\Models\Proposal $proposal
+ * @property-read \App\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewLog[] $logs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewScore[] $scores
+ *
+ * @method \Illuminate\Database\Eloquent\Builder|static completed()
+ * @method \Illuminate\Database\Eloquent\Builder|static forRound(int $round)
+ */
 class ProposalReviewer extends Model
 {
     protected $table = 'proposal_reviewer';
@@ -83,9 +103,10 @@ class ProposalReviewer extends Model
     /**
      * Get the latest completed review log.
      */
+    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function latestLog()
     {
-        return $this->logs()->completed()->first();
+        return $this->logs()->whereNotNull('completed_at')->first();
     }
 
     /**
@@ -93,7 +114,11 @@ class ProposalReviewer extends Model
      */
     public function logForRound(int $round): ?ReviewLog
     {
-        return $this->logs()->forRound($round)->first();
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        /** @var ReviewLog|null $log */
+        $log = $this->logs()->where('round', $round)->first();
+
+        return $log;
     }
 
     /**
@@ -106,7 +131,11 @@ class ProposalReviewer extends Model
             return null;
         }
 
-        return $this->logs()->forRound($currentRound - 1)->first();
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        /** @var ReviewLog|null $prevLog */
+        $prevLog = $this->logs()->where('round', $currentRound - 1)->first();
+
+        return $prevLog;
     }
 
     /**

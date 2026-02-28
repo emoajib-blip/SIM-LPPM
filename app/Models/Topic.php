@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $theme_id
+ * @property string $name
+ * @property bool $is_active_for_research
+ * @property bool $is_active_for_community_service
+ * @property-read \App\Models\Theme $theme
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $proposals
+ */
 class Topic extends Model
 {
     /** @use HasFactory<\Database\Factories\TopicFactory> */

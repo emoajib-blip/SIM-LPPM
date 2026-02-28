@@ -58,7 +58,8 @@ class NationalPriorityManager extends Component
 
     public function edit(NationalPriority $nationalPriority): void
     {
-        $this->editingId = $nationalPriority->id;
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->editingId = (string) $nationalPriority->id;
         $this->name = $nationalPriority->name;
         $this->modalTitle = 'Edit Prioritas Nasional';
         $this->dispatch('open-modal', modalId: 'modal-national-priority');
@@ -99,7 +100,7 @@ class NationalPriorityManager extends Component
     public function confirmDelete(int $id): void
     {
         $this->deleteItemId = $id;
-        $this->deleteItemName = \App\Models\NationalPriority::find($id)?->name ?? '';
+        $this->deleteItemName = \App\Models\NationalPriority::find($id)->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-national-priority');
     }
 }

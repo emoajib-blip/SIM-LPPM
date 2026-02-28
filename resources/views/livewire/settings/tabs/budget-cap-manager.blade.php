@@ -25,18 +25,40 @@
                             <td><span class="bg-blue-lt badge">{{ $item->year }}</span></td>
                             <td>
                                 @if ($item->research_budget_cap)
-                                    <span class="text-success fw-bold">Rp
-                                        {{ number_format($item->research_budget_cap, 0, ',', '.') }}</span>
+                                    <div class="text-success fw-bold">Global: Rp
+                                        {{ number_format($item->research_budget_cap, 0, ',', '.') }}
+                                    </div>
                                 @else
-                                    <span class="text-muted">Tidak dibatasi</span>
+                                    <div class="text-muted mb-1">Global: Tidak dibatasi</div>
+                                @endif
+                                @if($item->scheme_caps && isset($item->scheme_caps['research']) && count($item->scheme_caps['research']) > 0)
+                                    <div class="hr-text hr-text-left mt-2 mb-1 text-xs">Per Skema</div>
+                                    <ul class="list-unstyled text-xs">
+                                        @foreach($item->scheme_caps['research'] as $id => $val)
+                                            @php $schemeName = $researchSchemes->firstWhere('id', $id)?->name ?? "Skema ID {$id}"; @endphp
+                                            <li><span class="text-muted">{{ $schemeName }}:</span> <strong class="text-azure">Rp
+                                                    {{ number_format($val, 0, ',', '.') }}</strong></li>
+                                        @endforeach
+                                    </ul>
                                 @endif
                             </td>
                             <td>
                                 @if ($item->community_service_budget_cap)
-                                    <span class="text-success fw-bold">Rp
-                                        {{ number_format($item->community_service_budget_cap, 0, ',', '.') }}</span>
+                                    <div class="text-success fw-bold">Global: Rp
+                                        {{ number_format($item->community_service_budget_cap, 0, ',', '.') }}
+                                    </div>
                                 @else
-                                    <span class="text-muted">Tidak dibatasi</span>
+                                    <div class="text-muted mb-1">Global: Tidak dibatasi</div>
+                                @endif
+                                @if($item->scheme_caps && isset($item->scheme_caps['community_service']) && count($item->scheme_caps['community_service']) > 0)
+                                    <div class="hr-text hr-text-left mt-2 mb-1 text-xs">Per Skema</div>
+                                    <ul class="list-unstyled text-xs">
+                                        @foreach($item->scheme_caps['community_service'] as $id => $val)
+                                            @php $schemeName = $communityServiceSchemes->firstWhere('id', $id)?->name ?? "Skema ID {$id}"; @endphp
+                                            <li><span class="text-muted">{{ $schemeName }}:</span> <strong class="text-azure">Rp
+                                                    {{ number_format($val, 0, ',', '.') }}</strong></li>
+                                        @endforeach
+                                    </ul>
                                 @endif
                             </td>
                             <td>
@@ -85,29 +107,55 @@
                         <div class="d-block invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="hr-text">Penelitian</div>
                 <div class="mb-3">
-                    <label class="form-label">Batas Anggaran Penelitian</label>
+                    <label class="form-label font-weight-bold">Batas Anggaran Global (Opsional)</label>
                     <div class="input-group" x-data="moneyInputSingle('research_budget_cap')">
                         <span class="input-group-text">Rp</span>
                         <input type="text" x-model="display" x-ref="input" @focus="handleFocus" @input="handleInput"
-                            class="form-control" placeholder="50.000.000">
+                            class="form-control" placeholder="Misal: 50.000.000">
                     </div>
-                    <small class="form-hint">Kosongkan jika tidak ada batasan anggaran untuk penelitian.</small>
-                    @error('research_budget_cap')
-                        <div class="d-block invalid-feedback">{{ $message }}</div>
-                    @enderror
                 </div>
+
+                <h5 class="mt-2 mb-2">Anggaran Spesifik Pengecualian Per-Skema:</h5>
+                <div class="row">
+                    @foreach($researchSchemes as $scheme)
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-truncate"
+                                title="{{ $scheme->name }}"><small>{{ $scheme->name }}</small></label>
+                            <div class="input-group" x-data="moneyInputSingle('research_scheme_caps.{{ $scheme->id }}')">
+                                <span class="input-group-text p-1"><small>Rp</small></span>
+                                <input type="text" x-model="display" x-ref="input" @focus="handleFocus" @input="handleInput"
+                                    class="form-control form-control-sm" placeholder="Kosongkan jika ikuti global">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="hr-text">Pengabdian Masyarakat</div>
                 <div class="mb-3">
-                    <label class="form-label">Batas Anggaran Pengabdian Masyarakat</label>
+                    <label class="form-label font-weight-bold">Batas Anggaran Global (Opsional)</label>
                     <div class="input-group" x-data="moneyInputSingle('community_service_budget_cap')">
                         <span class="input-group-text">Rp</span>
                         <input type="text" x-model="display" x-ref="input" @focus="handleFocus" @input="handleInput"
-                            class="form-control" placeholder="30.000.000">
+                            class="form-control" placeholder="Misal: 30.000.000">
                     </div>
-                    <small class="form-hint">Kosongkan jika tidak ada batasan anggaran untuk pengabdian.</small>
-                    @error('community_service_budget_cap')
-                        <div class="d-block invalid-feedback">{{ $message }}</div>
-                    @enderror
+                </div>
+
+                <h5 class="mt-2 mb-2">Anggaran Spesifik Pengecualian Per-Skema:</h5>
+                <div class="row">
+                    @foreach($communityServiceSchemes as $scheme)
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-truncate"
+                                title="{{ $scheme->name }}"><small>{{ $scheme->name }}</small></label>
+                            <div class="input-group"
+                                x-data="moneyInputSingle('community_service_scheme_caps.{{ $scheme->id }}')">
+                                <span class="input-group-text p-1"><small>Rp</small></span>
+                                <input type="text" x-model="display" x-ref="input" @focus="handleFocus" @input="handleInput"
+                                    class="form-control form-control-sm" placeholder="Kosongkan jika ikuti global">
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </form>
         </x-slot:body>

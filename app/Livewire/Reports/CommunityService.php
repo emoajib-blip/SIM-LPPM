@@ -9,6 +9,7 @@ use App\Models\Proposal;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -27,33 +28,24 @@ class CommunityService extends Component
     /**
      * Update the selected reporting period.
      */
+    #[On('set-period')]
     public function setPeriod(string $period): void
     {
         $this->period = $period;
     }
 
-    public function exportPdf()
+    #[On('export-pdf')]
+    public function exportPdf(): void
     {
-        $proposals = $this->getBaseQuery()->get();
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.community-service-pdf', [
-            'proposals' => $proposals,
-            'period' => $this->period,
-        ])->setPaper('a4', 'landscape');
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'laporan-pkm-'.$this->period.'-'.now()->format('YmdHis').'.pdf', [
-            'Content-Type' => 'application/pdf',
-        ]);
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('reports.pkm.pdf', ['period' => $this->period]));
     }
 
-    public function exportExcel()
+    #[On('export-excel')]
+    public function exportExcel(): void
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(
-            new \App\Exports\CommunityServiceReportExport($this->period),
-            'laporan-pkm-'.$this->period.'-'.now()->format('YmdHis').'.xlsx'
-        );
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('download-file', url: route('reports.pkm.excel', ['period' => $this->period]));
     }
 
     protected function getBaseQuery()
@@ -257,12 +249,12 @@ class CommunityService extends Component
             ->where('start_year', $this->period)
             ->with(['submitter.identity.faculty'])
             ->get()
-            ->groupBy(fn ($p) => $p->submitter?->identity?->faculty_id)
+            ->groupBy(fn ($p) => $p->submitter->identity->faculty_id)
             ->map(function ($proposals) {
                 $first = $proposals->first();
 
                 return [
-                    'name' => $first->submitter?->identity?->faculty?->name ?? __('Pusat/Lainnya'),
+                    'name' => $first->submitter->identity->faculty->name ?? __('Pusat/Lainnya'),
                     'count' => $proposals->count(),
                 ];
             })
