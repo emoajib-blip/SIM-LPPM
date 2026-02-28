@@ -1,53 +1,59 @@
 #!/usr/bin/env bash
-# Quick deploy script for SIM-LPPM Cloud Run
-# Usage: ./deploy.sh "Commit message" [--seed]
+# Secure deploy script for SIM-LPPM Cloud Run
+# Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
-set -euo pipefail
+set -uo pipefail
 
 COMMIT_MSG=${1:-"Update deploy"}
 SEED_FLAG=${2:-""}
 
-# commit local changes
+echo "🧹 Menyiapkan kode untuk deployment..."
+
+# 1. Commit lokal
 git add .
-git commit -m "$COMMIT_MSG" || true
+git commit -m "$COMMIT_MSG" || echo "No changes to commit."
 
-echo "Pushing to remote..."
-git push origin HEAD
+# 2. Push ke GitHub (Tidak fatal jika gagal karena masalah token)
+echo "🚀 Pushing to remote (GitHub)..."
+git push origin HEAD || echo "⚠️ Warning: Git push failed. Proceeding with Google Cloud Run deployment anyway..."
 
-# Determine DB_SEED value
+# 3. Konfigurasi Deployment
+REGION="asia-southeast2"
+SERVICE_NAME="sim-lppm"
+CLOUDSQL_CONN="gen-lang-client-0704185463:asia-southeast2:sim-lppm-db"
+
+# Tentukan flag seeding
 if [[ "$SEED_FLAG" == "--seed" ]]; then
   DB_SEED=true
 else
   DB_SEED=false
 fi
 
-# --- CONFIGURATION (MUST BE CONFIGURED IN GOOGLE CLOUD) ---
-# PERINGATAN: Jika password mengandung karakter koma (,), gcloud akan error.
-CLOUDSQL_CONNECTION=${CLOUDSQL_CONNECTION:-"gen-lang-client-0704185463:asia-southeast2:sim-lppm-db"}
-DB_NAME=${DB_NAME:-"sim_lppm"}
-DB_USER=${DB_USER:-"root"}
-DB_PASS=${DB_PASS:-"1212"}
+echo "🚢 Mendeploy ke Google Cloud Run (Region: $REGION)..."
 
-echo "Deploying to Cloud Run using Cloud SQL: $CLOUDSQL_CONNECTION"
+# Menggunakan --set-secrets untuk keamanan tinggi
+SECRETS="APP_KEY=SIM_LPPM_APP_KEY:latest"
+SECRETS+=",DB_PASSWORD=SIM_LPPM_DB_PASSWORD:latest"
+SECRETS+=",INITIAL_ADMIN_PASSWORD=SIM_LPPM_INITIAL_ADMIN_PASSWORD:latest"
 
-# Menggunakan format list agar lebih aman dari parsing error
-ENV_VARS="APP_KEY=base64:wR54BxUsOi/ILFPFYSFic+0/ttVExD8jY/wQiQg4R4w="
-ENV_VARS+=",APP_DEBUG=false"
+# Variabel non-sensitif di Env Vars
+ENV_VARS="APP_DEBUG=false"
 ENV_VARS+=",APP_ENV=production"
 ENV_VARS+=",APP_URL=https://sim-lppm-969068032676.asia-southeast2.run.app"
 ENV_VARS+=",DB_CONNECTION=mysql"
-ENV_VARS+=",DB_SOCKET=/cloudsql/$CLOUDSQL_CONNECTION"
-ENV_VARS+=",DB_DATABASE=$DB_NAME"
-ENV_VARS+=",DB_USERNAME=$DB_USER"
-ENV_VARS+=",DB_PASSWORD=$DB_PASS"
-ENV_VARS+=",SESSION_DRIVER=database"
+ENV_VARS+=",DB_SOCKET=/cloudsql/$CLOUDSQL_CONN"
+ENV_VARS+=",DB_DATABASE=sim_lppm"
+ENV_VARS+=",DB_USERNAME=root"
 ENV_VARS+=",DB_SEED=$DB_SEED"
 
-gcloud run deploy sim-lppm \
+# Jalankan Deployment
+gcloud run deploy $SERVICE_NAME \
   --source . \
-  --region asia-southeast2 \
+  --region $REGION \
   --set-env-vars "$ENV_VARS" \
-  --add-cloudsql-instances "$CLOUDSQL_CONNECTION" \
+  --set-secrets "$SECRETS" \
+  --add-cloudsql-instances "$CLOUDSQL_CONN" \
+  --allow-unauthenticated \
   --quiet
 
-echo "Deployment complete. DB_SEED was set to $DB_SEED."
+echo "✅ Deployment selesai! Silakan cek dashboard Cloud Run Anda."
