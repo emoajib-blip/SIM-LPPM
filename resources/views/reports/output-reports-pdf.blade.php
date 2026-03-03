@@ -22,9 +22,50 @@
         .text-muted { color: #555; font-size: 8pt; }
         
         .footer { position: fixed; bottom: 0; left: 0; right: 0; font-size: 8pt; text-align: right; border-top: 1px solid #ddd; padding-top: 5px; }
+
+        .digital-signature {
+            border: 1px solid #1a56db;
+            padding: 5px;
+            display: inline-block;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #1a56db;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            width: 80px;
+        }
+
+        .digital-signature img {
+            width: 70px;
+            height: 70px;
+        }
+
+        .signature-label {
+            display: block;
+            font-size: 7px;
+            margin-top: 2px;
+            color: #1a56db;
+            font-weight: bold;
+        }
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80pt;
+            color: rgba(220, 220, 220, 0.4);
+            z-index: -1000;
+            white-space: nowrap;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+    @if($isPreview ?? false)
+        <div class="watermark">DRAFT PREVIEW</div>
+    @endif
     <div class="header">
         <div class="institution">INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN</div>
         <div class="lppm">LEMBAGA PENELITIAN DAN PENGABDIAN KEPADA MASYARAKAT (LPPM)</div>
@@ -94,41 +135,45 @@
         </tbody>
     </table>
     
-    <div class="signature-wrapper" style="margin-top: 30px;">
-        @php
-            $lppm = \App\Models\User::role('kepala lppm')->with('identity')->first();
-            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
-            
-            $lppmName = $lppm
-                ? format_name($lppm->identity->title_prefix ?? '', $lppm->name, $lppm->identity->title_suffix ?? '')
-                : 'Kepala LPPM';
-            $lppmNIDN = $lppm?->identity?->identity_id ?? '-';
-            $rektorName = $rektor
-                ? format_name($rektor->identity->title_prefix ?? '', $rektor->name, $rektor->identity->title_suffix ?? '')
-                : 'Rektor';
-            $rektorNIDN = $rektor?->identity?->identity_id ?? '-';
-        @endphp
         <table style="width: 100%; border: none;">
             <tr>
-                <td width="50%" style="border: none; text-align: center; padding: 0;">
-                    <div style="margin-top: 10px; margin-bottom: 4px;">Pekalongan, {{ now()->translatedFormat('d F Y') }}</div>
+                <td width="33%" style="border: none; text-align: center; padding: 0;">
+                    <div style="margin-top: 10px; margin-bottom: 4px;">Pekalongan,
+                        {{ now()->translatedFormat('d F Y') }}
+                    </div>
                     <div style="margin-bottom: 4px;">Mengetahui,</div>
                     <div style="margin-bottom: 4px;"><strong>Rektor ITSNU Pekalongan</strong></div>
-                    <div style="margin-bottom: 65px;"></div>
-                    <div style="font-weight: bold; text-decoration: underline;">{{ $rektorName }}</div>
-                    <div style="font-size: 9pt;">NIDN. {{ $rektorNIDN }}</div>
+                    @if(!($isPreview ?? false) && $institutionalReport && $institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
+                        <div class="digital-signature">
+                            <img src="{{ generate_qr_code_data_uri(route('reports.output.pdf', ['activeTab' => $activeTab, 'ref' => substr($institutionalReport->id, 0, 8)])) }}" alt="QR Code">
+                            <span class="signature-label">DIGITALLY SIGNED</span>
+                        </div>
+                    @else
+                        <div style="margin-bottom: 75px;"></div>
+                    @endif
+                    <div style="font-weight: bold; text-decoration: underline;">{{ format_name($rektor?->identity?->title_prefix, $rektor?->name ?? 'Rektor', $rektor?->identity?->title_suffix) }}</div>
+                    <div style="font-size: 9pt;">NPP. {{ $rektor?->identity?->identity_id ?? '-' }}</div>
                 </td>
-                <td width="50%" style="border: none; text-align: center; padding: 0;">
-                    <div style="margin-top: 10px; margin-bottom: 4px;">Pekalongan, {{ now()->translatedFormat('d F Y') }}</div>
+                <td width="34%" style="border: none;"></td>
+                <td width="33%" style="border: none; text-align: center; padding: 0;">
+                    <div style="margin-top: 10px; margin-bottom: 4px;">Pekalongan,
+                        {{ now()->translatedFormat('d F Y') }}
+                    </div>
                     <div style="margin-bottom: 4px;">Dibuat oleh,</div>
                     <div style="margin-bottom: 4px;"><strong>Kepala LPPM ITSNU Pekalongan</strong></div>
-                    <div style="margin-bottom: 65px;"></div>
-                    <div style="font-weight: bold; text-decoration: underline;">{{ $lppmName }}</div>
-                    <div style="font-size: 9pt;">NIDN. {{ $lppmNIDN }}</div>
+                    @if(!($isPreview ?? false) && $institutionalReport && in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::SUBMITTED, \App\Enums\InstitutionalReportStatus::APPROVED]))
+                        <div class="digital-signature" style="border-color: #059669; color: #059669;">
+                            <img src="{{ generate_qr_code_data_uri(route('reports.output.pdf', ['activeTab' => $activeTab, 'ref' => substr($institutionalReport->id, 0, 8)])) }}" alt="QR Code">
+                            <span class="signature-label" style="color: #059669;">VERIFIED BY LPPM</span>
+                        </div>
+                    @else
+                        <div style="margin-bottom: 75px;"></div>
+                    @endif
+                    <div style="font-weight: bold; text-decoration: underline;">{{ format_name($lppmHead?->identity?->title_prefix, $lppmHead?->name ?? 'Kepala LPPM', $lppmHead?->identity?->title_suffix) }}</div>
+                    <div style="font-size: 9pt;">NPP. {{ $lppmHead?->identity?->identity_id ?? '-' }}</div>
                 </td>
             </tr>
         </table>
-    </div>
 
     <div class="footer">
         Dicetak pada: {{ now()->format('d/m/Y H:i') }} oleh {{ auth()->user()->name ?? 'System' }}

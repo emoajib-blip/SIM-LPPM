@@ -62,7 +62,7 @@ class BudgetCapManager extends Component
     public function create(): void
     {
         $this->reset(['year', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
-        $this->modalTitle = 'Tambah Pengaturan Anggaran';
+        $this->modalTitle = 'Tambah Aturan Anggaran';
     }
 
     public function save(): void

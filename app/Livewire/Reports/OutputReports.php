@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Reports;
 
+use App\Livewire\Concerns\HasToast;
+use App\Livewire\Traits\WithInstitutionalApproval;
 use App\Models\AdditionalOutput;
 use App\Models\MandatoryOutput;
 use App\Models\Proposal;
@@ -13,30 +15,93 @@ use Livewire\WithPagination;
 
 class OutputReports extends Component
 {
-    use WithPagination;
+    use HasToast, WithInstitutionalApproval, WithPagination;
 
     /**
      * Active tab (research or community-service)
      */
     public string $activeTab = 'research';
 
-    /**
-     * Search query
-     */
+    public string $period;
+
     public string $search = '';
+
+    public string $selectedScheme = 'all';
+
+    public string $selectedFaculty = 'all';
+
+    public function mount(): void
+    {
+        if (active_role() === 'dekan' || auth()->user()->activeHasRole('dekan')) {
+            $this->selectedFaculty = (string) (auth()->user()->identity->faculty_id ?? 'all');
+        }
+
+        // Load metadata from existing report if available
+        $report = $this->getInstitutionalReport('output', (int) $this->period);
+        if ($report && $report->metadata) {
+            $this->search = $report->metadata['search'] ?? '';
+            $this->selectedScheme = $report->metadata['scheme'] ?? 'all';
+            $this->activeTab = $report->metadata['activeTab'] ?? $this->activeTab;
+            $this->outputType = $report->metadata['outputType'] ?? 'all';
+
+            // Only override faculty if not dekan
+            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
+                $this->selectedFaculty = $report->metadata['faculty'] ?? 'all';
+            }
+        } else {
+            // Check query params if no report metadata
+            $this->search = request()->query('search', '');
+            $this->selectedScheme = request()->query('scheme', 'all');
+
+            // Only override faculty if not dekan
+            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
+                $this->selectedFaculty = request()->query('faculty', 'all');
+            }
+        }
+    }
+
+    public function updatedPeriod(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedScheme(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedFaculty(): void
+    {
+        if (active_role() === 'dekan' || auth()->user()->activeHasRole('dekan')) {
+            $this->selectedFaculty = (string) (auth()->user()->identity->faculty_id ?? 'all');
+        }
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->search = '';
+        $this->selectedScheme = 'all';
+
+        if (active_role() === 'dekan' || auth()->user()->activeHasRole('dekan')) {
+            $this->selectedFaculty = (string) (auth()->user()->identity->faculty_id ?? 'all');
+        } else {
+            $this->selectedFaculty = 'all';
+        }
+
+        $this->period = (string) date('Y');
+        $this->resetPage();
+    }
 
     /**
      * Output type filter (all, mandatory, additional)
      */
     public string $outputType = 'all';
-
-    /**
-     * Reset pagination when search or filter changes
-     */
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     /**
      * Reset pagination when output type filter changes
@@ -65,7 +130,10 @@ class OutputReports extends Component
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('reports.output.pdf', [
             'activeTab' => $this->activeTab,
+            'period' => $this->period,
             'search' => $this->search,
+            'scheme' => $this->selectedScheme,
+            'faculty' => $this->selectedFaculty,
             'outputType' => $this->outputType,
         ]));
     }
@@ -76,7 +144,10 @@ class OutputReports extends Component
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('reports.output.excel', [
             'activeTab' => $this->activeTab,
+            'period' => $this->period,
             'search' => $this->search,
+            'scheme' => $this->selectedScheme,
+            'faculty' => $this->selectedFaculty,
             'outputType' => $this->outputType,
         ]));
     }
@@ -86,8 +157,14 @@ class OutputReports extends Component
         $detailableType = $this->activeTab === 'research' ? 'App\\Models\\Research' : 'App\\Models\\CommunityService';
 
         $query = Proposal::query()
-            ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'progressReports.mandatoryOutputs.proposalOutput', 'progressReports.additionalOutputs.proposalOutput'])
+            ->with([
+                'submitter.identity.faculty',
+                'submitter.identity.studyProgram',
+                'progressReports.mandatoryOutputs.proposalOutput',
+                'progressReports.additionalOutputs.proposalOutput',
+            ])
             ->where('detailable_type', $detailableType)
+            ->where('start_year', $this->period)
             ->where(function (Builder $query) {
                 $query->whereHas('progressReports.mandatoryOutputs')
                     ->orWhereHas('progressReports.additionalOutputs');
@@ -100,6 +177,18 @@ class OutputReports extends Component
                     ->orWhereHas('submitter', function (Builder $u) {
                         $u->where('name', 'like', "%{$this->search}%");
                     });
+            });
+        }
+
+        // Filter by scheme
+        if ($this->selectedScheme !== 'all') {
+            $query->where('research_scheme_id', $this->selectedScheme);
+        }
+
+        // Filter by faculty
+        if ($this->selectedFaculty !== 'all') {
+            $query->whereHas('submitter.identity', function ($q) {
+                $q->where('faculty_id', $this->selectedFaculty);
             });
         }
 
@@ -121,7 +210,25 @@ class OutputReports extends Component
         return view('livewire.reports.output-reports', [
             'proposals' => $this->getProposalsWithOutputs(),
             'statistics' => $this->getStatistics(),
+            'periods' => $this->availablePeriods(),
+            'allSchemes' => \App\Models\ResearchScheme::orderBy('name')->get(),
+            'allFaculties' => \App\Models\Faculty::orderBy('name')->get(),
+            'institutionalReport' => $this->getInstitutionalReport('output', (int) $this->period),
         ]);
+    }
+
+    /**
+     * Get available years from proposals.
+     */
+    protected function availablePeriods(): array
+    {
+        return Proposal::query()
+            ->distinct()
+            ->whereNotNull('start_year')
+            ->orderBy('start_year', 'desc')
+            ->pluck('start_year')
+            ->map(fn ($year) => (string) $year)
+            ->toArray() ?: [(string) date('Y')];
     }
 
     /**
@@ -153,6 +260,7 @@ class OutputReports extends Component
 
         $totalProposals = Proposal::query()
             ->where('detailable_type', $detailableType)
+            ->where('start_year', $this->period)
             ->whereIn('status', [
                 \App\Enums\ProposalStatus::APPROVED->value,
                 \App\Enums\ProposalStatus::COMPLETED->value,

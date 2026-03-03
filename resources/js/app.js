@@ -356,7 +356,15 @@ document.addEventListener("alpine:init", () => {
                     this.display = "";
                     return;
                 }
-                let numericVal = parseInt(val.toString().replace(/[^0-9]/g, ""));
+
+                // Handle string with decimal points from database (e.g. "1000.00")
+                let numericVal;
+                if (typeof val === 'string' && val.includes('.')) {
+                    numericVal = Math.round(parseFloat(val));
+                } else {
+                    numericVal = parseInt(val.toString().replace(/[^0-9]/g, ""));
+                }
+
                 if (isNaN(numericVal)) {
                     this.display = "";
                     return;
@@ -444,7 +452,15 @@ document.addEventListener("alpine:init", () => {
                 this.display = "";
                 return;
             }
-            let numericVal = parseInt(val.toString().replace(/[^0-9]/g, ""));
+
+            // Handle string with decimal points from database (e.g. "1000.00")
+            let numericVal;
+            if (typeof val === 'string' && val.includes('.')) {
+                numericVal = Math.round(parseFloat(val));
+            } else {
+                numericVal = parseInt(val.toString().replace(/[^0-9]/g, ""));
+            }
+
             if (isNaN(numericVal)) {
                 this.display = "";
                 return;
@@ -491,6 +507,11 @@ document.addEventListener("alpine:init", () => {
                 input.setSelectionRange(newPosition, newPosition);
             });
         },
+
+        // Helper to manually trigger refresh (useful during Livewire updates)
+        refresh() {
+            this.updateDisplay();
+        }
     }));
 
     /**

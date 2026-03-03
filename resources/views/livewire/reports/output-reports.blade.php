@@ -3,6 +3,108 @@
     {{-- Header empty as requested --}}
 </x-slot:pageHeader>
 
+<div>
+<div class="container-xl mt-3">
+    @if(active_role() === 'kepala lppm' || active_role() === 'rektor')
+        <div class="card mb-3 border-primary shadow-sm glass-card">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center mb-1">
+                        <h3 class="card-title h3 mb-0 me-2 text-primary">Validasi Dokumen Institusi (Luaran)</h3>
+                        @if($institutionalReport)
+                            <span class="badge bg-{{ $institutionalReport->status->color() }}-lt">
+                                {{ $institutionalReport->status->label() }}
+                            </span>
+                        @else
+                            <span class="badge bg-secondary-lt">Belum Diajukan</span>
+                        @endif
+                    </div>
+                    <p class="text-secondary mb-0 small">
+                        @if(!$institutionalReport || $institutionalReport->status === \App\Enums\InstitutionalReportStatus::DRAFT)
+                            Rekapitulasi luaran periode {{ $period }} belum diajukan ke Rektor.
+                        @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::SUBMITTED)
+                            Menunggu persetujuan dan tanda tangan digital Rektor.
+                        @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
+                            Telah disahkan Rektor pada {{ $institutionalReport->approved_at->format('d M Y H:i') }}.
+                        @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::REJECTED)
+                            Perbaikan: <strong>{{ $institutionalReport->notes }}</strong>
+                        @endif
+                    </p>
+                </div>
+                <div class="btn-list">
+                    @php
+                        $currentFilters = [
+                            'activeTab' => $activeTab,
+                            'search' => $search, 
+                            'period' => $period, 
+                            'scheme' => $selectedScheme, 
+                            'faculty' => $selectedFaculty,
+                            'outputType' => $outputType
+                        ];
+                    @endphp
+                    
+                    <!-- Draft Preview Icon (Support System) -->
+                    <a href="{{ route('reports.output.pdf', array_merge($currentFilters, ['preview' => 1])) }}" 
+                       target="_blank" class="btn btn-icon btn-outline-primary" title="Tinjau Draft PDF">
+                        <i class="ti ti-eye"></i>
+                    </a>
+
+                    @if(active_role() === 'kepala lppm' && (!$institutionalReport || in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::DRAFT, \App\Enums\InstitutionalReportStatus::REJECTED])))
+                        <button class="btn btn-primary" wire:click="submitInstitutionalReport('output', {{ $period }}, {{ json_encode($currentFilters) }})"
+                            wire:loading.attr="disabled">
+                            <i class="ti ti-send me-2"></i>
+                            Ajukan ke Rektor
+                        </button>
+                    @endif
+
+                    @if(active_role() === 'rektor' && ($institutionalReport?->status === \App\Enums\InstitutionalReportStatus::SUBMITTED))
+                        <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                            data-bs-target="#modal-reject-institutional">
+                            <i class="ti ti-x me-2"></i>
+                            Minta Perbaikan
+                        </button>
+                        <button class="btn btn-success" wire:click="approveInstitutionalReport('output', {{ $period }})"
+                            wire:loading.attr="disabled">
+                            <i class="ti ti-circle-check me-2"></i>
+                            Setujui & Tanda Tangani
+                        </button>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        @if(active_role() === 'rektor')
+            <div class="modal modal-blur fade" id="modal-reject-institutional" tabindex="-1" role="dialog" aria-hidden="true"
+                wire:ignore.self>
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Alasan Penolakan / Permintaan Perbaikan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <label class="form-label">Catatan untuk Kepala LPPM</label>
+                                <textarea class="form-control" wire:model="approvalNotes" rows="3"
+                                    placeholder="Masukkan alasan atau instruksi perbaikan..."></textarea>
+                                @error('approvalNotes') <span class="text-danger small">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link link-secondary me-auto"
+                                data-bs-dismiss="modal">Batal</button>
+                            <button type="button" class="btn btn-danger"
+                                wire:click="rejectInstitutionalReport('output', '{{ $period }}')">
+                                Simpan & Tolak
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endif
+</div>
+
 <!-- Statistics Cards -->
 <div>
     <div>
@@ -72,34 +174,70 @@
             </div>
 
             <div class="card-body">
-                <!-- Filters -->
-                <div class="row g-2 mb-3">
-                    <div class="col-md-5">
+                <!-- Filters (Support System Enhanced) -->
+                <div class="row g-2 mb-3 align-items-center">
+                    <div class="col-md-3">
                         <div class="input-icon">
-                            <input type="text" wire:model.live.debounce.300ms="search" class="form-control"
-                                placeholder="{{ __('Cari judul, ISBN, nama produk...') }}">
                             <span class="input-icon-addon">
-                                <x-lucide-search class="icon" />
+                                <i class="ti ti-search text-primary"></i>
                             </span>
+                            <input type="text" wire:model.live.debounce.500ms="search" class="form-control"
+                                placeholder="Cari judul, ISBN, produk...">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select wire:model.live="outputType" class="form-select">
-                            <option value="all">{{ __('Semua Luaran') }}</option>
-                            <option value="mandatory">{{ __('Luaran Wajib') }}</option>
-                            <option value="additional">{{ __('Luaran Tambahan') }}</option>
+                            <option value="all">Semua Jenis</option>
+                            <option value="mandatory">Wajib</option>
+                            <option value="additional">Tambahan</option>
                         </select>
                     </div>
-                    <div class="col-md-4 text-end">
-                        <div class="btn-group w-100">
-                            <a href="{{ route('reports.output.excel', ['activeTab' => $activeTab, 'search' => $search, 'outputType' => $outputType]) }}" class="btn btn-outline-success" data-navigate-ignore="true">
-                                <x-lucide-table class="icon me-2" />
-                                <span>{{ __('Excel') }}</span>
+                    <div class="col-md-2">
+                        <select wire:model.live="selectedScheme" class="form-select">
+                            <option value="all">Semua Skema</option>
+                            @foreach($allSchemes as $scheme)
+                                <option value="{{ $scheme->id }}">{{ $scheme->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select wire:model.live="selectedFaculty" class="form-select" @if(active_role() === 'dekan') disabled @endif>
+                            @if(active_role() !== 'dekan')
+                                <option value="all">Semua Fakultas</option>
+                            @endif
+                            @foreach($allFaculties as $faculty)
+                                <option value="{{ $faculty->id }}">{{ $faculty->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select wire:model.live="period" class="form-select">
+                            @foreach($periods as $p)
+                                <option value="{{ $p }}">Periode {{ $p }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        <div class="btn-group">
+                            @php
+                                $exportParams = [
+                                    'activeTab' => $activeTab, 
+                                    'period' => $period,
+                                    'search' => $search, 
+                                    'scheme' => $selectedScheme,
+                                    'faculty' => $selectedFaculty,
+                                    'outputType' => $outputType
+                                ];
+                            @endphp
+                            <a href="{{ route('reports.output.excel', $exportParams) }}" class="btn btn-icon btn-outline-success" title="Excel" data-navigate-ignore="true">
+                                <i class="ti ti-table"></i>
                             </a>
-                            <a href="{{ route('reports.output.pdf', ['activeTab' => $activeTab, 'search' => $search, 'outputType' => $outputType]) }}" class="btn btn-outline-danger" data-navigate-ignore="true">
-                                <x-lucide-file-text class="icon me-2" />
-                                <span>{{ __('PDF') }}</span>
+                            <a href="{{ route('reports.output.pdf', $exportParams) }}" class="btn btn-icon btn-outline-danger" title="PDF" data-navigate-ignore="true">
+                                <i class="ti ti-file-text"></i>
                             </a>
+                            <button class="btn btn-icon btn-white" wire:click="resetFilters" title="Reset">
+                                <i class="ti ti-refresh"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -516,4 +654,5 @@
             @endif
         </x-slot:body>
     </x-tabler.modal>
+</div>
 </div>

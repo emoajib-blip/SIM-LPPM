@@ -103,8 +103,8 @@
                                     <small class="text-secondary">
                                         Tahun {{ $finalReport->reporting_year }}
                                         <br>
-                                        <x-tabler.badge :color="$finalReport->status === 'approved' ? 'success' : ($finalReport->status === 'submitted' ? 'info' : 'secondary')" class="mt-1">
-                                            {{ ucfirst((string) $finalReport->status) }}
+                                        <x-tabler.badge :color="$finalReport->status->value === 'approved' ? 'success' : ($finalReport->status->value === 'submitted' ? 'info' : 'secondary')" class="mt-1">
+                                            {{ ucfirst($finalReport->status->label() ?? $finalReport->status->value) }}
                                         </x-tabler.badge>
                                     </small>
                                 @else

@@ -21,6 +21,7 @@ use Livewire\WithFileUploads;
 class Show extends Component
 {
     use \App\Livewire\Traits\HasReportTemplates;
+    use \App\Livewire\Traits\WithReportApproval;
     use HasFileUploads;
     use HasToast;
     use ManagesOutputs;
@@ -128,25 +129,45 @@ class Show extends Component
             abort(403);
         }
 
-        DB::transaction(function () {
-            // Submit report via form
-            $report = $this->form->submit($this->progressReport);
-            $this->progressReport = $report;
-            $this->isFinalReportDraft = true;
+        // Validate 100% Budget Usage
+        $totalProposedBudget = (float) $this->proposal->budgetItems()->sum('total_price');
+        $totalUsedBudget = (float) $this->proposal->dailyNotes()->sum('amount');
 
-            // Save report files
-            $this->saveSubstanceFile($report, 'final');
-            $this->saveRealizationFile($report, 'final');
-            $this->savePresentationFile($report, 'final');
+        if ($totalProposedBudget > 0 && $totalUsedBudget != $totalProposedBudget) {
+            $message = 'Gagal mengajukan: Total pemakaian anggaran di Catatan Harian (Rp '.number_format($totalUsedBudget, 0, ',', '.').') belum mencapai 100% dari total RAB yang disetujui (Rp '.number_format($totalProposedBudget, 0, ',', '.').').';
+            session()->flash('error', $message);
+            $this->toastError($message);
 
-            // Save output files
-            $this->saveOutputFiles($report);
-        });
+            return;
+        }
 
-        $message = 'Laporan akhir berhasil diajukan.';
-        session()->flash('success', $message);
-        $this->toastSuccess($message);
-        $this->redirect(route('community-service.final-report.index'), navigate: true);
+        try {
+            DB::transaction(function () {
+                // Submit report via form
+                $report = $this->form->submit($this->progressReport);
+                $this->progressReport = $report;
+                $this->isFinalReportDraft = true;
+
+                // Save report files
+                $this->saveSubstanceFile($report, 'final');
+                $this->saveRealizationFile($report, 'final');
+                $this->savePresentationFile($report, 'final');
+
+                // Save output files
+                $this->saveOutputFiles($report);
+            });
+
+            $message = 'Laporan akhir berhasil diajukan.';
+            session()->flash('success', $message);
+            $this->toastSuccess($message);
+            $this->redirect(route('community-service.final-report.index'), navigate: true);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            $message = 'Gagal mengajukan laporan: '.$e->getMessage();
+            session()->flash('error', $message);
+            $this->toastError($message);
+        }
     }
 
     /**

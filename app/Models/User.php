@@ -31,6 +31,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $proposals
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResearchStage[] $researchStages
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalReviewer[] $reviews
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MonevReview[] $monevReviews
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PolicyInvolvement[] $policyInvolvements
  * @property-read \Illuminate\Database\Eloquent\Relations\Pivot $pivot
  */
@@ -112,6 +113,14 @@ class User extends Authenticatable implements HasMedia
     public function policyInvolvements(): HasMany
     {
         return $this->hasMany(PolicyInvolvement::class, 'user_id');
+    }
+
+    /**
+     * Get all monev reviews (post-completion audits) assigned to the user.
+     */
+    public function monevReviews(): HasMany
+    {
+        return $this->hasMany(MonevReview::class, 'reviewer_id');
     }
 
     /**

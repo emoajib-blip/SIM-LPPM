@@ -260,7 +260,7 @@
                                             <path d="M14 16l1 0"></path>
                                             <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"></path>
                                         </svg>
-                                        {{ $user->identity->faculty->name }}
+                                        {{ $user->identity?->faculty?->name ?? '-' }}
                                     </div>
                                 @endif
                             </td>
@@ -321,20 +321,29 @@
                             </td>
                             <td class="text-end">
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle align-text-top"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
                                         {{ __('Tindakan') }}
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end shadow-sm">
                                         <a class="dropdown-item" href="{{ route('users.show', $user) }}" wire:navigate>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye me-2 text-info" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-eye me-2 text-info" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
+                                                <path
+                                                    d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6">
+                                                </path>
                                             </svg>
                                             {{ __('Lihat Profil') }}
                                         </a>
                                         <a class="dropdown-item" href="{{ route('users.edit', $user) }}" wire:navigate>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit me-2 text-primary" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-edit me-2 text-primary" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"></path>
                                                 <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"></path>
@@ -342,15 +351,20 @@
                                             </svg>
                                             {{ __('Ubah Data') }}
                                         </a>
-                                        
+
                                         @if(auth()->user()->hasAnyRole(['superadmin', 'admin lppm']))
                                             <div class="dropdown-divider"></div>
                                             <button class="dropdown-item" type="button"
                                                 wire:click.prevent="resetUserPassword('{{ $user->id }}')"
                                                 wire:confirm="{{ __("Apakah Anda yakin ingin mereset password {$user->name} menjadi 'password'?") }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-key me-2 text-warning" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="icon icon-tabler icon-tabler-key me-2 text-warning" width="24"
+                                                    height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"></path>
+                                                    <path
+                                                        d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z">
+                                                    </path>
                                                     <path d="M15 9h.01"></path>
                                                 </svg>
                                                 {{ __('Reset Password') }}
@@ -358,7 +372,10 @@
                                             <button class="dropdown-item" type="button"
                                                 wire:click.prevent="delete('{{ $user->id }}')"
                                                 wire:confirm="{{ __('Apakah Anda yakin ingin menghapus pengguna ini?') }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash me-2 text-danger" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="icon icon-tabler icon-tabler-trash me-2 text-danger" width="24"
+                                                    height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                     <path d="M4 7l16 0"></path>
                                                     <path d="M10 11l0 6"></path>
@@ -491,8 +508,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-ghost-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-danger" wire:click="deleteUser"
-                            wire:loading.attr="disabled">
+                        <button type="button" class="btn btn-danger" wire:click="deleteUser" wire:loading.attr="disabled">
                             <span wire:loading.remove wire:target="deleteUser">Hapus</span>
                             <span wire:loading wire:target="deleteUser">Memproses...</span>
                         </button>
@@ -505,19 +521,9 @@
 </div>
 
 @push('scripts')
-<script>
-    document.addEventListener('livewire:load', function () {
-        document.querySelectorAll('[wire\\:click^="delete"]').forEach(button => {
-            button.addEventListener('click', event => {
-                event.preventDefault();
-                const message = button.getAttribute('wire:confirm');
-                if (confirm(message)) {
-                    const component = Livewire.find(button.closest('[wire\\:id]').getAttribute('wire:id'));
-                    const method = button.getAttribute('wire:click').match(/delete\(([^)]+)\)/)[0];
-                    eval(`component.${method}`);
-                }
+    <script>
+            document.addEventListener('livewire:initialized', function () {
+                // Livewire 3 handled scripts here if needed
             });
-        });
-    });
-</script>
+    </script>
 @endpush

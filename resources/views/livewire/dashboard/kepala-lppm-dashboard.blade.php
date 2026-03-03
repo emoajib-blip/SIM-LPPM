@@ -50,7 +50,7 @@
                                         {{ $stats['pending_initial_approval'] ?? 0 }} Usulan
                                     </div>
                                     <div class="text-secondary">
-                                        Menunggu Persetujuan Awal
+                                        Persetujuan Awal Proposal
                                     </div>
                                 </div>
                             </div>
@@ -71,7 +71,49 @@
                                         {{ $stats['pending_final_decision'] ?? 0 }} Usulan
                                     </div>
                                     <div class="text-secondary">
-                                        Menunggu Keputusan Akhir
+                                        Keputusan Akhir Proposal
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card card-sm border-0 shadow-sm" style="border-radius: 12px;">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span class="bg-info-lt text-info avatar border-0 shadow-sm">
+                                        <x-lucide-file-check class="icon" />
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <div class="font-weight-medium">
+                                        {{ $stats['final_report_pending'] ?? 0 }} Laporan
+                                    </div>
+                                    <div class="text-secondary">
+                                        Persetujuan Laporan Akhir
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card card-sm border-0 shadow-sm" style="border-radius: 12px;">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span class="bg-purple-lt text-purple avatar border-0 shadow-sm">
+                                        <x-lucide-award class="icon" />
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <div class="font-weight-medium">
+                                        {{ $stats['total_outputs'] ?? 0 }} Capaian
+                                    </div>
+                                    <div class="text-secondary">
+                                        Monitoring Luaran
                                     </div>
                                 </div>
                             </div>

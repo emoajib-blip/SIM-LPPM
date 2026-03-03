@@ -4,6 +4,8 @@ namespace App\Livewire\Reports;
 
 use App\Actions\Reports\GetPartnerReportQuery;
 use App\Enums\ProposalStatus;
+use App\Livewire\Concerns\HasToast;
+use App\Livewire\Traits\WithInstitutionalApproval;
 use App\Models\Partner;
 use App\Models\Proposal;
 use Illuminate\View\View;
@@ -18,7 +20,7 @@ use Livewire\WithPagination;
 #[Layout('components.layouts.app', ['title' => 'Laporan Kerjasama Mitra', 'pageTitle' => 'Laporan Kerjasama Mitra'])]
 class PartnerCollaboration extends Component
 {
-    use WithPagination;
+    use HasToast, WithInstitutionalApproval, WithPagination;
 
     #[Url]
     public string $search = '';
@@ -135,6 +137,7 @@ class PartnerCollaboration extends Component
         return view('livewire.reports.partner-collaboration', [
             'partners' => $partners,
             'detailProposals' => $detailProposals,
+            'institutionalReport' => $this->getInstitutionalReport('partner', (int) ($this->periodFilter ?: date('Y'))),
         ]);
     }
 }

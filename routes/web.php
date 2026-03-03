@@ -20,38 +20,56 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
 // Installer Route - Available only when not installed
-Route::livewire('install', InstallerWizard::class)
+Route::get('install', InstallerWizard::class)
     ->name('install');
+
+Route::get('/dev/migrate', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+
+        return 'Migrasi Berhasil: '.\Illuminate\Support\Facades\Artisan::output();
+    } catch (\Exception $e) {
+        return 'Error Migrasi: '.$e->getMessage();
+    }
+});
 
 Route::get('/health-check', \App\Http\Controllers\HealthCheckController::class)->name('health.check');
 
 Route::redirect('/', 'dashboard', 302);
 
-Route::livewire('dashboard', Dashboard::class)
+Route::get('dashboard', Dashboard::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-    Route::livewire('laporan-penelitian', \App\Livewire\Reports\Research::class)
+    Route::get('laporan-penelitian', \App\Livewire\Reports\Research::class)
         ->middleware(['role:admin lppm|rektor|kepala lppm'])
         ->name('reports.research');
 
-    Route::livewire('laporan-pkm', \App\Livewire\Reports\CommunityService::class)
+    Route::get('laporan-pkm', \App\Livewire\Reports\CommunityService::class)
         ->middleware(['role:admin lppm|rektor|kepala lppm'])
         ->name('reports.pkm');
 
-    Route::livewire('laporan-luaran', \App\Livewire\Reports\OutputReports::class)
+    Route::get('laporan-luaran', \App\Livewire\Reports\OutputReports::class)
         ->middleware(['role:admin lppm|rektor|kepala lppm'])
         ->name('reports.outputs');
 
-    Route::livewire('laporan-mitra', \App\Livewire\Reports\PartnerCollaboration::class)
+    Route::get('laporan-mitra', \App\Livewire\Reports\PartnerCollaboration::class)
         ->middleware(['role:admin lppm|rektor|kepala lppm'])
         ->name('reports.partners');
 
+    Route::get('/reports/iku', \App\Livewire\Reports\IkuReport::class)
+        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->name('reports.iku');
+
+    Route::get('/reports/monitoring', \App\Livewire\Reports\InstitutionalReportMonitoring::class)
+        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->name('reports.monitoring');
+
     // User Management Routes
     Route::middleware(['role:admin lppm|superadmin'])->prefix('users')->name('users.')->group(function () {
-        Route::livewire('/', UsersIndex::class)->name('index');
-        Route::livewire('import', \App\Livewire\Users\Import::class)->name('import');
+        Route::get('/', UsersIndex::class)->name('index');
+        Route::get('import', \App\Livewire\Users\Import::class)->name('import');
         Route::get('import/template', function () {
             if (ob_get_level()) {
                 ob_end_clean();
@@ -59,14 +77,14 @@ Route::middleware(['auth'])->group(function () {
 
             return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\UsersTemplateExport, 'template-import-users.xlsx');
         })->name('import-template');
-        Route::livewire('sync-sinta', \App\Livewire\AdminLppm\SyncSinta::class)->name('sync-sinta');
-        Route::livewire('create', UsersCreate::class)->name('create');
-        Route::livewire('{user}', UsersShow::class)->name('show');
-        Route::livewire('{user}/edit', UsersEdit::class)->name('edit');
+        Route::get('sync-sinta', \App\Livewire\AdminLppm\SyncSinta::class)->name('sync-sinta');
+        Route::get('create', UsersCreate::class)->name('create');
+        Route::get('{user}', UsersShow::class)->name('show');
+        Route::get('{user}/edit', UsersEdit::class)->name('edit');
     });
 
     // SINTA Export Page (Livewire)
-    Route::livewire('export-sinta', \App\Livewire\AdminLppm\ExportSinta::class)
+    Route::get('export-sinta', \App\Livewire\AdminLppm\ExportSinta::class)
         ->middleware(['permission:module_export_sinta'])
         ->name('export-sinta');
 
@@ -80,124 +98,140 @@ Route::middleware(['auth'])->group(function () {
 
     // Research Routes
     Route::middleware(['permission:module_penelitian'])->prefix('research')->name('research.')->group(function () {
-        Route::livewire('/', \App\Livewire\Research\Proposal\Index::class)->name('proposal.index');
+        Route::get('/', \App\Livewire\Research\Proposal\Index::class)->name('proposal.index');
 
         // Only dosen can create proposals
-        Route::livewire('proposal/create', \App\Livewire\Research\Proposal\Create::class)
+        Route::get('proposal/create', \App\Livewire\Research\Proposal\Create::class)
             ->middleware('role:dosen')
             ->name('proposal.create');
 
-        Route::livewire('proposal/{proposal}', \App\Livewire\Research\Proposal\Show::class)->name('proposal.show');
-        Route::livewire('proposal/{proposal}/edit', \App\Livewire\Research\Proposal\Edit::class)->name('proposal.edit');
+        Route::get('proposal/{proposal}', \App\Livewire\Research\Proposal\Show::class)->name('proposal.show');
+        Route::get('proposal/{proposal}/edit', \App\Livewire\Research\Proposal\Edit::class)->name('proposal.edit');
 
-        Route::livewire('proposal-revision', \App\Livewire\Research\ProposalRevision\Index::class)->name('proposal-revision.index');
-        Route::livewire('proposal-revision/{proposal}', \App\Livewire\Research\ProposalRevision\Show::class)->name('proposal-revision.show');
+        Route::get('proposal-revision', \App\Livewire\Research\ProposalRevision\Index::class)->name('proposal-revision.index');
+        Route::get('proposal-revision/{proposal}', \App\Livewire\Research\ProposalRevision\Show::class)->name('proposal-revision.show');
 
-        Route::livewire('progress-report', \App\Livewire\Research\ProgressReport\Index::class)->name('progress-report.index');
-        Route::livewire('progress-report/{proposal}', \App\Livewire\Reports\Show::class)
-            ->name('progress-report.show')
-            ->defaults('type', 'research-progress');
+        // Laporan Kemajuan dihilangkan berdasarkan arahan simplifikasi
+        // Route::get('progress-report', \App\Livewire\Research\ProgressReport\Index::class)->name('progress-report.index');
+        // Route::get('progress-report/{proposal}', \App\Livewire\Reports\Show::class)
+        //     ->name('progress-report.show')
+        //     ->defaults('type', 'research-progress');
 
-        Route::livewire('final-report', \App\Livewire\Research\FinalReport\Index::class)->name('final-report.index');
-        Route::livewire('final-report/{proposal}', \App\Livewire\Research\FinalReport\Show::class)
+        Route::get('final-report', \App\Livewire\Research\FinalReport\Index::class)->name('final-report.index');
+        Route::get('final-report/{proposal}', \App\Livewire\Research\FinalReport\Show::class)
             ->name('final-report.show');
 
-        Route::livewire('daily-note', \App\Livewire\Research\DailyNote\Index::class)->name('daily-note.index');
-        Route::livewire('daily-note/{proposal}', \App\Livewire\Research\DailyNote\Show::class)->name('daily-note.show');
+        Route::get('daily-note', \App\Livewire\Research\DailyNote\Index::class)->name('daily-note.index');
+        Route::get('daily-note/{proposal}', \App\Livewire\Research\DailyNote\Show::class)->name('daily-note.show');
     });
 
     // Policy & Recognition Routes
     Route::middleware(['permission:module_rekognisi'])->prefix('recognition')->name('recognition.')->group(function () {
-        Route::livewire('policy-involvement', \App\Livewire\Lecturer\PolicyInvolvement\Index::class)->name('policy-involvement.index');
+        Route::get('policy-involvement', \App\Livewire\Lecturer\PolicyInvolvement\Index::class)->name('policy-involvement.index');
     });
 
     // Community Service Routes
     Route::middleware(['permission:module_pengabdian'])->prefix('community-service')->name('community-service.')->group(function () {
-        Route::livewire('/', \App\Livewire\CommunityService\Proposal\Index::class)->name('proposal.index');
+        Route::get('/', \App\Livewire\CommunityService\Proposal\Index::class)->name('proposal.index');
 
         // Only dosen can create proposals
-        Route::livewire('proposal/create', \App\Livewire\CommunityService\Proposal\Create::class)
+        Route::get('proposal/create', \App\Livewire\CommunityService\Proposal\Create::class)
             ->middleware('role:dosen')
             ->name('proposal.create');
 
-        Route::livewire('proposal/{proposal}', \App\Livewire\CommunityService\Proposal\Show::class)->name('proposal.show');
-        Route::livewire('proposal/{proposal}/edit', \App\Livewire\CommunityService\Proposal\Edit::class)->name('proposal.edit');
+        Route::get('proposal/{proposal}', \App\Livewire\CommunityService\Proposal\Show::class)->name('proposal.show');
+        Route::get('proposal/{proposal}/edit', \App\Livewire\CommunityService\Proposal\Edit::class)->name('proposal.edit');
 
-        Route::livewire('proposal-revision', \App\Livewire\CommunityService\ProposalRevision\Index::class)->name('proposal-revision.index');
-        Route::livewire('proposal-revision/{proposal}', \App\Livewire\CommunityService\ProposalRevision\Show::class)->name('proposal-revision.show');
+        Route::get('proposal-revision', \App\Livewire\CommunityService\ProposalRevision\Index::class)->name('proposal-revision.index');
+        Route::get('proposal-revision/{proposal}', \App\Livewire\CommunityService\ProposalRevision\Show::class)->name('proposal-revision.show');
 
-        Route::livewire('progress-report', \App\Livewire\CommunityService\ProgressReport\Index::class)->name('progress-report.index');
-        Route::livewire('progress-report/{proposal}', \App\Livewire\Reports\Show::class)
-            ->name('progress-report.show')
-            ->defaults('type', 'community-service-progress');
+        // Laporan Kemajuan dihilangkan berdasarkan arahan simplifikasi
+        // Route::get('progress-report', \App\Livewire\CommunityService\ProgressReport\Index::class)->name('progress-report.index');
+        // Route::get('progress-report/{proposal}', \App\Livewire\Reports\Show::class)
+        //     ->name('progress-report.show')
+        //     ->defaults('type', 'community-service-progress');
 
-        Route::livewire('final-report', \App\Livewire\CommunityService\FinalReport\Index::class)->name('final-report.index');
-        Route::livewire('final-report/{proposal}', \App\Livewire\CommunityService\FinalReport\Show::class)
+        Route::get('final-report', \App\Livewire\CommunityService\FinalReport\Index::class)->name('final-report.index');
+        Route::get('final-report/{proposal}', \App\Livewire\CommunityService\FinalReport\Show::class)
             ->name('final-report.show');
 
-        Route::livewire('daily-note', \App\Livewire\CommunityService\DailyNote\Index::class)->name('daily-note.index');
-        Route::livewire('daily-note/{proposal}', \App\Livewire\CommunityService\DailyNote\Show::class)->name('daily-note.show');
+        Route::get('daily-note', \App\Livewire\CommunityService\DailyNote\Index::class)->name('daily-note.index');
+        Route::get('daily-note/{proposal}', \App\Livewire\CommunityService\DailyNote\Show::class)->name('daily-note.show');
     });
+
+    // IKU Dashboard & Verification (Standardized access for Rektor/Kepala LPPM)
+    Route::get('/iku', \App\Livewire\Iku\IkuDashboard::class)
+        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->name('accreditation.hub');
+
+    Route::get('/iku/verification', \App\Livewire\Iku\IkuVerification::class)
+        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->name('accreditation.verification');
 
     // Dekan Routes
     Route::middleware(['permission:module_persetujuan_dekan'])->prefix('dekan')->name('dekan.')->group(function () {
-        Route::livewire('proposals', DekanProposalIndex::class)->name('proposals.index');
-        Route::livewire('riwayat-persetujuan', \App\Livewire\Dekan\ApprovalHistory::class)->name('approval-history');
+        Route::get('proposals', DekanProposalIndex::class)->name('proposals.index');
+        Route::get('reports', \App\Livewire\Dekan\ReportIndex::class)->name('reports.index');
+        Route::get('riwayat-persetujuan', \App\Livewire\Dekan\ApprovalHistory::class)->name('approval-history');
     });
 
     // Review Routes
     Route::middleware(['permission:module_review'])->prefix('review')->name('review.')->group(function () {
-        Route::livewire('research', ReviewResearch::class)->name('research');
-        Route::livewire('community-service', ReviewCommunityService::class)->name('community-service');
-        Route::livewire('riwayat-review', \App\Livewire\Review\ReviewHistory::class)->name('review-history');
+        Route::get('research', ReviewResearch::class)->name('research');
+        Route::get('community-service', ReviewCommunityService::class)->name('community-service');
+        Route::get('riwayat-review', \App\Livewire\Review\ReviewHistory::class)->name('review-history');
+        Route::get('monev', \App\Livewire\Reviewer\Monev\Index::class)->name('monev');
     });
 
     // Kepala LPPM Routes
     Route::middleware(['role:kepala lppm|rektor'])->prefix('kepala-lppm')->name('kepala-lppm.')->group(function () {
-        Route::livewire('persetujuan-awal', \App\Livewire\KepalaLppm\InitialApproval::class)->name('initial-approval');
-        Route::livewire('persetujuan-akhir', \App\Livewire\KepalaLppm\FinalDecision::class)->name('final-decision');
+        Route::get('persetujuan-awal', \App\Livewire\KepalaLppm\InitialApproval::class)->name('initial-approval');
+        Route::get('persetujuan-akhir', \App\Livewire\KepalaLppm\FinalDecision::class)->name('final-decision');
+        Route::get('persetujuan-laporan', \App\Livewire\KepalaLppm\ReportApproval::class)->name('report-approval');
+        Route::get('monev/recap', \App\Livewire\KepalaLppm\Monev\MonevRecap::class)->name('monev.recap');
+        Route::get('monev/dashboard', \App\Livewire\Rektor\MonevDashboard::class)->name('rektor.monev-dashboard');
     });
 
     // Admin LPPM Routes
     Route::prefix('admin-lppm')->name('admin-lppm.')->group(function () {
         // Reviewer Management
         Route::middleware(['permission:module_reviewer_management'])->group(function () {
-            Route::livewire('penugasan-reviewer', \App\Livewire\AdminLppm\ReviewerAssignment::class)->name('assign-reviewers');
-            Route::livewire('beban-kerja-reviewer', \App\Livewire\AdminLppm\ReviewerWorkload::class)->name('reviewer-workload');
-            Route::livewire('monitoring-review', \App\Livewire\AdminLppm\ReviewMonitoring::class)->name('review-monitoring');
+            Route::get('penugasan-reviewer', \App\Livewire\AdminLppm\ReviewerAssignment::class)->name('assign-reviewers');
+            Route::get('beban-kerja-reviewer', \App\Livewire\AdminLppm\ReviewerWorkload::class)->name('reviewer-workload');
+            Route::get('monitoring-review', \App\Livewire\AdminLppm\ReviewMonitoring::class)->name('review-monitoring');
         });
 
         // Monev
-        Route::livewire('monev', \App\Livewire\AdminLppm\Monev\MonevIndex::class)
+        Route::get('monev', \App\Livewire\AdminLppm\Monev\MonevIndex::class)
             ->middleware('permission:module_monev')
             ->name('monev.index');
         // route for global audit log access outside settings tab
-        Route::livewire('audit-log', \App\Livewire\Settings\AuditLog::class)
+        Route::get('audit-log', \App\Livewire\Settings\AuditLog::class)
             ->name('audit-log');
     });
 
-    Route::livewire('settings', SettingsIndex::class)
+    Route::get('settings', SettingsIndex::class)
         ->middleware(['auth', 'verified'])
         ->name('settings');
 
     // Archive Management
-    Route::livewire('admin/archives', \App\Livewire\Admin\Archive\ManageArchives::class)
+    Route::get('admin/archives', \App\Livewire\Admin\Archive\ManageArchives::class)
         ->middleware(['permission:module_arsip_data'])
         ->name('admin.archives');
 
     Route::redirect('settings/profile', '/settings')->name('settings.profile');
-    Route::livewire('settings/password', Password::class)->name('settings.password');
-    Route::livewire('settings/appearance', Appearance::class)
+    Route::get('settings/password', Password::class)->name('settings.password');
+    Route::get('settings/appearance', Appearance::class)
         ->middleware(['permission:module_pengaturan'])
         ->name('settings.appearance');
 
     Route::middleware(['role:admin lppm|superadmin'])->group(function () {
-        Route::livewire('settings/master-data', MasterData::class)->name('settings.master-data');
-        Route::livewire('settings/proposal-schedule', \App\Livewire\Settings\ProposalSchedule::class)->name('settings.proposal-schedule');
-        Route::livewire('settings/proposal-template', \App\Livewire\Settings\ProposalTemplate::class)->name('settings.proposal-template');
+        Route::get('settings/master-data', MasterData::class)->name('settings.master-data');
+        Route::get('settings/proposal-schedule', \App\Livewire\Settings\ProposalSchedule::class)->name('settings.proposal-schedule');
+        Route::get('settings/proposal-template', \App\Livewire\Settings\ProposalTemplate::class)->name('settings.proposal-template');
     });
 
-    Route::livewire('settings/two-factor', TwoFactor::class)
+    Route::get('settings/two-factor', TwoFactor::class)
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
@@ -209,7 +243,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('two-factor.show');
 
     // Notification Routes
-    Route::livewire('notifications', NotificationCenter::class)
+    Route::get('notifications', NotificationCenter::class)
         ->middleware(['auth', 'verified'])
         ->name('notifications');
 
@@ -256,7 +290,11 @@ Route::group(['middleware' => ['auth', 'verified', 'permission:module_laporan']]
 
     Route::get('/admin/dashboard/export-research', [\App\Http\Controllers\ReportExportController::class, 'dashboardResearchExport'])->name('admin.dashboard.export-research');
 
-    Route::get('/iku/verification', \App\Livewire\Iku\IkuVerification::class)->name('accreditation.verification');
+    Route::get('/monev/export-recap', [\App\Http\Controllers\ReportExportController::class, 'monevRecapExcel'])->name('export.monev.recap');
+
+    // IKU Exports
+    Route::get('/admin/iku/export-pdf', [\App\Http\Controllers\ReportExportController::class, 'ikuPdf'])->name('admin.iku.export-pdf');
+    Route::get('/admin/iku/export-excel', [\App\Http\Controllers\ReportExportController::class, 'ikuExcel'])->name('admin.iku.export-excel');
 });
 
 // Archive Export Routes - Should match archive module permission
@@ -265,11 +303,4 @@ Route::group(['middleware' => ['auth', 'verified', 'permission:module_arsip_data
     Route::get('/admin/archives/template', [\App\Http\Controllers\ReportExportController::class, 'archiveTemplate'])->name('admin.archives.template');
 });
 
-// IKU Dashboard and Exports
-Route::group(['middleware' => ['auth', 'verified', 'permission:module_iku']], function () {
-    Route::get('/iku', \App\Livewire\Iku\IkuDashboard::class)->name('accreditation.hub');
-    Route::get('/reports/iku', \App\Livewire\Reports\IkuReport::class)->name('reports.iku');
-
-    Route::get('/admin/iku/export-pdf', [\App\Http\Controllers\ReportExportController::class, 'ikuPdf'])->name('admin.iku.export-pdf');
-    Route::get('/admin/iku/export-excel', [\App\Http\Controllers\ReportExportController::class, 'ikuExcel'])->name('admin.iku.export-excel');
-});
+// IKU Dashboard removed from here - moved to shared role-based group above

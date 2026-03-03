@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $duration_in_years
  * @property int|null $start_year
  * @property string|null $summary
+ * @property string|null $asta_cita
  * @property \App\Enums\ProposalStatus $status
  * @property array|null $student_members
  * @property-read \App\Models\User $submitter
@@ -96,8 +97,11 @@ class Proposal extends Model
         'sbk_value',
         'duration_in_years',
         'start_year',
+        'semester',
         'summary',
+        'asta_cita',
         'status',
+        'logbook_signed_at',
         'student_members',
     ];
 
@@ -436,5 +440,29 @@ class Proposal extends Model
     public function canBeApproved(): bool
     {
         return $this->allReviewersCompleted();
+    }
+
+    /**
+     * Get all monev reviews (post-completion audits) for the proposal.
+     */
+    public function monevReviews(): HasMany
+    {
+        return $this->hasMany(MonevReview::class);
+    }
+
+    /**
+     * Scope for academic year.
+     */
+    public function scopeForAcademicYear($query, string $year)
+    {
+        return $query->where('start_year', $year);
+    }
+
+    /**
+     * Scope for semester.
+     */
+    public function scopeForSemester($query, string $semester)
+    {
+        return $query->where('semester', $semester);
     }
 }

@@ -24,7 +24,7 @@ class Research extends Component
 
     public function mount(): void
     {
-        if (! Auth::user()->hasRole('reviewer')) {
+        if (! Auth::user()->can('module_review')) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
     }

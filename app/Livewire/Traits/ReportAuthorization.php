@@ -14,8 +14,16 @@ trait ReportAuthorization
     {
         $user = Auth::user();
 
-        if ($user->hasAnyRole(['admin lppm', 'kepala lppm', 'rektor', 'dekan'])) {
+        if ($user->hasAnyRole(['admin lppm', 'kepala lppm', 'rektor'])) {
             return $query;
+        }
+
+        if ($user->hasRole('dekan')) {
+            $facultyId = $user->identity?->faculty_id;
+
+            return $query->whereHas('submitter.identity', function ($q) use ($facultyId) {
+                $q->where('faculty_id', $facultyId);
+            });
         }
 
         return $query->where(function ($q) use ($user) {

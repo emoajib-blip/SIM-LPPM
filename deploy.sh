@@ -39,7 +39,7 @@ SECRETS+=",INITIAL_ADMIN_PASSWORD=SIM_LPPM_INITIAL_ADMIN_PASSWORD:latest"
 # Variabel non-sensitif di Env Vars
 ENV_VARS="APP_DEBUG=false"
 ENV_VARS+=",APP_ENV=production"
-ENV_VARS+=",APP_URL=https://sim-lppm-969068032676.asia-southeast2.run.app"
+ENV_VARS+=",APP_URL=https://sosiomen.web.id"
 ENV_VARS+=",DB_CONNECTION=mysql"
 ENV_VARS+=",DB_SOCKET=/cloudsql/$CLOUDSQL_CONN"
 ENV_VARS+=",DB_DATABASE=sim_lppm"

@@ -88,7 +88,11 @@ class SubmitProposalAction
     protected function sendNotifications(Proposal $proposal): void
     {
         // Get recipients: Dekan, Team Members
-        $dekan = User::role('dekan')->first();
+        $faculty = $proposal->submitter->identity?->faculty;
+        $dekan = $faculty->deanUser ?? User::role('dekan')->whereHas('identity', function ($query) use ($faculty) {
+            $query->where('faculty_id', $faculty?->id);
+        })->first();
+
         $teamMembers = $proposal->teamMembers()->where('user_id', '!=', $proposal->submitter_id)->get();
 
         $recipients = collect()

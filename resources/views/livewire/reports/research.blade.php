@@ -5,37 +5,139 @@
 
     <x-slot:pageActions>
         <div class="btn-list">
-            <div class="dropdown">
-                <button class="btn btn-white dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="ti ti-calendar-event me-2 text-primary"></i>
-                    {{ __('Periode') }}: <span class="fw-bold ms-1">{{ $period }}</span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
-                    <li class="dropdown-header">{{ __('Pilih Tahun Anggaran') }}</li>
-                    @foreach ($periods as $availablePeriod)
-                        <li>
-                            <button type="button"
-                                class="dropdown-item d-flex justify-content-between align-items-center {{ $period === $availablePeriod ? 'active' : '' }}"
-                                onclick="Livewire.dispatch('set-period', { period: '{{ $availablePeriod }}' })">
-                                {{ $availablePeriod }}
-                                @if($period === $availablePeriod) <i class="ti ti-check ms-2"></i> @endif
-                            </button>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-            <div class="hr-vertical mx-1 d-none d-md-block"></div>
-            <a href="{{ route('reports.research.excel', ['period' => $period]) }}" class="btn btn-outline-success shadow-sm" data-navigate-ignore="true">
+            @php
+                $exportParams = ['period' => $period, 'search' => $search, 'scheme' => $selectedScheme, 'faculty' => $selectedFaculty];
+            @endphp
+            <a href="{{ route('reports.research.excel', $exportParams) }}" class="btn btn-outline-success shadow-sm"
+                data-navigate-ignore="true">
                 <i class="ti ti-table me-2"></i>
                 <span>{{ __('Unduh Excel') }}</span>
             </a>
-            <a href="{{ route('reports.research.pdf', ['period' => $period]) }}" class="btn btn-outline-danger shadow-sm" data-navigate-ignore="true">
+            <a href="{{ route('reports.research.pdf', $exportParams) }}" class="btn btn-outline-danger shadow-sm"
+                data-navigate-ignore="true">
                 <i class="ti ti-file-type-pdf me-2"></i>
                 <span>{{ __('Unduh PDF') }}</span>
             </a>
         </div>
     </x-slot:pageActions>
+
+    <div class="container-xl mt-3">
+        <!-- Filter Bar (Support System) -->
+        <div class="card mb-3 shadow-sm border-0 glass-card">
+            <div class="card-body p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-4">
+                        <div class="input-icon">
+                            <span class="input-icon-addon">
+                                <i class="ti ti-search text-primary"></i>
+                            </span>
+                            <input type="text" wire:model.live.debounce.500ms="search" class="form-control"
+                                placeholder="Cari judul atau nama pengusul...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select wire:model.live="selectedScheme" class="form-select">
+                            <option value="all">Semua Skema</option>
+                            @foreach($allSchemes as $scheme)
+                                <option value="{{ $scheme->id }}">{{ $scheme->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select wire:model.live="selectedFaculty" class="form-select" @if(active_role() === 'dekan')
+                        disabled @endif>
+                            @if(active_role() !== 'dekan')
+                                <option value="all">Semua Fakultas</option>
+                            @endif
+                            @foreach($allFaculties as $faculty)
+                                <option value="{{ $faculty->id }}">{{ $faculty->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select wire:model.live="period" class="form-select">
+                            @foreach($periods as $p)
+                                <option value="{{ $p }}">Periode {{ $p }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        <button class="btn btn-icon btn-white" wire:click="resetFilters" title="Reset Filter">
+                            <i class="ti ti-refresh text-secondary"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if(active_role() === 'kepala lppm' || active_role() === 'rektor')
+            <div class="card mb-3 border-primary shadow-sm glass-card">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center mb-1">
+                            <h3 class="card-title h3 mb-0 me-2 text-primary">Validasi Dokumen Institusi (Penelitian)</h3>
+                            @if($institutionalReport)
+                                <span class="badge bg-{{ $institutionalReport->status->color() }}-lt">
+                                    {{ $institutionalReport->status->label() }}
+                                </span>
+                            @else
+                                <span class="badge bg-secondary-lt">Belum Diajukan</span>
+                            @endif
+                        </div>
+                        <p class="text-secondary mb-0 small">
+                            @if(!$institutionalReport || $institutionalReport->status === \App\Enums\InstitutionalReportStatus::DRAFT)
+                                Rekapitulasi penelitian periode {{ $period }} belum diajukan ke Rektor.
+                            @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::SUBMITTED)
+                                Menunggu persetujuan dan tanda tangan digital Rektor.
+                            @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
+                                Telah disahkan Rektor pada {{ $institutionalReport->approved_at->format('d M Y H:i') }}.
+                            @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::REJECTED)
+                                Perbaikan: <strong>{{ $institutionalReport->notes }}</strong>
+                            @endif
+                        </p>
+                    </div>
+                    <div class="btn-list">
+                        @php
+                            $currentFilters = [
+                                'search' => $search,
+                                'period' => $period,
+                                'scheme' => $selectedScheme,
+                                'faculty' => $selectedFaculty
+                            ];
+                        @endphp
+
+                        <!-- Draft Preview Icon (Support System) -->
+                        <a href="{{ route('reports.research.pdf', array_merge($currentFilters, ['preview' => 1])) }}"
+                            target="_blank" class="btn btn-icon btn-outline-primary" title="Tinjau Draft PDF">
+                            <i class="ti ti-eye"></i>
+                        </a>
+
+                        @if(active_role() === 'kepala lppm' && (!$institutionalReport || in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::DRAFT, \App\Enums\InstitutionalReportStatus::REJECTED])))
+                            <button class="btn btn-primary"
+                                wire:click="submitInstitutionalReport('research', {{ $period }}, {{ json_encode($currentFilters) }})"
+                                wire:loading.attr="disabled">
+                                <i class="ti ti-send me-2"></i>
+                                Ajukan ke Rektor
+                            </button>
+                        @endif
+
+                        @if(active_role() === 'rektor' && ($institutionalReport?->status === \App\Enums\InstitutionalReportStatus::SUBMITTED))
+                            <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#modal-reject-institutional">
+                                <i class="ti ti-x me-2"></i>
+                                Minta Perbaikan
+                            </button>
+                            <button class="btn btn-success" wire:click="approveInstitutionalReport('research', {{ $period }})"
+                                wire:loading.attr="disabled">
+                                <i class="ti ti-circle-check me-2"></i>
+                                Setujui & Tanda Tangani
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+    <!-- End of first section, content continues as child of root div -->
 
     <!-- KPI Cards with Visual Enhancements -->
     <div class="mb-4 row row-deck">
@@ -167,7 +269,8 @@
                                 <tr>
                                     <td>
                                         <div class="fw-semibold text-truncate" style="max-width: 180px;">
-                                            {{ $faculty['name'] }}</div>
+                                            {{ $faculty['name'] }}
+                                        </div>
                                     </td>
                                     <td class="text-center">
                                         <span class="badge bg-green-lt">{{ $faculty['count'] }}</span>
@@ -266,16 +369,18 @@
                                                     </div>
                                                     <div class="text-muted small">
                                                         {{ $research->submitter->name }}
-                                                        ({{ $research->submitter->identity->nidn ?? '-' }})
+                                                        ({{ $research->submitter->identity?->nidn ?? '-' }})
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="small fw-bold">
-                                                {{ $research->submitter->identity->faculty->name ?? '-' }}</div>
+                                                {{ $research->submitter->identity?->faculty->name ?? '-' }}
+                                            </div>
                                             <div class="small text-muted">
-                                                {{ $research->submitter->identity->studyProgram->name ?? '-' }}</div>
+                                                {{ $research->submitter->identity?->studyProgram->name ?? '-' }}
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="text-muted small mb-1">
@@ -287,7 +392,12 @@
                                         </td>
                                         <td class="text-end">
                                             <div class="fw-bold">
-                                                {{ number_format($research->sbk_value, 0, ',', '.') }}
+                                                @php
+                                                    $dana = ($research->sbk_value && $research->sbk_value > 0)
+                                                        ? $research->sbk_value
+                                                        : ($research->budgetItems->sum('total_price') ?? 0);
+                                                @endphp
+                                                {{ number_format($dana, 0, ',', '.') }}
                                             </div>
                                         </td>
                                         <td>
@@ -318,3 +428,33 @@
         </div>
 
     </div>
+    @if(active_role() === 'rektor')
+        <div class="modal modal-blur fade" id="modal-reject-institutional" tabindex="-1" role="dialog" aria-hidden="true"
+            wire:ignore.self>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Alasan Penolakan / Permintaan Perbaikan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label class="form-label">Catatan untuk Kepala LPPM</label>
+                            <textarea class="form-control" wire:model="approvalNotes" rows="3"
+                                placeholder="Masukkan alasan atau instruksi perbaikan..."></textarea>
+                            @error('approvalNotes') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary me-auto"
+                            data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger"
+                            wire:click="rejectInstitutionalReport('research', '{{ $period }}')">
+                            Simpan & Tolak
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>

@@ -15,6 +15,8 @@ class IkuDashboard extends Component
 
     public string $period;
 
+    public ?string $selectedIku = null;
+
     public function exportPdf(): void
     {
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
@@ -55,6 +57,24 @@ class IkuDashboard extends Component
     public function ikuMetrics(): array
     {
         return $this->getIkuMetrics($this->period);
+    }
+
+    /**
+     * Get details for the selected IKU.
+     */
+    #[Computed]
+    public function selectedMetricDetails(): array
+    {
+        if (! $this->selectedIku) {
+            return [];
+        }
+
+        return $this->getIkuDetails($this->selectedIku, $this->period);
+    }
+
+    public function selectIku(?string $ikuCode)
+    {
+        $this->selectedIku = $ikuCode;
     }
 
     public function setPeriod(string $period)

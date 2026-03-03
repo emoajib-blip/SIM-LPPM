@@ -74,7 +74,11 @@ class CommunityService extends Model implements HasMedia
     {
         $this->addMediaCollection('substance_file')
             ->singleFile()
-            ->acceptsMimeTypes(['application/pdf']);
+            ->acceptsMimeTypes([
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            ]);
 
         $this->addMediaCollection('approval_file')
             ->singleFile()

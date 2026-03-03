@@ -45,72 +45,66 @@
 
     <!-- Executive KPI Cards -->
     <div class="row row-deck row-cards mb-4">
-        <div class="col-sm-6 col-lg-3">
+        <div class="col-sm-6 col-md-3">
             <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <div class="subheader text-primary fw-bold">Total Penelitian</div>
-                        <div class="ms-auto text-primary bg-primary-lt rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <div class="ms-auto text-primary bg-primary-lt rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px;">
                             <i class="ti ti-microscope fs-3"></i>
                         </div>
                     </div>
                     <div class="h1 mb-1 fw-bold text-primary">{{ $stats['total_research'] ?? 0 }}</div>
-                    <div class="text-muted small">Proposal terdaftar periode ini</div>
+                    <div class="text-muted small">Proposal terdaftar</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-lg-3">
+        <div class="col-sm-6 col-md-3">
             <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <div class="subheader text-azure fw-bold">Total PKM</div>
-                        <div class="ms-auto text-azure bg-azure-lt rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <div class="ms-auto text-azure bg-azure-lt rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px;">
                             <i class="ti ti-users-group fs-3"></i>
                         </div>
                     </div>
                     <div class="h1 mb-1 fw-bold text-azure">{{ $stats['total_community_service'] ?? 0 }}</div>
-                    <div class="text-muted small">Proposal pengabdian terdaftar</div>
+                    <div class="text-muted small">Proposal pengabdian</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-lg-3">
+        <div class="col-sm-6 col-md-3">
             <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="subheader text-green fw-bold">Penelitian Disetujui</div>
-                        <div class="ms-auto">
-                            @php
-                                $presPrc = ($stats['total_research'] ?? 0) > 0 ? round(($stats['research_approved'] / $stats['total_research']) * 100, 1) : 0;
-                            @endphp
-                            <span class="badge bg-green-lt">{{ $presPrc }}%</span>
+                        <div class="subheader text-orange fw-bold">Persetujuan Lap. Akhir</div>
+                        <div class="ms-auto text-orange bg-orange-lt rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px;">
+                            <i class="ti ti-clipboard-check fs-3"></i>
                         </div>
                     </div>
-                    <div class="h1 mb-3 fw-bold text-green">{{ $stats['research_approved'] ?? 0 }}</div>
-                    <div class="progress progress-sm card-progress mt-auto">
-                        <div class="progress-bar bg-green" style="width: {{ $presPrc }}%"></div>
-                    </div>
+                    <div class="h1 mb-1 fw-bold text-orange">{{ $stats['final_report_pending'] ?? 0 }}</div>
+                    <div class="text-muted small">Laporan menunggu tinjauan</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-lg-3">
+        <div class="col-sm-6 col-md-3">
             <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="subheader text-purple fw-bold">PKM Disetujui</div>
-                        <div class="ms-auto">
-                            @php
-                                $pkmPrc = ($stats['total_community_service'] ?? 0) > 0 ? round(($stats['community_service_approved'] / $stats['total_community_service']) * 100, 1) : 0;
-                            @endphp
-                            <span class="badge bg-purple-lt">{{ $pkmPrc }}%</span>
+                        <div class="subheader text-purple fw-bold">Total Luaran</div>
+                        <div class="ms-auto text-purple bg-purple-lt rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px;">
+                            <i class="ti ti-award fs-3"></i>
                         </div>
                     </div>
-                    <div class="h1 mb-3 fw-bold text-purple">{{ $stats['community_service_approved'] ?? 0 }}</div>
-                    <div class="progress progress-sm card-progress mt-auto">
-                        <div class="progress-bar bg-purple" style="width: {{ $pkmPrc }}%"></div>
-                    </div>
+                    <div class="h1 mb-1 fw-bold text-purple">{{ $stats['total_outputs'] ?? 0 }}</div>
+                    <div class="text-muted small">Capaian luaran terarsip</div>
                 </div>
             </div>
         </div>

@@ -119,6 +119,32 @@
         .bg-primary {
             background-color: #007bff;
         }
+
+        .digital-signature {
+            border: 1px solid #1a56db;
+            padding: 5px;
+            display: inline-block;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #1a56db;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            width: 80px;
+        }
+
+        .digital-signature img {
+            width: 70px;
+            height: 70px;
+        }
+
+        .signature-label {
+            display: block;
+            font-size: 7px;
+            margin-top: 2px;
+            color: #1a56db;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -182,14 +208,34 @@
                 <td>
                     Pekalongan, {{ now()->translatedFormat('d F Y') }}<br>
                     Mengetahui,<br>
-                    <strong>Rektor</strong><br><br><br><br><br>
+                    <strong>Rektor</strong><br><br>
+                    @if($institutionalReport && $institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
+                        <div class="digital-signature">
+                            <img src="{{ generate_qr_code_data_uri(route('reports.iku', ['period' => $period, 'ref' => substr($institutionalReport->id, 0, 8)])) }}"
+                                alt="QR Code">
+                            <span class="signature-label">DIGITALLY SIGNED</span>
+                        </div>
+                    @else
+                        <br><br><br><br><br>
+                    @endif
+                    <br>
                     <u><strong>{{ format_name($rektor?->identity?->title_prefix, $rektor?->name ?? 'Drs. H. Ali Imron', $rektor?->identity?->title_suffix) }}</strong></u><br>
                     NPP. {{ $rektor?->identity?->identity_id ?? '-' }}
                 </td>
                 <td>
                     <br>
                     Hormat Kami,<br>
-                    <strong>Kepala LPPM</strong><br><br><br><br><br>
+                    <strong>Kepala LPPM</strong><br><br>
+                    @if($institutionalReport && in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::SUBMITTED, \App\Enums\InstitutionalReportStatus::APPROVED]))
+                        <div class="digital-signature" style="border-color: #059669; color: #059669;">
+                            <img src="{{ generate_qr_code_data_uri(route('reports.iku', ['period' => $period, 'ref' => substr($institutionalReport->id, 0, 8)])) }}"
+                                alt="QR Code">
+                            <span class="signature-label" style="color: #059669;">VERIFIED BY LPPM</span>
+                        </div>
+                    @else
+                        <br><br><br><br><br>
+                    @endif
+                    <br>
                     <u><strong>{{ format_name($lppmHead?->identity?->title_prefix, $lppmHead?->name ?? 'Kepala LPPM', $lppmHead?->identity?->title_suffix) }}</strong></u><br>
                     NPP. {{ $lppmHead?->identity?->identity_id ?? '-' }}
                 </td>

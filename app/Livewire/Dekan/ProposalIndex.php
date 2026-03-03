@@ -61,7 +61,9 @@ class ProposalIndex extends Component
     {
         $facultyId = $this->dekanFacultyId;
 
-        if ($facultyId) {
+        if (! $facultyId) {
+            $query->whereRaw('1 = 0');
+        } else {
             $query->whereHas('submitter.identity', function ($q) use ($facultyId) {
                 $q->where('faculty_id', $facultyId);
             });

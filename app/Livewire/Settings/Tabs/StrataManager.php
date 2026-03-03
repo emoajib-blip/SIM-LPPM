@@ -12,11 +12,6 @@ class StrataManager extends Component
 {
     use HasToast, WithPagination;
 
-    public function mount(): void
-    {
-        app(\App\Actions\Scheme\AuthorizeAdminAccessAction::class)->execute();
-    }
-
     #[Validate('required|min:2|max:255')]
     public string $name = '';
 

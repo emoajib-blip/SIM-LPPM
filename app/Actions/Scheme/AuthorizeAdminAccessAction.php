@@ -12,7 +12,7 @@ class AuthorizeAdminAccessAction
      *
      * @throws AuthorizationException
      */
-    public function execute(string $permission = 'manage-master-data'): void
+    public function execute(string $permission = 'module_pengaturan'): void
     {
         $user = Auth::user();
 
@@ -29,7 +29,7 @@ class AuthorizeAdminAccessAction
         // In the spec: "tidak hanya mengecek Role ID, tetapi juga memverifikasi izin spesifik... dan konteks"
         $activeRole = session('active_role');
 
-        $allowedRoles = ['admin lppm', 'kepala lppm'];
+        $allowedRoles = ['admin lppm', 'kepala lppm', 'superadmin'];
 
         if (! in_array($activeRole, $allowedRoles)) {
             throw new AuthorizationException("Akses ditolak: Peran aktif Anda ($activeRole) tidak berwenang mengelola data ini.");

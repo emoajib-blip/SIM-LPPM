@@ -119,6 +119,7 @@ class Identity extends Model
         'garuda_cited_documents',
         // Status
         'is_active',
+        'is_external',
     ];
 
     /**
@@ -158,6 +159,7 @@ class Identity extends Model
             'garuda_documents' => 'integer',
             'garuda_citations' => 'integer',
             'garuda_cited_documents' => 'integer',
+            'is_external' => 'boolean',
         ];
     }
 

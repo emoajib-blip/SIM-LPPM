@@ -5,7 +5,8 @@
 <div>
     <x-tabler.alert />
 
-    <div class="alert alert-info alert-dismissible fade show border-0 shadow-sm collapse" id="finalDecisionInfo" role="alert">
+    <div class="alert alert-info alert-dismissible fade show border-0 shadow-sm collapse" id="finalDecisionInfo"
+        role="alert">
         <div class="d-flex">
             <div>
                 <x-lucide-info class="alert-icon icon me-2" />
@@ -13,17 +14,20 @@
             <div>
                 <h4 class="alert-title">Panduan Keputusan Final</h4>
                 <div class="text-secondary">
-                    Halaman ini menampilkan usulan yang telah selesai dinilai oleh seluruh reviewer. 
-                    Anda dapat melihat ringkasan rekomendasi reviewer sebelum memberikan keputusan akhir (Diterima / Perlu Revisi / Ditolak). 
+                    Halaman ini menampilkan usulan yang telah selesai dinilai oleh seluruh reviewer.
+                    Anda dapat melihat ringkasan rekomendasi reviewer sebelum memberikan keputusan akhir (Diterima /
+                    Perlu Revisi / Ditolak).
                     Keputusan <strong>Diterima</strong> akan menandai proposal sebagai usulan yang didanai/selesai.
                 </div>
             </div>
         </div>
-        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#finalDecisionInfo" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#finalDecisionInfo"
+            aria-label="Close"></button>
     </div>
 
     <div class="mb-3">
-        <button class="btn btn-ghost-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#finalDecisionInfo" aria-expanded="false" aria-controls="finalDecisionInfo">
+        <button class="btn btn-ghost-info btn-sm" type="button" data-bs-toggle="collapse"
+            data-bs-target="#finalDecisionInfo" aria-expanded="false" aria-controls="finalDecisionInfo">
             <x-lucide-info class="icon me-1" />
             Informasi Pengambilan Keputusan
         </button>
@@ -171,7 +175,7 @@
                             </td>
                             <td>
                                 <div>{{ $proposal->submitter?->name }}</div>
-                                <small class="text-secondary">{{ $proposal->submitter?->identity->identity_id }}</small>
+                                <small class="text-secondary">{{ $proposal->submitter?->identity?->identity_id }}</small>
                             </td>
                             <td>
                                 @foreach ($proposal->reviewers as $reviewer)

@@ -6,7 +6,7 @@
             @foreach ($logs as $log)
                 <div class="timeline-item">
                     <div class="timeline-badge bg-info">
-                        <x-lucide-refresh-cw class="icon-inline" style="width: 12px; height: 12px;"/>
+                        <x-lucide-refresh-cw class="icon-inline" style="width: 12px; height: 12px;" />
                     </div>
                     <div class="timeline-content">
                         <div class="d-flex align-items-start justify-content-between mb-2">

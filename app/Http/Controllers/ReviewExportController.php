@@ -33,6 +33,7 @@ class ReviewExportController extends Controller
             'submitter.identity.faculty',
             'submitter.identity.studyProgram',
             'teamMembers',
+            'budgetItems',
         ]);
 
         $proposalReviewer->load('user.identity');
@@ -54,7 +55,8 @@ class ReviewExportController extends Controller
             'type' => $type,
         ]);
 
-        $filename = 'Penilaian_Reviewer_'.str_replace(' ', '_', substr($proposal->title, 0, 30)).'.pdf';
+        $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 30));
+        $filename = 'Penilaian_Reviewer_'.$title.'.pdf';
 
         if (ob_get_level()) {
 

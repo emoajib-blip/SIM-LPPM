@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="text-muted small">
                                     {{-- identity_id --}}
-                                    {{ $member->identity->identity_id }}
+                                    {{ $member->identity?->identity_id ?? '-' }}
                                 </div>
                             </td>
                             <td>{{ $member->pivot->tasks ?? '—' }}</td>

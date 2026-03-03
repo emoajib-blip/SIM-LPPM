@@ -295,8 +295,8 @@
             @foreach($mahasiswaRelation as $member)
                 <tr>
                     <td>{{ strtoupper($member->name) }}</td>
-                    <td>{{ $member->identity->identity_id ?? '-' }}</td>
-                    <td>{{ $member->identity->studyProgram->name ?? '-' }}</td>
+                    <td>{{ $member->identity?->identity_id ?? '-' }}</td>
+                    <td>{{ $member->identity?->studyProgram?->name ?? '-' }}</td>
                     <td>{{ $member->pivot->tasks ?? '-' }}</td>
                 </tr>
             @endforeach
@@ -352,9 +352,13 @@
     @endif
 
     {{-- SDGs (Skip if empty) --}}
-    @if(isset($proposal->sdgs) && $proposal->sdgs)
-    <div class="section-title">{{ $sectionNum++ }}. (SDGs)</div>
-    <div style="margin-left: 20px; text-align: justify;">{{ $proposal->sdgs }}</div>
+    @if(isset($proposal->sdgs) && $proposal->sdgs->count() > 0)
+    <div class="section-title">{{ $sectionNum++ }}. Sustainable Development Goals (SDGs)</div>
+    <div style="margin-left: 20px; text-align: justify;">
+        @foreach($proposal->sdgs as $sdg)
+            <div>{{ trim($sdg->name) }} : {{ $sdg->description }}</div>
+        @endforeach
+    </div>
     @endif
 
     {{-- IKU (Skip if empty) --}}
@@ -396,21 +400,28 @@
         if ($proposal->detailable?->hasMedia('substance_file')) {
             $supportingDocs[] = ['name' => 'Substansi Usulan', 'file' => $proposal->detailable->getFirstMedia('substance_file')];
         }
+        
+        // Add physical approval file if applicable
+        if (in_array($proposal_approval_mode, ['upload', 'both']) && $proposal->detailable?->hasMedia('approval_file')) {
+            $supportingDocs[] = ['name' => 'Lembar Pengesahan (Tanda Tangan Basah)', 'file' => $proposal->detailable->getFirstMedia('approval_file')];
+        }
     @endphp
     @if(count($supportingDocs) > 0)
-    <div class="section-title">{{ $sectionNum++ }}. Dokumen Pendukung</div>
+    <div class="section-title">{{ $sectionNum++ }}. Dokumen Pendukung (Terlampir)</div>
     <table>
         <thead>
             <tr>
-                <th>Nama Data Pendukung</th>
-                <th>File</th>
+                <th width="5%">No</th>
+                <th width="75%">Nama Data Pendukung</th>
+                <th width="20%">Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($supportingDocs as $doc)
+            @foreach($supportingDocs as $index => $doc)
             <tr>
+                <td class="text-center">{{ $index + 1 }}</td>
                 <td>{{ $doc['name'] }}</td>
-                <td>Terlampir</td>
+                <td class="text-center">Terlampir</td>
             </tr>
             @endforeach
         </tbody>
@@ -422,26 +433,34 @@
         $otherDocs = [];
         foreach($proposal->partners as $partner) {
             if ($partner->hasMedia('commitment_letter')) {
-                $otherDocs[] = ['name' => 'Surat Pernyataan Kerjasama Mitra - ' . $partner->name, 'file' => $partner->getFirstMedia('commitment_letter')];
+                // Find media for THIS specific proposal
+                $media = $partner->getMedia('commitment_letter')
+                    ->where('custom_properties.proposal_id', $proposal->id)
+                    ->first();
+                if ($media) {
+                    $otherDocs[] = ['name' => 'Surat Pernyataan Kerjasama Mitra - ' . $partner->name, 'file' => $media];
+                }
             }
         }
     @endphp
     @if(count($otherDocs) > 0)
-    <div class="section-title">{{ $sectionNum++ }}. Dokumen Pendukung Lainnya</div>
+    <div class="section-title">{{ $sectionNum++ }}. Dokumen Pendukung Lainnya (Terlampir)</div>
     <table>
         <thead>
             <tr>
-                <th>Kategori</th>
-                <th>Nama Mitra</th>
-                <th>File</th>
+                <th width="5%">No</th>
+                <th width="35%">Kategori</th>
+                <th width="40%">Nama Mitra</th>
+                <th width="20%">Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($otherDocs as $doc)
+            @foreach($otherDocs as $index => $doc)
             <tr>
+                <td class="text-center">{{ $index + 1 }}</td>
                 <td>Surat Pernyataan Kerjasama</td>
                 <td>{{ str_replace('Surat Pernyataan Kerjasama Mitra - ', '', $doc['name']) }}</td>
-                <td>Terlampir</td>
+                <td class="text-center">Terlampir</td>
             </tr>
             @endforeach
         </tbody>
@@ -521,17 +540,17 @@
         <tr>
             <td></td>
             <td style="padding-left: 20px;">b. NIDN/ NIDK</td>
-            <td>{{ $proposal->submitter->identity->identity_id ?? '-' }}</td>
+            <td>{{ $proposal->submitter->identity?->identity_id ?? '-' }}</td>
         </tr>
         <tr>
             <td></td>
             <td style="padding-left: 20px;">c. Jabatan Fungsional</td>
-            <td>{{ $proposal->submitter->identity->functional_position ?? '-' }}</td>
+            <td>{{ $proposal->submitter->identity?->functional_position ?? '-' }}</td>
         </tr>
         <tr>
             <td></td>
             <td style="padding-left: 20px;">d. Program Studi</td>
-            <td>{{ $proposal->submitter->identity->studyProgram->name ?? '-' }}</td>
+            <td>{{ $proposal->submitter->identity?->studyProgram?->name ?? '-' }}</td>
         </tr>
         <tr>
             <td></td>
@@ -558,17 +577,17 @@
         <tr>
             <td></td>
             <td style="padding-left: 20px;">a. Nama Lengkap</td>
-            <td>{{ format_name($member->identity->title_prefix ?? '', $member->name, $member->identity->title_suffix ?? '') }}</td>
+            <td>{{ format_name($member->identity?->title_prefix ?? '', $member->name, $member->identity?->title_suffix ?? '') }}</td>
         </tr>
         <tr>
             <td></td>
             <td style="padding-left: 20px;">b. NIDN/ NIDK</td>
-            <td>{{ $member->identity->identity_id ?? '-' }}</td>
+            <td>{{ $member->identity?->identity_id ?? '-' }}</td>
         </tr>
         <tr>
             <td></td>
             <td style="padding-left: 20px;">c. Perguruan Tinggi</td>
-            <td>{{ $member->identity->institution->name ?? 'ITSNU Pekalongan' }}</td>
+            <td>{{ $member->identity?->institution?->name ?? 'ITSNU Pekalongan' }}</td>
         </tr>
         @endforeach
 
@@ -607,7 +626,7 @@
                 @if($studentMembers->count() > 0)
                     <ol style="margin: 0; padding-left: 15px;">
                     @foreach($studentMembers as $student)
-                        <li>{{ $student->name }} ({{ $student->identity->identity_id ?? '-' }})</li>
+                        <li>{{ $student->name }} ({{ $student->identity?->identity_id ?? '-' }})</li>
                     @endforeach
                     </ol>
                 @else
@@ -647,7 +666,7 @@
         <tr>
             <td class="text-center">
                 Mengetahui,<br>
-                Dekan Fakultas {{ $proposal->submitter->identity->faculty->name ?? '.......................' }}
+                Dekan Fakultas {{ $proposal->submitter->identity?->faculty?->name ?? '.......................' }}
             </td>
             <td class="text-center">
                 Ketua {{ $proposal->detailable_type === 'App\Models\Research' ? 'Peneliti' : 'Pelaksana' }}
@@ -673,7 +692,7 @@
                 </div>
                 <div style="font-size: 8pt; margin-bottom: 5px;">Diajukan pada: {{ \Carbon\Carbon::parse($lecturer_signed_at)->format('d-m-Y H:i') }}</div>
                 <strong><u>{{ $submitterFullName }}</u></strong><br>
-                NIDN. {{ $proposal->submitter->identity->identity_id ?? '-' }}
+                NIDN. {{ $proposal->submitter->identity?->identity_id ?? '-' }}
             </td>
         </tr>
 

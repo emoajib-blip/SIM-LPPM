@@ -34,5 +34,17 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prepend(\App\Http\Middleware\InstallerMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->renderable(function (\Throwable $e, \Illuminate\Http\Request $request) {
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpException && $e->getStatusCode() === 403) {
+                \Illuminate\Support\Facades\Log::error('403 Forbidden Triggered', [
+                    'url' => $request->fullUrl(),
+                    'user_id' => auth()->id(),
+                    'active_role' => session('active_role'),
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => collect($e->getTrace())->take(10)->toArray(),
+                ]);
+            }
+        });
     })->create();

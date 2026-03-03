@@ -23,9 +23,17 @@ class MonevIndex extends Component
     #[Url]
     public string $typeFilter = 'all';
 
+    #[Url]
+    public string $academicYear = '';
+
+    #[Url]
+    public string $semester = 'all';
+
     public $selectedProposal;
 
     public $selectedMonev;
+
+    public $reviewer_id;
 
     public $monev_date;
 
@@ -48,9 +56,32 @@ class MonevIndex extends Component
         if (! Auth::user()->hasRole('admin lppm')) {
             abort(403);
         }
+
+        $this->academicYear = $this->academicYear ?: date('Y');
     }
 
-    public function selectProposal($id)
+    public function assignReviewer()
+    {
+        $this->validate([
+            'reviewer_id' => 'required|exists:users,id',
+        ]);
+
+        \App\Models\MonevReview::updateOrCreate(
+            [
+                'proposal_id' => $this->selectedProposal->id,
+                'academic_year' => $this->selectedProposal->start_year,
+                'semester' => $this->selectedProposal->semester ?? 'ganjil',
+            ],
+            [
+                'reviewer_id' => $this->reviewer_id,
+            ]
+        );
+
+        $this->toastSuccess('Reviewer berhasil ditugaskan.');
+        $this->showListModal = false;
+    }
+
+    public function selectProposal(string $id)
     {
         $this->selectedProposal = Proposal::with('monevs')->findOrFail($id);
         $this->showListModal = true;
@@ -64,7 +95,7 @@ class MonevIndex extends Component
         $this->showFormModal = true;
     }
 
-    public function editMonev($id)
+    public function editMonev(string $id)
     {
         $this->selectedMonev = ProposalMonev::findOrFail($id);
         $this->monev_date = $this->selectedMonev->monev_date->format('Y-m-d');
@@ -106,7 +137,7 @@ class MonevIndex extends Component
         ]);
 
         $monev = $this->selectedMonev ?? new ProposalMonev(['proposal_id' => $this->selectedProposal->id]);
-        $monev->monev_date = $this->monev_date;
+        $monev->monev_date = \Carbon\Carbon::parse($this->monev_date);
         $monev->progress_percentage = $this->progress_percentage;
         $monev->notes = $this->notes;
         $monev->save();
@@ -137,7 +168,7 @@ class MonevIndex extends Component
         $this->reset(['showFormModal', 'berita_acara', 'borang', 'rekap_penilaian']);
     }
 
-    public function deleteMonev($id)
+    public function deleteMonev(string $id)
     {
         $monev = ProposalMonev::findOrFail($id);
         $monev->delete();
@@ -173,16 +204,34 @@ class MonevIndex extends Component
     }
 
     #[Computed]
+    public function reviewers()
+    {
+        return \App\Models\User::role('reviewer')->with('identity')->get();
+    }
+
+    #[Computed]
+    public function academicYears()
+    {
+        return Proposal::distinct()->pluck('start_year')->filter()->sortDesc();
+    }
+
+    #[Computed]
     public function proposals()
     {
         return Proposal::query()
             ->where('status', \App\Enums\ProposalStatus::COMPLETED)
-            ->with(['submitter', 'detailable', 'monevs'])
+            ->with(['submitter', 'detailable', 'monevReviews.reviewer'])
             ->when($this->search, function ($query) {
                 $query->where('title', 'like', "%{$this->search}%")
                     ->orWhereHas('submitter', function ($q) {
                         $q->where('name', 'like', "%{$this->search}%");
                     });
+            })
+            ->when($this->academicYear, function ($query) {
+                $query->where('start_year', $this->academicYear);
+            })
+            ->when($this->semester !== 'all', function ($query) {
+                $query->where('semester', $this->semester);
             })
             ->when($this->typeFilter !== 'all', function ($query) {
                 $detailableType = $this->typeFilter === 'research'

@@ -37,7 +37,8 @@ class TwoFactorChallengeController extends Controller
         $userId = $request->session()->get('login.id');
         $remember = $request->session()->get('login.remember', false);
 
-        $user = (new \App\Models\User)->find($userId);
+        // Prevent array injection vulnerability returning a Collection
+        $user = \App\Models\User::where('id', $userId)->first();
 
         if (! $user) {
             RateLimiter::hit($this->throttleKey());

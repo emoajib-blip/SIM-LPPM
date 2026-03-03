@@ -46,6 +46,14 @@ trait WithApproval
 
             if ($newStatus === ProposalStatus::UNDER_REVIEW) {
                 $dekan = $proposal->submitter->identity->faculty->deanUser;
+                // Notify Submitter
+                $this->notificationService()->notifyDekanApprovalDecision(
+                    $proposal,
+                    'approved',
+                    $dekan,
+                    [$proposal->submitter]
+                );
+
                 if ($dekan) {
                     $this->notificationService()->notifyDekanApprovalDecision(
                         $proposal,
@@ -96,15 +104,34 @@ trait WithApproval
             $proposal->notes = $this->approvalNotes;
             $proposal->update(['status' => $newStatus->value]);
 
-            $kepalaLppmUsers = $this->notificationService()
-                ->getUsersByRole('kepala lppm');
-
-            foreach ($kepalaLppmUsers as $kepalaLppm) {
+            if ($newStatus === ProposalStatus::APPROVED) {
+                // Notify Submitter (Dosen) about Dean's approval
                 $this->notificationService()->notifyDekanApprovalDecision(
                     $proposal,
                     $this->approvalDecision,
-                    $kepalaLppm,
-                    [$kepalaLppm]
+                    \Illuminate\Support\Facades\Auth::user(),
+                    [$proposal->submitter]
+                );
+
+                // Notify Kepala LPPM for next step
+                $kepalaLppmUsers = $this->notificationService()
+                    ->getUsersByRole('kepala lppm');
+
+                foreach ($kepalaLppmUsers as $kepalaLppm) {
+                    $this->notificationService()->notifyDekanApprovalDecision(
+                        $proposal,
+                        $this->approvalDecision,
+                        \Illuminate\Support\Facades\Auth::user(),
+                        [$kepalaLppm]
+                    );
+                }
+            } else {
+                // If rejected or need_fix, notify the submitter directly
+                $this->notificationService()->notifyDekanApprovalDecision(
+                    $proposal,
+                    $this->approvalDecision,
+                    \Illuminate\Support\Facades\Auth::user(),
+                    [$proposal->submitter]
                 );
             }
         });

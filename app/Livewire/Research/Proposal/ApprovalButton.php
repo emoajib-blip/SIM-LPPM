@@ -39,7 +39,7 @@ class ApprovalButton extends Component
     public function canApprove(): bool
     {
         $user = Auth::user();
-        $isAdmin = $user->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita', 'kepala lppm', 'rektor']);
+        $isAdmin = $user->hasRole(['admin lppm', 'kepala lppm', 'rektor']);
         $proposal = $this->proposal;
 
         return $isAdmin && $proposal->status === ProposalStatus::REVIEWED && $proposal->allReviewsCompleted();
@@ -61,10 +61,10 @@ class ApprovalButton extends Component
             ->map->count();
     }
 
-    public function approve(): void
+    public function approve(ApproveProposalAction $action): void
     {
         $user = Auth::user();
-        $isAdmin = $user->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita', 'kepala lppm', 'rektor']);
+        $isAdmin = $user->hasRole(['admin lppm', 'kepala lppm', 'rektor']);
 
         if (! $isAdmin) {
             $message = 'Anda tidak memiliki akses untuk approve proposal';
@@ -75,7 +75,6 @@ class ApprovalButton extends Component
         }
 
         $proposal = $this->proposal;
-        $action = new ApproveProposalAction;
         $result = $action->execute($proposal, 'completed');
 
         if ($result['success']) {
@@ -90,10 +89,10 @@ class ApprovalButton extends Component
         }
     }
 
-    public function reject(): void
+    public function reject(ApproveProposalAction $action): void
     {
         $user = Auth::user();
-        $isAdmin = $user->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita', 'kepala lppm', 'rektor']);
+        $isAdmin = $user->hasRole(['admin lppm', 'kepala lppm', 'rektor']);
 
         if (! $isAdmin) {
             $message = 'Anda tidak memiliki akses untuk reject proposal';
@@ -104,7 +103,6 @@ class ApprovalButton extends Component
         }
 
         $proposal = $this->proposal;
-        $action = new ApproveProposalAction;
         $result = $action->execute($proposal, 'rejected');
 
         if ($result['success']) {

@@ -6,10 +6,21 @@
         <x-lucide-arrow-left class="me-2 icon" />
         Kembali
     </a>
-    <a data-navigate-ignore="true" href="{{ route('daily-notes.export-pdf', $proposal) }}" target="_blank" class="btn-outline-primary btn">
-        <x-lucide-download class="me-2 icon" />
-        Unduh Catatan (PDF)
+    <a data-navigate-ignore="true" href="{{ route('daily-notes.export-pdf', ['proposal' => $proposal, 'download' => 'false']) }}" target="_blank" class="btn-outline-primary btn">
+        <x-lucide-eye class="me-2 icon" />
+        Tinjau (PDF)
     </a>
+    @if ($proposal->logbook_signed_at)
+        <a data-navigate-ignore="true" href="{{ route('daily-notes.export-pdf', ['proposal' => $proposal, 'download' => 'true']) }}" target="_blank" class="btn-success btn">
+            <x-lucide-download class="me-2 icon" />
+            Unduh (Tertanda)
+        </a>
+    @elseif ($this->canManage($proposal))
+        <button type="button" class="btn-primary btn" x-data @click="if(confirm('Apakah Anda yakin ingin menandatangani logbook ini secara digital? Tanda tangan ini menyatakan keabsahan seluruh aktivitas harian beserta laporannya.')) { Livewire.dispatch('sign-logbook') }">
+            <x-lucide-check-square class="me-2 icon" />
+            Tandatangani & Unduh
+        </button>
+    @endif
 </x-slot:pageActions>
 
 <div>

@@ -185,10 +185,15 @@ class KepalaLppmFinalDecision extends Component
     {
         $notificationService = app(NotificationService::class);
 
+        $faculty = $proposal->submitter->identity?->faculty;
+        $dekan = $faculty->deanUser ?? User::role('dekan')->whereHas('identity', function ($query) use ($faculty) {
+            $query->where('faculty_id', $faculty?->id);
+        })->first();
+
         // Get recipients
         $recipients = collect()
             ->push($proposal->user) // Submitter
-            ->push(User::role('dekan')->first()) // Dekan
+            ->push($dekan) // Relevant Dekan
             ->push(User::role('admin lppm')->first()) // Admin LPPM
             ->merge($proposal->teamMembers) // Team Members
             ->filter()

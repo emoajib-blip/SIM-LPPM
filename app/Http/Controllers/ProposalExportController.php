@@ -32,7 +32,8 @@ class ProposalExportController extends Controller
         try {
             $pdfPath = $this->pdfService->export($proposal);
 
-            $filename = 'Proposal_'.str_replace(' ', '_', substr($proposal->title, 0, 50)).'.pdf';
+            $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
+            $filename = 'Proposal_'.$title.'.pdf';
 
             while (ob_get_level() > 0) {
                 @ob_end_clean();
@@ -120,14 +121,17 @@ class ProposalExportController extends Controller
         }
 
         if (! $report) {
-            abort(404, 'Laporan '.$type.' tidak ditemukan untuk proposal ini.');
+            $message = 'Data Laporan '.($type === 'final' ? 'Akhir' : 'Kemajuan').' belum tersedia. Harap simpan draft laporan terlebih dahulu.';
+
+            return back()->with('error', $message);
         }
 
         try {
             /** @var \App\Models\ProgressReport $report */
             $pdfPath = $this->pdfService->exportReport($proposal, $report);
 
-            $filename = ucfirst($type).'_Report_'.str_replace(' ', '_', substr($proposal->title, 0, 50)).'.pdf';
+            $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
+            $filename = ucfirst($type).'_Report_'.$title.'.pdf';
 
             if (! app()->environment('testing')) {
                 while (ob_get_level() > 0) {
@@ -136,7 +140,11 @@ class ProposalExportController extends Controller
                 }
             }
 
-            // Return as inline for target="_blank" support in browsers
+            if ($request->query('download') === 'true') {
+                return response()->download($pdfPath, $filename);
+            }
+
+            // Return as inline for target="_blank" support in browsers (Preview)
             return response()->file($pdfPath, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="'.$filename.'"',

@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard;
 
 use App\Models\BudgetItem;
+use App\Models\MonevReview;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
 use App\Models\ProposalMonev;
@@ -156,9 +157,13 @@ class AdminDashboard extends Component
         $researchCompleted = $research->filter(fn ($r) => $r->status?->value === 'completed')->sum('count');
         $pkmCompleted = $communityService->filter(fn ($r) => $r->status?->value === 'completed')->sum('count');
 
+        $totalResearch = $research->sum('count');
+        $totalPkm = $communityService->sum('count');
+
         return [
-            'total_research' => $research->sum('count'),
-            'total_community_service' => $communityService->sum('count'),
+            'total_research' => $totalResearch,
+            'total_community_service' => $totalPkm,
+            'total_proposals' => $totalResearch + $totalPkm,
             'research_pending' => $research->filter(fn ($r) => $r->status?->value === 'submitted')->sum('count'),
             'community_service_pending' => $communityService->filter(fn ($r) => $r->status?->value === 'submitted')->sum('count'),
             'research_approved' => $researchApproved,
@@ -181,9 +186,9 @@ class AdminDashboard extends Component
         $proposalsThisYearIds = $proposalsThisYear->pluck('id');
 
         // New Metrics: Draft & Approval Stages
-        $totalDraft = $proposalsThisYear->where('status.value', 'draft')->count();
-        $waitingDean = $proposalsThisYear->where('status.value', 'submitted')->count();
-        $waitingLppm = $proposalsThisYear->whereIn('status.value', ['approved', 'reviewed'])->count();
+        $totalDraft = $proposalsThisYear->filter(fn ($p) => ($p->status->value ?? '') === 'draft')->count();
+        $waitingDean = $proposalsThisYear->filter(fn ($p) => ($p->status->value ?? '') === 'submitted')->count();
+        $waitingLppm = $proposalsThisYear->filter(fn ($p) => in_array($p->status->value ?? '', ['approved', 'reviewed']))->count();
 
         // 1. Review Status
         // Total Review = Proposals that have progressed past submission (i.e. currently in review or decided)
@@ -202,16 +207,22 @@ class AdminDashboard extends Component
         });
         $activeProposalIds = $activeProposals->pluck('id');
 
-        // 2. Monev Status
+        // 2. Monev Status (Integrated with new MonevReview system)
         $totalMonev = $activeProposals->count();
-        // Completed Monev corresponds to the number of distinct active proposals that have a monev record
-        $completedMonev = ProposalMonev::whereIn('proposal_id', $activeProposalIds)->distinct('proposal_id')->count();
+        $completedMonev = MonevReview::whereIn('proposal_id', $activeProposalIds)
+            ->whereNotNull('reviewed_at')
+            ->distinct('proposal_id')
+            ->count();
+
+        // If no new reviews, fallback to legacy ProposalMonev for backward compatibility
+        if ($completedMonev === 0) {
+            $completedMonev = ProposalMonev::whereIn('proposal_id', $activeProposalIds)->distinct('proposal_id')->count();
+        }
 
         // 3. Reporting Status (Progress & Final Report)
         $totalReports = $activeProposals->count();
-        // A report is considered submitted/completed if it exists and has one of the defined statuses
         $submittedReports = ProgressReport::whereIn('proposal_id', $activeProposalIds)
-            ->whereIn('status', ['submitted', 'approved', 'revised', 'completed'])
+            ->whereIn('status', [\App\Enums\ReportStatus::SUBMITTED, \App\Enums\ReportStatus::APPROVED, \App\Enums\ReportStatus::APPROVED_BY_DEKAN])
             ->distinct('proposal_id')
             ->count();
 
@@ -244,6 +255,9 @@ class AdminDashboard extends Component
             'output_target' => $targetOutputs,
             'output_achieved' => $achievedOutputs,
             'output_progress' => $targetOutputs > 0 ? min(100, ($achievedOutputs / $targetOutputs) * 100) : 0,
+
+            // Fallbacks for total proposals if needed in other view logic
+            'total_proposals' => $proposalsThisYear->count(),
         ];
     }
 

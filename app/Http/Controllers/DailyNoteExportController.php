@@ -11,7 +11,7 @@ class DailyNoteExportController extends Controller
     /**
      * Download the daily notes PDF.
      */
-    public function download(Proposal $proposal)
+    public function download(Proposal $proposal, \Illuminate\Http\Request $request)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -28,19 +28,28 @@ class DailyNoteExportController extends Controller
             'dailyNotes' => fn ($q) => $q->with(['media.model', 'budgetGroup'])->latest('activity_date'),
             'submitter.identity.studyProgram',
             'researchScheme',
+            'communityServiceScheme',
         ]);
+
+        $isSigned = $proposal->logbook_signed_at !== null || $request->query('signed') === 'true';
 
         $pdf = Pdf::loadView('pdf.daily-notes', [
             'proposal' => $proposal,
             'notes' => $proposal->dailyNotes,
+            'isSigned' => $isSigned,
         ])->setPaper('a4', 'portrait');
 
-        $filename = 'Catatan_Harian_'.str_replace(' ', '_', substr($proposal->title, 0, 50)).'.pdf';
+        $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
+        $filename = 'Catatan_Harian_'.$title.'.pdf';
 
         if (ob_get_level()) {
 
         }
 
-        return $pdf->download($filename);
+        if ($request->query('download') === 'true') {
+            return $pdf->download($filename);
+        }
+
+        return $pdf->stream($filename);
     }
 }

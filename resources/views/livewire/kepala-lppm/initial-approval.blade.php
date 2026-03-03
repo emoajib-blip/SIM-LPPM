@@ -6,7 +6,8 @@
 <div>
     <x-tabler.alert />
 
-    <div class="alert alert-info alert-dismissible fade show border-0 shadow-sm collapse" id="initialApprovalInfo" role="alert">
+    <div class="alert alert-info alert-dismissible fade show border-0 shadow-sm collapse" id="initialApprovalInfo"
+        role="alert">
         <div class="d-flex">
             <div>
                 <x-lucide-info class="alert-icon icon me-2" />
@@ -14,17 +15,20 @@
             <div>
                 <h4 class="alert-title">Panduan Persetujuan Awal</h4>
                 <div class="text-secondary">
-                    Halaman ini berisi usulan yang telah divalidasi oleh Dekan. 
-                    Tugas Anda adalah memberikan persetujuan administratif awal agar Admin LPPM dapat melanjutkan proses penugasan reviewer. 
+                    Halaman ini berisi usulan yang telah divalidasi oleh Dekan.
+                    Tugas Anda adalah memberikan persetujuan administratif awal agar Admin LPPM dapat melanjutkan proses
+                    penugasan reviewer.
                     Persetujuan awal ini memastikan usulan layak untuk masuk ke tahap penilaian substansi.
                 </div>
             </div>
         </div>
-        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#initialApprovalInfo" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#initialApprovalInfo"
+            aria-label="Close"></button>
     </div>
 
     <div class="mb-3">
-        <button class="btn btn-ghost-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#initialApprovalInfo" aria-expanded="false" aria-controls="initialApprovalInfo">
+        <button class="btn btn-ghost-info btn-sm" type="button" data-bs-toggle="collapse"
+            data-bs-target="#initialApprovalInfo" aria-expanded="false" aria-controls="initialApprovalInfo">
             <x-lucide-info class="icon me-1" />
             Informasi Alur
         </button>
@@ -171,7 +175,8 @@
                             <td>
                                 <div>{{ $proposal->submitter?->name }}</div>
                                 <small class="text-secondary">
-                                    {{ $proposal->submitter?->identity->identity_id }} &middot; {{ $proposal->updated_at?->format('d M Y H:i') }}
+                                    {{ $proposal->submitter?->identity?->identity_id }} &middot;
+                                    {{ $proposal->updated_at?->format('d M Y H:i') }}
                                 </small>
                             </td>
                             <td>

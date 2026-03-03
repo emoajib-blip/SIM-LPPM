@@ -1,7 +1,9 @@
 <div>
     <!-- Reviewer Assignment (Admin Only) -->
-    @if (auth()->user()->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita']) &&
-            in_array($proposal->status, [\App\Enums\ProposalStatus::WAITING_REVIEWER, \App\Enums\ProposalStatus::UNDER_REVIEW]))
+    @if (
+            auth()->user()->hasRole(['admin lppm']) &&
+            in_array($proposal->status, [\App\Enums\ProposalStatus::WAITING_REVIEWER, \App\Enums\ProposalStatus::UNDER_REVIEW])
+        )
         <div class="mb-3">
             <livewire:research.proposal.reviewer-assignment :proposalId="$proposal->id" :key="'reviewer-assignment-' . $proposal->id" />
         </div>
@@ -23,18 +25,18 @@
                     Silakan tinjau proposal ini dan berikan keputusan Anda sebagai Dekan.
                 </p>
                 <div class="gap-2 btn-list">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#approvalModal" wire:click="$set('approvalDecision', 'approved')">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approvalModal"
+                        wire:click="$set('approvalDecision', 'approved')">
                         <x-lucide-check class="icon" />
                         Setujui Proposal
                     </button>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                        data-bs-target="#approvalModal" wire:click="$set('approvalDecision', 'need_fix')">
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#approvalModal"
+                        wire:click="$set('approvalDecision', 'need_fix')">
                         <x-lucide-alert-triangle class="icon" />
                         Perlu Perbaikan
                     </button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#approvalModal" wire:click="$set('approvalDecision', 'rejected')">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#approvalModal"
+                        wire:click="$set('approvalDecision', 'rejected')">
                         <x-lucide-x class="icon" />
                         Tolak Proposal
                     </button>

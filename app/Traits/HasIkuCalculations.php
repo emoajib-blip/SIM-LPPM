@@ -25,6 +25,21 @@ trait HasIkuCalculations
         ];
     }
 
+    /**
+     * Get detailed data for a specific IKU metric.
+     */
+    public function getIkuDetails(string $ikuCode, string $period, string $search = ''): array
+    {
+        return match (strtoupper($ikuCode)) {
+            'IKU4' => $this->getIku4Details($period, $search),
+            'IKU5' => $this->getIku5Details($period, $search),
+            'IKU6' => $this->getIku6Details($period, $search),
+            'IKU7' => $this->getIku7Details($period, $search),
+            'IKU8' => $this->getIku8Details($period, $search),
+            default => [],
+        };
+    }
+
     protected function calculateIku4(string $period): array
     {
         $target = MasterIku::where('code', 'IKU-04')->value('target_percentage') ?? 15;
@@ -194,5 +209,134 @@ trait HasIkuCalculations
             'achievement' => $percentage,
             'target' => $target,
         ];
+    }
+
+    protected function getIku4Details(string $period, string $search = ''): array
+    {
+        return Identity::where('type', 'dosen')
+            ->where(function ($q) {
+                $q->whereNotNull('scopus_id')
+                    ->orWhereNotNull('wos_id')
+                    ->orWhereNotNull('sinta_id');
+            })
+            ->when($search, function ($q) use ($search) {
+                $q->whereHas('user', function ($uq) use ($search) {
+                    $uq->where('name', 'like', "%{$search}%");
+                })->orWhere('identity_id', 'like', "%{$search}%");
+            })
+            ->with('user')
+            ->get()
+            ->map(function ($id) {
+                /** @var \App\Models\Identity $id */
+                return [
+                    'name' => $id->user->name ?? 'N/A',
+                    'id_number' => $id->identity_id,
+                    'scopus' => $id->scopus_id,
+                    'sinta' => $id->sinta_id,
+                    'wos' => $id->wos_id,
+                ];
+            })
+            ->toArray();
+    }
+
+    protected function getIku5Details(string $period, string $search = ''): array
+    {
+        return Proposal::where('start_year', $period)
+            ->with(['partners', 'submitter'])
+            ->whereHas('partners')
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($sq) use ($search) {
+                    $sq->where('title', 'like', "%{$search}%")
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$search}%"))
+                        ->orWhereHas('partners', fn ($pq) => $pq->where('name', 'like', "%{$search}%"));
+                });
+            })
+            ->get()
+            ->map(function ($p) {
+                $weights = $p->partners->map(function ($partner) {
+                    return (strtolower($partner->country) !== 'indonesia' && ! empty($partner->country)) ? 1.5 : 1.0;
+                });
+
+                return [
+                    'title' => $p->title,
+                    'submitter' => $p->submitter->name,
+                    'partners' => $p->partners->pluck('name')->implode(', '),
+                    'weight' => $weights->max() ?? 0,
+                ];
+            })
+            ->toArray();
+    }
+
+    protected function getIku6Details(string $period, string $search = ''): array
+    {
+        $mandatory = MandatoryOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period))
+            ->whereIn('proposal_output_id', function ($q) {
+                $q->select('id')->from('proposal_outputs')->where('category', 'journal');
+            })
+            ->where('is_verified', true)
+            ->when($search, function ($q) use ($search) {
+                $q->where('article_title', 'like', "%{$search}%")
+                    ->orWhere('journal_title', 'like', "%{$search}%");
+            })
+            ->with('progressReport.proposal')
+            ->get();
+
+        $additional = AdditionalOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period))
+            ->whereIn('proposal_output_id', function ($q) {
+                $q->select('id')->from('proposal_outputs')->where('category', 'journal');
+            })
+            ->where('is_verified', true)
+            ->when($search, function ($q) use ($search) {
+                $q->where('article_title', 'like', "%{$search}%")
+                    ->orWhere('journal_title', 'like', "%{$search}%");
+            })
+            ->with('progressReport.proposal')
+            ->get();
+
+        return $mandatory->concat($additional)->map(function ($o) {
+            /** @var \App\Models\MandatoryOutput|\App\Models\AdditionalOutput $o */
+            return [
+                'title' => $o->article_title ?? $o->product_name ?? $o->book_title ?? 'N/A',
+                'proposal' => $o->progressReport->proposal->title ?? 'N/A',
+                'journal' => $o->journal_title ?? $o->publisher ?? 'N/A',
+                'rank' => $o->rank ?? 'N/A',
+                'indexing' => $o->indexing_body ?? 'N/A',
+                'weight' => $this->getJournalWeight($o),
+            ];
+        })->toArray();
+    }
+
+    protected function getIku7Details(string $period, string $search = ''): array
+    {
+        return Proposal::where('start_year', $period)
+            ->has('sdgs')
+            ->with(['sdgs', 'submitter'])
+            ->when($search, function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
+            })
+            ->get()
+            ->map(fn ($p) => [
+                'title' => $p->title,
+                'submitter' => $p->submitter->name,
+                'sdgs' => $p->sdgs->pluck('name')->implode(', '),
+            ])
+            ->toArray();
+    }
+
+    protected function getIku8Details(string $period, string $search = ''): array
+    {
+        return User::role('dosen')
+            ->whereHas('policyInvolvements', function ($query) {
+                $query->where('status', 'verified');
+            })
+            ->when($search, fn ($q) => $q->where('name', 'like', "%{$search}%"))
+            ->with('policyInvolvements')
+            ->get()
+            ->map(fn ($u) => [
+                'name' => $u->name,
+                'policies' => $u->policyInvolvements->pluck('title')->implode(', '),
+            ])
+            ->toArray();
     }
 }

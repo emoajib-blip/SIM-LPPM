@@ -46,7 +46,7 @@ class Index extends Component
         $this->date = date('Y-m-d');
     }
 
-    public function openModal($id = null)
+    public function openModal(?string $id = null)
     {
         $this->resetErrorBag();
         $this->resetValidation();
@@ -108,7 +108,7 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function verify($id)
+    public function verify(string $id)
     {
         if (! auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm'])) {
             return;
@@ -127,7 +127,7 @@ class Index extends Component
         ]);
     }
 
-    public function reject($id)
+    public function reject(string $id)
     {
         if (! auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm'])) {
             return;
@@ -146,7 +146,7 @@ class Index extends Component
         ]);
     }
 
-    public function delete($id)
+    public function delete(string $id)
     {
         $involvement = PolicyInvolvement::when(! auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm']), function ($q) {
             $q->where('user_id', Auth::id());

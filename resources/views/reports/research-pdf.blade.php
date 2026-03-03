@@ -163,10 +163,51 @@
             border-top: 0.5pt solid #eee;
             padding-top: 5px;
         }
+
+        .digital-signature {
+            border: 1px solid #1a56db;
+            padding: 5px;
+            display: inline-block;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #1a56db;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            width: 80px;
+        }
+
+        .digital-signature img {
+            width: 70px;
+            height: 70px;
+        }
+
+        .signature-label {
+            display: block;
+            font-size: 7px;
+            margin-top: 2px;
+            color: #1a56db;
+            font-weight: bold;
+        }
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80pt;
+            color: rgba(220, 220, 220, 0.4);
+            z-index: -1000;
+            white-space: nowrap;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
+    @if($isPreview ?? false)
+        <div class="watermark">DRAFT PREVIEW</div>
+    @endif
     <div class="kop-surat">
         <div class="kop-surat-inner">
             <img src="{{ public_path('logo.png') }}" class="logo">
@@ -220,9 +261,9 @@
                     </td>
                     <td class="text-right fw-bold">
                         @php
-                            $dana = ($proposal->sbk_value ?? 0) > 0
+                            $dana = ($proposal->sbk_value && $proposal->sbk_value > 0)
                                 ? $proposal->sbk_value
-                                : ($proposal->budgetItems?->sum('total_price') ?? 0);
+                                : ($proposal->budgetItems->sum('total_price') ?? 0);
                         @endphp
                         Rp {{ number_format($dana, 0, ',', '.') }}
                     </td>
@@ -238,47 +279,48 @@
     </table>
 
     <div class="signature-wrapper">
-        @php
-            $lppm = \App\Models\User::role('kepala lppm')->with('identity')->first();
-            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
-
-            // use the shared helper for consistency
-            $lppmName = $lppm
-                ? format_name(
-                    $lppm->identity?->title_prefix ?? '',
-                    $lppm->name,
-                    $lppm->identity?->title_suffix ?? ''
-                )
-                : 'Kepala LPPM';
-            $lppmNIDN = $lppm?->identity?->identity_id ?? '-';
-            $rektorName = $rektor
-                ? format_name(
-                    $rektor->identity?->title_prefix ?? '',
-                    $rektor->name,
-                    $rektor->identity?->title_suffix ?? ''
-                )
-                : 'Rektor';
-            $rektorNIDN = $rektor?->identity?->identity_id ?? '-';
-        @endphp
         <table class="signature-table">
             <tr>
-                <td width="50%" class="text-center">
+                <td width="33%" class="text-center">
                     <div class="sign-date" style="margin-bottom: 4px;">Pekalongan,
-                        {{ now()->translatedFormat('d F Y') }}</div>
+                        {{ now()->translatedFormat('d F Y') }}
+                    </div>
                     <div style="margin-bottom: 4px;">Mengetahui,</div>
                     <div style="margin-bottom: 4px; font-weight: bold;">Rektor ITSNU Pekalongan</div>
-                    <div style="margin-bottom: 65px;"></div>
-                    <div class="sign-name">{{ $rektorName }}</div>
-                    <div class="sign-nip">NIDN. {{ $rektorNIDN }}</div>
+                    @if(!($isPreview ?? false) && $institutionalReport && $institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
+                        <div class="digital-signature">
+                            <img src="{{ generate_qr_code_data_uri(route('reports.research.pdf', ['period' => $period, 'ref' => substr($institutionalReport->id, 0, 8)])) }}"
+                                alt="QR Code">
+                            <span class="signature-label">DIGITALLY SIGNED</span>
+                        </div>
+                    @else
+                        <div style="margin-bottom: 75px;"></div>
+                    @endif
+                    <div class="sign-name">
+                        {{ format_name($rektor?->identity?->title_prefix, $rektor?->name ?? 'Rektor', $rektor?->identity?->title_suffix) }}
+                    </div>
+                    <div class="sign-nip">NPP. {{ $rektor?->identity?->identity_id ?? '-' }}</div>
                 </td>
-                <td width="50%" class="text-center">
+                <td width="34%"></td>
+                <td width="33%" class="text-center">
                     <div class="sign-date" style="margin-bottom: 4px;">Pekalongan,
-                        {{ now()->translatedFormat('d F Y') }}</div>
+                        {{ now()->translatedFormat('d F Y') }}
+                    </div>
                     <div style="margin-bottom: 4px;">Dibuat oleh,</div>
                     <div style="margin-bottom: 4px; font-weight: bold;">Kepala LPPM ITSNU Pekalongan</div>
-                    <div style="margin-bottom: 65px;"></div>
-                    <div class="sign-name">{{ $lppmName }}</div>
-                    <div class="sign-nip">NIDN. {{ $lppmNIDN }}</div>
+                    @if(!($isPreview ?? false) && $institutionalReport && in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::SUBMITTED, \App\Enums\InstitutionalReportStatus::APPROVED]))
+                        <div class="digital-signature" style="border-color: #059669; color: #059669;">
+                            <img src="{{ generate_qr_code_data_uri(route('reports.research.pdf', ['period' => $period, 'ref' => substr($institutionalReport->id, 0, 8)])) }}"
+                                alt="QR Code">
+                            <span class="signature-label" style="color: #059669;">VERIFIED BY LPPM</span>
+                        </div>
+                    @else
+                        <div style="margin-bottom: 75px;"></div>
+                    @endif
+                    <div class="sign-name">
+                        {{ format_name($lppmHead?->identity?->title_prefix, $lppmHead?->name ?? 'Kepala LPPM', $lppmHead?->identity?->title_suffix) }}
+                    </div>
+                    <div class="sign-nip">NPP. {{ $lppmHead?->identity?->identity_id ?? '-' }}</div>
                 </td>
             </tr>
         </table>

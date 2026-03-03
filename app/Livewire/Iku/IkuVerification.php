@@ -126,8 +126,7 @@ class IkuVerification extends Component
                 $item->is_verified_status = $item->is_verified;
                 $item->display_title = $item->journal_title ?? $item->article_title;
                 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-                // @phpstan-ignore-next-line
-                $item->submitter_name = $item->progressReport?->proposal?->submitter?->name ?? 'Unknown';
+                $item->submitter_name = $item->progressReport?->proposal?->submitter->name ?? 'Unknown';
                 $item->document_url = $item->document_file ? asset('storage/'.$item->document_file) : null;
 
                 return $item;
@@ -147,8 +146,7 @@ class IkuVerification extends Component
                 $item->is_verified_status = $item->is_verified;
                 $item->display_title = $item->journal_title ?? $item->book_title ?? $item->product_name;
                 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-                // @phpstan-ignore-next-line
-                $item->submitter_name = $item->progressReport?->proposal?->submitter?->name ?? 'Unknown';
+                $item->submitter_name = $item->progressReport?->proposal?->submitter->name ?? 'Unknown';
                 $item->document_url = $item->document_file ? asset('storage/'.$item->document_file) : null;
 
                 return $item;

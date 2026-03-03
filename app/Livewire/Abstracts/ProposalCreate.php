@@ -97,12 +97,27 @@ abstract class ProposalCreate extends Component
     {
         $user = Auth::user();
 
-        if ($user instanceof \App\Models\User && $user->hasRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita'])) {
+        if ($user instanceof \App\Models\User && $user->hasRole(['admin lppm'])) {
             return true;
         }
 
-        return $proposal->status === \App\Enums\ProposalStatus::DRAFT
-            && $proposal->submitter_id === $user->getAuthIdentifier();
+        if ($proposal->submitter_id === $user->getAuthIdentifier()) {
+            if ($proposal->status === \App\Enums\ProposalStatus::DRAFT) {
+                return true;
+            }
+
+            // Allow editing if proposal is completed (final report phase)
+            // BUT the final report is not yet fully approved
+            if ($proposal->status === \App\Enums\ProposalStatus::COMPLETED) {
+                /** @var \App\Models\ProgressReport|null $finalReport */
+                $finalReport = $proposal->progressReports()->where('reporting_period', 'final')->latest()->first();
+                if (! $finalReport || $finalReport->status !== \App\Enums\ReportStatus::APPROVED) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     abstract protected function getProposalType(): string;
@@ -167,6 +182,7 @@ abstract class ProposalCreate extends Component
             'form.duration_in_years' => 'Lama Kegiatan',
             'form.start_year' => 'Tahun Usulan',
             'form.summary' => 'Ringkasan',
+            'form.asta_cita' => 'Asta Cita',
             'form.author_tasks' => 'Tugas Ketua',
             'form.tkt_type' => 'Jenis TKT',
             'form.macro_research_group_id' => 'Kelompok Makro Riset',
@@ -501,6 +517,7 @@ abstract class ProposalCreate extends Component
                 'form.duration_in_years' => 'required|integer|min:1|max:10',
                 'form.start_year' => 'required|integer|min:2020|max:2050',
                 'form.summary' => 'required|string|min:100',
+                'form.asta_cita' => 'nullable|string',
                 'form.author_tasks' => 'required|string',
                 'form.tkt_type' => $type === 'research' ? ['required', 'string', 'max:255', \Illuminate\Validation\Rule::in(app(\App\Services\MasterDataService::class)->tktTypes()->toArray())] : 'nullable',
                 'form.tkt_results' => $type === 'research' ? [

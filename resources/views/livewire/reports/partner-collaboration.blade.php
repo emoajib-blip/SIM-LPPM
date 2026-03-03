@@ -18,6 +18,60 @@
         </div>
     </x-slot:pageActions>
 
+    <div class="container-xl mt-3">
+        @if(active_role() === 'kepala lppm' || active_role() === 'rektor')
+            <div class="card mb-3 border-primary shadow-sm glass-card">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center mb-1">
+                            <h3 class="card-title h3 mb-0 me-2 text-primary">Validasi Dokumen Institusi (Kerjasama)</h3>
+                            @if($institutionalReport)
+                                <span class="badge bg-{{ $institutionalReport->status->color() }}-lt">
+                                    {{ $institutionalReport->status->label() }}
+                                </span>
+                            @else
+                                <span class="badge bg-secondary-lt">Belum Diajukan</span>
+                            @endif
+                        </div>
+                        <p class="text-secondary mb-0 small">
+                            @if(!$institutionalReport || $institutionalReport->status === \App\Enums\InstitutionalReportStatus::DRAFT)
+                                Rekapitulasi kerjasama mitra periode {{ $periodFilter ?: date('Y') }} belum diajukan ke Rektor.
+                            @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::SUBMITTED)
+                                Menunggu persetujuan dan tanda tangan digital Rektor.
+                            @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
+                                Telah disahkan Rektor pada {{ $institutionalReport->approved_at->format('d M Y H:i') }}.
+                            @elseif($institutionalReport->status === \App\Enums\InstitutionalReportStatus::REJECTED)
+                                Perbaikan: <strong>{{ $institutionalReport->notes }}</strong>
+                            @endif
+                        </p>
+                    </div>
+                    <div class="btn-list">
+                        @if(active_role() === 'kepala lppm' && (!$institutionalReport || in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::DRAFT, \App\Enums\InstitutionalReportStatus::REJECTED])))
+                            <button class="btn btn-primary" wire:click="submitInstitutionalReport('partner', {{ $periodFilter ?: date('Y') }})"
+                                wire:loading.attr="disabled">
+                                <i class="ti ti-send me-2"></i>
+                                Ajukan ke Rektor
+                            </button>
+                        @endif
+
+                        @if(active_role() === 'rektor' && ($institutionalReport?->status === \App\Enums\InstitutionalReportStatus::SUBMITTED))
+                            <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#modal-reject-institutional">
+                                <i class="ti ti-x me-2"></i>
+                                Minta Perbaikan
+                            </button>
+                            <button class="btn btn-success" wire:click="approveInstitutionalReport('partner', {{ $periodFilter ?: date('Y') }})"
+                                wire:loading.attr="disabled">
+                                <i class="ti ti-circle-check me-2"></i>
+                                Setujui & Tanda Tangani
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+
 
 
     <!-- Summary Cards with Visual Polish -->
@@ -349,4 +403,34 @@
             </div>
         @endif
     </div>
+
+    @if(active_role() === 'rektor')
+        <div class="modal modal-blur fade" id="modal-reject-institutional" tabindex="-1" role="dialog" aria-hidden="true"
+            wire:ignore.self>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Alasan Penolakan / Permintaan Perbaikan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label class="form-label">Catatan untuk Kepala LPPM</label>
+                            <textarea class="form-control" wire:model="approvalNotes" rows="3"
+                                placeholder="Masukkan alasan atau instruksi perbaikan..."></textarea>
+                            @error('approvalNotes') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary me-auto"
+                            data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger"
+                            wire:click="rejectInstitutionalReport('partner', '{{ $periodFilter ?: date('Y') }}')">
+                            Simpan & Tolak
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

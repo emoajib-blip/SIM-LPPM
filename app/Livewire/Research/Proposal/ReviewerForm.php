@@ -308,8 +308,9 @@ class ReviewerForm extends Component
         }
     }
 
-    public function submitReview(\App\Livewire\Actions\CompleteReviewAction $completeReviewAction): void
+    public function submitReview(): void
     {
+        $completeReviewAction = app(\App\Livewire\Actions\CompleteReviewAction::class);
         $this->validate();
 
         $review = $this->myReview;

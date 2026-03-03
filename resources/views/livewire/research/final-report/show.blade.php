@@ -8,12 +8,25 @@
                 <x-lucide-arrow-left class="icon" />
                 Kembali
             </a>
-            @if ($progressReport)
+            @if (auth()->id() === $proposal->submitter_id && (!$progressReport || $progressReport->status->value !== 'approved'))
+                <a href="{{ route('research.proposal.edit', $proposal) }}" class="btn-outline-warning btn"
+                    data-navigate-ignore="true">
+                    <x-lucide-edit class="icon me-2" />
+                    Koreksi Data Proposal
+                </a>
+            @endif
+            @if ($progressReport && $progressReport->reporting_period === 'final')
                 <a data-navigate-ignore="true"
                     href="{{ route('reports.export-pdf', ['proposal' => $proposal, 'type' => 'final']) }}" target="_blank"
                     class="btn-outline-primary btn">
+                    <x-lucide-eye class="icon" />
+                    Tinjau (PDF)
+                </a>
+                <a data-navigate-ignore="true"
+                    href="{{ route('reports.export-pdf', ['proposal' => $proposal, 'type' => 'final', 'download' => 'true']) }}"
+                    class="btn-primary btn">
                     <x-lucide-download class="icon" />
-                    Unduh Laporan (PDF)
+                    Unduh Laporan
                 </a>
             @endif
         </div>
@@ -31,6 +44,66 @@
 ">
         <x-tabler.alert />
 
+        <!-- Approval Section -->
+        @if ($progressReport)
+            @php
+                $user = auth()->user();
+                $isActiveDekan = active_role_is('dekan');
+                $isActiveKepalaLppm = active_role_is('kepala lppm');
+                $isSubmitted = $progressReport->status === \App\Enums\ReportStatus::SUBMITTED;
+                $isApprovedByDekan = $progressReport->status === \App\Enums\ReportStatus::APPROVED_BY_DEKAN;
+                $canApprove = ($isActiveDekan && $isSubmitted) || ($isActiveKepalaLppm && $isApprovedByDekan);
+            @endphp
+
+            @if ($canApprove)
+                <div class="card mb-3 border-primary border-2 border-dashed">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h3 class="card-title text-primary mb-1">
+                                    <x-lucide-check-circle class="icon me-2" />
+                                    Butuh Persetujuan Anda
+                                </h3>
+                                <p class="text-secondary mb-0">
+                                    Silakan tinjau laporan ini dan berikan keputusan Anda.
+                                </p>
+                            </div>
+                            <div class="btn-list">
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                    data-bs-target="#modalReject">
+                                    <x-lucide-x-circle class="icon me-1" />
+                                    Tolak Laporan
+                                </button>
+                                <button type="button" class="btn btn-primary" wire:click="approve" wire:loading.attr="disabled">
+                                    <span wire:loading.remove wire:target="approve">
+                                        <x-lucide-check-circle class="icon me-1" />
+                                        Setujui Laporan
+                                    </span>
+                                    <span wire:loading wire:target="approve">
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                        Memproses...
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Status Journey -->
+                        <div class="steps steps-blue container-tight">
+                            <div
+                                class="step-item {{ $progressReport->status !== \App\Enums\ReportStatus::DRAFT ? 'active' : '' }}">
+                                Dosen (Diajukan)</div>
+                            <div
+                                class="step-item {{ !in_array($progressReport->status, [\App\Enums\ReportStatus::DRAFT, \App\Enums\ReportStatus::SUBMITTED]) ? 'active' : '' }}">
+                                Dekan</div>
+                            <div
+                                class="step-item {{ $progressReport->status === \App\Enums\ReportStatus::APPROVED ? 'active' : '' }}">
+                                Kepala LPPM (Selesai)</div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endif
+
         <!-- Alert Info Workflow -->
         <div class="alert alert-info" role="alert">
             <div class="d-flex">
@@ -41,8 +114,7 @@
                     <h4 class="alert-title">Panduan Pengisian Laporan Akhir</h4>
                     <div class="text-secondary">
                         <p class="mb-2">
-                            Data ringkasan dan luaran telah diisi otomatis dari Laporan Kemajuan sebelumnya.
-                            Silakan periksa kembali dan lengkapi data terbaru.
+                            Silakan periksa dan lengkapi form berikut untuk mengajukan Laporan Akhir.
                         </p>
                         <ol class="mb-0 ps-3">
                             <li>Lengkapi <strong>Ringkasan & Kata Kunci</strong> serta upload dokumen laporan akhir.
@@ -531,6 +603,23 @@
 
     <!-- Action Buttons -->
     @if ($canEdit)
+        @if ($isFinalReportDraft)
+            <div class="alert alert-warning mb-3" role="alert">
+                <div class="d-flex">
+                    <div>
+                        <x-lucide-alert-triangle class="icon alert-icon" />
+                    </div>
+                    <div>
+                        <h4 class="alert-title">Persyaratan Pengajuan Laporan</h4>
+                        <div class="text-secondary">
+                            Pastikan total pengeluaran pada menu Catatan Harian (Logbook) telah mencapai 100% dari total Pagu
+                            RAB sebelum mengajukan Laporan Akhir. Sistem akan memblokir pengajuan jika serapan dana belum genap
+                            100%.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="card">
             <div class="card-body">
                 <div class="justify-content-end btn-list">
@@ -1115,5 +1204,33 @@
         </x-slot:footer>
     </x-tabler.modal>
     @endteleport
+
+    <!-- Modal: Reject Laporan -->
+    <x-tabler.modal id="modalReject" title="Tolak Laporan Akhir" size="md" wire:ignore.self>
+        <x-slot:body>
+            <div class="mb-3">
+                <label class="form-label required">Alasan Penolakan / Catatan Perbaikan</label>
+                <textarea wire:model="approvalNotes" class="form-control" rows="5"
+                    placeholder="Berikan alasan mengapa laporan ini ditolak atau apa yang perlu diperbaiki..."></textarea>
+                @error('approvalNotes')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+            <p class="text-secondary small">
+                <x-lucide-info class="icon icon-sm" />
+                Laporan yang ditolak akan dikembalikan statusnya ke Draft dan Dosen harus memperbaikinya.
+            </p>
+        </x-slot:body>
+        <x-slot:footer>
+            <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-danger" wire:click="reject" wire:loading.attr="disabled">
+                <span wire:loading.remove wire:target="reject">Tolak & Kembalikan</span>
+                <span wire:loading wire:target="reject">
+                    <span class="spinner-border spinner-border-sm me-1"></span>
+                    Memproses...
+                </span>
+            </button>
+        </x-slot:footer>
+    </x-tabler.modal>
 </div>
 </div>

@@ -36,8 +36,8 @@ services:
   # Database (MariaDB)
   mariadb:
     image: mariadb:11
-    container_name: sim-lppm-db
     restart: unless-stopped
+    command: --performance-schema=ON
     ports:
       - "127.0.0.1:${FORWARD_DB_PORT:-33060}:3306"
     environment:

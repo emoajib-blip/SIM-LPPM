@@ -251,6 +251,21 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label d-flex align-items-center gap-2" for="asta_cita">
+                Asta Cita Terkait (Opsional)
+                <span class="text-muted" data-bs-toggle="tooltip"
+                    title="Jelaskan kaitan usulan ini dengan poin-poin Asta Cita terkait jika ada.">
+                    <i class="ti ti-info-circle"></i>
+                </span>
+            </label>
+            <textarea id="asta_cita" class="form-control @error('form.asta_cita') is-invalid @enderror"
+                wire:model="form.asta_cita" rows="3" placeholder="Jelaskan Asta Cita terkait proposal ini"></textarea>
+            @error('form.asta_cita')
+                <div class="d-block invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
             <label class="form-label d-flex align-items-center gap-2" for="sdgs">
                 Sustainable Development Goals (SDGs) <span class="text-danger">*</span>
                 <span class="text-muted" data-bs-toggle="tooltip"
@@ -263,7 +278,7 @@
                     wire:model.live="form.sdg_ids" x-data="tomSelect" multiple
                     placeholder="Pilih kategori SDGs yang relevan" required>
                     @foreach ($this->sdgs as $sdg)
-                        <option value="{{ $sdg->id }}">{{ $sdg->name }}</option>
+                        <option value="{{ $sdg->id }}">{{ $sdg->name }} - {{ $sdg->description }}</option>
                     @endforeach
                 </select>
             </div>

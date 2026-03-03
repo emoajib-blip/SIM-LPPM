@@ -25,11 +25,11 @@
                             <td><span class="bg-blue-lt badge">{{ $item->year }}</span></td>
                             <td>
                                 @if ($item->research_budget_cap)
-                                    <div class="text-success fw-bold">Global: Rp
+                                    <div class="text-success fw-bold">Default: Rp
                                         {{ number_format($item->research_budget_cap, 0, ',', '.') }}
                                     </div>
                                 @else
-                                    <div class="text-muted mb-1">Global: Tidak dibatasi</div>
+                                    <div class="text-muted mb-1 italic small">Default: Tidak diatur</div>
                                 @endif
                                 @if($item->scheme_caps && isset($item->scheme_caps['research']) && count($item->scheme_caps['research']) > 0)
                                     <div class="hr-text hr-text-left mt-2 mb-1 text-xs">Per Skema</div>
@@ -44,11 +44,11 @@
                             </td>
                             <td>
                                 @if ($item->community_service_budget_cap)
-                                    <div class="text-success fw-bold">Global: Rp
+                                    <div class="text-success fw-bold">Default: Rp
                                         {{ number_format($item->community_service_budget_cap, 0, ',', '.') }}
                                     </div>
                                 @else
-                                    <div class="text-muted mb-1">Global: Tidak dibatasi</div>
+                                    <div class="text-muted mb-1 italic small">Default: Tidak diatur</div>
                                 @endif
                                 @if($item->scheme_caps && isset($item->scheme_caps['community_service']) && count($item->scheme_caps['community_service']) > 0)
                                     <div class="hr-text hr-text-left mt-2 mb-1 text-xs">Per Skema</div>
@@ -107,9 +107,20 @@
                         <div class="d-block invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="hr-text">Penelitian</div>
+                <div class="alert alert-info py-2 mb-3">
+                    <div class="d-flex">
+                        <x-lucide-info class="icon me-2" />
+                        <div class="small">
+                            <strong>Prioritas Anggaran:</strong> Batas Anggaran Spesifik akan selalu digunakan terlebih
+                            dahulu. Jika dikosongkan, sistem akan menggunakan Batas Anggaran Default (Cadangan). Jika
+                            keduanya kosong, pendaftaran skema tersebut akan diblokir.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-text text-azure fw-bold">Penelitian</div>
                 <div class="mb-3">
-                    <label class="form-label font-weight-bold">Batas Anggaran Global (Opsional)</label>
+                    <label class="form-label font-weight-bold">Batas Anggaran Default (Cadangan)</label>
                     <div class="input-group" x-data="moneyInputSingle('research_budget_cap')">
                         <span class="input-group-text">Rp</span>
                         <input type="text" x-model="display" x-ref="input" @focus="handleFocus" @input="handleInput"
@@ -117,7 +128,7 @@
                     </div>
                 </div>
 
-                <h5 class="mt-2 mb-2">Anggaran Spesifik Pengecualian Per-Skema:</h5>
+                <h5 class="mt-2 mb-2">Batas Anggaran Spesifik Per-Skema (Prioritas):</h5>
                 <div class="row">
                     @foreach($researchSchemes as $scheme)
                         <div class="col-md-6 mb-3">
@@ -132,9 +143,9 @@
                     @endforeach
                 </div>
 
-                <div class="hr-text">Pengabdian Masyarakat</div>
+                <div class="hr-text text-azure fw-bold">Pengabdian Masyarakat</div>
                 <div class="mb-3">
-                    <label class="form-label font-weight-bold">Batas Anggaran Global (Opsional)</label>
+                    <label class="form-label font-weight-bold">Batas Anggaran Default (Cadangan)</label>
                     <div class="input-group" x-data="moneyInputSingle('community_service_budget_cap')">
                         <span class="input-group-text">Rp</span>
                         <input type="text" x-model="display" x-ref="input" @focus="handleFocus" @input="handleInput"
@@ -142,7 +153,7 @@
                     </div>
                 </div>
 
-                <h5 class="mt-2 mb-2">Anggaran Spesifik Pengecualian Per-Skema:</h5>
+                <h5 class="mt-2 mb-2">Batas Anggaran Spesifik Per-Skema (Prioritas):</h5>
                 <div class="row">
                     @foreach($communityServiceSchemes as $scheme)
                         <div class="col-md-6 mb-3">

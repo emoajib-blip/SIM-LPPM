@@ -24,6 +24,10 @@ class TeamMembersForm extends Component
 
     public bool $isManual = false;
 
+    public ?int $editingIndex = null;
+
+    public string $editingTugas = '';
+
     public string $member_name = '';
 
     public string $member_email = '';
@@ -181,6 +185,33 @@ class TeamMembersForm extends Component
 
         // Dispatch to parent component
         $this->dispatch('members-updated', members: $this->members);
+    }
+
+    public function startEditingMember(int $index): void
+    {
+        $this->editingIndex = $index;
+        $this->editingTugas = $this->members[$index]['tugas'] ?? '';
+    }
+
+    public function saveEditingMember(): void
+    {
+        $this->validate([
+            'editingTugas' => 'required|string|max:500',
+        ]);
+
+        if ($this->editingIndex !== null && isset($this->members[$this->editingIndex])) {
+            $this->members[$this->editingIndex]['tugas'] = $this->editingTugas;
+            $this->dispatch('members-updated', members: $this->members);
+        }
+
+        $this->cancelEditingMember();
+    }
+
+    public function cancelEditingMember(): void
+    {
+        $this->editingIndex = null;
+        $this->editingTugas = '';
+        $this->resetErrorBag('editingTugas');
     }
 
     /**

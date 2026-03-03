@@ -58,6 +58,8 @@ class ProposalForm extends Form
     #[Validate('required|string|min:100')]
     public string $summary = '';
 
+    public string $asta_cita = '';
+
     public string $tkt_type = '';
 
     public array $tkt_results = []; // [level_id => ['percentage' => 100]]
@@ -170,6 +172,7 @@ class ProposalForm extends Form
         $this->duration_in_years = (string) $proposal->duration_in_years;
         $this->start_year = (string) ($proposal->start_year ?? date('Y'));
         $this->summary = $proposal->summary ?? '';
+        $this->asta_cita = $proposal->asta_cita ?? '';
         $this->sdg_ids = $proposal->sdgs->pluck('id')->toArray();
         $this->targeted_iku_ids = $proposal->targetedIkus->pluck('id')->toArray();
 
@@ -386,6 +389,7 @@ class ProposalForm extends Form
             'duration_in_years' => (int) $this->duration_in_years,
             'start_year' => (int) $this->start_year,
             'summary' => $this->summary,
+            'asta_cita' => $this->asta_cita ?: null,
             'status' => 'draft',
         ]);
 
@@ -472,6 +476,7 @@ class ProposalForm extends Form
             'duration_in_years' => (int) $this->duration_in_years,
             'start_year' => (int) $this->start_year,
             'summary' => $this->summary,
+            'asta_cita' => $this->asta_cita ?: null,
             'status' => 'draft',
         ]);
 
@@ -606,6 +611,7 @@ class ProposalForm extends Form
                 'duration_in_years' => (int) $this->duration_in_years,
                 'start_year' => (int) $this->start_year,
                 'summary' => $this->summary,
+                'asta_cita' => $this->asta_cita ?: null,
             ]);
 
             $this->attachTeamMembers($this->proposal, $this->proposal->submitter_id);
@@ -669,6 +675,7 @@ class ProposalForm extends Form
             'duration_in_years' => 'required|integer|min:1|max:10',
             'start_year' => 'required|integer|min:2020|max:2050',
             'summary' => 'required|string|min:100',
+            'asta_cita' => 'nullable|string',
             'eligibility_check' => [
                 function ($attribute, $value, $fail) {
                     $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
@@ -996,8 +1003,9 @@ class ProposalForm extends Form
         $proposalType = $this->getProposalType();
         $currentYear = (int) date('Y');
 
-        // Get budget cap for current year and proposal type
-        $budgetCap = \App\Models\BudgetCap::getCapForYear($currentYear, $proposalType);
+        // Get budget cap for current year and proposal type (with scheme priority)
+        $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
+        $budgetCap = \App\Models\BudgetCap::getCapForYear($currentYear, $proposalType, (int) $schemeId);
 
         if ($budgetCap === null || $budgetCap <= 0) {
             // No budget cap set, cannot validate percentages
@@ -1069,8 +1077,9 @@ class ProposalForm extends Form
         // Get current year
         $currentYear = (int) date('Y');
 
-        // Get budget cap for current year and proposal type
-        $budgetCap = \App\Models\BudgetCap::getCapForYear($currentYear, $proposalType);
+        // Get budget cap for current year and proposal type (with scheme priority)
+        $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
+        $budgetCap = \App\Models\BudgetCap::getCapForYear($currentYear, $proposalType, (int) $schemeId);
 
         if ($budgetCap === null) {
             // No cap set, allow any amount

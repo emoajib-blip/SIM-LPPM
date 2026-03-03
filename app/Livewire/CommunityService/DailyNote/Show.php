@@ -6,6 +6,7 @@ use App\Livewire\Concerns\HasToast;
 use App\Models\DailyNote;
 use App\Models\Proposal;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -91,8 +92,9 @@ class Show extends Component
         $this->validate();
 
         // Check budget constraint if group and amount is selected
-        if ($this->budget_group_id && $this->amount > 0) {
-            $allocatedBudget = $this->proposal->budgetItems()
+        $amount = (float) $this->amount;
+        if ($this->budget_group_id && $amount > 0) {
+            $allocatedBudget = (float) $this->proposal->budgetItems()
                 ->where('budget_group_id', $this->budget_group_id)
                 ->sum('total_price');
 
@@ -104,11 +106,11 @@ class Show extends Component
                 $usedBudgetQuery->where('id', '!=', $this->editingId);
             }
 
-            $usedBudget = $usedBudgetQuery->sum('amount');
+            $usedBudget = (float) $usedBudgetQuery->sum('amount');
             $remainingConstraint = $allocatedBudget - $usedBudget;
 
-            if ($this->amount > $remainingConstraint) {
-                $this->addError('amount', 'Nominal pengeluaran (Rp '.number_format($this->amount, 0, ',', '.').') melebihi sisa anggaran (Rp '.number_format($remainingConstraint, 0, ',', '.').') untuk kategori ini.');
+            if ($amount > $remainingConstraint) {
+                $this->addError('amount', 'Nominal pengeluaran (Rp '.number_format($amount, 0, ',', '.').') melebihi sisa anggaran (Rp '.number_format($remainingConstraint, 0, ',', '.').') untuk kategori ini.');
 
                 return;
             }
@@ -121,7 +123,7 @@ class Show extends Component
             'progress_percentage' => $this->progress_percentage,
             'notes' => $this->notes,
             'budget_group_id' => $this->budget_group_id,
-            'amount' => $this->amount,
+            'amount' => $amount,
         ];
 
         if ($this->editingId) {
@@ -237,5 +239,33 @@ class Show extends Component
                 ->keyBy('budget_group_id'),
             'total_proposed_budget' => $this->proposal->budgetItems()->sum('total_price'),
         ]);
+    }
+
+    #[On('sign-logbook')]
+    public function signLogbook()
+    {
+        if (! $this->canManage($this->proposal)) {
+            abort(403);
+        }
+
+        $this->proposal->update(['logbook_signed_at' => now()]);
+
+        // Invalidate cached reports so the signature appears on newly downloaded final reports
+        $reports = $this->proposal->progressReports()->get();
+        /** @var \App\Models\ProgressReport $report */
+        foreach ($reports as $report) {
+            $files = glob(storage_path('app/public/pdf_cache/reports/report_'.$report->id.'_*.pdf'));
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    @unlink($file);
+                }
+            }
+        }
+
+        $message = 'Catatan harian berhasil ditandatangani.';
+        session()->flash('success', $message);
+        $this->toastSuccess($message);
+
+        return redirect()->route('daily-notes.export-pdf', ['proposal' => $this->proposal, 'signed' => 'true']);
     }
 }

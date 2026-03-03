@@ -112,7 +112,15 @@ class ExecDashboard extends Component
             }
         }
 
-        if ($facultyId) {
+        if ($this->roleName === 'dekan') {
+            if (! $facultyId) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereHas('submitter.identity', function ($q) use ($facultyId) {
+                    $q->where('faculty_id', $facultyId);
+                });
+            }
+        } elseif ($facultyId) {
             $query->whereHas('submitter.identity', function ($q) use ($facultyId) {
                 $q->where('faculty_id', $facultyId);
             });
@@ -137,13 +145,13 @@ class ExecDashboard extends Component
             ->groupBy('detailable_type', 'status')
             ->get();
 
-        $this->stats = $this->transformStats($statsRaw, $facultyId);
+        $this->stats = $this->transformStats($statsRaw, $facultyId, $yearFilter);
     }
 
     /**
      * Transform raw stats query result into stats array.
      */
-    private function transformStats(Collection $raw, ?int $facultyId): array
+    private function transformStats(Collection $raw, ?int $facultyId, int $yearFilter): array
     {
         $research = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'Research'));
         $communityService = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'CommunityService'));
@@ -155,6 +163,34 @@ class ExecDashboard extends Component
             'research_approved' => $research->filter(fn ($r) => in_array($r->status->value, ['approved', 'completed']))->sum('count'),
             'community_service_approved' => $communityService->filter(fn ($r) => in_array($r->status->value, ['approved', 'completed']))->sum('count'),
             'faculty_name' => $facultyId ? $this->user->identity?->faculty?->name : null,
+            'final_report_pending' => $this->roleName === 'rektor'
+                ? \App\Models\InstitutionalReport::where('status', \App\Enums\InstitutionalReportStatus::SUBMITTED)->count()
+                : \App\Models\ProgressReport::query()
+                    ->where('reporting_period', 'final')
+                    ->where('status', \App\Enums\ReportStatus::SUBMITTED)
+                    ->when($facultyId, function ($q) use ($facultyId) {
+                        $q->whereHas('proposal.submitter.identity', function ($sq) use ($facultyId) {
+                            $sq->where('faculty_id', $facultyId);
+                        });
+                    })
+                    ->whereYear('created_at', $yearFilter)
+                    ->count(),
+            'total_outputs' => \App\Models\MandatoryOutput::whereHas('progressReport', function ($q) use ($yearFilter, $facultyId) {
+                $q->whereYear('created_at', $yearFilter);
+                if ($facultyId) {
+                    $q->whereHas('proposal.submitter.identity', function ($sq) use ($facultyId) {
+                        $sq->where('faculty_id', $facultyId);
+                    });
+                }
+            })->count() +
+                \App\Models\AdditionalOutput::whereHas('progressReport', function ($q) use ($yearFilter, $facultyId) {
+                    $q->whereYear('created_at', $yearFilter);
+                    if ($facultyId) {
+                        $q->whereHas('proposal.submitter.identity', function ($sq) use ($facultyId) {
+                            $sq->where('faculty_id', $facultyId);
+                        });
+                    }
+                })->count(),
         ];
     }
 
@@ -205,7 +241,15 @@ class ExecDashboard extends Component
                     $query->whereMonth('created_at', '>=', 3)->whereMonth('created_at', '<=', 8);
                 }
 
-                if ($facultyId) {
+                if ($this->roleName === 'dekan') {
+                    if (! $facultyId) {
+                        $query->whereRaw('1 = 0');
+                    } else {
+                        $query->whereHas('submitter.identity', function ($q) use ($facultyId) {
+                            $q->where('faculty_id', $facultyId);
+                        });
+                    }
+                } elseif ($facultyId) {
                     $query->whereHas('submitter.identity', function ($q) use ($facultyId) {
                         $q->where('faculty_id', $facultyId);
                     });

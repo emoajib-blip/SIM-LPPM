@@ -18,7 +18,7 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="input-icon">
                                 <span class="input-icon-addon">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -33,14 +33,29 @@
                                     placeholder="Cari judul atau pengusul...">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <select wire:model.live="academicYear" class="form-select">
+                                <option value="">Tahun Akademik</option>
+                                @foreach($this->academicYears as $year)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select wire:model.live="semester" class="form-select">
+                                <option value="all">Semua Semester</option>
+                                <option value="ganjil">Ganjil (Sep-Feb)</option>
+                                <option value="genap">Genap (Mar-Agu)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <select wire:model.live="typeFilter" class="form-select">
                                 <option value="all">Semua Jenis</option>
                                 <option value="research">Penelitian</option>
                                 <option value="community-service">Pengabdian</option>
                             </select>
                         </div>
-                        <div class="col-md-5 text-end">
+                        <div class="col-md-3 text-end d-flex gap-2 justify-content-end">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-outline-secondary dropdown-toggle"
                                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -64,6 +79,11 @@
                                     @endif
                                 </div>
                             </div>
+                            <a href="{{ route('export.monev.recap', ['academic_year' => $academicYear, 'semester' => $semester]) }}"
+                               class="btn btn-success" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
+                                Rekap Kolektif
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -92,7 +112,8 @@
                                     <td>
                                         <div class="font-weight-bold">{{ $proposal->submitter->name }}</div>
                                         <div class="text-muted text-truncate" style="max-width: 400px;">
-                                            {{ $proposal->title }}</div>
+                                            {{ $proposal->title }}
+                                        </div>
                                     </td>
                                     <td>
                                         @if ($proposal->detailable_type === \App\Models\Research::class)
@@ -158,9 +179,30 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label font-weight-bold">Judul Proposal</label>
-                                    <div class="text-muted">{{ $selectedProposal->title }}</div>
+                                    <label class="form-label font-weight-bold">Tugaskan Reviewer Monev</label>
+                                    <div class="input-group">
+                                        <select class="form-select" wire:model="reviewer_id">
+                                            <option value="">Pilih Reviewer...</option>
+                                            @foreach($this->reviewers as $reviewer)
+                                                <option value="{{ $reviewer->id }}">{{ $reviewer->name }}
+                                                    {{ $reviewer->identity?->is_external ? '(Eksternal)' : '(Internal)' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <button class="btn btn-primary" wire:click="assignReviewer"
+                                            wire:loading.attr="disabled">
+                                            Simpan
+                                        </button>
+                                    </div>
+                                    @error('reviewer_id') <span class="text-danger small">{{ $message }}</span> @enderror
                                 </div>
+                                @php $activeMonevReview = $selectedProposal->monevReviews->first(); @endphp
+                                @if($activeMonevReview)
+                                    <div class="alert alert-info py-2">
+                                        <strong>Reviewer Aktif:</strong> {{ $activeMonevReview->reviewer->name }}<br>
+                                        <strong>Status:</strong> {{ strtoupper($activeMonevReview->status ?? 'PENDING') }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -212,7 +254,8 @@
                                             <td class="text-center">
                                                 @if($monev->hasMedia('berita_acara'))
                                                     @php $media = $monev->getFirstMedia('berita_acara'); @endphp
-                                                    <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                                    <a data-navigate-ignore="true"
+                                                        href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
                                                         target="_blank" class="text-success">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -228,7 +271,8 @@
                                             <td class="text-center">
                                                 @if($monev->hasMedia('borang'))
                                                     @php $media = $monev->getFirstMedia('borang'); @endphp
-                                                    <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                                    <a data-navigate-ignore="true"
+                                                        href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
                                                         target="_blank" class="text-success">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -244,7 +288,8 @@
                                             <td class="text-center">
                                                 @if($monev->hasMedia('rekap_penilaian'))
                                                     @php $media = $monev->getFirstMedia('rekap_penilaian'); @endphp
-                                                    <a data-navigate-ignore="true" href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
+                                                    <a data-navigate-ignore="true"
+                                                        href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $media]) }}"
                                                         target="_blank" class="text-success">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"

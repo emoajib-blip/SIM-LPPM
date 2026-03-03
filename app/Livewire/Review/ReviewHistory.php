@@ -21,8 +21,8 @@ class ReviewHistory extends Component
 
     public function mount(): void
     {
-        if (! Auth::user()->hasRole('reviewer')) {
-            abort(403);
+        if (! Auth::user()->can('module_review')) {
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
     }
 

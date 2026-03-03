@@ -34,7 +34,18 @@ trait ReportAccess
     protected function checkAccess(): void
     {
         if (! $this->canView()) {
-            abort(403, 'Anda tidak memiliki akses untuk melihat laporan ini.');
+            $user = Auth::user();
+            $message = 'Anda tidak memiliki akses untuk melihat laporan ini.';
+
+            if ($user?->hasRole('dekan')) {
+                if (! $user->identity) {
+                    $message = 'Profil Anda belum lengkap (Identity tidak ditemukan). Silakan lengkapi profil Anda terlebih dahulu.';
+                } else {
+                    $message = 'Maaf, Anda tidak memiliki akses ke fakultas dosen yang bersangkutan.';
+                }
+            }
+
+            abort(403, $message);
         }
 
         $this->canEdit = $this->canEditReport($this->proposal);
@@ -49,8 +60,15 @@ trait ReportAccess
         $user = Auth::user();
         // dd($user->getRoleNames());
 
-        if ($user->hasAnyRole(['admin lppm', 'kepala lppm', 'rektor', 'dekan'])) {
+        if ($user->hasAnyRole(['admin lppm', 'kepala lppm', 'rektor'])) {
             return true;
+        }
+
+        if ($user->hasRole('dekan')) {
+            $dekanFacultyId = $user->identity?->faculty_id;
+            $submitterFacultyId = $this->proposal->submitter->identity?->faculty_id;
+
+            return $dekanFacultyId && $dekanFacultyId === $submitterFacultyId;
         }
 
         return $this->proposal->submitter_id === $user->id

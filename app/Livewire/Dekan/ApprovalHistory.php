@@ -26,7 +26,9 @@ class ApprovalHistory extends Component
             ->whereHas('proposal', function ($query) {
                 // Optionally filter by faculty again just in case
                 $facultyId = Auth::user()->identity?->faculty_id;
-                if ($facultyId) {
+                if (! $facultyId) {
+                    $query->whereRaw('1 = 0');
+                } else {
                     $query->whereHas('submitter.identity', function ($q) use ($facultyId) {
                         $q->where('faculty_id', $facultyId);
                     });

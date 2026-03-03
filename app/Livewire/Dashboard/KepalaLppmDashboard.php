@@ -93,13 +93,13 @@ class KepalaLppmDashboard extends Component
             ->groupBy('detailable_type', 'status')
             ->get();
 
-        $this->stats = $this->transformStats($statsRaw);
+        $this->stats = $this->transformStats($statsRaw, $yearFilter);
     }
 
     /**
      * Transform raw stats query result into stats array.
      */
-    private function transformStats(Collection $raw): array
+    private function transformStats(Collection $raw, string $yearFilter): array
     {
         $research = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'Research'));
         $communityService = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'CommunityService'));
@@ -118,6 +118,17 @@ class KepalaLppmDashboard extends Component
             'community_service_completed' => $communityService->where('status', 'completed')->sum('count'),
             'pending_initial_approval' => $raw->where('status', 'approved')->sum('count'),
             'pending_final_decision' => $researchPending + $communityServicePending,
+            'final_report_pending' => \App\Models\ProgressReport::query()
+                ->where('reporting_period', 'final')
+                ->where('status', \App\Enums\ReportStatus::APPROVED_BY_DEKAN)
+                ->whereYear('created_at', $yearFilter)
+                ->count(),
+            'total_outputs' => \App\Models\MandatoryOutput::whereHas('progressReport', function ($q) use ($yearFilter) {
+                $q->whereYear('created_at', $yearFilter);
+            })->count() +
+                \App\Models\AdditionalOutput::whereHas('progressReport', function ($q) use ($yearFilter) {
+                    $q->whereYear('created_at', $yearFilter);
+                })->count(),
         ];
     }
 

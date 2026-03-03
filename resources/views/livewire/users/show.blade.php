@@ -22,8 +22,7 @@
                     <div class="my-3">
                         @if ($user->roles->isNotEmpty())
                             @foreach ($user->roles as $role)
-                                <x-tabler.badge color="primary"
-                                    size="lg">{{ str($role->name)->title() }}</x-tabler.badge>
+                                <x-tabler.badge color="primary" size="lg">{{ str($role->name)->title() }}</x-tabler.badge>
                             @endforeach
                         @else
                             <span class="text-secondary">Tidak ada peran</span>
@@ -88,7 +87,7 @@
                             <dt class="text-secondary">Tipe Identitas</dt>
                             <dd class="fw-medium">
                                 @if ($user->identity?->type)
-                                    <span class="text-capitalize">{{ str($user->identity->type)->title() }}</span>
+                                    <span class="text-capitalize">{{ str($user->identity?->type)->title() }}</span>
                                 @else
                                     —
                                 @endif
@@ -111,7 +110,8 @@
                         <div class="col-12">
                             <dt class="text-secondary">Fakultas</dt>
                             <dd class="fw-medium">{{ $user->identity?->faculty?->name ?? '—' }} /
-                                {{ $user->identity?->faculty?->code ?? '—' }}</dd>
+                                {{ $user->identity?->faculty?->code ?? '—' }}
+                            </dd>
                         </div>
                         <div class="col-12">
                             <dt class="text-secondary">Program Studi</dt>
@@ -145,18 +145,29 @@
                                 <div class="col-12">
                                     <dt class="text-secondary">Gelar Akademik</dt>
                                     <dd class="fw-medium">
-                                        {{ $user->identity?->title_prefix }} {{ $user->name }} {{ $user->identity?->title_suffix }}
+                                        {{ $user->identity?->title_prefix }} {{ $user->name }}
+                                        {{ $user->identity?->title_suffix }}
                                     </dd>
                                 </div>
                                 <div class="col-12">
                                     <dt class="text-secondary">ID SINTA</dt>
                                     <dd class="fw-medium">
                                         @if ($user->identity?->sinta_id)
-                                            <a href="https://sinta.kemdiktisaintek.go.id/authors/profile/{{ $user->identity->sinta_id }}"
+                                            <a href="https://sinta.kemdiktisaintek.go.id/authors/profile/{{ $user->identity?->sinta_id }}"
                                                 target="_blank" rel="noopener noreferrer" class="d-flex align-items-center">
-                                                <img src="https://sinta.kemdikbud.go.id/assets/img/logo_sinta.png" alt="SINTA" width="20" class="me-2">
-                                                {{ $user->identity->sinta_id }}
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="ms-1 icon icon-tabler icon-tabler-external-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
+                                                <img src="https://sinta.kemdikbud.go.id/assets/img/logo_sinta.png"
+                                                    alt="SINTA" width="20" class="me-2">
+                                                {{ $user->identity?->sinta_id }}
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="ms-1 icon icon-tabler icon-tabler-external-link" width="24"
+                                                    height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path
+                                                        d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
+                                                    <path d="M11 13l9 -9" />
+                                                    <path d="M15 4h5v5" />
+                                                </svg>
                                             </a>
                                         @else
                                             —
@@ -170,26 +181,34 @@
                             <div class="datagrid">
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">SINTA Score Overall</div>
-                                    <div class="datagrid-content">{{ number_format($user->identity?->sinta_score_v3_overall ?? 0, 0, ',', '.') }}</div>
+                                    <div class="datagrid-content">
+                                        {{ number_format($user->identity?->sinta_score_v3_overall ?? 0, 0, ',', '.') }}
+                                    </div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">SINTA Score 3Yr</div>
-                                    <div class="datagrid-content">{{ number_format($user->identity?->sinta_score_v3_3yr ?? 0, 0, ',', '.') }}</div>
+                                    <div class="datagrid-content">
+                                        {{ number_format($user->identity?->sinta_score_v3_3yr ?? 0, 0, ',', '.') }}
+                                    </div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Affiliation Score Overall</div>
-                                    <div class="datagrid-content">{{ number_format($user->identity?->affil_score_v3_overall ?? 0, 0, ',', '.') }}</div>
+                                    <div class="datagrid-content">
+                                        {{ number_format($user->identity?->affil_score_v3_overall ?? 0, 0, ',', '.') }}
+                                    </div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Affiliation Score 3Yr</div>
-                                    <div class="datagrid-content">{{ number_format($user->identity?->affil_score_v3_3yr ?? 0, 0, ',', '.') }}</div>
+                                    <div class="datagrid-content">
+                                        {{ number_format($user->identity?->affil_score_v3_3yr ?? 0, 0, ',', '.') }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="hr-text">Indeksasi</div>
-                    
+
                     <div class="row row-cards">
                         <div class="col-md-4">
                             <div class="card card-sm border-secondary">
@@ -315,8 +334,8 @@
                                 <tr>
                                     <td class="text-wrap">
                                         <div class="fw-medium">
-                                            <a href="{{ route('research.proposal.show', $research) }}"
-                                                class="text-reset" wire:navigate.hover>
+                                            <a href="{{ route('research.proposal.show', $research) }}" class="text-reset"
+                                                wire:navigate.hover>
                                                 {{ $research->title }}
                                             </a>
                                         </div>

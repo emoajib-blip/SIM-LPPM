@@ -3,6 +3,8 @@
 namespace App\Livewire\Reports;
 
 use App\Enums\ProposalStatus;
+use App\Livewire\Concerns\HasToast;
+use App\Livewire\Traits\WithInstitutionalApproval;
 use App\Models\AdditionalOutput;
 use App\Models\MandatoryOutput;
 use App\Models\Proposal;
@@ -16,13 +18,77 @@ use Livewire\WithPagination;
 #[Layout('components.layouts.app', ['title' => 'Laporan Pengabdian (PKM)', 'pageTitle' => 'Laporan Pengabdian (PKM)'])]
 class CommunityService extends Component
 {
-    use WithPagination;
+    use HasToast, WithInstitutionalApproval, WithPagination;
 
     public string $period;
 
+    public string $search = '';
+
+    public string $selectedScheme = 'all';
+
+    public string $selectedFaculty = 'all';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedScheme(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedFaculty(): void
+    {
+        if (active_role() === 'dekan' || auth()->user()->activeHasRole('dekan')) {
+            $this->selectedFaculty = (string) (auth()->user()->identity->faculty_id ?? 'all');
+        }
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->search = '';
+        $this->selectedScheme = 'all';
+
+        if (active_role() === 'dekan' || auth()->user()->activeHasRole('dekan')) {
+            $this->selectedFaculty = (string) (auth()->user()->identity->faculty_id ?? 'all');
+        } else {
+            $this->selectedFaculty = 'all';
+        }
+
+        $this->period = (string) date('Y');
+        $this->resetPage();
+    }
+
     public function mount()
     {
-        $this->period = (string) date('Y');
+        $this->period = request()->query('period', (string) date('Y'));
+
+        if (active_role() === 'dekan' || auth()->user()->activeHasRole('dekan')) {
+            $this->selectedFaculty = (string) (auth()->user()->identity->faculty_id ?? 'all');
+        }
+
+        // Load metadata from existing report if available
+        $report = $this->getInstitutionalReport('pkm', (int) $this->period);
+        if ($report && $report->metadata) {
+            $this->search = $report->metadata['search'] ?? '';
+            $this->selectedScheme = $report->metadata['scheme'] ?? 'all';
+
+            // Only override faculty if not dekan
+            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
+                $this->selectedFaculty = $report->metadata['faculty'] ?? 'all';
+            }
+        } else {
+            // Check query params if no report metadata
+            $this->search = request()->query('search', '');
+            $this->selectedScheme = request()->query('scheme', 'all');
+
+            // Only override faculty if not dekan
+            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
+                $this->selectedFaculty = request()->query('faculty', 'all');
+            }
+        }
     }
 
     /**
@@ -38,14 +104,28 @@ class CommunityService extends Component
     public function exportPdf(): void
     {
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-        $this->dispatch('download-file', url: route('reports.pkm.pdf', ['period' => $this->period]));
+        $params = [
+            'period' => $this->period,
+            'search' => $this->search,
+            'scheme' => $this->selectedScheme,
+            'faculty' => $this->selectedFaculty,
+        ];
+
+        $this->dispatch('download-file', url: route('reports.pkm.pdf', $params));
     }
 
     #[On('export-excel')]
     public function exportExcel(): void
     {
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-        $this->dispatch('download-file', url: route('reports.pkm.excel', ['period' => $this->period]));
+        $params = [
+            'period' => $this->period,
+            'search' => $this->search,
+            'scheme' => $this->selectedScheme,
+            'faculty' => $this->selectedFaculty,
+        ];
+
+        $this->dispatch('download-file', url: route('reports.pkm.excel', $params));
     }
 
     protected function getBaseQuery()
@@ -53,6 +133,16 @@ class CommunityService extends Component
         return Proposal::query()
             ->where('detailable_type', 'App\Models\CommunityService')
             ->where('start_year', $this->period)
+            ->when($this->selectedScheme !== 'all', fn ($q) => $q->where('research_scheme_id', $this->selectedScheme))
+            ->when($this->selectedFaculty !== 'all', function ($q) {
+                $q->whereHas('submitter.identity', fn ($iq) => $iq->where('faculty_id', $this->selectedFaculty));
+            })
+            ->when($this->search, function ($q) {
+                $q->where(function ($sq) {
+                    $sq->where('title', 'like', "%{$this->search}%")
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                });
+            })
             ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme', 'budgetItems'])
             ->latest();
     }
@@ -70,6 +160,9 @@ class CommunityService extends Component
             'faculties' => $this->pkmByFaculty(),
             'outputStats' => $this->outputAnalytics(),
             'proposals' => $this->proposals(),
+            'allSchemes' => \App\Models\ResearchScheme::orderBy('name')->get(),
+            'allFaculties' => \App\Models\Faculty::orderBy('name')->get(),
+            'institutionalReport' => $this->getInstitutionalReport('pkm', (int) $this->period),
         ]);
     }
 
@@ -86,9 +179,7 @@ class CommunityService extends Component
      */
     protected function pkmByFocusArea(): Collection
     {
-        return Proposal::query()
-            ->where('detailable_type', 'App\Models\CommunityService')
-            ->where('start_year', $this->period)
+        return $this->getBaseQuery()
             ->with('focusArea')
             ->get()
             ->groupBy('focus_area_id')
@@ -122,9 +213,7 @@ class CommunityService extends Component
      */
     protected function summaryMetrics(): array
     {
-        $query = Proposal::query()
-            ->where('detailable_type', 'App\Models\CommunityService')
-            ->where('start_year', $this->period);
+        $query = $this->getBaseQuery();
 
         $totalApproved = (clone $query)
             ->whereIn('status', [
@@ -141,7 +230,8 @@ class CommunityService extends Component
                 ProposalStatus::APPROVED->value,
                 ProposalStatus::COMPLETED->value,
             ])
-            ->sum('sbk_value');
+            ->get()
+            ->sum(fn ($p) => ($p->sbk_value && $p->sbk_value > 0) ? (float) $p->sbk_value : $p->budgetItems->sum('total_price'));
 
         $reportsCount = (clone $query)
             ->whereHas('progressReports')
@@ -149,19 +239,19 @@ class CommunityService extends Component
 
         return [
             [
-                'label' => __('Proposal Disetujui'),
+                'label' => __('Proposal'),
                 'value' => $totalApproved,
                 'icon' => 'check',
                 'variant' => 'bg-green-lt text-green',
             ],
             [
-                'label' => __('Total Anggaran'),
+                'label' => __('Anggaran'),
                 'value' => 'Rp '.number_format($totalBudget, 0, ',', '.'),
                 'icon' => 'currency-dollar',
                 'variant' => 'bg-blue-lt text-blue',
             ],
             [
-                'label' => __('Laporan Terkumpul'),
+                'label' => __('Laporan'),
                 'value' => $reportsCount,
                 'icon' => 'file-text',
                 'variant' => 'bg-yellow-lt text-yellow',
@@ -174,10 +264,7 @@ class CommunityService extends Component
      */
     protected function outputAnalytics(): Collection
     {
-        $proposalIds = Proposal::query()
-            ->where('detailable_type', 'App\Models\CommunityService')
-            ->where('start_year', $this->period)
-            ->pluck('id');
+        $proposalIds = $this->getBaseQuery()->pluck('id');
 
         $mandatory = MandatoryOutput::query()
             ->whereHas('progressReport', fn ($q) => $q->whereIn('proposal_id', $proposalIds))
@@ -194,7 +281,11 @@ class CommunityService extends Component
             ->map(fn ($group, $key) => [
                 'category' => $this->translateCategory($key),
                 'count' => $group->count(),
-                'published' => $group->filter(fn ($o) => in_array($o->status_type ?? $o->status, ['published', 'terbit', 'granted']))->count(),
+                'published' => $group->filter(fn ($o) => in_array($o->status_type ?? $o->status, [
+                    'published',
+                    'terbit',
+                    'granted',
+                ]))->count(),
             ])
             ->sortByDesc('count');
     }
@@ -224,7 +315,16 @@ class CommunityService extends Component
         return Proposal::query()
             ->where('detailable_type', 'App\Models\CommunityService')
             ->where('start_year', $this->period)
-            ->with('researchScheme')
+            ->when($this->selectedFaculty !== 'all', function ($q) {
+                $q->whereHas('submitter.identity', fn ($iq) => $iq->where('faculty_id', $this->selectedFaculty));
+            })
+            ->when($this->search, function ($q) {
+                $q->where(function ($sq) {
+                    $sq->where('title', 'like', "%{$this->search}%")
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                });
+            })
+            ->with(['researchScheme', 'budgetItems'])
             ->get()
             ->groupBy('research_scheme_id')
             ->map(function ($proposals) {
@@ -233,7 +333,8 @@ class CommunityService extends Component
                 return [
                     'name' => $first->researchScheme->name ?? __('Tanpa Skema'),
                     'count' => $proposals->count(),
-                    'budget' => $proposals->sum('sbk_value'),
+                    'budget' => $proposals->sum(fn ($p) => ($p->sbk_value && $p->sbk_value > 0) ? (float) $p->sbk_value :
+                        $p->budgetItems->sum('total_price')),
                 ];
             })
             ->sortByDesc('count');
@@ -247,6 +348,13 @@ class CommunityService extends Component
         return Proposal::query()
             ->where('detailable_type', 'App\Models\CommunityService')
             ->where('start_year', $this->period)
+            ->when($this->selectedScheme !== 'all', fn ($q) => $q->where('research_scheme_id', $this->selectedScheme))
+            ->when($this->search, function ($q) {
+                $q->where(function ($sq) {
+                    $sq->where('title', 'like', "%{$this->search}%")
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                });
+            })
             ->with(['submitter.identity.faculty'])
             ->get()
             ->groupBy(fn ($p) => $p->submitter->identity->faculty_id)

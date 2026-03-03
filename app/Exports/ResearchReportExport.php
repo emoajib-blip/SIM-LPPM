@@ -12,14 +12,29 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ResearchReportExport implements FromView, ShouldAutoSize, WithColumnFormatting, WithStyles
 {
-    public function __construct(protected string $period) {}
+    public function __construct(
+        protected string $period,
+        protected ?string $search = null,
+        protected ?string $scheme = null,
+        protected ?string $faculty = null
+    ) {}
 
     public function view(): View
     {
         $proposals = Proposal::query()
             ->where('detailable_type', 'App\Models\Research')
             ->when($this->period, fn ($q) => $q->where('start_year', $this->period))
-            ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme'])
+            ->when($this->search, function ($q) {
+                $q->where(function ($sub) {
+                    $sub->where('title', 'like', "%{$this->search}%")
+                        ->orWhereHas('submitter', fn ($u) => $u->where('name', 'like', "%{$this->search}%"));
+                });
+            })
+            ->when($this->scheme && $this->scheme !== 'all', fn ($q) => $q->where('research_scheme_id', $this->scheme))
+            ->when($this->faculty && $this->faculty !== 'all', function ($q) {
+                $q->whereHas('submitter.identity', fn ($i) => $i->where('faculty_id', $this->faculty));
+            })
+            ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme', 'budgetItems'])
             ->latest()
             ->get();
 

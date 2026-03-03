@@ -4,9 +4,14 @@ namespace App\Livewire\Actions;
 
 use App\Enums\ProposalStatus;
 use App\Models\Proposal;
+use App\Services\NotificationService;
 
 class ApproveProposalAction
 {
+    public function __construct(
+        protected NotificationService $notificationService
+    ) {}
+
     /**
      * Approve or reject a proposal.
      * Only possible if all reviewers have completed their reviews.
@@ -35,6 +40,14 @@ class ApproveProposalAction
 
         // Update proposal status
         $proposal->update(['status' => $decision]);
+
+        // Send Final Notification to Submitter and All Stakeholders
+        $this->notificationService->notifyFinalDecision(
+            $proposal,
+            $decision,
+            \Illuminate\Support\Facades\Auth::user(),
+            [$proposal->submitter]
+        );
 
         $message = $decision === 'completed'
             ? 'Proposal berhasil disetujui dan selesai.'

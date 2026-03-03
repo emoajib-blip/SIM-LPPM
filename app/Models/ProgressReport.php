@@ -59,6 +59,7 @@ class ProgressReport extends Model implements HasMedia
     protected function casts(): array
     {
         return [
+            'status' => \App\Enums\ReportStatus::class,
             'submitted_at' => 'datetime',
         ];
     }

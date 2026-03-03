@@ -23,10 +23,33 @@ class ProposalPdfService
             mkdir($cacheDir, 0755, true);
         }
 
+        // Calculate latest timestamp including media
+        $latestTimestamp = $proposal->updated_at->timestamp;
+
+        $collections = ['substance_file', 'approval_file'];
+        foreach ($collections as $col) {
+            /** @var \Illuminate\Database\Eloquent\Model&\Spatie\MediaLibrary\HasMedia $detailable */
+            $detailable = $proposal->detailable;
+            $media = $detailable->getMedia($col)->first();
+            if ($media) {
+                $latestTimestamp = max($latestTimestamp, $media->updated_at->timestamp);
+            }
+        }
+
+        // Check partner commitment letters
+        foreach ($proposal->partners as $partner) {
+            $commitment = $partner->getMedia('commitment_letter')
+                ->where('custom_properties.proposal_id', $proposal->id)
+                ->first();
+            if ($commitment) {
+                $latestTimestamp = max($latestTimestamp, $commitment->updated_at->timestamp);
+            }
+        }
+
         $cacheFileName = sprintf(
             'proposal_%s_%s.pdf',
             $proposal->id,
-            $proposal->updated_at->timestamp
+            $latestTimestamp
         );
         $cachePath = $cacheDir.DIRECTORY_SEPARATOR.$cacheFileName;
 
@@ -227,7 +250,7 @@ class ProposalPdfService
             $detailable = $proposal->detailable;
             /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $approvalFile */
             $approvalFile = $detailable->getFirstMedia('approval_file');
-            if ($approvalFile && file_exists($approvalFile->getPath()) && ($approvalFile->mime_type ?? '') === 'application/pdf') {
+            if ($approvalFile && file_exists($approvalFile->getPath()) && str_contains($approvalFile->mime_type ?? '', 'pdf')) {
                 try {
                     $approvalPageCount = $pdf->setSourceFile($approvalFile->getPath());
                     for ($i = 1; $i <= $approvalPageCount; $i++) {
@@ -247,7 +270,7 @@ class ProposalPdfService
         $detailableSubstance = $proposal->detailable;
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
         $substanceFile = $detailableSubstance->getFirstMedia('substance_file');
-        if ($substanceFile && file_exists($substanceFile->getPath()) && ($substanceFile->mime_type ?? '') === 'application/pdf') {
+        if ($substanceFile && file_exists($substanceFile->getPath()) && str_contains($substanceFile->mime_type ?? '', 'pdf')) {
             try {
                 $substancePageCount = $pdf->setSourceFile($substanceFile->getPath());
                 for ($i = 1; $i <= $substancePageCount; $i++) {
@@ -258,6 +281,30 @@ class ProposalPdfService
                 }
             } catch (\Throwable $e) {
                 Log::warning('FPDI Merge Fail (Substance File) for '.$proposal->id.': '.$e->getMessage());
+            }
+        } elseif ($substanceFile && file_exists($substanceFile->getPath())) {
+            Log::warning('Proposal PDF Export: Skipping non-PDF substance file for proposal '.$proposal->id.' (MIME: '.$substanceFile->mime_type.')');
+        }
+
+        // 4. Add pages from partner commitment letters
+        foreach ($proposal->partners as $partner) {
+            /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $commitmentLetter */
+            $commitmentLetter = $partner->getMedia('commitment_letter')
+                ->where('custom_properties.proposal_id', $proposal->id)
+                ->first();
+
+            if ($commitmentLetter && file_exists($commitmentLetter->getPath()) && str_contains($commitmentLetter->mime_type ?? '', 'pdf')) {
+                try {
+                    $commitmentPageCount = $pdf->setSourceFile($commitmentLetter->getPath());
+                    for ($i = 1; $i <= $commitmentPageCount; $i++) {
+                        $templateId = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($templateId);
+                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                        $pdf->useTemplate($templateId);
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning('FPDI Merge Fail (Partner Commitment Letter) for partner '.$partner->id.' in proposal '.$proposal->id.': '.$e->getMessage());
+                }
             }
         }
 
@@ -280,10 +327,34 @@ class ProposalPdfService
             mkdir($cacheDir, 0755, true);
         }
 
+        // Calculate latest timestamp including media
+        $latestTimestamp = $report->updated_at->timestamp;
+
+        // Check report media
+        $collections = ['substance_file', 'realization_file', 'presentation_file', 'signature_page'];
+        foreach ($collections as $col) {
+            $media = $report->getFirstMedia($col);
+            if ($media) {
+                $latestTimestamp = max($latestTimestamp, $media->updated_at->timestamp);
+            }
+        }
+
+        // Check output media
+        $outputModels = $report->mandatoryOutputs->concat($report->additionalOutputs);
+        foreach ($outputModels as $output) {
+            $outputCols = ['journal_article', 'book_document', 'publication_certificate', 'output_file'];
+            foreach ($outputCols as $col) {
+                $media = $output->getFirstMedia($col);
+                if ($media) {
+                    $latestTimestamp = max($latestTimestamp, $media->updated_at->timestamp);
+                }
+            }
+        }
+
         $cacheFileName = sprintf(
             'report_%s_%s.pdf',
             $report->id,
-            $report->updated_at->timestamp
+            $latestTimestamp
         );
         $cachePath = $cacheDir.DIRECTORY_SEPARATOR.$cacheFileName;
 
@@ -348,26 +419,19 @@ class ProposalPdfService
         }
 
         // Determine signature presence for reports
-        // Since robust report approval workflow might be pending, we rely on report status or proposal completion
+        // Strict logic: Dean signature appears ONLY IF report is approved_by_dekan OR approved
+        // LPPM signature appears ONLY IF report is approved
         $deanSignedAt = null;
         $lppmSignedAt = null;
 
-        // If Report is Final and Proposal is Completed, assume fully signed
-        if ($report->reporting_period === 'final' && $proposal->status === \App\Enums\ProposalStatus::COMPLETED) {
-            // Find completion log for LPPM Head signature
-            $completionLog = \App\Models\ProposalStatusLog::where('proposal_id', $proposal->id)
-                ->where('status_after', \App\Enums\ProposalStatus::COMPLETED)
-                ->latest('at')
-                ->first();
+        $reportStatusVal = $report->status instanceof \BackedEnum ? $report->status->value : $report->status;
 
-            $lppmSignedAt = $completionLog->at ?? $proposal->updated_at;
-
-            // Assume Dean signed slightly before or use same time if no log available
-            $deanSignedAt = $lppmSignedAt;
-        } elseif ($report->status === 'approved' || $report->status === 'accepted') {
-            // If individual report has approved status
-            $lppmSignedAt = $report->updated_at;
+        if (in_array($reportStatusVal, ['approved_by_dekan', 'approved', 'accepted'])) {
             $deanSignedAt = $report->updated_at;
+        }
+
+        if (in_array($reportStatusVal, ['approved', 'accepted'])) {
+            $lppmSignedAt = $report->updated_at;
         }
 
         $lecturerSignedAt = $report->submitted_at ?? ($report->created_at ?? now());
@@ -411,10 +475,28 @@ class ProposalPdfService
             $pdf->useTemplate($templateId);
         }
 
-        // Add pages from the report's substance file if it exists
+        // 1.5. Add pages from the report's uploaded signature page (if exists)
+        /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $signaturePage */
+        $signaturePage = $report->getFirstMedia('signature_page');
+        if ($signaturePage && file_exists($signaturePage->getPath()) && str_contains($signaturePage->mime_type ?? '', 'pdf')) {
+            try {
+                $sigPageCount = $pdf->setSourceFile($signaturePage->getPath());
+                for ($i = 1; $i <= $sigPageCount; $i++) {
+                    $templateId = $pdf->importPage($i);
+                    $size = $pdf->getTemplateSize($templateId);
+                    $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                    $pdf->useTemplate($templateId);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Signature Page) for '.$report->id.': '.$e->getMessage());
+            }
+        }
+
+        // 2. Add pages from the report's substance file
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
         $substanceFile = $report->getFirstMedia('substance_file');
-        if ($substanceFile && file_exists($substanceFile->getPath()) && ($substanceFile->mime_type ?? '') === 'application/pdf') {
+        // Validate MIME type is application/pdf before merging
+        if ($substanceFile && file_exists($substanceFile->getPath()) && str_contains($substanceFile->mime_type ?? '', 'pdf')) {
             try {
                 $substancePageCount = $pdf->setSourceFile($substanceFile->getPath());
                 for ($i = 1; $i <= $substancePageCount; $i++) {
@@ -426,6 +508,97 @@ class ProposalPdfService
             } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Substance) for '.$report->id.': '.$e->getMessage());
             }
+        }
+
+        // 3. Add pages from Realisasi Keterlibatan file
+        /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $realizationFile */
+        $realizationFile = $report->getFirstMedia('realization_file');
+        if ($realizationFile && file_exists($realizationFile->getPath()) && str_contains($realizationFile->mime_type ?? '', 'pdf')) {
+            try {
+                $realizationPageCount = $pdf->setSourceFile($realizationFile->getPath());
+                for ($i = 1; $i <= $realizationPageCount; $i++) {
+                    $templateId = $pdf->importPage($i);
+                    $size = $pdf->getTemplateSize($templateId);
+                    $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                    $pdf->useTemplate($templateId);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Realization File) for '.$report->id.': '.$e->getMessage());
+            }
+        }
+
+        // 4. Add pages from Presentation file (Community Service only)
+        if ($proposal->detailable_type === 'App\Models\CommunityService') {
+            /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $presentationFile */
+            $presentationFile = $report->getFirstMedia('presentation_file');
+            if ($presentationFile && file_exists($presentationFile->getPath()) && str_contains($presentationFile->mime_type ?? '', 'pdf')) {
+                try {
+                    $presentationPageCount = $pdf->setSourceFile($presentationFile->getPath());
+                    for ($i = 1; $i <= $presentationPageCount; $i++) {
+                        $templateId = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($templateId);
+                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                        $pdf->useTemplate($templateId);
+                    }
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Presentation File) for '.$report->id.': '.$e->getMessage());
+                }
+            }
+        }
+
+        // Add pages from output files (if they are PDFs)
+        $outputModels = $report->mandatoryOutputs->concat($report->additionalOutputs);
+        foreach ($outputModels as $outputRecord) {
+            // Check all possible PDF-containing collections for outputs
+            $collections = ['journal_article', 'book_document', 'publication_certificate', 'output_file'];
+
+            foreach ($collections as $collection) {
+                /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $outputMedia */
+                $outputMedia = $outputRecord->getFirstMedia($collection);
+                if ($outputMedia && file_exists($outputMedia->getPath()) && str_contains($outputMedia->mime_type ?? '', 'pdf')) {
+                    try {
+                        $outputPageCount = $pdf->setSourceFile($outputMedia->getPath());
+                        for ($i = 1; $i <= $outputPageCount; $i++) {
+                            $templateId = $pdf->importPage($i);
+                            $size = $pdf->getTemplateSize($templateId);
+                            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                            $pdf->useTemplate($templateId);
+                        }
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::warning("FPDI Merge Fail (Output File - {$collection}) for report ".$report->id.': '.$e->getMessage());
+                    }
+                }
+            }
+        }
+
+        // Add pages from Daily Notes
+        $dailyNotes = \App\Models\DailyNote::where('proposal_id', $proposal->id)
+            ->with(['budgetGroup', 'media'])
+            ->orderBy('activity_date', 'asc')
+            ->get();
+
+        if ($dailyNotes->isNotEmpty()) {
+            $notesPdfContent = Pdf::loadView('pdf.daily-notes', [
+                'proposal' => $proposal,
+                'notes' => $dailyNotes,
+                'isSigned' => $proposal->logbook_signed_at !== null,
+            ])->setPaper('a4', 'portrait')->output();
+
+            $tempNotesPath = tempnam(sys_get_temp_dir(), 'report_notes_');
+            file_put_contents($tempNotesPath, $notesPdfContent);
+
+            try {
+                $notesPageCount = $pdf->setSourceFile($tempNotesPath);
+                for ($i = 1; $i <= $notesPageCount; $i++) {
+                    $templateId = $pdf->importPage($i);
+                    $size = $pdf->getTemplateSize($templateId);
+                    $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                    $pdf->useTemplate($templateId);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Daily Notes) for '.$report->id.': '.$e->getMessage());
+            }
+            @unlink($tempNotesPath);
         }
 
         $pdf->Output('F', $cachePath);

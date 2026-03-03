@@ -46,10 +46,14 @@ class CompleteReviewAction
         }
 
         if ($review->isCompleted()) {
-            return [
-                'success' => false,
-                'message' => 'Review sudah selesai dan tidak dapat diubah.',
-            ];
+            // Check if proposal status is final (Completed or Rejected)
+            if ($review->proposal->status->isFinal()) {
+                return [
+                    'success' => false,
+                    'message' => 'Review tidak dapat diubah karena proposal sudah mencapai status final.',
+                ];
+            }
+            // If not final, we allow re-submission/update
         }
 
         return DB::transaction(function () use ($review, $comments, $recommendation) {
@@ -128,7 +132,10 @@ class CompleteReviewAction
             ->push($proposal->submitter) // Submitter
             ->merge(User::role('kepala lppm')->get()) // All Kepala LPPM
             ->merge(User::role('admin lppm')->get()) // All Admin LPPM
-            ->merge(User::role('dekan')->where('faculty_id', $proposal->submitter->faculty_id)->get()) // Relevant Dekan
+            ->push($proposal->submitter?->identity?->faculty?->deanUser) // Specific Dekan from Faculty relation
+            ->merge(User::role('dekan')->whereHas('identity', function ($query) use ($proposal) {
+                $query->where('faculty_id', $proposal->submitter?->identity?->faculty_id);
+            })->get()) // Relevant Dekan(s) by identity (backup)
             ->merge($proposal->teamMembers) // Team Members
             ->filter()
             ->unique('id')

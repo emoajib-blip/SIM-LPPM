@@ -97,7 +97,7 @@ class ManageArchives extends Component
         }
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         // Zero Trust: verifikasi proposal ada & statusnya COMPLETED
         $p = Proposal::where('status', ProposalStatus::COMPLETED)->findOrFail($id);
