@@ -772,6 +772,7 @@ REJECTED        → [] (TERMINAL)
 | `/research/progress-report` | `research.progress-report.index` | Laporan kemajuan |
 | `/research/final-report` | `research.final-report.index` | Laporan akhir |
 | `/research/daily-note` | `research.daily-note.index` | Catatan harian |
+| `/reports/outputs` | `reports.outputs` | Laporan luaran (Admin/Rektor/Kepala) |
 
 ### Dekan
 
@@ -801,7 +802,17 @@ REJECTED        → [] (TERMINAL)
 |-----|------------|--------|
 | `/review/research` | `review.research` | Daftar proposal penelitian untuk direview |
 | `/review/community-service` | `review.community-service` | Daftar proposal PKM untuk direview |
-| `/review/riwayat-review` | `review.review-history` | Riwayat review yang sudah selesai |
+| `/review/riwayat-review` | `review.review-history` | Riwayat review |
+
+### Modul Laporan (Institutional Reports)
+
+| Nama Laporan | Deskripsi | Target User |
+|--------------|-----------|-------------|
+| **Laporan Penelitian** | Rekapitulasi seluruh usulan penelitian per periode | Admin, Rektor, Kepala |
+| **Laporan PKM** | Rekapitulasi seluruh usulan pengabdian per periode | Admin, Rektor, Kepala |
+| **Laporan Luaran** | Rekapitulasi luaran wajib & tambahan (Jurnal, Paten, dll) | Admin, Rektor, Kepala, Dekan |
+| **Laporan IKU** | Dashboard ketercapaian Indikator Kinerja Utama | Admin, Rektor, Kepala |
+| **Kerjasama Mitra** | Daftar mitra dan status kerjasama (khusus PKM) | Admin, Rektor, Kepala |
 
 ### Semua Role
 

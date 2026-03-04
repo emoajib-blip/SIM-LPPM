@@ -69,4 +69,12 @@ Khusus untuk Pengabdian (PKM), sistem menyimpan database mitra:
 Sistem mengelola koleksi kata kunci yang dapat digunakan kembali untuk meningkatkan pencarian dan keterhubungan antar proposal/laporan yang memiliki topik serupa.
 
 ---
+
+## 8. Batas Anggaran (Budget Caps)
+Sistem menerapkan batasan anggaran tahunan untuk menjaga stabilitas finansial institusi:
+*   **Global Cap:** Batas maksimal total anggaran untuk Penelitian dan PKM dalam satu tahun.
+*   **Scheme-specific Cap:** Batas maksimal anggaran untuk skema tertentu (misal: Hibah Internal max 15jt, Hibah Bersaing max 50jt).
+*   **Validation:** Sistem akan menolak proposal jika rencana anggaran (RAB) melampaui batas yang telah ditetapkan di Master Data.
+
+---
 *Pengelolaan data master yang disiplin adalah kunci dari kualitas dashboard analitik di tingkat Rektor dan Kepala LPPM.*

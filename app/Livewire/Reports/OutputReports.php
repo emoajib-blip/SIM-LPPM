@@ -32,6 +32,8 @@ class OutputReports extends Component
 
     public function mount(): void
     {
+        $this->period = request()->query('period', (string) date('Y'));
+
         if (active_role() === 'dekan' || auth()->user()->activeHasRole('dekan')) {
             $this->selectedFaculty = (string) (auth()->user()->identity->faculty_id ?? 'all');
         }
