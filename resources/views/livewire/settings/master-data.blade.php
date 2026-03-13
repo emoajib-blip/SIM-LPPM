@@ -61,6 +61,11 @@
                                 <x-lucide-list class="icon me-2" />
                                 Jenis Luaran IKU
                             </button>
+                            <button wire:click="setActiveTab('master-iku')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'master-iku' ? 'active' : '' }}">
+                                <x-lucide-database class="icon me-2" />
+                                Master IKU
+                            </button>
                             <button wire:click="setActiveTab('sdgs')"
                                 class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'sdgs' ? 'active' : '' }}">
                                 <x-lucide-globe class="icon me-2" />
@@ -230,6 +235,10 @@
                     @elseif ($activeTab === 'iku-output-types')
                         <div>
                             <livewire:settings.tabs.iku-output-type-manager />
+                        </div>
+                    @elseif ($activeTab === 'master-iku')
+                        <div>
+                            <livewire:settings.tabs.master-iku-manager />
                         </div>
                     @elseif ($activeTab === 'sdgs')
                         <div>

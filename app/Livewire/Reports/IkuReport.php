@@ -63,6 +63,15 @@ class IkuReport extends Component
         }
     }
 
+    public function previewPdf(): void
+    {
+        $this->dispatch('open-new-tab', url: route('admin.iku.export-pdf', [
+            'period' => $this->period,
+            'search' => $this->search,
+            'preview' => 1,
+        ]));
+    }
+
     public function render(): View
     {
         $ikuMetrics = $this->getIkuMetrics($this->period);

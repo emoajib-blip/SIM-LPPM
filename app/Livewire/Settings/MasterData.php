@@ -23,6 +23,7 @@ class MasterData extends Component
                 'academic-structure' => 'study-programs',
                 'budget' => 'budget-groups',
                 'partnership' => 'partners',
+                'academic-content' => 'focus-areas',
                 default => 'focus-areas',
             };
         }

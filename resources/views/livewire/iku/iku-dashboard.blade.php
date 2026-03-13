@@ -21,6 +21,12 @@
                     @endforeach
                 </ul>
             </div>
+            <button wire:click="previewPdf" wire:loading.attr="disabled" class="btn btn-outline-primary shadow-sm">
+                <i class="ti ti-eye me-2" wire:loading.remove wire:target="previewPdf"></i>
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" wire:loading
+                    wire:target="previewPdf"></span>
+                <span>Tinjau PDF</span>
+            </button>
             <a href="{{ route('admin.iku.export-pdf', ['period' => $period]) }}" class="btn btn-primary shadow-sm"
                 data-navigate-ignore="true" target="_blank">
                 <x-lucide-printer class="icon me-2" />
@@ -42,30 +48,39 @@
                         <div class="d-flex justify-content-between align-items-start mb-4">
                             <div class="badge px-3 py-2 rounded-pill bg-soft-primary text-primary text-uppercase font-weight-bold"
                                 style="font-size: 0.7rem;">
-                                {{ strtoupper($key) }}
+                                {{ $metric['code'] }}
                             </div>
-                            @if($metric['achievement'] >= $metric['target'])
-                                <div class="d-flex align-items-center text-success small font-weight-bold">
-                                    <x-lucide-check-circle class="icon icon-sm me-1" />
-                                    Mencapai Target
-                                </div>
-                            @else
-                                <div class="d-flex align-items-center text-warning small font-weight-bold">
-                                    <x-lucide-alert-circle class="icon icon-sm me-1" />
-                                    Sedang Berjalan
-                                </div>
-                            @endif
+                            <div class="d-flex align-items-center gap-2">
+                                @if(isset($metric['is_manual']) && $metric['is_manual'])
+                                    <span class="badge bg-warning-lt px-2" title="Manual Input Aktif">
+                                        <x-lucide-edit-3 class="icon icon-sm me-1" />
+                                        Manual
+                                    </span>
+                                @endif
+                                @if($metric['achievement'] >= $metric['target'])
+                                    <div class="d-flex align-items-center text-success small font-weight-bold">
+                                        <x-lucide-check-circle class="icon icon-sm me-1" />
+                                        Mencapai Target
+                                    </div>
+                                @else
+                                    <div class="d-flex align-items-center text-warning small font-weight-bold">
+                                        <x-lucide-alert-circle class="icon icon-sm me-1" />
+                                        Berjalan
+                                    </div>
+                                @endif
+                            </div>
                         </div>
 
                         <!-- Interactive Gauge Widget -->
                         <div class="gauge-container mb-4">
                             <div class="gauge-wrapper">
                                 <div class="gauge-body"></div>
-                                <div class="gauge-fill" 
+                                <div class="gauge-fill"
                                     style="--gauge-deg: {{ min($metric['achievement'] * 1.8, 180) }}deg; 
-                                           --gauge-color: {{ $metric['achievement'] >= $metric['target'] ? '#10b981' : '#2563eb' }};">
+                                                   --gauge-color: {{ $metric['achievement'] >= $metric['target'] ? '#10b981' : '#2563eb' }};">
                                 </div>
-                                <div class="gauge-target-line" style="--target-deg: {{ min($metric['target'] * 1.8, 180) }}deg;">
+                                <div class="gauge-target-line"
+                                    style="--target-deg: {{ min($metric['target'] * 1.8, 180) }}deg;">
                                     <div class="gauge-target-marker"></div>
                                 </div>
                                 <div class="gauge-cover">
@@ -76,7 +91,9 @@
                         </div>
 
                         <h4 class="h6 font-weight-semi-bold text-dark mb-2 text-center">{{ $metric['name'] }}</h4>
-                        <p class="small text-muted mb-4 text-center" style="height: 3em; overflow: hidden;">{{ $metric['description'] }}</p>
+                        <p class="small text-muted mb-4 text-center" style="height: 3em; overflow: hidden;">
+                            {{ $metric['description'] }}
+                        </p>
 
                         <div class="progress mb-2 d-none" style="height: 6px; border-radius: 10px; background: #f1f5f9;">
                             <div class="progress-bar @if($metric['achievement'] >= $metric['target']) bg-success @else bg-primary @endif"
@@ -122,7 +139,14 @@
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="bg-light">
-                            @if(strtoupper($selectedIku) == 'IKU4')
+                            @if(strtoupper($selectedIku) == 'IKU03')
+                                <tr>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>Program Studi</th>
+                                    <th>Kegiatan</th>
+                                    <th>Status</th>
+                                </tr>
+                            @elseif(strtoupper($selectedIku) == 'IKU04')
                                 <tr>
                                     <th>Nama Dosen</th>
                                     <th>NIDN/NIK</th>
@@ -130,14 +154,14 @@
                                     <th>SINTA ID</th>
                                     <th>WoS ID</th>
                                 </tr>
-                            @elseif(strtoupper($selectedIku) == 'IKU5')
+                            @elseif(strtoupper($selectedIku) == 'IKU05')
                                 <tr>
                                     <th>Judul Kegiatan</th>
                                     <th>Ketua Pengusul</th>
                                     <th>Nama Mitra</th>
                                     <th class="text-center">Bobot Skor</th>
                                 </tr>
-                            @elseif(strtoupper($selectedIku) == 'IKU6')
+                            @elseif(strtoupper($selectedIku) == 'IKU06')
                                 <tr>
                                     <th>Judul Artikel</th>
                                     <th>Nama Jurnal / Penerbit</th>
@@ -145,22 +169,33 @@
                                     <th>Pengindeks</th>
                                     <th class="text-center">Bobot</th>
                                 </tr>
-                            @elseif(strtoupper($selectedIku) == 'IKU7')
+                            @elseif(strtoupper($selectedIku) == 'IKU07')
                                 <tr>
                                     <th>Judul Kegiatan</th>
                                     <th>Ketua Pengusul</th>
                                     <th>Target SDGs</th>
                                 </tr>
-                            @elseif(strtoupper($selectedIku) == 'IKU8')
+                            @elseif(strtoupper($selectedIku) == 'IKU08')
                                 <tr>
                                     <th>Nama Dosen</th>
                                     <th>Keterlibatan Kebijakan / Rekognisi Pakar</th>
+                                </tr>
+                            @else
+                                <tr>
+                                    <th colspan="5">Data rincian tidak tersedia untuk IKU ini (Hubungi Admin)</th>
                                 </tr>
                             @endif
                         </thead>
                         <tbody>
                             @forelse($this->selectedMetricDetails as $row)
-                                @if(strtoupper($selectedIku) == 'IKU4')
+                                @if(strtoupper($selectedIku) == 'IKU03')
+                                    <tr>
+                                        <td>{{ $row['name'] ?? 'N/A' }}</td>
+                                        <td>{{ $row['prodi'] ?? 'N/A' }}</td>
+                                        <td>{{ $row['activity'] ?? 'N/A' }}</td>
+                                        <td><span class="badge bg-success-lt">Aktif</span></td>
+                                    </tr>
+                                @elseif(strtoupper($selectedIku) == 'IKU04')
                                     <tr>
                                         <td class="font-weight-semi-bold">{{ $row['name'] }}</td>
                                         <td>{{ $row['id_number'] }}</td>
@@ -168,7 +203,7 @@
                                         <td><span class="text-muted">{{ $row['sinta'] ?? '-' }}</span></td>
                                         <td><span class="text-muted">{{ $row['wos'] ?? '-' }}</span></td>
                                     </tr>
-                                @elseif(strtoupper($selectedIku) == 'IKU5')
+                                @elseif(strtoupper($selectedIku) == 'IKU05')
                                     <tr>
                                         <td class="font-weight-semi-bold">{{ $row['title'] }}</td>
                                         <td>{{ $row['submitter'] }}</td>
@@ -176,7 +211,7 @@
                                         <td class="text-center"><span
                                                 class="badge bg-soft-primary text-primary">{{ $row['weight'] }}</span></td>
                                     </tr>
-                                @elseif(strtoupper($selectedIku) == 'IKU6')
+                                @elseif(strtoupper($selectedIku) == 'IKU06')
                                     <tr>
                                         <td class="font-weight-semi-bold">{{ $row['title'] }}</td>
                                         <td>{{ $row['journal'] }}</td>
@@ -185,13 +220,13 @@
                                         <td class="text-center"><span
                                                 class="badge bg-soft-primary text-primary">{{ $row['weight'] }}</span></td>
                                     </tr>
-                                @elseif(strtoupper($selectedIku) == 'IKU7')
+                                @elseif(strtoupper($selectedIku) == 'IKU07')
                                     <tr>
                                         <td class="font-weight-semi-bold">{{ $row['title'] }}</td>
                                         <td>{{ $row['submitter'] }}</td>
                                         <td><span class="small">{{ $row['sdgs'] }}</span></td>
                                     </tr>
-                                @elseif(strtoupper($selectedIku) == 'IKU8')
+                                @elseif(strtoupper($selectedIku) == 'IKU08')
                                     <tr>
                                         <td class="font-weight-semi-bold">{{ $row['name'] }}</td>
                                         <td>{{ $row['policies'] }}</td>

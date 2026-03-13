@@ -10,6 +10,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\Seeders\RoleSeeder']);
+    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\Seeders\MasterIkuSeeder']);
 });
 
 test('it can render the dashboard', function () {

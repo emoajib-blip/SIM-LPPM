@@ -16,16 +16,41 @@ class ProposalSchedule extends Component
 
     public $research_end_date;
 
+    public $research_revision_start_date;
+
+    public $research_revision_end_date;
+
+    public $research_final_report_start_date;
+
+    public $research_final_report_end_date;
+
     public $community_service_start_date;
 
     public $community_service_end_date;
+
+    public $community_service_revision_start_date;
+
+    public $community_service_revision_end_date;
+
+    public $community_service_final_report_start_date;
+
+    public $community_service_final_report_end_date;
 
     public function mount()
     {
         $this->research_start_date = Setting::where('key', 'research_proposal_start_date')->value('value');
         $this->research_end_date = Setting::where('key', 'research_proposal_end_date')->value('value');
+        $this->research_revision_start_date = Setting::where('key', 'research_revision_start_date')->value('value');
+        $this->research_revision_end_date = Setting::where('key', 'research_revision_end_date')->value('value');
+        $this->research_final_report_start_date = Setting::where('key', 'research_final_report_start_date')->value('value');
+        $this->research_final_report_end_date = Setting::where('key', 'research_final_report_end_date')->value('value');
+
         $this->community_service_start_date = Setting::where('key', 'community_service_proposal_start_date')->value('value');
         $this->community_service_end_date = Setting::where('key', 'community_service_proposal_end_date')->value('value');
+        $this->community_service_revision_start_date = Setting::where('key', 'community_service_revision_start_date')->value('value');
+        $this->community_service_revision_end_date = Setting::where('key', 'community_service_revision_end_date')->value('value');
+        $this->community_service_final_report_start_date = Setting::where('key', 'community_service_final_report_start_date')->value('value');
+        $this->community_service_final_report_end_date = Setting::where('key', 'community_service_final_report_end_date')->value('value');
     }
 
     public function save()
@@ -33,14 +58,32 @@ class ProposalSchedule extends Component
         $this->validate([
             'research_start_date' => 'nullable|date',
             'research_end_date' => 'nullable|date|after_or_equal:research_start_date',
+            'research_revision_start_date' => 'nullable|date',
+            'research_revision_end_date' => 'nullable|date|after_or_equal:research_revision_start_date',
+            'research_final_report_start_date' => 'nullable|date',
+            'research_final_report_end_date' => 'nullable|date|after_or_equal:research_final_report_start_date',
+
             'community_service_start_date' => 'nullable|date',
             'community_service_end_date' => 'nullable|date|after_or_equal:community_service_start_date',
+            'community_service_revision_start_date' => 'nullable|date',
+            'community_service_revision_end_date' => 'nullable|date|after_or_equal:community_service_revision_start_date',
+            'community_service_final_report_start_date' => 'nullable|date',
+            'community_service_final_report_end_date' => 'nullable|date|after_or_equal:community_service_final_report_start_date',
         ]);
 
         Setting::updateOrCreate(['key' => 'research_proposal_start_date'], ['value' => $this->research_start_date]);
         Setting::updateOrCreate(['key' => 'research_proposal_end_date'], ['value' => $this->research_end_date]);
+        Setting::updateOrCreate(['key' => 'research_revision_start_date'], ['value' => $this->research_revision_start_date]);
+        Setting::updateOrCreate(['key' => 'research_revision_end_date'], ['value' => $this->research_revision_end_date]);
+        Setting::updateOrCreate(['key' => 'research_final_report_start_date'], ['value' => $this->research_final_report_start_date]);
+        Setting::updateOrCreate(['key' => 'research_final_report_end_date'], ['value' => $this->research_final_report_end_date]);
+
         Setting::updateOrCreate(['key' => 'community_service_proposal_start_date'], ['value' => $this->community_service_start_date]);
         Setting::updateOrCreate(['key' => 'community_service_proposal_end_date'], ['value' => $this->community_service_end_date]);
+        Setting::updateOrCreate(['key' => 'community_service_revision_start_date'], ['value' => $this->community_service_revision_start_date]);
+        Setting::updateOrCreate(['key' => 'community_service_revision_end_date'], ['value' => $this->community_service_revision_end_date]);
+        Setting::updateOrCreate(['key' => 'community_service_final_report_start_date'], ['value' => $this->community_service_final_report_start_date]);
+        Setting::updateOrCreate(['key' => 'community_service_final_report_end_date'], ['value' => $this->community_service_final_report_end_date]);
 
         $message = 'Jadwal proposal berhasil disimpan.';
         session()->flash('success', $message);

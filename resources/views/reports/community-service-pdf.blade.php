@@ -5,202 +5,52 @@
     <title>Laporan Pengabdian Masyarakat</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
-        @page {
-            margin: 1cm;
-        }
+        /* Vetted by AI - Manual Review Required by Senior Engineer/Manager */
+        html, body { margin: 0; padding: 0; border: 0; }
+        @page { margin: 3cm 2.5cm 3cm 3.5cm; }
+        body { font-family: "Arial", "Helvetica", sans-serif; font-size: 10pt; line-height: 1.4; color: #000; }
 
-        body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 10pt;
-            color: #333;
-            line-height: 1.4;
-        }
+        .kop-surat { border-bottom: 3pt solid #000; padding-bottom: 6px; margin-bottom: 0; position: relative; overflow: hidden; }
+        .kop-surat-inner { border-bottom: 1pt solid #000; padding-bottom: 4px; margin-bottom: 2px; }
+        .logo { position: absolute; left: 0; top: 4px; width: 75px; }
+        .header-text { text-align: center; margin-left: 85px; margin-right: 0; }
+        .inst-name { font-size: 13pt; font-weight: bold; color: #000; margin-bottom: 1px; }
+        .lppm-name { font-size: 11pt; font-weight: bold; margin-top: 1px; margin-bottom: 4px; }
+        .inst-address { font-size: 8.5pt; color: #333; }
 
-        /* Kop Surat Styles */
-        .kop-surat {
-            border-bottom: 2.5pt solid #000;
-            padding-bottom: 5px;
-            margin-bottom: 2px;
-            position: relative;
-        }
+        .report-title-container { text-align: center; margin-top: 8px; margin-bottom: 8px; }
+        .report-title { font-size: 11pt; font-weight: bold; text-decoration: underline; text-transform: uppercase; }
+        .report-subtitle { font-size: 9.5pt; margin-top: 2px; color: #333; }
 
-        .kop-surat-inner {
-            border-bottom: 0.5pt solid #000;
-            padding-bottom: 3px;
-        }
+        table.data-table { width: 100%; border-collapse: collapse; margin-top: 6px; table-layout: fixed; page-break-inside: auto; }
+        table.data-table thead tr { page-break-inside: avoid; page-break-after: avoid; }
+        table.data-table tbody tr { page-break-inside: avoid; }
+        table.data-table th { background-color: #1a4a8e; color: #fff; font-weight: bold; text-align: center; vertical-align: middle; font-size: 9pt; padding: 5px 6px; border: 0.5pt solid #0e2e5a; line-height: 1.3; }
+        table.data-table td { font-size: 9pt; line-height: 1.35; padding: 4px 6px; vertical-align: top; border: 0.5pt solid #c0c8d8; word-wrap: break-word; overflow-wrap: break-word; }
+        table.data-table tbody tr:nth-child(even) td { background-color: #f4f6fa; }
+        table.data-table tbody tr:nth-child(odd) td { background-color: #ffffff; }
 
-        .logo {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 80px;
-        }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .fw-bold { font-weight: bold; }
+        .cell-title { font-weight: bold; text-align: left; line-height: 1.35; }
+        .text-muted { color: #555; font-size: 8pt; }
+        .status-ok { color: #166534; font-weight: bold; }
+        .status-def { color: #333; }
+        .summary-row td { font-weight: bold; background-color: #e8ecf4 !important; border-top: 1.5pt solid #1a4a8e; }
 
-        .header-text {
-            text-align: center;
-            margin-left: 90px;
-            margin-right: 50px;
-        }
+        .signature-wrapper { margin-top: 20px; page-break-inside: avoid; }
+        table.signature-table { width: 100%; border-collapse: collapse; border: none; }
+        table.signature-table td { border: none; padding: 0; vertical-align: top; }
+        .sign-block { text-align: center; font-size: 10pt; line-height: 1.6; }
+        .sign-name { font-weight: bold; text-decoration: underline; }
+        .sign-nip { font-size: 9pt; color: #333; }
+        .digital-signature { border: 1pt solid #1a56db; padding: 4px; display: inline-block; margin: 4px auto; border-radius: 4px; background-color: #f0f4ff; color: #1a56db; text-align: center; width: 75px; }
+        .digital-signature img { width: 65px; height: 65px; }
+        .signature-label { display: block; font-size: 6.5pt; margin-top: 2px; color: #1a56db; font-weight: bold; }
 
-        .inst-name {
-            font-size: 14pt;
-            font-weight: bold;
-            color: #1a4a8e;
-            margin-bottom: 0;
-        }
-
-        .lppm-name {
-            font-size: 12pt;
-            font-weight: bold;
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-
-        .inst-address {
-            font-size: 8pt;
-            font-style: italic;
-            color: #555;
-        }
-
-        .report-title-container {
-            text-align: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        .report-title {
-            font-size: 12pt;
-            font-weight: bold;
-            text-decoration: underline;
-            text-transform: uppercase;
-        }
-
-        .report-subtitle {
-            font-size: 10pt;
-            margin-top: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            table-layout: fixed;
-        }
-
-        th,
-        td {
-            border: 0.5pt solid #888;
-            padding: 8px 5px;
-            vertical-align: middle;
-            word-wrap: break-word;
-        }
-
-        th {
-            background-color: #f1f4f9;
-            font-weight: bold;
-            text-align: center;
-            font-size: 8.5pt;
-            color: #1a4a8e;
-        }
-
-        td {
-            font-size: 8.5pt;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-right {
-            text-align: right;
-        }
-
-        .fw-bold {
-            font-weight: bold;
-        }
-
-        .text-muted {
-            color: #666;
-            font-size: 7.5pt;
-        }
-
-        /* Signature Styles */
-        .signature-wrapper {
-            margin-top: 30px;
-            width: 100%;
-        }
-
-        .signature-table {
-            border: none !important;
-        }
-
-        .signature-table td {
-            border: none !important;
-            padding: 0;
-        }
-
-        .sign-date {
-            margin-bottom: 60px;
-        }
-
-        .sign-name {
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
-        .sign-nip {
-            font-size: 9pt;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: -0.5cm;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            text-align: center;
-            color: #999;
-            border-top: 0.5pt solid #eee;
-            padding-top: 5px;
-        }
-
-        .digital-signature {
-            border: 1px solid #1a56db;
-            padding: 5px;
-            display: inline-block;
-            margin-bottom: 5px;
-            border-radius: 4px;
-            background-color: #ffffff;
-            color: #1a56db;
-            font-family: 'Courier New', Courier, monospace;
-            text-align: center;
-            width: 80px;
-        }
-
-        .digital-signature img {
-            width: 70px;
-            height: 70px;
-        }
-
-        .signature-label {
-            display: block;
-            font-size: 7px;
-            margin-top: 2px;
-            color: #1a56db;
-            font-weight: bold;
-        }
-
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 80pt;
-            color: rgba(220, 220, 220, 0.4);
-            z-index: -1000;
-            white-space: nowrap;
-            font-weight: bold;
-        }
+        .footer { position: fixed; bottom: -1.5cm; left: 0; right: 0; font-size: 8pt; text-align: center; color: #666; border-top: 0.5pt solid #ccc; padding-top: 4px; }
+        .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 75pt; color: rgba(200, 200, 200, 0.35); z-index: -1000; white-space: nowrap; font-weight: bold; }
     </style>
 </head>
 
@@ -227,54 +77,63 @@
         <div class="report-subtitle">Tahun Anggaran Jurnal: <strong>{{ $period }}</strong></div>
     </div>
 
-    <table>
+    @php
+        $totalDanaPkm = $proposals->reduce(function($carry, $p) {
+            $dana = ($p->sbk_value && $p->sbk_value > 0) ? $p->sbk_value : ($p->budgetItems->sum('total_price') ?? 0);
+            return $carry + $dana;
+        }, 0);
+    @endphp
+
+    <table class="data-table">
         <thead>
             <tr>
-                <th width="30px">No</th>
-                <th>Judul Kegiatan PKM</th>
-                <th width="120px">Ketua Pelaksana</th>
-                <th width="120px">Fakultas / Prodi</th>
-                <th width="90px">Skema</th>
-                <th width="80px">Status</th>
-                <th width="90px">Dana Disetujui</th>
+                <th style="width: 4%;">No</th>
+                <th style="width: 30%;">Judul Kegiatan PKM</th>
+                <th style="width: 16%;">Ketua Pelaksana</th>
+                <th style="width: 16%;">Fakultas / Prodi</th>
+                <th style="width: 13%;">Skema</th>
+                <th style="width: 11%;">Status</th>
+                <th style="width: 10%;">Dana (Rp)</th>
             </tr>
         </thead>
         <tbody>
             @forelse($proposals as $index => $proposal)
+                @php
+                    $dana = ($proposal->sbk_value && $proposal->sbk_value > 0)
+                        ? $proposal->sbk_value
+                        : ($proposal->budgetItems->sum('total_price') ?? 0);
+                    $isCompleted = in_array($proposal->status?->value, ['approved', 'completed']);
+                @endphp
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
-                    <td class="fw-bold">{{ $proposal->title }}</td>
+                    <td class="cell-title">{{ $proposal->title }}</td>
                     <td>
-                        <div>{{ $proposal->submitter?->name ?? '-' }}</div>
+                        <div style="font-weight: bold;">{{ $proposal->submitter?->name ?? '-' }}</div>
                         <div class="text-muted">NIDN: {{ $proposal->submitter?->identity?->identity_id ?? '-' }}</div>
                     </td>
                     <td>
-                        {{ $proposal->submitter?->identity?->faculty?->name ?? '-' }}<br>
-                        <span class="text-muted">{{ $proposal->submitter?->identity?->studyProgram?->name ?? '-' }}</span>
+                        <div>{{ $proposal->submitter?->identity?->faculty?->name ?? '-' }}</div>
+                        <div class="text-muted">{{ $proposal->submitter?->identity?->studyProgram?->name ?? '-' }}</div>
                     </td>
                     <td class="text-center">{{ $proposal->researchScheme?->name ?? '-' }}</td>
-                    <td class="text-center">
-                        <span class="fw-bold"
-                            style="color: {{ $proposal->status?->value === 'approved' || $proposal->status?->value === 'completed' ? '#2d7a10' : '#444' }}">
-                            {{ $proposal->status?->label() ?? '-' }}
-                        </span>
+                    <td class="text-center {{ $isCompleted ? 'status-ok' : 'status-def' }}">
+                        {{ $proposal->status?->label() ?? '-' }}
                     </td>
-                    <td class="text-right fw-bold">
-                        @php
-                            $dana = ($proposal->sbk_value && $proposal->sbk_value > 0)
-                                ? $proposal->sbk_value
-                                : ($proposal->budgetItems->sum('total_price') ?? 0);
-                        @endphp
-                        Rp {{ number_format($dana, 0, ',', '.') }}
-                    </td>
+                    <td class="text-right fw-bold">{{ number_format($dana, 0, ',', '.') }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center" style="padding: 30px; color: #999;">
+                    <td colspan="7" class="text-center" style="padding: 25px; color: #888; font-style: italic;">
                         Tidak ada data PKM untuk periode ini.
                     </td>
                 </tr>
             @endforelse
+            @if($proposals->count() > 0)
+                <tr class="summary-row">
+                    <td colspan="6" class="text-right">Total Dana Seluruh Kegiatan PKM ({{ $proposals->count() }} judul)</td>
+                    <td class="text-right">Rp {{ number_format($totalDanaPkm, 0, ',', '.') }}</td>
+                </tr>
+            @endif
         </tbody>
     </table>
 

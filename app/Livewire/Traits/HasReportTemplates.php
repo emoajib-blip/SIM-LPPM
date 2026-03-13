@@ -33,13 +33,18 @@ trait HasReportTemplates
         return Setting::where('key', 'report_approval_mode')->value('value') ?? 'digital';
     }
 
-    /**
-     * Get the proposal approval mode setting.
-     */
-    #[Computed]
     public function proposalApprovalMode(): string
     {
         return Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
+    }
+
+    /**
+     * Get the logbook approval mode setting.
+     */
+    #[Computed]
+    public function logbookApprovalMode(): string
+    {
+        return Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital';
     }
 
     protected function getReportType(): string

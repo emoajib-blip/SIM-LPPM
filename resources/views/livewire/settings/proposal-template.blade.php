@@ -119,13 +119,13 @@
             </div>
 
             {{-- ───────────────────────────────────────────────────────────
-            SECTION 2: Template Laporan (Kemajuan & Akhir)
+            SECTION 2: Template Laporan Akhir
             ─────────────────────────────────────────────────────────── --}}
             <h3 class="mb-3">
-                <x-lucide-clipboard-list class="icon me-1" /> Template Laporan (Kemajuan & Akhir)
+                <x-lucide-clipboard-list class="icon me-1" /> Template Laporan Akhir
             </h3>
             <p class="text-secondary small mb-3">
-                Berkas berikut digunakan saat dosen membuat laporan kemajuan dan akhir untuk penelitian ataupun
+                Berkas berikut digunakan saat dosen membuat laporan akhir untuk penelitian ataupun
                 pengabdian.
             </p>
 
@@ -201,7 +201,7 @@
                 <div class="card-body">
                     <form wire:submit.prevent="saveApprovalSettings">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">Metode Persetujuan Proposal (Dekan &
                                         LPPM)</label>
@@ -214,7 +214,7 @@
                                         persetujuan atau sistem yang membuat otomatis di PDF.</small>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">Metode Pengesahan Laporan (Akhir)</label>
                                     <select class="form-select" wire:model="report_approval_mode">
@@ -224,6 +224,19 @@
                                     </select>
                                     <small class="text-muted">Menentukan apakah dosen perlu mengunggah scan lembar
                                         pengesahan pada laporan akhir.</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Metode Pengesahan Catatan Harian &
+                                        Keuangan</label>
+                                    <select class="form-select" wire:model="logbook_approval_mode">
+                                        <option value="digital">Opsi A: Digital (Otomatis di PDF)</option>
+                                        <option value="upload">Opsi B: Upload (Scan Lembar Basah)</option>
+                                        <option value="both">Keduanya (A dan B)</option>
+                                    </select>
+                                    <small class="text-muted">Menentukan apakah dosen perlu mengunggah scan lembar
+                                        pengesahan pada catatan harian & keuangan.</small>
                                 </div>
                             </div>
                         </div>

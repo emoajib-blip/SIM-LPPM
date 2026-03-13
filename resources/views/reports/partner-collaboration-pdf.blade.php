@@ -5,206 +5,49 @@
     <title>Laporan Kerjasama Mitra</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
-        @page {
-            margin: 1cm;
-        }
+        /* Vetted by AI - Manual Review Required by Senior Engineer/Manager */
+        html, body { margin: 0; padding: 0; border: 0; }
+        @page { margin: 3cm 2.5cm 3cm 3.5cm; }
+        body { font-family: "Arial", "Helvetica", sans-serif; font-size: 10pt; line-height: 1.4; color: #000; }
 
-        body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 10pt;
-            color: #333;
-            line-height: 1.4;
-        }
+        .kop-surat { border-bottom: 3pt solid #000; padding-bottom: 6px; margin-bottom: 0; position: relative; overflow: hidden; }
+        .kop-surat-inner { border-bottom: 1pt solid #000; padding-bottom: 4px; margin-bottom: 2px; }
+        .logo { position: absolute; left: 0; top: 4px; width: 75px; }
+        .header-text { text-align: center; margin-left: 85px; margin-right: 0; }
+        .inst-name { font-size: 13pt; font-weight: bold; color: #000; margin-bottom: 1px; }
+        .lppm-name { font-size: 11pt; font-weight: bold; margin-top: 1px; margin-bottom: 4px; }
+        .inst-address { font-size: 8.5pt; color: #333; }
 
-        /* Kop Surat Styles */
-        .kop-surat {
-            border-bottom: 2.5pt solid #000;
-            padding-bottom: 5px;
-            margin-bottom: 2px;
-            position: relative;
-        }
+        .report-title-container { text-align: center; margin-top: 8px; margin-bottom: 8px; }
+        .report-title { font-size: 11pt; font-weight: bold; text-decoration: underline; text-transform: uppercase; }
+        .report-subtitle { font-size: 9.5pt; margin-top: 2px; color: #333; }
 
-        .kop-surat-inner {
-            border-bottom: 0.5pt solid #000;
-            padding-bottom: 3px;
-        }
+        .summary-box { margin: 6px 0 8px 0; padding: 8px 10px; border: 0.75pt solid #1a4a8e; background: #f0f4ff; }
+        .summary-title { font-weight: bold; color: #1a4a8e; font-size: 9pt; margin-bottom: 3px; text-transform: uppercase; }
 
-        .logo {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 80px;
-        }
+        table.data-table { width: 100%; border-collapse: collapse; margin-top: 6px; table-layout: fixed; page-break-inside: auto; }
+        table.data-table thead tr { page-break-inside: avoid; page-break-after: avoid; }
+        table.data-table tbody tr { page-break-inside: avoid; }
+        table.data-table th { background-color: #1a4a8e; color: #fff; font-weight: bold; text-align: center; vertical-align: middle; font-size: 9pt; padding: 5px 6px; border: 0.5pt solid #0e2e5a; line-height: 1.3; }
+        table.data-table td { font-size: 9pt; line-height: 1.35; padding: 4px 6px; vertical-align: top; border: 0.5pt solid #c0c8d8; word-wrap: break-word; overflow-wrap: break-word; }
+        table.data-table tbody tr:nth-child(even) td { background-color: #f4f6fa; }
+        table.data-table tbody tr:nth-child(odd) td { background-color: #ffffff; }
 
-        .header-text {
-            text-align: center;
-            margin-left: 90px;
-            margin-right: 50px;
-        }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .fw-bold { font-weight: bold; }
+        .text-muted { color: #555; font-size: 8pt; }
 
-        .inst-name {
-            font-size: 14pt;
-            font-weight: bold;
-            color: #1a4a8e;
-            margin-bottom: 0;
-        }
-
-        .lppm-name {
-            font-size: 12pt;
-            font-weight: bold;
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-
-        .inst-address {
-            font-size: 8pt;
-            font-style: italic;
-            color: #555;
-        }
-
-        .report-title-container {
-            text-align: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        .report-title {
-            font-size: 12pt;
-            font-weight: bold;
-            text-decoration: underline;
-            text-transform: uppercase;
-        }
-
-        .report-subtitle {
-            font-size: 10pt;
-            margin-top: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            table-layout: fixed;
-        }
-
-        th,
-        td {
-            border: 0.5pt solid #888;
-            padding: 8px 5px;
-            vertical-align: middle;
-            word-wrap: break-word;
-        }
-
-        th {
-            background-color: #f1f4f9;
-            font-weight: bold;
-            text-align: center;
-            font-size: 8pt;
-            color: #1a4a8e;
-        }
-
-        td {
-            font-size: 8pt;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-right {
-            text-align: right;
-        }
-
-        .fw-bold {
-            font-weight: bold;
-        }
-
-        .text-muted {
-            color: #666;
-            font-size: 7.5pt;
-        }
-
-        .summary-box {
-            margin-bottom: 20px;
-            padding: 12px;
-            border: 1pt solid #1a4a8e;
-            background: #f1f4f9;
-            border-radius: 4px;
-        }
-
-        .summary-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #1a4a8e;
-            text-transform: uppercase;
-            font-size: 9pt;
-        }
-
-        /* Signature Styles */
-        .signature-wrapper {
-            margin-top: 30px;
-            width: 100%;
-        }
-
-        .signature-table {
-            border: none !important;
-        }
-
-        .signature-table td {
-            border: none !important;
-            padding: 0;
-        }
-
-        .sign-date {
-            margin-bottom: 60px;
-        }
-
-        .sign-name {
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
-        .sign-nip {
-            font-size: 9pt;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: -0.5cm;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            text-align: center;
-            color: #999;
-            border-top: 0.5pt solid #eee;
-            padding-top: 5px;
-        }
-
-        .digital-signature {
-            border: 1px solid #1a56db;
-            padding: 5px;
-            display: inline-block;
-            margin-bottom: 5px;
-            border-radius: 4px;
-            background-color: #ffffff;
-            color: #1a56db;
-            font-family: 'Courier New', Courier, monospace;
-            text-align: center;
-            width: 80px;
-        }
-
-        .digital-signature img {
-            width: 70px;
-            height: 70px;
-        }
-
-        .signature-label {
-            display: block;
-            font-size: 7px;
-            margin-top: 2px;
-            color: #1a56db;
-            font-weight: bold;
-        }
+        .signature-wrapper { margin-top: 20px; page-break-inside: avoid; }
+        table.signature-table { width: 100%; border-collapse: collapse; border: none; }
+        table.signature-table td { border: none; padding: 0; vertical-align: top; }
+        .sign-block { text-align: center; font-size: 10pt; line-height: 1.6; }
+        .sign-name { font-weight: bold; text-decoration: underline; }
+        .sign-nip { font-size: 9pt; color: #333; }
+        .digital-signature { border: 1pt solid #1a56db; padding: 4px; display: inline-block; margin: 4px auto; border-radius: 4px; background-color: #f0f4ff; color: #1a56db; text-align: center; width: 75px; }
+        .digital-signature img { width: 65px; height: 65px; }
+        .signature-label { display: block; font-size: 6.5pt; margin-top: 2px; color: #1a56db; font-weight: bold; }
+        .footer { position: fixed; bottom: -1.5cm; left: 0; right: 0; font-size: 8pt; text-align: center; color: #666; border-top: 0.5pt solid #ccc; padding-top: 4px; }
     </style>
 </head>
 
@@ -239,17 +82,17 @@
         </div>
     </div>
 
-    <table>
+    <table class="data-table">
         <thead>
             <tr>
-                <th width="30px">No</th>
-                <th>Nama Mitra & Institusi</th>
-                <th width="100px">Jenis Mitra</th>
-                <th width="150px">Kontak / Email</th>
-                <th width="70px">Jumlah Usulan</th>
-                <th width="70px">Disetujui</th>
-                <th width="100px">Total Dana</th>
-                <th width="50px">Dok MOU</th>
+                <th style="width: 4%;">No</th>
+                <th style="width: 24%;">Nama Mitra &amp; Institusi</th>
+                <th style="width: 12%;">Jenis Mitra</th>
+                <th style="width: 18%;">Kontak / Email</th>
+                <th style="width: 10%;">Jml. Usulan</th>
+                <th style="width: 10%;">Disetujui</th>
+                <th style="width: 14%;">Total Dana (Rp)</th>
+                <th style="width: 8%;">Dok MOU</th>
             </tr>
         </thead>
         <tbody>

@@ -1,3 +1,66 @@
+   0/319 [░░░░░░░░░░░░░░░░░░░░░░░░░]   0%[1G[2K  20/319 [▓░░░░░░░░░░░░░░░░░░░░░░░░]   6%[1G[2K  40/319 [▓▓▓░░░░░░░░░░░░░░░░░░░░░░]  12%[1G[2K  80/319 [▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░]  25%[1G[2K 100/319 [▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░]  31%[1G[2K 120/319 [▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░]  37%[1G[2K 140/319 [▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░]  43%[1G[2K 200/319 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░]  62%[1G[2K 240/319 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░]  75%[1G[2K 260/319 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░]  81%[1G[2K 300/319 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░]  94%[1G[2K 319/319 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
 
- [OK] No errors                                                                    
+ ------ -------------------------------- 
+  Line   Traits/HasIkuCalculations.php   
+         (in context of class            
+         App\Exports\IkuReportExport)    
+ ------ -------------------------------- 
+  :314   Parameter #3 $count of method   
+         Illuminate\Database\Eloquent\B  
+         uilder<App\Models\Proposal>::o  
+         rHas() expects                  
+         Illuminate\Contracts\Database\  
+         Query\Expression|int, string    
+         given.                          
+         🪪  argument.type               
+ ------ -------------------------------- 
+
+ ------ -------------------------------- 
+  Line   Traits/HasIkuCalculations.php   
+         (in context of class            
+         App\Http\Controllers\ReportExp  
+         ortController)                  
+ ------ -------------------------------- 
+  :314   Parameter #3 $count of method   
+         Illuminate\Database\Eloquent\B  
+         uilder<App\Models\Proposal>::o  
+         rHas() expects                  
+         Illuminate\Contracts\Database\  
+         Query\Expression|int, string    
+         given.                          
+         🪪  argument.type               
+ ------ -------------------------------- 
+
+ ------ -------------------------------- 
+  Line   Traits/HasIkuCalculations.php   
+         (in context of class            
+         App\Livewire\Iku\IkuDashboard)  
+ ------ -------------------------------- 
+  :314   Parameter #3 $count of method   
+         Illuminate\Database\Eloquent\B  
+         uilder<App\Models\Proposal>::o  
+         rHas() expects                  
+         Illuminate\Contracts\Database\  
+         Query\Expression|int, string    
+         given.                          
+         🪪  argument.type               
+ ------ -------------------------------- 
+
+ ------ -------------------------------- 
+  Line   Traits/HasIkuCalculations.php   
+         (in context of class            
+         App\Livewire\Reports\IkuReport  
+         )                               
+ ------ -------------------------------- 
+  :314   Parameter #3 $count of method   
+         Illuminate\Database\Eloquent\B  
+         uilder<App\Models\Proposal>::o  
+         rHas() expects                  
+         Illuminate\Contracts\Database\  
+         Query\Expression|int, string    
+         given.                          
+         🪪  argument.type               
+ ------ -------------------------------- 
+
+ [ERROR] Found 4 errors                  
 

@@ -9,10 +9,12 @@ use App\Models\MandatoryOutput;
 use App\Models\Proposal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Layout('components.layouts.app', ['title' => 'Laporan Luaran', 'pageTitle' => 'Laporan Luaran'])]
 class OutputReports extends Component
 {
     use HasToast, WithInstitutionalApproval, WithPagination;
@@ -47,7 +49,7 @@ class OutputReports extends Component
             $this->outputType = $report->metadata['outputType'] ?? 'all';
 
             // Only override faculty if not dekan
-            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
+            if (active_role() !== 'dekan' && !auth()->user()->activeHasRole('dekan')) {
                 $this->selectedFaculty = $report->metadata['faculty'] ?? 'all';
             }
         } else {
@@ -56,7 +58,7 @@ class OutputReports extends Component
             $this->selectedScheme = request()->query('scheme', 'all');
 
             // Only override faculty if not dekan
-            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
+            if (active_role() !== 'dekan' && !auth()->user()->activeHasRole('dekan')) {
                 $this->selectedFaculty = request()->query('faculty', 'all');
             }
         }
@@ -118,7 +120,7 @@ class OutputReports extends Component
      */
     public function setTab(string $tab): void
     {
-        if (! in_array($tab, ['research', 'community-service'])) {
+        if (!in_array($tab, ['research', 'community-service'])) {
             return;
         }
 
@@ -137,6 +139,21 @@ class OutputReports extends Component
             'scheme' => $this->selectedScheme,
             'faculty' => $this->selectedFaculty,
             'outputType' => $this->outputType,
+        ]));
+    }
+
+    #[On('preview-pdf')]
+    public function previewPdf(): void
+    {
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('preview-pdf', url: route('reports.output.pdf', [
+            'activeTab' => $this->activeTab,
+            'period' => $this->period,
+            'search' => $this->search,
+            'scheme' => $this->selectedScheme,
+            'faculty' => $this->selectedFaculty,
+            'outputType' => $this->outputType,
+            'preview' => true,
         ]));
     }
 
@@ -229,7 +246,7 @@ class OutputReports extends Component
             ->whereNotNull('start_year')
             ->orderBy('start_year', 'desc')
             ->pluck('start_year')
-            ->map(fn ($year) => (string) $year)
+            ->map(fn($year) => (string) $year)
             ->toArray() ?: [(string) date('Y')];
     }
 
@@ -295,7 +312,7 @@ class OutputReports extends Component
 
     public function mandatoryOutput(): ?MandatoryOutput
     {
-        if (! $this->viewingMandatoryId) {
+        if (!$this->viewingMandatoryId) {
             return null;
         }
 
@@ -320,7 +337,7 @@ class OutputReports extends Component
 
     public function additionalOutput(): ?AdditionalOutput
     {
-        if (! $this->viewingAdditionalId) {
+        if (!$this->viewingAdditionalId) {
             return null;
         }
 

@@ -19,6 +19,32 @@ class ReviewCriteriaManager extends Component
         if (! Auth::user()->hasRole('admin lppm')) {
             abort(403);
         }
+
+        $this->cleanupDuplicates();
+    }
+
+    private function cleanupDuplicates(): void
+    {
+        $duplicates = ReviewCriteria::select('type', 'criteria')
+            ->groupBy('type', 'criteria')
+            ->havingRaw('COUNT(*) > 1')
+            ->get();
+
+        if ($duplicates->isEmpty()) {
+            return;
+        }
+
+        foreach ($duplicates as $duplicate) {
+            $ids = ReviewCriteria::where('type', $duplicate->type)
+                ->where('criteria', $duplicate->criteria)
+                ->orderBy('id')
+                ->pluck('id');
+
+            if ($ids->count() > 1) {
+                $idsToRemove = $ids->slice(1);
+                ReviewCriteria::whereIn('id', $idsToRemove)->delete();
+            }
+        }
     }
 
     #[Computed]
@@ -33,6 +59,22 @@ class ReviewCriteriaManager extends Component
     public function pkmCriterias()
     {
         return ReviewCriteria::where('type', 'community_service')
+            ->orderBy('order')
+            ->get();
+    }
+
+    #[Computed]
+    public function monevResearchCriterias()
+    {
+        return ReviewCriteria::where('type', 'monev_research')
+            ->orderBy('order')
+            ->get();
+    }
+
+    #[Computed]
+    public function monevPkmCriterias()
+    {
+        return ReviewCriteria::where('type', 'monev_community_service')
             ->orderBy('order')
             ->get();
     }

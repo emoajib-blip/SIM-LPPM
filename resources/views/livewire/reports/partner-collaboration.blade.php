@@ -5,16 +5,22 @@
 
     <x-slot:pageActions>
         <div class="btn-list">
-            <div class="btn-group shadow-sm">
-                <a href="{{ route('reports.partner.excel', ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter]) }}" class="btn btn-white" data-navigate-ignore="true">
-                    <i class="ti ti-table me-2 text-success"></i>
-                    <span>{{ __('Excel') }}</span>
-                </a>
-                <a href="{{ route('reports.partner.pdf', ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter]) }}" class="btn btn-white" data-navigate-ignore="true">
-                    <i class="ti ti-file-type-pdf me-2 text-danger"></i>
-                    <span>{{ __('PDF') }}</span>
-                </a>
-            </div>
+            @php
+                $exportParams = ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter];
+            @endphp
+            <button wire:click="previewPdf" wire:loading.attr="disabled" class="btn btn-outline-primary shadow-sm" title="Tinjau PDF">
+                <i class="ti ti-eye me-2"></i>
+                <span wire:loading.remove wire:target="previewPdf">{{ __('Tinjau PDF') }}</span>
+                <span wire:loading wire:target="previewPdf">{{ __('Memproses...') }}</span>
+            </button>
+            <a href="{{ route('reports.partner.excel', $exportParams) }}" class="btn btn-outline-success shadow-sm" data-navigate-ignore="true" title="Unduh Excel">
+                <i class="ti ti-table me-2"></i>
+                <span>{{ __('Unduh Excel') }}</span>
+            </a>
+            <a href="{{ route('reports.partner.pdf', $exportParams) }}" class="btn btn-outline-danger shadow-sm" data-navigate-ignore="true" title="Unduh PDF">
+                <i class="ti ti-file-type-pdf me-2"></i>
+                <span>{{ __('Unduh PDF') }}</span>
+            </a>
         </div>
     </x-slot:pageActions>
 
@@ -46,8 +52,14 @@
                         </p>
                     </div>
                     <div class="btn-list">
+                        <!-- Draft Preview Icon (Support System) -->
+                        <a href="{{ route('reports.partner.pdf', array_merge(['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter], ['preview' => 1])) }}"
+                            target="_blank" class="btn btn-outline-primary shadow-sm" title="Tinjau Draft PDF">
+                            <i class="ti ti-eye me-2"></i> Tinjau PDF
+                        </a>
+
                         @if(active_role() === 'kepala lppm' && (!$institutionalReport || in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::DRAFT, \App\Enums\InstitutionalReportStatus::REJECTED])))
-                            <button class="btn btn-primary" wire:click="submitInstitutionalReport('partner', {{ $periodFilter ?: date('Y') }})"
+                            <button class="btn btn-primary shadow-sm" wire:click="submitInstitutionalReport('partner', {{ $periodFilter ?: date('Y') }})"
                                 wire:loading.attr="disabled">
                                 <i class="ti ti-send me-2"></i>
                                 Ajukan ke Rektor
@@ -55,12 +67,12 @@
                         @endif
 
                         @if(active_role() === 'rektor' && ($institutionalReport?->status === \App\Enums\InstitutionalReportStatus::SUBMITTED))
-                            <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                            <button class="btn btn-outline-danger shadow-sm" data-bs-toggle="modal"
                                 data-bs-target="#modal-reject-institutional">
                                 <i class="ti ti-x me-2"></i>
                                 Minta Perbaikan
                             </button>
-                            <button class="btn btn-success" wire:click="approveInstitutionalReport('partner', {{ $periodFilter ?: date('Y') }})"
+                            <button class="btn btn-success shadow-sm" wire:click="approveInstitutionalReport('partner', {{ $periodFilter ?: date('Y') }})"
                                 wire:loading.attr="disabled">
                                 <i class="ti ti-circle-check me-2"></i>
                                 Setujui & Tanda Tangani
@@ -137,9 +149,8 @@
                 </div>
                 <div class="col-md-1">
                     @if($search || $typeFilter || $periodFilter)
-                        <button type="button" wire:click="$set('search', ''); $set('typeFilter', ''); $set('periodFilter', '')"
-                            class="btn btn-outline-secondary w-100" title="Reset Filter">
-                            <x-lucide-x class="icon" />
+                        <button class="btn btn-icon btn-white shadow-sm" wire:click="resetFilters" title="Reset Filter">
+                            <i class="ti ti-refresh text-secondary"></i>
                         </button>
                     @endif
                 </div>
@@ -156,17 +167,8 @@
                         <x-lucide-handshake class="icon me-2" />
                         Daftar Mitra Kerjasama
                     </h3>
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="btn-group btn-group-sm">
-                            <a href="{{ route('reports.partner.excel', ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter]) }}" class="btn btn-outline-success" data-navigate-ignore="true" title="Export Excel">
-                                <x-lucide-table class="icon-sm me-1" /> Excel
-                            </a>
-                            <a href="{{ route('reports.partner.pdf', ['search' => $search, 'typeFilter' => $typeFilter, 'periodFilter' => $periodFilter]) }}" class="btn btn-outline-danger" data-navigate-ignore="true" title="Export PDF">
-                                <x-lucide-file-text class="icon-sm me-1" /> PDF
-                            </a>
-                        </div>
                         <span class="badge bg-blue-lt">{{ $partners->total() }} mitra</span>
-                    </div>
+
                 </div>
                 <div class="table-responsive">
                     <table class="table table-vcenter card-table table-hover">
@@ -424,7 +426,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-link link-secondary me-auto"
                             data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-danger"
+                        <button type="button" class="btn btn-danger shadow-sm"
                             wire:click="rejectInstitutionalReport('partner', '{{ $periodFilter ?: date('Y') }}')">
                             Simpan & Tolak
                         </button>

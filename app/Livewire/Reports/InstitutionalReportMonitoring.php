@@ -69,8 +69,12 @@ class InstitutionalReportMonitoring extends Component
                 'output' => 'Luaran',
                 'partner' => 'Kerjasama Mitra',
                 'iku' => 'Rekap IKU',
+                'monev' => 'Monitoring & Evaluasi (Monev)',
             ],
-        ])->layout('layouts.app', ['pageTitle' => 'Monitoring Laporan Institusi']);
+        ])->layout('layouts.app', [
+            'pageTitle' => 'Monitoring Laporan Institusi',
+            'pageSubtitle' => 'Lacak status pengajuan, revisi, dan persetujuan laporan ke Rektor'
+        ]);
     }
 
     public function getStatusLabel($status)

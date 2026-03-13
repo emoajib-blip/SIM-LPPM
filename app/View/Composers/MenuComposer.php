@@ -43,11 +43,6 @@ class MenuComposer
                         'route' => 'research.proposal-revision.index',
                     ],
                     [
-                        'title' => 'Laporan Kemajuan',
-                        'icon' => 'report',
-                        'route' => 'research.progress-report.index',
-                    ],
-                    [
                         'title' => 'Laporan Akhir',
                         'icon' => 'file-text',
                         'route' => 'research.final-report.index',
@@ -73,11 +68,6 @@ class MenuComposer
                         'title' => 'Perbaikan Usulan',
                         'icon' => 'checkbox',
                         'route' => 'community-service.proposal-revision.index',
-                    ],
-                    [
-                        'title' => 'Laporan Kemajuan',
-                        'icon' => 'report',
-                        'route' => 'community-service.progress-report.index',
                     ],
                     [
                         'title' => 'Laporan Akhir',
@@ -186,6 +176,12 @@ class MenuComposer
                 'roles' => ['reviewer'],
             ],
             [
+                'title' => 'Monev Laporan',
+                'icon' => 'chart-infographic',
+                'route' => 'review.monev',
+                'roles' => ['reviewer'],
+            ],
+            [
                 'title' => 'IKU & Luaran',
                 'icon' => 'target-arrow',
                 'roles' => ['admin lppm', 'rektor', 'kepala lppm'],
@@ -237,6 +233,18 @@ class MenuComposer
                         'title' => 'Laporan IKU',
                         'icon' => 'file-text',
                         'route' => 'reports.iku',
+                    ],
+                    [
+                        'title' => 'Rekap Monev',
+                        'icon' => 'chart-dots',
+                        'route' => 'kepala-lppm.monev.recap',
+                        'roles' => ['kepala lppm', 'rektor'],
+                    ],
+                    [
+                        'title' => 'Capaian Monev',
+                        'icon' => 'dashboard',
+                        'route' => 'kepala-lppm.rektor.monev-dashboard',
+                        'roles' => ['kepala lppm', 'rektor'],
                     ],
                 ],
             ],
@@ -334,7 +342,7 @@ class MenuComposer
         ];
 
         return array_values(array_filter(array_map(
-            fn (array $item) => $this->formatItem($item, $user),
+            fn(array $item) => $this->formatItem($item, $user),
             $items,
         )));
     }
@@ -343,7 +351,7 @@ class MenuComposer
     {
         $allowedRoles = $item['roles'] ?? null;
 
-        if ($allowedRoles !== null && (! $user || ! active_has_any_role($allowedRoles))) {
+        if ($allowedRoles !== null && (!$user || !active_has_any_role($allowedRoles))) {
             return null;
         }
 
@@ -353,7 +361,7 @@ class MenuComposer
         $children = null;
         if (isset($item['children']) && is_array($item['children'])) {
             $children = array_values(array_filter(array_map(
-                fn (array $child) => $this->formatDropdownItem($child, $user),
+                fn(array $child) => $this->formatDropdownItem($child, $user),
                 $item['children'],
             )));
         }
@@ -393,7 +401,7 @@ class MenuComposer
     {
         $allowedRoles = $item['roles'] ?? null;
 
-        if ($allowedRoles !== null && (! $user || ! active_has_any_role($allowedRoles))) {
+        if ($allowedRoles !== null && (!$user || !active_has_any_role($allowedRoles))) {
             return null;
         }
 
@@ -403,7 +411,7 @@ class MenuComposer
         $children = null;
         if (isset($item['children']) && is_array($item['children'])) {
             $children = array_values(array_filter(array_map(
-                fn (array $child) => $this->formatDropdownItem($child, $user),
+                fn(array $child) => $this->formatDropdownItem($child, $user),
                 $item['children'],
             )));
         }
@@ -461,7 +469,7 @@ class MenuComposer
             // Check for query parameter matches (e.g. group=academic-structure)
             if (str_contains($pattern, '=')) {
                 // Ensure the route matches if one is defined
-                if ($routeName && ! request()->routeIs($routeName)) {
+                if ($routeName && !request()->routeIs($routeName)) {
                     continue;
                 }
 
@@ -488,7 +496,7 @@ class MenuComposer
             if ($expandIndex && str_ends_with($pattern, '.index')) {
                 $resourceRoute = substr($pattern, 0, -6);
 
-                if (request()->routeIs($resourceRoute.'.*')) {
+                if (request()->routeIs($resourceRoute . '.*')) {
                     return true;
                 }
             }

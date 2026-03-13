@@ -5,189 +5,248 @@
     <title>Laporan Penelitian</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
+        /* Vetted by AI - Manual Review Required by Senior Engineer/Manager */
+        html, body {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
         @page {
-            margin: 1cm;
+            margin: 3cm 2.5cm 3cm 3.5cm;
         }
 
         body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-family: "Arial", "Helvetica", sans-serif;
             font-size: 10pt;
-            color: #333;
             line-height: 1.4;
+            color: #000;
+            text-align: left;
         }
 
-        /* Kop Surat Styles */
+        /* ============================
+           KOP SURAT
+        ============================ */
         .kop-surat {
-            border-bottom: 2.5pt solid #000;
-            padding-bottom: 5px;
-            margin-bottom: 2px;
+            border-bottom: 3pt solid #000;
+            padding-bottom: 6px;
+            margin-bottom: 0;
             position: relative;
+            overflow: hidden;
         }
 
         .kop-surat-inner {
-            border-bottom: 0.5pt solid #000;
-            padding-bottom: 3px;
+            border-bottom: 1pt solid #000;
+            padding-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .logo {
             position: absolute;
             left: 0;
-            top: 0;
-            width: 80px;
+            top: 4px;
+            width: 75px;
         }
 
         .header-text {
             text-align: center;
-            margin-left: 90px;
-            margin-right: 50px;
+            margin-left: 85px;
+            margin-right: 0;
         }
 
         .inst-name {
-            font-size: 14pt;
+            font-size: 13pt;
             font-weight: bold;
-            color: #1a4a8e;
-            margin-bottom: 0;
+            color: #000;
+            margin-bottom: 1px;
+            letter-spacing: 0.5pt;
         }
 
         .lppm-name {
-            font-size: 12pt;
+            font-size: 11pt;
             font-weight: bold;
-            margin-top: 0;
-            margin-bottom: 5px;
+            margin-top: 1px;
+            margin-bottom: 4px;
         }
 
         .inst-address {
-            font-size: 8pt;
-            font-style: italic;
-            color: #555;
+            font-size: 8.5pt;
+            color: #333;
+            margin-top: 1px;
         }
 
+        /* ============================
+           JUDUL LAPORAN
+        ============================ */
         .report-title-container {
             text-align: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            margin-top: 8px;
+            margin-bottom: 8px;
         }
 
         .report-title {
-            font-size: 12pt;
+            font-size: 11pt;
             font-weight: bold;
             text-decoration: underline;
             text-transform: uppercase;
         }
 
         .report-subtitle {
-            font-size: 10pt;
-            margin-top: 5px;
+            font-size: 9.5pt;
+            margin-top: 2px;
+            color: #333;
         }
 
-        table {
+        /* ============================
+           TABEL DATA UTAMA
+        ============================ */
+        table.data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 6px;
             table-layout: fixed;
+            page-break-inside: auto;
         }
 
-        th,
-        td {
-            border: 0.5pt solid #888;
-            padding: 8px 5px;
+        table.data-table thead tr {
+            page-break-inside: avoid;
+            page-break-after: avoid;
+        }
+
+        table.data-table tbody tr {
+            page-break-inside: avoid;
+        }
+
+        table.data-table th {
+            background-color: #1a4a8e;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
             vertical-align: middle;
+            font-size: 9pt;
+            padding: 5px 6px;
+            border: 0.5pt solid #0e2e5a;
+            line-height: 1.3;
+        }
+
+        table.data-table td {
+            font-size: 9pt;
+            line-height: 1.35;
+            padding: 4px 6px;
+            vertical-align: top;
+            border: 0.5pt solid #c0c8d8;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        th {
-            background-color: #f1f4f9;
+        table.data-table tbody tr:nth-child(even) td {
+            background-color: #f4f6fa;
+        }
+
+        table.data-table tbody tr:nth-child(odd) td {
+            background-color: #ffffff;
+        }
+
+        .text-center { text-align: center; }
+        .text-right  { text-align: right; }
+        .text-left   { text-align: left; }
+        .text-justify { text-align: justify; }
+        .fw-bold     { font-weight: bold; }
+
+        .cell-title {
             font-weight: bold;
-            text-align: center;
-            font-size: 8.5pt;
-            color: #1a4a8e;
-        }
-
-        td {
-            font-size: 8.5pt;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-right {
-            text-align: right;
-        }
-
-        .fw-bold {
-            font-weight: bold;
+            text-align: left;
+            line-height: 1.35;
         }
 
         .text-muted {
-            color: #666;
-            font-size: 7.5pt;
+            color: #555;
+            font-size: 8pt;
         }
 
-        /* Signature Styles */
+        .status-ok   { color: #166534; font-weight: bold; }
+        .status-warn { color: #92400e; font-weight: bold; }
+        .status-def  { color: #333; }
+
+        /* ============================
+           TANDA TANGAN
+        ============================ */
         .signature-wrapper {
-            margin-top: 30px;
+            margin-top: 28px;
+            page-break-inside: avoid;
+        }
+
+        table.signature-table {
             width: 100%;
+            border-collapse: collapse;
+            border: none;
         }
 
-        .signature-table {
-            border: none !important;
-        }
-
-        .signature-table td {
-            border: none !important;
+        table.signature-table td {
+            border: none;
             padding: 0;
+            vertical-align: top;
         }
 
-        .sign-date {
-            margin-bottom: 60px;
+        .sign-block {
+            text-align: center;
+            font-size: 10.5pt;
+            line-height: 1.6;
+        }
+
+        .sign-space {
+            height: 70px;
         }
 
         .sign-name {
             font-weight: bold;
             text-decoration: underline;
+            font-size: 10.5pt;
         }
 
         .sign-nip {
             font-size: 9pt;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: -0.5cm;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            text-align: center;
-            color: #999;
-            border-top: 0.5pt solid #eee;
-            padding-top: 5px;
+            color: #333;
         }
 
         .digital-signature {
-            border: 1px solid #1a56db;
-            padding: 5px;
+            border: 1pt solid #1a56db;
+            padding: 4px;
             display: inline-block;
-            margin-bottom: 5px;
+            margin: 4px auto;
             border-radius: 4px;
-            background-color: #ffffff;
+            background-color: #f0f4ff;
             color: #1a56db;
-            font-family: 'Courier New', Courier, monospace;
             text-align: center;
-            width: 80px;
+            width: 75px;
         }
 
         .digital-signature img {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
         }
 
         .signature-label {
             display: block;
-            font-size: 7px;
+            font-size: 6.5pt;
             margin-top: 2px;
             color: #1a56db;
             font-weight: bold;
+        }
+
+        /* ============================
+           FOOTER & WATERMARK
+        ============================ */
+        .footer {
+            position: fixed;
+            bottom: -1.5cm;
+            left: 0;
+            right: 0;
+            font-size: 8pt;
+            text-align: center;
+            color: #666;
+            border-top: 0.5pt solid #ccc;
+            padding-top: 4px;
         }
 
         .watermark {
@@ -195,11 +254,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 80pt;
-            color: rgba(220, 220, 220, 0.4);
+            font-size: 75pt;
+            color: rgba(200, 200, 200, 0.35);
             z-index: -1000;
             white-space: nowrap;
             font-weight: bold;
+        }
+
+        .summary-row td {
+            font-weight: bold;
+            background-color: #e8ecf4 !important;
+            border-top: 1.5pt solid #1a4a8e;
+            font-size: 10pt;
         }
     </style>
 </head>
@@ -227,66 +293,78 @@
         <div class="report-subtitle">Tahun Anggaran Jurnal: <strong>{{ $period }}</strong></div>
     </div>
 
-    <table>
+    @php
+        $totalDana = $proposals->reduce(function($carry, $p) {
+            $dana = ($p->sbk_value && $p->sbk_value > 0)
+                ? $p->sbk_value
+                : ($p->budgetItems->sum('total_price') ?? 0);
+            return $carry + $dana;
+        }, 0);
+    @endphp
+
+    <table class="data-table">
         <thead>
             <tr>
-                <th width="30px">No</th>
-                <th>Judul Penelitian</th>
-                <th width="120px">Ketua Peneliti</th>
-                <th width="120px">Fakultas / Prodi</th>
-                <th width="90px">Skema</th>
-                <th width="80px">Status</th>
-                <th width="90px">Dana Disetujui</th>
+                <th style="width: 4%;">No</th>
+                <th style="width: 30%;">Judul Penelitian</th>
+                <th style="width: 16%;">Ketua Peneliti</th>
+                <th style="width: 16%;">Fakultas / Prodi</th>
+                <th style="width: 13%;">Skema</th>
+                <th style="width: 11%;">Status</th>
+                <th style="width: 10%;">Dana (Rp)</th>
             </tr>
         </thead>
         <tbody>
             @forelse($proposals as $index => $proposal)
+                @php
+                    $dana = ($proposal->sbk_value && $proposal->sbk_value > 0)
+                        ? $proposal->sbk_value
+                        : ($proposal->budgetItems->sum('total_price') ?? 0);
+                    $isCompleted = in_array($proposal->status?->value, ['approved', 'completed']);
+                @endphp
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
-                    <td class="fw-bold">{{ $proposal->title }}</td>
+                    <td class="cell-title">{{ $proposal->title }}</td>
                     <td>
-                        <div>{{ $proposal->submitter?->name ?? '-' }}</div>
+                        <div style="font-weight: bold;">{{ $proposal->submitter?->name ?? '-' }}</div>
                         <div class="text-muted">NIDN: {{ $proposal->submitter?->identity?->identity_id ?? '-' }}</div>
                     </td>
                     <td>
-                        {{ $proposal->submitter?->identity?->faculty?->name ?? '-' }}<br>
-                        <span class="text-muted">{{ $proposal->submitter?->identity?->studyProgram?->name ?? '-' }}</span>
+                        <div>{{ $proposal->submitter?->identity?->faculty?->name ?? '-' }}</div>
+                        <div class="text-muted">{{ $proposal->submitter?->identity?->studyProgram?->name ?? '-' }}</div>
                     </td>
                     <td class="text-center">{{ $proposal->researchScheme?->name ?? '-' }}</td>
-                    <td class="text-center">
-                        <span class="fw-bold"
-                            style="color: {{ $proposal->status?->value === 'approved' || $proposal->status?->value === 'completed' ? '#2d7a10' : '#444' }}">
-                            {{ $proposal->status?->label() ?? '-' }}
-                        </span>
+                    <td class="text-center {{ $isCompleted ? 'status-ok' : 'status-def' }}">
+                        {{ $proposal->status?->label() ?? '-' }}
                     </td>
                     <td class="text-right fw-bold">
-                        @php
-                            $dana = ($proposal->sbk_value && $proposal->sbk_value > 0)
-                                ? $proposal->sbk_value
-                                : ($proposal->budgetItems->sum('total_price') ?? 0);
-                        @endphp
-                        Rp {{ number_format($dana, 0, ',', '.') }}
+                        {{ number_format($dana, 0, ',', '.') }}
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center" style="padding: 30px; color: #999;">
+                    <td colspan="7" class="text-center" style="padding: 25px; color: #888; font-style: italic;">
                         Tidak ada data penelitian untuk periode ini.
                     </td>
                 </tr>
             @endforelse
+            @if($proposals->count() > 0)
+                <tr class="summary-row">
+                    <td colspan="6" class="text-right">Total Dana Seluruh Proposal ({{ $proposals->count() }} judul)</td>
+                    <td class="text-right">Rp {{ number_format($totalDana, 0, ',', '.') }}</td>
+                </tr>
+            @endif
         </tbody>
     </table>
 
     <div class="signature-wrapper">
         <table class="signature-table">
             <tr>
-                <td width="33%" class="text-center">
-                    <div class="sign-date" style="margin-bottom: 4px;">Pekalongan,
-                        {{ now()->translatedFormat('d F Y') }}
-                    </div>
-                    <div style="margin-bottom: 4px;">Mengetahui,</div>
-                    <div style="margin-bottom: 4px; font-weight: bold;">Rektor ITSNU Pekalongan</div>
+                <td width="33%">
+                    <div class="sign-block">
+                        <div>Pekalongan, {{ now()->translatedFormat('d F Y') }}</div>
+                        <div>Mengetahui,</div>
+                        <div style="font-weight: bold;">Rektor ITSNU Pekalongan</div>
                     @if(!($isPreview ?? false) && $institutionalReport && $institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
                         <div class="digital-signature">
                             <img src="{{ generate_qr_code_data_uri(route('reports.research.pdf', ['period' => $period, 'ref' => substr($institutionalReport->id, 0, 8)])) }}"

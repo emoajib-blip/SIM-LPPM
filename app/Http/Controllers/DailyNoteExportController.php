@@ -20,27 +20,30 @@ class DailyNoteExportController extends Controller
         $isSubmitter = $proposal->submitter_id === $user->id;
         $isLppm = $user->hasRole(['admin lppm', 'kepala lppm', 'superadmin', 'rektor', 'dekan']);
 
-        if (! $isSubmitter && ! $isMember && ! $isLppm) {
+        if (!$isSubmitter && !$isMember && !$isLppm) {
             abort(403, 'Anda tidak memiliki akses untuk mengekspor catatan harian ini.');
         }
 
         $proposal->load([
-            'dailyNotes' => fn ($q) => $q->with(['media.model', 'budgetGroup'])->latest('activity_date'),
+            'dailyNotes' => fn($q) => $q->with(['media.model', 'budgetGroup'])->latest('activity_date'),
             'submitter.identity.studyProgram',
+            'teamMembers.identity',
             'researchScheme',
             'communityServiceScheme',
         ]);
 
-        $isSigned = $proposal->logbook_signed_at !== null || $request->query('signed') === 'true';
+        $logbookApprovalMode = \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital';
 
         $pdf = Pdf::loadView('pdf.daily-notes', [
             'proposal' => $proposal,
             'notes' => $proposal->dailyNotes,
-            'isSigned' => $isSigned,
+            'isSigned' => $proposal->logbook_signed_at !== null || $request->query('signed') === 'true',
+            'isApproved' => $proposal->logbook_approved_at !== null,
+            'logbookApprovalMode' => $logbookApprovalMode,
         ])->setPaper('a4', 'portrait');
 
         $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
-        $filename = 'Catatan_Harian_'.$title.'.pdf';
+        $filename = 'Catatan_Harian_' . $title . '.pdf';
 
         if (ob_get_level()) {
 

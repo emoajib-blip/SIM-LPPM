@@ -19,7 +19,7 @@ class ProposalPdfService
     {
         // 0. Cache Check
         $cacheDir = storage_path('app/public/pdf_cache/proposals');
-        if (! file_exists($cacheDir)) {
+        if (!file_exists($cacheDir)) {
             mkdir($cacheDir, 0755, true);
         }
 
@@ -51,14 +51,14 @@ class ProposalPdfService
             $proposal->id,
             $latestTimestamp
         );
-        $cachePath = $cacheDir.DIRECTORY_SEPARATOR.$cacheFileName;
+        $cachePath = $cacheDir . DIRECTORY_SEPARATOR . $cacheFileName;
 
         if (file_exists($cachePath)) {
             return $cachePath;
         }
 
         // Cleanup old versions of this proposal's PDF
-        $oldPdfs = glob($cacheDir.DIRECTORY_SEPARATOR."proposal_{$proposal->id}_*.pdf");
+        $oldPdfs = glob($cacheDir . DIRECTORY_SEPARATOR . "proposal_{$proposal->id}_*.pdf");
         foreach ($oldPdfs as $oldPdf) {
             @unlink($oldPdf);
         }
@@ -77,13 +77,13 @@ class ProposalPdfService
             $suffix = $identity->title_suffix;
 
             // Only prepend prefix if not already present
-            if ($prefix && ! str_starts_with($name, $prefix) && ! str_contains($name, $prefix.' ')) {
-                $name = $prefix.' '.$name;
+            if ($prefix && !str_starts_with($name, $prefix) && !str_contains($name, $prefix . ' ')) {
+                $name = $prefix . ' ' . $name;
             }
 
             // Only append suffix if not already present
-            if ($suffix && ! str_ends_with($name, $suffix) && ! str_contains($name, ', '.$suffix)) {
-                $name = $name.', '.$suffix;
+            if ($suffix && !str_ends_with($name, $suffix) && !str_contains($name, ', ' . $suffix)) {
+                $name = $name . ', ' . $suffix;
             }
 
             $deanName = $name;
@@ -110,11 +110,11 @@ class ProposalPdfService
                 $nm = $candidate->name;
                 $px = $idn->title_prefix;
                 $sx = $idn->title_suffix;
-                if ($px && ! str_starts_with($nm, $px) && ! str_contains($nm, $px.' ')) {
-                    $nm = $px.' '.$nm;
+                if ($px && !str_starts_with($nm, $px) && !str_contains($nm, $px . ' ')) {
+                    $nm = $px . ' ' . $nm;
                 }
-                if ($sx && ! str_ends_with($nm, $sx) && ! str_contains($nm, ', '.$sx)) {
-                    $nm = $nm.', '.$sx;
+                if ($sx && !str_ends_with($nm, $sx) && !str_contains($nm, ', ' . $sx)) {
+                    $nm = $nm . ', ' . $sx;
                 }
                 $deanName = $nm;
                 $deanId = $idn->identity_id ?? '';
@@ -134,11 +134,11 @@ class ProposalPdfService
             $prefix = $identity->title_prefix;
             $suffix = $identity->title_suffix;
 
-            if ($prefix && ! str_contains($fullName, $prefix)) {
-                $fullName = $prefix.' '.$fullName;
+            if ($prefix && !str_contains($fullName, $prefix)) {
+                $fullName = $prefix . ' ' . $fullName;
             }
-            if ($suffix && ! str_contains($fullName, $suffix)) {
-                $fullName = $fullName.', '.$suffix;
+            if ($suffix && !str_contains($fullName, $suffix)) {
+                $fullName = $fullName . ', ' . $suffix;
             }
 
             $lppmHeadName = $fullName;
@@ -164,11 +164,11 @@ class ProposalPdfService
                 $nm = $candidate->name;
                 $px = $idn->title_prefix;
                 $sx = $idn->title_suffix;
-                if ($px && ! str_contains($nm, $px)) {
-                    $nm = $px.' '.$nm;
+                if ($px && !str_contains($nm, $px)) {
+                    $nm = $px . ' ' . $nm;
                 }
-                if ($sx && ! str_contains($nm, $sx)) {
-                    $nm = $nm.', '.$sx;
+                if ($sx && !str_contains($nm, $sx)) {
+                    $nm = $nm . ', ' . $sx;
                 }
                 $lppmHeadName = $nm;
                 $deanId = $idn->identity_id ?? '';
@@ -260,7 +260,7 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    \Log::warning('FPDI Merge Fail (Approval File) for '.$proposal->id.': '.$e->getMessage());
+                    \Log::warning('FPDI Merge Fail (Approval File) for ' . $proposal->id . ': ' . $e->getMessage());
                 }
             }
         }
@@ -280,10 +280,10 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                Log::warning('FPDI Merge Fail (Substance File) for '.$proposal->id.': '.$e->getMessage());
+                Log::warning('FPDI Merge Fail (Substance File) for ' . $proposal->id . ': ' . $e->getMessage());
             }
         } elseif ($substanceFile && file_exists($substanceFile->getPath())) {
-            Log::warning('Proposal PDF Export: Skipping non-PDF substance file for proposal '.$proposal->id.' (MIME: '.$substanceFile->mime_type.')');
+            Log::warning('Proposal PDF Export: Skipping non-PDF substance file for proposal ' . $proposal->id . ' (MIME: ' . $substanceFile->mime_type . ')');
         }
 
         // 4. Add pages from partner commitment letters
@@ -303,7 +303,7 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    Log::warning('FPDI Merge Fail (Partner Commitment Letter) for partner '.$partner->id.' in proposal '.$proposal->id.': '.$e->getMessage());
+                    Log::warning('FPDI Merge Fail (Partner Commitment Letter) for partner ' . $partner->id . ' in proposal ' . $proposal->id . ': ' . $e->getMessage());
                 }
             }
         }
@@ -323,7 +323,7 @@ class ProposalPdfService
     {
         // 0. Cache Check
         $cacheDir = storage_path('app/public/pdf_cache/reports');
-        if (! file_exists($cacheDir)) {
+        if (!file_exists($cacheDir)) {
             mkdir($cacheDir, 0755, true);
         }
 
@@ -356,14 +356,14 @@ class ProposalPdfService
             $report->id,
             $latestTimestamp
         );
-        $cachePath = $cacheDir.DIRECTORY_SEPARATOR.$cacheFileName;
+        $cachePath = $cacheDir . DIRECTORY_SEPARATOR . $cacheFileName;
 
         if (file_exists($cachePath)) {
             return $cachePath;
         }
 
         // Cleanup old versions of this report's PDF
-        $oldPdfs = glob($cacheDir.DIRECTORY_SEPARATOR."report_{$report->id}_*.pdf");
+        $oldPdfs = glob($cacheDir . DIRECTORY_SEPARATOR . "report_{$report->id}_*.pdf");
         foreach ($oldPdfs as $oldPdf) {
             @unlink($oldPdf);
         }
@@ -488,7 +488,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Signature Page) for '.$report->id.': '.$e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Signature Page) for ' . $report->id . ': ' . $e->getMessage());
             }
         }
 
@@ -506,7 +506,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Substance) for '.$report->id.': '.$e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Substance) for ' . $report->id . ': ' . $e->getMessage());
             }
         }
 
@@ -523,7 +523,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Realization File) for '.$report->id.': '.$e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Realization File) for ' . $report->id . ': ' . $e->getMessage());
             }
         }
 
@@ -541,7 +541,7 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Presentation File) for '.$report->id.': '.$e->getMessage());
+                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Presentation File) for ' . $report->id . ': ' . $e->getMessage());
                 }
             }
         }
@@ -565,7 +565,7 @@ class ProposalPdfService
                             $pdf->useTemplate($templateId);
                         }
                     } catch (\Throwable $e) {
-                        \Illuminate\Support\Facades\Log::warning("FPDI Merge Fail (Output File - {$collection}) for report ".$report->id.': '.$e->getMessage());
+                        \Illuminate\Support\Facades\Log::warning("FPDI Merge Fail (Output File - {$collection}) for report " . $report->id . ': ' . $e->getMessage());
                     }
                 }
             }
@@ -582,6 +582,8 @@ class ProposalPdfService
                 'proposal' => $proposal,
                 'notes' => $dailyNotes,
                 'isSigned' => $proposal->logbook_signed_at !== null,
+                'isApproved' => $proposal->logbook_approved_at !== null,
+                'logbookApprovalMode' => \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital',
             ])->setPaper('a4', 'portrait')->output();
 
             $tempNotesPath = tempnam(sys_get_temp_dir(), 'report_notes_');
@@ -596,7 +598,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Daily Notes) for '.$report->id.': '.$e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Daily Notes) for ' . $report->id . ': ' . $e->getMessage());
             }
             @unlink($tempNotesPath);
         }

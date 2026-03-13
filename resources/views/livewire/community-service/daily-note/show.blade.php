@@ -10,10 +10,24 @@
         <x-lucide-eye class="me-2 icon" />
         Tinjau (PDF)
     </a>
-    @if ($proposal->logbook_signed_at)
+    @if ($proposal->logbook_approved_at)
+        <span class="badge bg-success me-2">
+            <x-lucide-check-circle class="me-1 icon icon-inline" /> Telah Disetujui LPPM
+        </span>
         <a data-navigate-ignore="true" href="{{ route('daily-notes.export-pdf', ['proposal' => $proposal, 'download' => 'true']) }}" target="_blank" class="btn-success btn">
             <x-lucide-download class="me-2 icon" />
-            Unduh (Tertanda)
+            Unduh (Final)
+        </a>
+    @elseif ($this->logbookApprovalMode !== 'upload' && $this->canApprove($proposal) && $proposal->logbook_signed_at)
+        <button type="button" class="btn-success btn" x-data @click="if(confirm('Apakah Anda sebagai Kepala LPPM memvalidasi kebenaran catatan harian dan laporan keuangan ini?')) { Livewire.dispatch('approve-logbook') }">
+            <x-lucide-shield-check class="me-2 icon" />
+            Validasi Kepala LPPM
+        </button>
+    @elseif ($proposal->logbook_signed_at)
+        <span class="badge bg-warning me-2">Menunggu Validasi LPPM</span>
+        <a data-navigate-ignore="true" href="{{ route('daily-notes.export-pdf', ['proposal' => $proposal, 'download' => 'true']) }}" target="_blank" class="btn-success btn">
+            <x-lucide-download class="me-2 icon" />
+            Unduh (Tertanda Submitter)
         </a>
     @elseif ($this->canManage($proposal))
         <button type="button" class="btn-primary btn" x-data @click="if(confirm('Apakah Anda yakin ingin menandatangani logbook ini secara digital? Tanda tangan ini menyatakan keabsahan seluruh aktivitas harian beserta laporannya.')) { Livewire.dispatch('sign-logbook') }">
@@ -35,7 +49,7 @@
                 <h4 class="alert-title">Informasi Catatan Harian</h4>
                 <div class="text-secondary">
                     Gunakan fitur ini untuk mencatat aktivitas harian pengabdian masyarakat Anda. Catatan ini akan
-                    menjadi bukti pelaksanaan kegiatan dan digunakan dalam pemantauan kemajuan pengabdian. Lampirkan
+                    menjadi bukti pelaksanaan kegiatan dan digunakan dalam pemantauan progres pengabdian. Lampirkan
                     foto atau dokumen sebagai bukti dukung kegiatan.
                 </div>
             </div>

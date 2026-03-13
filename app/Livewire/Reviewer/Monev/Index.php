@@ -5,6 +5,7 @@ namespace App\Livewire\Reviewer\Monev;
 use App\Livewire\Concerns\HasToast;
 use App\Models\MonevReview;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -36,19 +37,51 @@ class Index extends Component
         if (! Auth::user()->hasRole('reviewer')) {
             abort(403);
         }
+
+        // Self-Healing Database: Ensure columns exist to avoid 500 errors
+        try {
+            if (! \Illuminate\Support\Facades\Schema::hasColumn('proposal_monevs', 'academic_year')) {
+                \Illuminate\Support\Facades\Schema::table('proposal_monevs', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->string('academic_year')->nullable()->after('proposal_id');
+                    $table->enum('semester', ['ganjil', 'genap'])->nullable()->after('academic_year');
+                });
+
+                // Populate initial data
+                \Illuminate\Support\Facades\DB::statement("
+                    UPDATE proposal_monevs 
+                    INNER JOIN proposals ON proposal_monevs.proposal_id = proposals.id
+                    SET proposal_monevs.academic_year = proposals.start_year,
+                        proposal_monevs.semester = IFNULL(proposals.semester, 'ganjil')
+                    WHERE proposal_monevs.academic_year IS NULL
+                ");
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Reviewer Monev Self-Healing Failed: " . $e->getMessage());
+        }
     }
 
     public function selectReview($id)
     {
-        $this->selectedReview = MonevReview::with('proposal.submitter')->findOrFail($id);
+        $this->selectedReview = MonevReview::with([
+            'proposal.submitter.identity', 
+            'proposal.progressReports' => fn($q) => $q->where('reporting_period', 'final'),
+            'proposal.detailable',
+            'proposal.teamMembers.identity'
+        ])->findOrFail($id);
         $this->score = $this->selectedReview->score;
         $this->notes = $this->selectedReview->notes;
-        $this->status = $this->selectedReview->status ?? 'Baik';
-        $this->borang_data = $this->selectedReview->borang_data ?? [
-            'luaran_wajib' => '',
-            'luaran_tambahan' => '',
-            'kualitas_substansi' => '',
-        ];
+        $this->status = $this->selectedReview->status ?? 'baik';
+        
+        if ($this->selectedReview->borang_data) {
+            $this->borang_data = $this->selectedReview->borang_data;
+        } else {
+            $this->borang_data = [];
+            foreach ($this->activeCriteria as $criteria) {
+                // Use snake case of the criteria name as key
+                $this->borang_data[Str::snake($criteria->criteria)] = '';
+            }
+        }
+        
         $this->showReviewModal = true;
     }
 
@@ -56,7 +89,7 @@ class Index extends Component
     {
         $this->validate([
             'score' => 'required|numeric|min:0|max:100',
-            'status' => 'required|in:Sangat Baik,Baik,Cukup',
+            'status' => 'required|in:sangat_baik,baik,cukup',
             'notes' => 'required|string',
             'berita_acara' => [
                 ! $this->selectedReview?->hasMedia('berita_acara') ? 'required' : 'nullable',
@@ -91,7 +124,11 @@ class Index extends Component
     {
         return MonevReview::query()
             ->where('reviewer_id', Auth::id())
-            ->with(['proposal.submitter', 'proposal.detailable'])
+            ->with([
+                'proposal.submitter', 
+                'proposal.detailable',
+                'proposal.progressReports' => fn($q) => $q->where('reporting_period', 'final')
+            ])
             ->when($this->search, function ($query) {
                 $query->whereHas('proposal', function ($q) {
                     $q->where('title', 'like', "%{$this->search}%")
@@ -102,6 +139,23 @@ class Index extends Component
             })
             ->latest()
             ->paginate(10);
+    }
+
+    #[Computed]
+    public function activeCriteria()
+    {
+        if (! $this->selectedReview) {
+            return collect();
+        }
+
+        $type = $this->selectedReview->proposal->detailable_type === \App\Models\Research::class
+            ? 'monev_research'
+            : 'monev_community_service';
+
+        return \App\Models\ReviewCriteria::where('type', $type)
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->get();
     }
 
     public function render()

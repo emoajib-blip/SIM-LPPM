@@ -1,0 +1,4 @@
+@@ -216,3 +216,3 @@
+ 
+ Route::fallback(fn () => redirect('/dashboard'));
+ 

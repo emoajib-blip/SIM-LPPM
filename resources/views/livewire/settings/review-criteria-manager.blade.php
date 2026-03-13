@@ -111,6 +111,117 @@
                 </div>
             </div>
         </div>
+    <div class="row mt-4">
+        <div class="col-12 mb-4">
+            <h2 class="mb-1">Monitoring & Evaluasi (Monev)</h2>
+            <p class="text-muted">Kelola kriteria penilaian laporan akhir untuk monitoring dan evaluasi.</p>
+        </div>
+
+        {{-- Monev Penelitian --}}
+        <div class="mb-4 col-12">
+            <div class="card shadow-sm border-blue-lt">
+                <div class="card-status-start bg-blue"></div>
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="card-title">Monev Penelitian</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="card-table table table-vcenter text-nowrap datatable">
+                        <thead>
+                            <tr>
+                                <th class="w-1">No</th>
+                                <th>Kriteria</th>
+                                <th>Deskripsi</th>
+                                <th class="text-center">Bobot (%)</th>
+                                <th class="text-center">Status</th>
+                                <th class="w-1"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($this->monevResearchCriterias as $criteria)
+                                <tr>
+                                    <td>{{ $criteria->order }}</td>
+                                    <td>{{ $criteria->criteria }}</td>
+                                    <td class="text-muted text-wrap small">{{ $criteria->description }}</td>
+                                    <td class="text-center">{{ number_format($criteria->weight, 0) }}%</td>
+                                    <td class="text-center">
+                                        <label class="form-check-inline m-0 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox"
+                                                wire:click="toggleActive({{ $criteria->id }})"
+                                                @if ($criteria->is_active) checked @endif>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-icon btn-ghost-primary"
+                                            wire:click="edit({{ $criteria->id }})">
+                                            <x-lucide-edit class="icon" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <tr class="bg-body-tertiary">
+                                <td colspan="3" class="text-end fw-bold">Total Bobot:</td>
+                                <td class="text-center fw-bold">
+                                    {{ number_format($this->monevResearchCriterias->sum('weight'), 0) }}%</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {{-- Monev Pengabdian --}}
+        <div class="col-12">
+            <div class="card shadow-sm border-green-lt">
+                <div class="card-status-start bg-green"></div>
+                <div class="card-header">
+                    <h3 class="card-title">Monev Pengabdian Masyarakat (PkM)</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="card-table table table-vcenter text-nowrap datatable">
+                        <thead>
+                            <tr>
+                                <th class="w-1">No</th>
+                                <th>Kriteria</th>
+                                <th>Deskripsi</th>
+                                <th class="text-center">Bobot (%)</th>
+                                <th class="text-center">Status</th>
+                                <th class="w-1"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($this->monevPkmCriterias as $criteria)
+                                <tr>
+                                    <td>{{ $criteria->order }}</td>
+                                    <td>{{ $criteria->criteria }}</td>
+                                    <td class="text-muted text-wrap small">{{ $criteria->description }}</td>
+                                    <td class="text-center">{{ number_format($criteria->weight, 0) }}%</td>
+                                    <td class="text-center">
+                                        <label class="form-check-inline m-0 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox"
+                                                wire:click="toggleActive({{ $criteria->id }})"
+                                                @if ($criteria->is_active) checked @endif>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-icon btn-ghost-primary"
+                                            wire:click="edit({{ $criteria->id }})">
+                                            <x-lucide-edit class="icon" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <tr class="bg-body-tertiary">
+                                <td colspan="3" class="text-end fw-bold">Total Bobot:</td>
+                                <td class="text-center fw-bold">
+                                    {{ number_format($this->monevPkmCriterias->sum('weight'), 0) }}%</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- Edit Modal --}}

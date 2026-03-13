@@ -23,6 +23,12 @@ class IkuDashboard extends Component
         $this->dispatch('download-file', url: route('admin.iku.export-pdf', ['period' => $this->period]));
     }
 
+    public function previewPdf(): void
+    {
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('preview-pdf', url: route('admin.iku.export-pdf', ['period' => $this->period, 'preview' => true]));
+    }
+
     public function exportExcel(): void
     {
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
@@ -46,7 +52,7 @@ class IkuDashboard extends Component
             ->whereNotNull('start_year')
             ->orderBy('start_year', 'desc')
             ->pluck('start_year')
-            ->map(fn ($y) => (string) $y)
+            ->map(fn($y) => (string) $y)
             ->toArray() ?: [(string) date('Y')];
     }
 
@@ -65,7 +71,7 @@ class IkuDashboard extends Component
     #[Computed]
     public function selectedMetricDetails(): array
     {
-        if (! $this->selectedIku) {
+        if (!$this->selectedIku) {
             return [];
         }
 

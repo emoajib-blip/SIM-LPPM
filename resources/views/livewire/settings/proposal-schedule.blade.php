@@ -104,6 +104,40 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
+                                        <h4 class="mb-3 mt-4">Perbaikan Usulan Penelitian</h4>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Mulai</label>
+                                            <input type="date" class="form-control"
+                                                wire:model="research_revision_start_date">
+                                            @error('research_revision_start_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Selesai</label>
+                                            <input type="date" class="form-control"
+                                                wire:model="research_revision_end_date">
+                                            @error('research_revision_end_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <h4 class="mb-3 mt-4">Laporan Akhir Penelitian</h4>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Mulai</label>
+                                            <input type="date" class="form-control"
+                                                wire:model="research_final_report_start_date">
+                                            @error('research_final_report_start_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Selesai</label>
+                                            <input type="date" class="form-control"
+                                                wire:model="research_final_report_end_date">
+                                            @error('research_final_report_end_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <h4 class="mb-3">Pengabdian Masyarakat</h4>
@@ -120,6 +154,40 @@
                                             <input type="date" class="form-control"
                                                 wire:model="community_service_end_date">
                                             @error('community_service_end_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <h4 class="mb-3 mt-4">Perbaikan Usulan Pengabdian Masyarakat</h4>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Mulai</label>
+                                            <input type="date" class="form-control"
+                                                wire:model="community_service_revision_start_date">
+                                            @error('community_service_revision_start_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Selesai</label>
+                                            <input type="date" class="form-control"
+                                                wire:model="community_service_revision_end_date">
+                                            @error('community_service_revision_end_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <h4 class="mb-3 mt-4">Laporan Akhir Pengabdian Masyarakat</h4>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Mulai</label>
+                                            <input type="date" class="form-control"
+                                                wire:model="community_service_final_report_start_date">
+                                            @error('community_service_final_report_start_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Selesai</label>
+                                            <input type="date" class="form-control"
+                                                wire:model="community_service_final_report_end_date">
+                                            @error('community_service_final_report_end_date')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>

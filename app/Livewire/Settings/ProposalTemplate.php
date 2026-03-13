@@ -40,11 +40,14 @@ class ProposalTemplate extends Component
 
     public $report_approval_mode = 'digital'; // 'digital', 'upload', 'both'
 
+    public $logbook_approval_mode = 'digital'; // 'digital', 'upload', 'both'
+
     public function mount()
     {
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->proposal_approval_mode = Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
         $this->report_approval_mode = Setting::where('key', 'report_approval_mode')->value('value') ?? 'digital';
+        $this->logbook_approval_mode = Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital';
     }
 
     public function saveResearchTemplate()
@@ -254,10 +257,12 @@ class ProposalTemplate extends Component
         $this->validate([
             'proposal_approval_mode' => 'required|in:digital,upload,both',
             'report_approval_mode' => 'required|in:digital,upload,both',
+            'logbook_approval_mode' => 'required|in:digital,upload,both',
         ]);
 
         Setting::updateOrCreate(['key' => 'proposal_approval_mode'], ['value' => $this->proposal_approval_mode]);
         Setting::updateOrCreate(['key' => 'report_approval_mode'], ['value' => $this->report_approval_mode]);
+        Setting::updateOrCreate(['key' => 'logbook_approval_mode'], ['value' => $this->logbook_approval_mode]);
 
         $this->toastSuccess('Pengaturan metode persetujuan berhasil disimpan.');
     }

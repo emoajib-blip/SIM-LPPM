@@ -1,0 +1,11 @@
+--- routes/web.php
++++ routes/web.php
+@@ -216,3 +216,3 @@
+ 
+ Route::fallback(fn () => redirect('/dashboard'));
+ 
++Route::get('/debug-pkm-excel', function () {
++    $c = app()->make(\App\Livewire\Reports\CommunityService::class);
++    $c->period = '2026';
++    return $c->exportExcel();
++});

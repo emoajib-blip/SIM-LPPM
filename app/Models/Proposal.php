@@ -102,6 +102,7 @@ class Proposal extends Model
         'asta_cita',
         'status',
         'logbook_signed_at',
+        'logbook_approved_at',
         'student_members',
     ];
 
@@ -116,6 +117,8 @@ class Proposal extends Model
             'sbk_value' => 'decimal:2',
             'duration_in_years' => 'integer',
             'status' => ProposalStatus::class,
+            'logbook_signed_at' => 'datetime',
+            'logbook_approved_at' => 'datetime',
             'student_members' => 'array',
         ];
     }

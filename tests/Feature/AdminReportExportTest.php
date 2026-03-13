@@ -24,8 +24,8 @@ class AdminReportExportTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('admin lppm');
 
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'module_iku']);
-        $admin->givePermissionTo('module_iku');
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'module_laporan']);
+        $admin->givePermissionTo('module_laporan');
 
         // Note: No Rektor or LPPM Head created intentionally to test null-safety
 

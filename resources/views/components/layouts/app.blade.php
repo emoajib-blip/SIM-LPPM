@@ -61,6 +61,23 @@
     </div>
 
     @stack('scripts')
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('download-file', (event) => {
+                const url = event[0]?.url || event.url;
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+
+            Livewire.on('preview-pdf', (event) => {
+                const url = event[0]?.url || event.url;
+                if (url) {
+                    window.open(url, '_blank');
+                }
+            });
+        });
+    </script>
 
     {{-- @include('components.layouts.app.settings') --}}
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->

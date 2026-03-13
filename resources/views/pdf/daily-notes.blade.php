@@ -1,19 +1,108 @@
 <!DOCTYPE html>
 <html>
-
+@php
+    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+    // Defensive defaults in case variables are not passed from all render paths
+    $isApproved ??= false;
+    $isSigned ??= false;
+    $logbookApprovalMode ??= 'digital';
+@endphp
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Catatan Harian - {{ $proposal->id }}</title>
     <style>
         @page {
-            margin: 1.5cm;
+            margin: 3cm 3cm 3cm 4cm;
         }
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 9pt;
-            line-height: 1.4;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12pt;
+            line-height: 1.5;
             color: #000;
+            text-align: justify;
+        }
+
+        .cover-page {
+            box-sizing: border-box;
+            height: 24.5cm;
+            text-align: center;
+            padding: 1cm 0;
+            margin: 0;
+            width: 100%;
+            page-break-after: always;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cover-header {
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 1cm;
+            text-transform: uppercase;
+        }
+
+        .cover-logo {
+            width: 150px;
+            margin: 1cm 0;
+        }
+
+        .cover-title {
+            font-size: 16pt;
+            font-weight: bold;
+            margin: 1.5cm 0;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+
+        .cover-authors {
+            margin: 1cm 0;
+            font-size: 12pt;
+        }
+
+        .cover-authors-table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        .cover-authors-table td {
+            padding: 5px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .cover-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16pt;
+            text-transform: uppercase;
+        }
+
+        .signature-section {
+            width: 100%;
+            margin-top: 1cm;
+        }
+
+        .signature-table {
+            width: 100%;
+            border: none;
+        }
+
+        .signature-table td {
+            width: 50%;
+            text-align: center;
+            vertical-align: top;
+            border: none;
+            padding: 10px;
+        }
+
+        .signature-qr {
+            margin: 10px auto;
+            display: block;
         }
 
         .header-table {
@@ -21,6 +110,14 @@
             border-bottom: 2px solid #000;
             margin-bottom: 5px;
             padding-bottom: 5px;
+        }
+
+        .log-content {
+            margin-top: 5px;
+            font-size: 8.5pt;
+            text-align: justify;
+            white-space: pre-wrap;
+            line-height: 1.5;
         }
 
         .logo {
@@ -69,15 +166,17 @@
         table.data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-bottom: 15px;
         }
 
-        table.data-table th,
-        table.data-table td {
+        .data-table th,
+        .data-table td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 6px;
             text-align: left;
             vertical-align: top;
+            font-size: 11pt;
+            line-height: 1.5;
         }
 
         table.data-table th {
@@ -101,16 +200,204 @@
         .footer {
             margin-top: 30px;
             text-align: right;
-            /* page-break-inside: avoid; */
         }
 
         .signature-space {
-            height: 80px;
+            min-height: 80px;
         }
     </style>
 </head>
 
 <body>
+    @php
+        $isResearch = $proposal->detailable_type === \App\Models\Research::class;
+        $docType = ($isResearch ? 'PENELITIAN' : 'PENGABDIAN');
+        $docFullType = ($isResearch ? 'PENELITIAN' : 'PENGABDIAN MASYARAKAT');
+        $docTitle = "CATATAN HARIAN $docType DAN LAPORAN KEUANGAN $docFullType";
+        $period = $proposal->dailyNotes->min('activity_date')?->format('d/m/Y') . ' s/d ' . $proposal->dailyNotes->max('activity_date')?->format('d/m/Y');
+    @endphp
+
+    {{-- Cover Page --}}
+    <div class="cover-page">
+        <div class="cover-header">
+            {{ $docTitle }}
+        </div>
+
+        @if (file_exists(public_path('logo.png')))
+            <img src="{{ public_path('logo.png') }}" alt="Logo" class="cover-logo">
+        @else
+            <div style="height: 120px;"></div>
+        @endif
+
+        <div class="cover-title">
+            @php
+                $cleanTitle = $proposal->title;
+                // Strip common prefixes if they exist (case-insensitive)
+                $cleanTitle = preg_replace('/^(PENELITIAN|PENGABDIAN MASYARAKAT|PENGABDIAN):?\s*/i', '', $cleanTitle);
+            @endphp
+            {{ strtoupper($cleanTitle) }}
+        </div>
+
+        <div class="cover-authors">
+            <div style="margin-bottom: 15px; font-weight: bold;">OLEH:</div>
+            <table class="cover-authors-table">
+                <tr>
+                    <td width="30%">Ketua Pengusul</td>
+                    <td width="5%">:</td>
+                    <td>{{ $proposal->submitter->name }} (NIDN:
+                        {{ $proposal->submitter->identity?->identity_id ?? '-' }})
+                    </td>
+                </tr>
+                <tr>
+                    <td>Anggota</td>
+                    <td>:</td>
+                    <td>
+                        @forelse($proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id) as $member)
+                            <div>- {{ $member->name }} (NIDN: {{ $member->identity?->identity_id ?? '-' }})</div>
+                        @empty
+                            -
+                        @endforelse
+                    </td>
+                </tr>
+                <tr>
+                    <td>Program Studi</td>
+                    <td>:</td>
+                    <td>{{ $proposal->submitter->identity?->studyProgram?->name ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Fakultas</td>
+                    <td>:</td>
+                    <td>{{ $proposal->submitter->identity?->studyProgram?->faculty?->name ?? '-' }}</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="cover-footer">
+            INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN<br>
+            TAHUN {{ $proposal->start_year }}
+        </div>
+    </div>
+
+    {{-- Halaman Pengesahan --}}
+    <div style="page-break-inside: avoid;">
+        <div class="document-title"
+            style="margin-top: 20px; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px;">
+            HALAMAN PENGESAHAN
+        </div>
+
+        <table class="info-table" style="margin-bottom: 15px;">
+            <tr>
+                <td class="info-label">Judul Usulan</td>
+                <td class="info-colon">:</td>
+                <td><strong>{{ $proposal->title }}</strong></td>
+            </tr>
+            <tr>
+                <td class="info-label">Ketua Pengusul</td>
+                <td class="info-colon">:</td>
+                <td>{{ $proposal->submitter->name }} (NIDN: {{ $proposal->submitter->identity?->identity_id ?? '-' }})</td>
+            </tr>
+            <tr>
+                <td class="info-label">Skema</td>
+                <td class="info-colon">:</td>
+                <td>{{ $proposal->researchScheme->name ?? ($proposal->communityServiceScheme->name ?? '-') }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Total Anggaran Digunakan</td>
+                <td class="info-colon">:</td>
+                <td class="font-bold">Rp {{ number_format($notes->sum('amount'), 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Jumlah Catatan Aktivitas</td>
+                <td class="info-colon">:</td>
+                <td>{{ $notes->count() }} Kali Kegiatan</td>
+            </tr>
+        </table>
+
+        <div style="margin-top: 10px; margin-bottom: 15px;">
+            <div class="font-bold"
+                style="margin-bottom: 10px; font-size: 11pt; border-bottom: 1px solid #000; padding-bottom: 5px;">Ringkasan
+                Biaya sesuai Kelompok RAB:</div>
+            <table class="data-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th width="5%">No</th>
+                        <th>Kelompok RAB</th>
+                        <th class="text-right" width="30%">Total Tagihan (Rp)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $groupTotals = $notes->groupBy('budget_group_id');
+                    @endphp
+                    @foreach ($groupTotals as $groupId => $items)
+                        <tr>
+                            <td class="text-center">{{ $loop->iteration }}</td>
+                            <td>{{ $items->first()->budgetGroup->name ?? 'Tanpa Kelompok' }}</td>
+                            <td class="text-right">{{ number_format($items->sum('amount'), 0, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2" class="text-right">TOTAL KESELURUHAN</th>
+                        <th class="text-right">{{ number_format($notes->sum('amount'), 0, ',', '.') }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="footer" style="margin-top: 10px;">
+            <table class="signature-table" style="width: 100%; margin-top: 10px;">
+                <tr>
+                    <td style="width: 50%; text-align: center;">
+                        <p style="margin: 0;">Pekalongan, {{ date('d F Y') }}</p>
+                        <p style="margin: 0;">Yang Melaporkan,<br>Ketua Pengusul</p>
+                        <div class="signature-space"
+                            style="height: 60px; display: flex; justify-content: center; align-items: center; margin: 5px 0;">
+                            @if ($isSigned)
+                                @php
+                                    $qrTextSubmitter = 'Catatan harian & laporan keuangan ini dilaporkan secara digital oleh: ' . strtoupper($proposal->submitter->name) . ' pada ' . ($proposal->logbook_signed_at?->format('d/m/Y H:i') ?? date('d/m/Y H:i'));
+                                @endphp
+                                <img src="{{ generate_qr_code_data_uri($qrTextSubmitter) }}" width="60" alt="QR Code"
+                                    style="margin: 0 auto; display: block;">
+                            @else
+                                <div
+                                    style="color: #999; border: 1px dashed #ccc; padding: 10px; text-align: center; font-size: 8pt; width: 80%; margin: 0 auto;">
+                                    [DRAFT - Belum Ditandatangani]
+                                </div>
+                            @endif
+                        </div>
+                        <p style="margin: 0;"><strong>{{ strtoupper($proposal->submitter->name) }}</strong></p>
+                    </td>
+                    <td style="width: 50%; text-align: center;">
+                        <p style="margin: 0;">&nbsp;</p>
+                        <p style="margin: 0;">Menyetujui,<br>Kepala LPPM</p>
+                        <div class="signature-space"
+                            style="height: 60px; display: flex; justify-content: center; align-items: center; margin: 5px 0;">
+                            @if ($isApproved)
+                                @php
+                                    $headOfLppm = \App\Models\User::role('kepala lppm')->first();
+                                    $qrTextLppm = "Logbook & Laporan Keuangan ini telah disetujui secara digital oleh Kepala LPPM:\nNama: " . ($headOfLppm->name ?? 'Kepala LPPM') . "\nTanggal: " . $proposal->logbook_approved_at?->format('d/m/Y H:i');
+                                @endphp
+                                <img src="{{ generate_qr_code_data_uri($qrTextLppm) }}" width="60" alt="QR Code"
+                                    style="margin: 0 auto; display: block;">
+                            @else
+                                <div
+                                    style="color: #999; border: 1px dashed #ccc; padding: 10px; text-align: center; font-size: 8pt; width: 80%; margin: 0 auto;">
+                                    [Menunggu Validasi LPPM]
+                                </div>
+                            @endif
+                        </div>
+                        <p style="margin: 0;"><strong>( KEPALA LPPM )</strong></p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div style="page-break-before: always;"></div>
+    {{-- End Halaman Pengesahan --}}
     <table class="header-table no-border">
         <tr>
             <td class="logo" style="width: 60px; border: none;">
@@ -129,8 +416,9 @@
         </tr>
     </table>
 
-    <div class="document-title">
-        CATATAN HARIAN (LOGBOOK)
+    <div class="document-title"
+        style="margin-top: 1cm; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
+        {{ $docTitle }}
     </div>
 
     <table class="info-table">
@@ -142,7 +430,7 @@
         <tr>
             <td class="info-label">Ketua Pengusul</td>
             <td class="info-colon">:</td>
-            <td>{{ $proposal->submitter->name }}</td>
+            <td>{{ $proposal->submitter->name }} (NIDN: {{ $proposal->submitter->identity?->identity_id ?? '-' }})</td>
         </tr>
         <tr>
             <td class="info-label">Program Studi</td>
@@ -180,10 +468,10 @@
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td class="text-center">{{ $note->activity_date->format('d/m/Y') }}</td>
-                    <td>
-                        <div class="font-bold">{{ $note->activity_description }}</div>
+                    <td class="text-justify">
+                        <div class="font-bold" style="line-height: 1.4;">{{ $note->activity_description }}</div>
                         @if ($note->notes)
-                            <div style="margin-top: 5px; font-style: italic; color: #444; font-size: 8pt;">
+                            <div style="margin-top: 5px; font-style: italic; color: #444; font-size: 8pt; line-height: 1.4;">
                                 Catatan: {{ $note->notes }}
                             </div>
                         @endif
@@ -226,58 +514,7 @@
         @endif --}}
     </table>
 
-    @if ($notes->count() > 0)
-        <div style="margin-top: 20px; margin-bottom: 10px; page-break-inside: avoid;">
-            <div class="font-bold" style="margin-bottom: 5px;">Ringkasan Penggunaan Anggaran:</div>
-            <table class="data-table" style="width: 50%;">
-                <thead>
-                    <tr>
-                        <th>Kelompok RAB</th>
-                        <th class="text-right">Total (Rp)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $groupTotals = $notes->groupBy('budget_group_id');
-                    @endphp
-                    @foreach ($groupTotals as $groupId => $items)
-                        <tr>
-                            <td>{{ $items->first()->budgetGroup->name ?? 'Tanpa Kelompok' }}</td>
-                            <td class="text-right">{{ number_format($items->sum('amount'), 0, ',', '.') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th class="text-right">Total Keseluruhan</th>
-                        <th class="text-right">{{ number_format($notes->sum('amount'), 0, ',', '.') }}</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    @endif
 
-    <div class="footer" style="text-align: right; width: 300px; float: right;">
-        <p>Pekalongan, {{ date('d F Y') }}</p>
-        <p>Ketua Pengusul,</p>
-        <div class="signature-space"
-            style="height: 80px; display: flex; justify-content: flex-end; align-items: center; padding-right: 50px;">
-            @if(isset($isSigned) && $isSigned)
-                @php
-                    $qrText = 'Catatan harian ini dinyatakan sah secara digital oleh: ' . strtoupper($proposal->submitter->name) . ' pada ' . date('d/m/Y H:i');
-                @endphp
-                <img src="{{ generate_qr_code_data_uri($qrText) }}" width="70" alt="QR Code"
-                    style="margin-left: auto; display: block;">
-            @else
-                <div
-                    style="color: #999; border: 1px dashed #ccc; padding: 10px; text-align: center; font-size: 8pt; width: 100%;">
-                    [DRAFT - Belum Ditandatangani]
-                </div>
-            @endif
-        </div>
-        <p><strong>( {{ strtoupper($proposal->submitter->name) }} )</strong></p>
-    </div>
-    <div style="clear: both;"></div>
 
     @php
         $hasAttachments = false;

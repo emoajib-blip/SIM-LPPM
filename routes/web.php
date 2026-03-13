@@ -27,9 +27,9 @@ Route::get('/dev/migrate', function () {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
 
-        return 'Migrasi Berhasil: '.\Illuminate\Support\Facades\Artisan::output();
+        return 'Migrasi Berhasil: ' . \Illuminate\Support\Facades\Artisan::output();
     } catch (\Exception $e) {
-        return 'Error Migrasi: '.$e->getMessage();
+        return 'Error Migrasi: ' . $e->getMessage();
     }
 });
 
@@ -112,10 +112,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('proposal-revision/{proposal}', \App\Livewire\Research\ProposalRevision\Show::class)->name('proposal-revision.show');
 
         // Laporan Kemajuan dihilangkan berdasarkan arahan simplifikasi
-        // Route::get('progress-report', \App\Livewire\Research\ProgressReport\Index::class)->name('progress-report.index');
-        // Route::get('progress-report/{proposal}', \App\Livewire\Reports\Show::class)
-        //     ->name('progress-report.show')
-        //     ->defaults('type', 'research-progress');
+        Route::get('progress-report', \App\Livewire\Research\ProgressReport\Index::class)->name('progress-report.index');
+        Route::get('progress-report/{proposal}', \App\Livewire\Reports\Show::class)
+            ->name('progress-report.show')
+            ->defaults('type', 'research-progress');
 
         Route::get('final-report', \App\Livewire\Research\FinalReport\Index::class)->name('final-report.index');
         Route::get('final-report/{proposal}', \App\Livewire\Research\FinalReport\Show::class)
@@ -146,10 +146,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('proposal-revision/{proposal}', \App\Livewire\CommunityService\ProposalRevision\Show::class)->name('proposal-revision.show');
 
         // Laporan Kemajuan dihilangkan berdasarkan arahan simplifikasi
-        // Route::get('progress-report', \App\Livewire\CommunityService\ProgressReport\Index::class)->name('progress-report.index');
-        // Route::get('progress-report/{proposal}', \App\Livewire\Reports\Show::class)
-        //     ->name('progress-report.show')
-        //     ->defaults('type', 'community-service-progress');
+        Route::get('progress-report', \App\Livewire\CommunityService\ProgressReport\Index::class)->name('progress-report.index');
+        Route::get('progress-report/{proposal}', \App\Livewire\Reports\Show::class)
+            ->name('progress-report.show')
+            ->defaults('type', 'community-service-progress');
 
         Route::get('final-report', \App\Livewire\CommunityService\FinalReport\Index::class)->name('final-report.index');
         Route::get('final-report/{proposal}', \App\Livewire\CommunityService\FinalReport\Show::class)
@@ -270,9 +270,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('media/{media:uuid}/download', [\App\Http\Controllers\MediaDownloadController::class, 'download'])
         ->middleware(['auth'])
         ->name('media.download');
+
+    Route::get('monev/{id}/ba-pdf', [\App\Http\Controllers\ReportExportController::class, 'monevBaPdf'])
+        ->name('export.monev.ba');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // Rute Ekspor Laporan via Standar HTTP (Bypass Livewire)
 Route::group(['middleware' => ['auth', 'verified', 'permission:module_laporan']], function () {
@@ -291,6 +294,7 @@ Route::group(['middleware' => ['auth', 'verified', 'permission:module_laporan']]
     Route::get('/admin/dashboard/export-research', [\App\Http\Controllers\ReportExportController::class, 'dashboardResearchExport'])->name('admin.dashboard.export-research');
 
     Route::get('/monev/export-recap', [\App\Http\Controllers\ReportExportController::class, 'monevRecapExcel'])->name('export.monev.recap');
+    Route::get('/laporan-monev/export/pdf', [\App\Http\Controllers\ReportExportController::class, 'monevPdf'])->name('reports.monev.pdf');
 
     // IKU Exports
     Route::get('/admin/iku/export-pdf', [\App\Http\Controllers\ReportExportController::class, 'ikuPdf'])->name('admin.iku.export-pdf');

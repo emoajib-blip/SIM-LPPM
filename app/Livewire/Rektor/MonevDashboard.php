@@ -33,7 +33,7 @@ class MonevDashboard extends Component
             ->when($this->semester !== 'all', function ($query) {
                 $query->where('semester', $this->semester);
             })
-            ->whereNotNull('reported_at');
+            ->whereNotNull('reported_to_rektor_at');
 
         return [
             'total' => $baseQuery->count(),
@@ -58,8 +58,8 @@ class MonevDashboard extends Component
             ->when($this->semester !== 'all', function ($query) {
                 $query->where('semester', $this->semester);
             })
-            ->whereNotNull('reported_at')
-            ->latest('reported_at')
+            ->whereNotNull('reported_to_rektor_at')
+            ->latest('reported_to_rektor_at')
             ->take(10)
             ->get();
     }

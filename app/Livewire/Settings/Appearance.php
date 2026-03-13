@@ -12,22 +12,29 @@ class Appearance extends Component
 
     public string $dashboardName = 'Dashboard';
 
+    public string $loginTitle = 'Login to your account';
+
     public $logo;
 
     public function mount()
     {
-        if (! auth()->user()->hasRole('admin lppm')) {
+        if (!auth()->user()->hasRole('admin lppm')) {
             abort(403);
         }
 
         $this->dashboardName = Setting::where('key', 'dashboard_name')->value('value') ?? 'Dashboard';
+        $this->loginTitle = Setting::where('key', 'login_title')->value('value') ?? 'Login to your account';
     }
-
     public function saveSettings()
     {
         Setting::updateOrCreate(
             ['key' => 'dashboard_name'],
             ['value' => $this->dashboardName, 'type' => 'string']
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'login_title'],
+            ['value' => $this->loginTitle, 'type' => 'string']
         );
 
         session()->flash('success_settings', 'Pengaturan teks berhasil disimpan.');

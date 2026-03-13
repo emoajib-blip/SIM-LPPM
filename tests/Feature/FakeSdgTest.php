@@ -2,22 +2,21 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Livewire\Settings\MasterData;
 use Livewire\Livewire;
 use Tests\TestCase;
 
 class FakeSdgTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_master_data_sdgs_tab_can_render_without_403()
     {
-        // Avoid running migrations, use existing DB
-        config(['database.default' => config('database.default', 'mysql')]);
+        $this->seed(\Database\Seeders\RoleSeeder::class);
 
-        $user = \App\Models\User::role(['admin lppm', 'superadmin'])->first();
-        if ($user) {
-            \Illuminate\Support\Facades\Auth::login($user);
-            session()->put('active_role', $user->getRoleNames()->first());
-        }
+        $user = \App\Models\User::factory()->create();
+        $user->assignRole('admin lppm');
 
         Livewire::actingAs($user)
             ->test(MasterData::class, ['group' => 'academic-content', 'activeTab' => 'sdgs'])

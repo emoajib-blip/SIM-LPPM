@@ -34,11 +34,14 @@ class Login extends Component
 
     public bool $remember = false;
 
+    public string $loginTitle = 'Login to your account';
+
     public string $captcha = '';
 
     public function mount(): void
     {
         $this->generateMathQuestion();
+        $this->loginTitle = \App\Models\Setting::where('key', 'login_title')->value('value') ?? 'Login to your account';
     }
 
     public function generateMathQuestion(): void
@@ -58,8 +61,8 @@ class Login extends Component
                 'password' => 'required|string',
             ];
 
-            if (! app()->environment('testing')) {
-                if (! empty($this->captcha)) {
+            if (!app()->environment('testing')) {
+                if (!empty($this->captcha)) {
                     $rules['captcha'] = [new Turnstile];
                 } else {
                     $rules['math_answer'] = [
@@ -76,7 +79,7 @@ class Login extends Component
             $this->validate($rules);
 
             // Manual Honey Pot Check
-            if (! empty($this->username_honeypot)) {
+            if (!empty($this->username_honeypot)) {
                 throw ValidationException::withMessages([
                     'email' => __('auth.failed'),
                 ]);
@@ -112,13 +115,13 @@ class Login extends Component
 
     public function devLogin(string $roleName): void
     {
-        if (! app()->environment('local')) {
+        if (!app()->environment('local')) {
             return;
         }
 
         $user = User::role($roleName)->first();
 
-        if (! $user) {
+        if (!$user) {
             $this->addError('email', "No user found with role: $roleName");
 
             return;
@@ -139,7 +142,7 @@ class Login extends Component
         // Try to find user by email, username, or identity_id
         $user = User::where('email', $this->email)
             ->orWhere(function ($query) {
-                if (! empty($this->email)) {
+                if (!empty($this->email)) {
                     $query->where('username', $this->email);
                 }
             })
@@ -148,7 +151,7 @@ class Login extends Component
             })
             ->first();
 
-        if (! $user || ! Auth::getProvider()->validateCredentials($user, ['password' => $this->password])) {
+        if (!$user || !Auth::getProvider()->validateCredentials($user, ['password' => $this->password])) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -164,7 +167,7 @@ class Login extends Component
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -185,6 +188,6 @@ class Login extends Component
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }

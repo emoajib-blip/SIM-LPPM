@@ -24,6 +24,9 @@ class MonevRecapExport implements FromView, ShouldAutoSize, WithStyles
             ->with([
                 'submitter.identity.faculty',
                 'submitter.identity.studyProgram',
+                'monevReviews' => function ($q) {
+                    $q->whereNotNull('finalized_by_lppm_at')->latest();
+                },
                 'monevReviews.reviewer',
                 'progressReports' => function ($q) {
                     $q->where('reporting_period', 'final')->latest();

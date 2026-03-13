@@ -90,7 +90,14 @@ class Show extends Component
      */
     public function canEdit(): bool
     {
-        return $this->form->proposal->submitter_id === Auth::id();
+        if ($this->form->proposal->submitter_id !== Auth::id()) {
+            return false;
+        }
+
+        /** @var \App\Services\LecturerEligibilityService $service */
+        $service = app(\App\Services\LecturerEligibilityService::class);
+
+        return $service->isRevisionOpen('community_service');
     }
 
     /**
@@ -98,7 +105,7 @@ class Show extends Component
      */
     public function save(): void
     {
-        if (! $this->canEdit()) {
+        if (!$this->canEdit()) {
             $message = 'Anda tidak memiliki akses untuk mengedit proposal ini';
             session()->flash('error', $message);
             $this->toastError($message);
@@ -127,7 +134,7 @@ class Show extends Component
             // Refresh proposal data
             $this->form->setProposal($this->form->proposal->fresh());
         } catch (\Exception $e) {
-            $message = 'Gagal menyimpan perubahan: '.$e->getMessage();
+            $message = 'Gagal menyimpan perubahan: ' . $e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
         }

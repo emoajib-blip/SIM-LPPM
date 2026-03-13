@@ -4,83 +4,81 @@
     <title>Laporan Luaran</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
-        body { font-family: sans-serif; font-size: 10pt; }
-        .header { text-align: center; margin-bottom: 25px; border-bottom: 3px double #000; padding-bottom: 10px; }
-        .institution { font-size: 14pt; font-weight: bold; margin-bottom: 2px; }
-        .lppm { font-size: 12pt; font-weight: bold; margin-bottom: 10px; }
-        .title { font-size: 11pt; font-weight: bold; text-decoration: underline; text-transform: uppercase; }
-        .subtitle { font-size: 10pt; margin-top: 5px; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 6px 4px; vertical-align: top; }
-        th { background-color: #f2f2f2; font-weight: bold; text-align: center; font-size: 9pt; }
-        td { font-size: 9pt; }
-        
+        /* Vetted by AI - Manual Review Required by Senior Engineer/Manager */
+        html, body { margin: 0; padding: 0; border: 0; }
+        @page { margin: 3cm 2.5cm 3cm 3.5cm; }
+        body { font-family: "Arial", "Helvetica", sans-serif; font-size: 10pt; line-height: 1.4; color: #000; }
+
+        .kop-surat { border-bottom: 3pt solid #000; padding-bottom: 6px; margin-bottom: 0; position: relative; overflow: hidden; }
+        .kop-surat-inner { border-bottom: 1pt solid #000; padding-bottom: 4px; margin-bottom: 2px; }
+        .logo { position: absolute; left: 0; top: 4px; width: 75px; }
+        .header-text { text-align: center; margin-left: 85px; margin-right: 0; }
+        .inst-name { font-size: 13pt; font-weight: bold; color: #000; margin-bottom: 1px; }
+        .lppm-name { font-size: 11pt; font-weight: bold; margin-top: 1px; margin-bottom: 4px; }
+        .inst-address { font-size: 8.5pt; color: #333; }
+
+        .report-title-container { text-align: center; margin-top: 8px; margin-bottom: 8px; }
+        .report-title { font-size: 11pt; font-weight: bold; text-decoration: underline; text-transform: uppercase; }
+        .report-subtitle { font-size: 9.5pt; margin-top: 2px; color: #333; }
+
+        table.data-table { width: 100%; border-collapse: collapse; margin-top: 6px; table-layout: fixed; page-break-inside: auto; }
+        table.data-table thead tr { page-break-inside: avoid; page-break-after: avoid; }
+        table.data-table tbody tr { page-break-inside: avoid; }
+        table.data-table th { background-color: #1a4a8e; color: #fff; font-weight: bold; text-align: center; vertical-align: middle; font-size: 9pt; padding: 5px 6px; border: 0.5pt solid #0e2e5a; line-height: 1.3; }
+        table.data-table td { font-size: 9pt; line-height: 1.35; padding: 4px 6px; vertical-align: top; border: 0.5pt solid #c0c8d8; word-wrap: break-word; overflow-wrap: break-word; }
+        table.data-table tbody tr:nth-child(even) td { background-color: #f4f6fa; }
+        table.data-table tbody tr:nth-child(odd) td { background-color: #ffffff; }
+
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .fw-bold { font-weight: bold; }
+        .cell-title { font-weight: bold; text-align: left; line-height: 1.35; }
         .text-muted { color: #555; font-size: 8pt; }
-        
-        .footer { position: fixed; bottom: 0; left: 0; right: 0; font-size: 8pt; text-align: right; border-top: 1px solid #ddd; padding-top: 5px; }
 
-        .digital-signature {
-            border: 1px solid #1a56db;
-            padding: 5px;
-            display: inline-block;
-            margin-bottom: 5px;
-            border-radius: 4px;
-            background-color: #ffffff;
-            color: #1a56db;
-            font-family: 'Courier New', Courier, monospace;
-            text-align: center;
-            width: 80px;
-        }
-
-        .digital-signature img {
-            width: 70px;
-            height: 70px;
-        }
-
-        .signature-label {
-            display: block;
-            font-size: 7px;
-            margin-top: 2px;
-            color: #1a56db;
-            font-weight: bold;
-        }
-
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 80pt;
-            color: rgba(220, 220, 220, 0.4);
-            z-index: -1000;
-            white-space: nowrap;
-            font-weight: bold;
-        }
+        .signature-wrapper { margin-top: 20px; page-break-inside: avoid; }
+        table.signature-table { width: 100%; border-collapse: collapse; border: none; }
+        table.signature-table td { border: none; padding: 0; vertical-align: top; }
+        .sign-block { text-align: center; font-size: 10pt; line-height: 1.6; }
+        .sign-name { font-weight: bold; text-decoration: underline; }
+        .sign-nip { font-size: 9pt; color: #333; }
+        .digital-signature { border: 1pt solid #1a56db; padding: 4px; display: inline-block; margin: 4px auto; border-radius: 4px; background-color: #f0f4ff; color: #1a56db; text-align: center; width: 75px; }
+        .digital-signature img { width: 65px; height: 65px; }
+        .signature-label { display: block; font-size: 6.5pt; margin-top: 2px; color: #1a56db; font-weight: bold; }
+        .footer { position: fixed; bottom: -1.5cm; left: 0; right: 0; font-size: 8pt; text-align: center; color: #666; border-top: 0.5pt solid #ccc; padding-top: 4px; }
+        .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 75pt; color: rgba(200, 200, 200, 0.35); z-index: -1000; white-space: nowrap; font-weight: bold; }
     </style>
 </head>
 <body>
     @if($isPreview ?? false)
         <div class="watermark">DRAFT PREVIEW</div>
     @endif
-    <div class="header">
-        <div class="institution">INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN</div>
-        <div class="lppm">LEMBAGA PENELITIAN DAN PENGABDIAN KEPADA MASYARAKAT (LPPM)</div>
-        <div class="title">LAPORAN LUARAN {{ strtoupper($activeTab === 'research' ? 'PENELITIAN' : 'PENGABDIAN') }}</div>
-        <div class="subtitle">SIM-LPPM ITSNU</div>
+    <div class="kop-surat">
+        <div class="kop-surat-inner">
+            <img src="{{ public_path('logo.png') }}" class="logo">
+            <div class="header-text">
+                <div class="inst-name">INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN</div>
+                <div class="lppm-name">LEMBAGA PENELITIAN DAN PENGABDIAN KEPADA MASYARAKAT (LPPM)</div>
+                <div class="inst-address">
+                    Jl. Karangdowo No. 9, Kedungwuni, Kab. Pekalongan, Jawa Tengah 51173<br>
+                    Email: lppm@itsnupekalongan.ac.id | Website: https://lppm.itsnupekalongan.ac.id
+                </div>
+            </div>
+        </div>
     </div>
 
-    <table>
+    <div class="report-title-container">
+        <div class="report-title">LAPORAN LUARAN {{ strtoupper($activeTab === 'research' ? 'PENELITIAN' : 'PENGABDIAN') }}</div>
+        <div class="report-subtitle">SIM-LPPM ITSNU</div>
+    </div>
+
+    <table class="data-table">
         <thead>
             <tr>
-                <th width="3%">No</th>
-                <th width="25%">Proposal & Ketua</th>
-                <th width="15%">Prodi</th>
-                <th width="15%">Kategori Luaran</th>
-                <th width="42%">Detail & Status</th>
+                <th style="width: 4%;">No</th>
+                <th style="width: 28%;">Proposal &amp; Ketua</th>
+                <th style="width: 15%;">Prodi</th>
+                <th style="width: 15%;">Kategori Luaran</th>
+                <th style="width: 38%;">Detail &amp; Status</th>
             </tr>
         </thead>
         <tbody>

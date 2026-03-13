@@ -86,15 +86,19 @@ class ProposalWorkflowTest extends TestCase
 
         $this->kepalaLppm = User::factory()->create(['name' => 'Kepala LPPM']);
         $this->kepalaLppm->assignRole('kepala lppm');
+        Identity::factory()->create(['user_id' => $this->kepalaLppm->id, 'faculty_id' => $this->faculty->id]);
 
         $this->adminLppm = User::factory()->create(['name' => 'Admin LPPM']);
         $this->adminLppm->assignRole('admin lppm');
+        Identity::factory()->create(['user_id' => $this->adminLppm->id, 'faculty_id' => $this->faculty->id]);
 
         $this->reviewer1 = User::factory()->create(['name' => 'Reviewer 1']);
         $this->reviewer1->assignRole('reviewer');
+        Identity::factory()->create(['user_id' => $this->reviewer1->id, 'faculty_id' => $this->faculty->id]);
 
         $this->reviewer2 = User::factory()->create(['name' => 'Reviewer 2']);
         $this->reviewer2->assignRole('reviewer');
+        Identity::factory()->create(['user_id' => $this->reviewer2->id, 'faculty_id' => $this->faculty->id]);
 
         Notification::fake();
     }

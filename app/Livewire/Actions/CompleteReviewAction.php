@@ -14,7 +14,8 @@ class CompleteReviewAction
 {
     public function __construct(
         protected NotificationService $notificationService
-    ) {}
+    ) {
+    }
 
     /**
      * Complete a review submission.
@@ -38,7 +39,7 @@ class CompleteReviewAction
         }
 
         $validRecommendations = ['approved', 'rejected', 'revision_needed'];
-        if (! in_array($recommendation, $validRecommendations)) {
+        if (!in_array($recommendation, $validRecommendations)) {
             return [
                 'success' => false,
                 'message' => 'Rekomendasi harus "approved", "rejected", atau "revision_needed".',
@@ -46,14 +47,10 @@ class CompleteReviewAction
         }
 
         if ($review->isCompleted()) {
-            // Check if proposal status is final (Completed or Rejected)
-            if ($review->proposal->status->isFinal()) {
-                return [
-                    'success' => false,
-                    'message' => 'Review tidak dapat diubah karena proposal sudah mencapai status final.',
-                ];
-            }
-            // If not final, we allow re-submission/update
+            return [
+                'success' => false,
+                'message' => 'Review sudah selesai dan tidak dapat diubah.',
+            ];
         }
 
         return DB::transaction(function () use ($review, $comments, $recommendation) {
@@ -111,7 +108,7 @@ class CompleteReviewAction
         $recipients = collect()
             ->push($proposal->submitter) // Submitter
             ->merge($proposal->teamMembers) // Team Members
-            ->filter(fn ($user) => $user && $user->id !== $reviewer->id) // Exclude reviewer
+            ->filter(fn($user) => $user && $user->id !== $reviewer->id) // Exclude reviewer
             ->unique('id')
             ->values();
 

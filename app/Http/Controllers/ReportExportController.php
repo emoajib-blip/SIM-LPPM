@@ -39,7 +39,13 @@ class ReportExportController extends Controller
                 'institutionalReport' => $institutionalReport,
             ])->setPaper('a4', 'portrait');
 
-            return $pdf->download('laporan-rekap-iku-'.$period.'-'.now()->format('YmdHis').'.pdf');
+            $filename = 'laporan-rekap-iku-'.$period.'-'.now()->format('YmdHis').'.pdf';
+
+            if ($request->boolean('preview')) {
+                return $pdf->stream($filename);
+            }
+
+            return $pdf->download($filename);
         } catch (\Exception $e) {
 
             \Illuminate\Support\Facades\Log::error('IKU PDF Export Error: '.$e->getMessage());
@@ -115,6 +121,10 @@ class ReportExportController extends Controller
             ])->setPaper('a4', 'landscape');
 
             $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-penelitian-'.$period.'-'.now()->format('YmdHis').'.pdf';
+
+            if ($isPreview) {
+                return $pdf->stream($filename);
+            }
 
             return $pdf->download($filename);
         } catch (\Exception $e) {
@@ -196,6 +206,10 @@ class ReportExportController extends Controller
 
             $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-pkm-'.$period.'-'.now()->format('YmdHis').'.pdf';
 
+            if ($isPreview) {
+                return $pdf->stream($filename);
+            }
+
             return $pdf->download($filename);
         } catch (\Exception $e) {
 
@@ -264,6 +278,10 @@ class ReportExportController extends Controller
             ])->setPaper('a4', 'landscape');
 
             $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-luaran-'.$activeTab.'-'.now()->format('YmdHis').'.pdf';
+
+            if ($isPreview) {
+                return $pdf->stream($filename);
+            }
 
             return $pdf->download($filename);
         } catch (\Exception $e) {
@@ -369,7 +387,14 @@ class ReportExportController extends Controller
                 'institutionalReport' => $institutionalReport,
             ])->setPaper('a4', 'landscape');
 
-            return $pdf->download('laporan-mitra-'.now()->format('Y-m-d').'.pdf');
+            $isPreview = $request->boolean('preview');
+            $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-mitra-'.now()->format('Y-m-d').'.pdf';
+
+            if ($isPreview) {
+                return $pdf->stream($filename);
+            }
+
+            return $pdf->download($filename);
         } catch (\Exception $e) {
 
             \Illuminate\Support\Facades\Log::error('Partner PDF Export Error: '.$e->getMessage());
@@ -479,5 +504,103 @@ class ReportExportController extends Controller
         $fileName = "Monev_Recap_{$academicYear}_".($semester ?? 'all').'.xlsx';
 
         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\MonevRecapExport($academicYear, $semester), $fileName);
+    }
+
+    /**
+     * Export Digital Monev Berita Acara (BA) to PDF.
+     */
+    public function monevBaPdf(Request $request, $id)
+    {
+        try {
+            $review = \App\Models\MonevReview::with([
+                'proposal.submitter.identity', 
+                'proposal.researchScheme', 
+                'proposal.communityServiceScheme', 
+                'proposal.focusArea',
+                'reviewer.identity'
+            ])->findOrFail($id);
+
+            // Access check: only Admin LPPM or the Assignee Reviewer can download
+            if (! auth()->user()->hasRole(['admin lppm', 'kepala lppm', 'superadmin']) && auth()->id() !== $review->reviewer_id) {
+                abort(403);
+            }
+
+            $type = $review->proposal->detailable_type === \App\Models\Research::class
+                ? 'monev_research'
+                : 'monev_community_service';
+
+            $criteria = \App\Models\ReviewCriteria::where('type', $type)
+                ->where('is_active', true)
+                ->orderBy('order')
+                ->get();
+
+            $pdf = Pdf::loadView('reports.monev-ba-pdf', [
+                'review' => $review,
+                'criteria' => $criteria,
+            ])->setPaper('a4', 'portrait');
+
+            $filename = 'Berita_Acara_Monev_'.str_replace(' ', '_', $review->proposal->title).'_'.now()->format('YmdHi').'.pdf';
+
+            return $pdf->stream($filename);
+        } catch (\Exception $e) {
+            Log::error('Monev BA PDF Export Error: '.$e->getMessage());
+
+            return back()->with('error', 'Gagal menghasilkan Berita Acara: '.$e->getMessage());
+        }
+    }
+    /**
+     * Export Collective Monev Report to PDF for Institutional Monitoring.
+     */
+    public function monevPdf(Request $request)
+    {
+        try {
+            $period = $request->query('academic_year', date('Y'));
+            $semester = $request->query('semester', 'all');
+            $isPreview = $request->boolean('preview');
+
+            $reviews = \App\Models\MonevReview::query()
+                ->with(['proposal.submitter.identity', 'reviewer.identity'])
+                ->where('academic_year', $period)
+                ->when($semester !== 'all', function ($query) use ($semester) {
+                    $query->where('semester', $semester);
+                })
+                ->whereNotNull('reported_to_rektor_at')
+                ->latest()
+                ->get();
+
+            $institutionalReport = \App\Models\InstitutionalReport::where('type', 'monev')
+                ->where('year', $period)
+                ->when($semester !== 'all', function($q) use ($semester) {
+                    $q->where('metadata->semester', $semester);
+                })
+                ->first();
+
+            $institution = \App\Models\Institution::first();
+            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
+            $lppmHead = \App\Models\User::role('kepala lppm')->with('identity')->first();
+
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.monev-pdf', [
+                'reviews' => $reviews,
+                'period' => $period,
+                'semester' => $semester,
+                'institution' => $institution,
+                'rektor' => $rektor,
+                'lppmHead' => $lppmHead,
+                'institutionalReport' => $institutionalReport,
+                'isPreview' => $isPreview,
+            ])->setPaper('a4', 'portrait');
+
+            $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-rekap-monev-'.$period.'-'.now()->format('YmdHis').'.pdf';
+
+            if ($isPreview) {
+                return $pdf->stream($filename);
+            }
+
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Monev PDF Export Error: '.$e->getMessage());
+
+            return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
+        }
     }
 }

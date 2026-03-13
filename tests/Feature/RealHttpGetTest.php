@@ -2,23 +2,22 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class RealHttpGetTest extends TestCase
 {
-    public function test_get()
+    use RefreshDatabase;
+
+    public function test_master_data_get_request()
     {
-        $user = \App\Models\User::role('admin lppm')->first();
-        $this->actingAs($user);
-        session()->put('active_role', 'admin lppm');
+        $this->seed(\Database\Seeders\RoleSeeder::class);
+        $user = \App\Models\User::factory()->create();
+        $user->assignRole('admin lppm');
 
-        $response = $this->get('/settings/master-data?group=academic-content&tab=sdgs');
+        $response = $this->actingAs($user)
+            ->get('/settings/master-data?group=academic-content&tab=sdgs');
 
-        if ($response->exception) {
-            echo 'Exception: '.get_class($response->exception).' -> '.$response->exception->getMessage()."\n";
-            echo $response->exception->getTraceAsString();
-        } else {
-            echo 'Status: '.$response->getStatusCode()."\n";
-        }
+        $response->assertStatus(200);
     }
 }

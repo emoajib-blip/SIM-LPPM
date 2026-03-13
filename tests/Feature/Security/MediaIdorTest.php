@@ -56,7 +56,7 @@ class MediaIdorTest extends TestCase
 
         // Intruder should receive 403 when attempting to access the report page
         $response = $this->actingAs($intruder)
-            ->get(route('research.progress-report.show', $proposal));
+            ->get(route('research.final-report.show', $proposal));
         $response->assertForbidden();
         if ($response->getStatusCode() === 200) {
             $response->assertDontSee('laporan.pdf');

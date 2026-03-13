@@ -5,6 +5,8 @@ namespace App\Livewire\KepalaLppm\Monev;
 use App\Livewire\Concerns\HasToast;
 use App\Models\MonevReview;
 use App\Models\Proposal;
+use App\Models\InstitutionalReport;
+use App\Enums\InstitutionalReportStatus;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -39,7 +41,9 @@ class MonevRecap extends Component
                 $query->where('semester', $this->semester);
             })
             ->whereNotNull('reviewed_at')
-            ->whereNull('reported_at')
+            ->whereNotNull('finalized_by_lppm_at')
+            ->whereNotNull('approved_by_kepala_at')
+            ->whereNull('reported_to_rektor_at')
             ->get();
 
         if ($reviews->isEmpty()) {
@@ -49,10 +53,65 @@ class MonevRecap extends Component
         }
 
         $reviews->each(function (MonevReview $review) {
-            $review->update(['reported_at' => now()]);
+            $review->update(['reported_to_rektor_at' => now()]);
         });
 
+        // Sync with InstitutionalReport
+        InstitutionalReport::updateOrCreate(
+            [
+                'type' => 'monev',
+                'year' => $this->academicYear,
+                'metadata->semester' => $this->semester, // Optionally track semester in metadata
+            ],
+            [
+                'status' => InstitutionalReportStatus::SUBMITTED,
+                'submitted_at' => now(),
+                'submitted_by' => Auth::id(),
+                'notes' => "Laporan Monev Periode {$this->academicYear} " . ($this->semester !== 'all' ? ucfirst($this->semester) : 'Semua Semester'),
+                'metadata' => [
+                    'count' => $reviews->count(),
+                    'semester' => $this->semester,
+                ]
+            ]
+        );
+
         $this->toastSuccess($reviews->count().' hasil monev telah dilaporkan ke Rektor.');
+    }
+
+    public function approveReview($id)
+    {
+        $review = MonevReview::findOrFail($id);
+        $review->update(['approved_by_kepala_at' => now()]);
+        
+        $this->toastSuccess('Monev berhasil disetujui.');
+    }
+
+    public function approveAll()
+    {
+        $count = MonevReview::query()
+            ->where('academic_year', $this->academicYear)
+            ->when($this->semester !== 'all', function ($query) {
+                $query->where('semester', $this->semester);
+            })
+            ->whereNotNull('finalized_by_lppm_at')
+            ->whereNull('approved_by_kepala_at')
+            ->count();
+
+        if ($count === 0) {
+            $this->toastWarning('Tidak ada data untuk disetujui.');
+            return;
+        }
+
+        MonevReview::query()
+            ->where('academic_year', $this->academicYear)
+            ->when($this->semester !== 'all', function ($query) {
+                $query->where('semester', $this->semester);
+            })
+            ->whereNotNull('finalized_by_lppm_at')
+            ->whereNull('approved_by_kepala_at')
+            ->update(['approved_by_kepala_at' => now()]);
+
+        $this->toastSuccess($count . ' hasil monev telah disetujui.');
     }
 
     #[Computed]
@@ -80,6 +139,7 @@ class MonevRecap extends Component
                         });
                 });
             })
+            ->whereNotNull('finalized_by_lppm_at')
             ->latest()
             ->paginate(15);
     }

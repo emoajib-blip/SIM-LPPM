@@ -15,7 +15,8 @@
                 @endphp
                 <a href="/" aria-label="{{ $appName }}">
                     @php
-                        $customLogo = \App\Models\Setting::where('key', 'app_logo')->first()?->getFirstMediaUrl('logo');
+                        $logoMedia = \App\Models\Setting::where('key', 'app_logo')->first()?->getFirstMedia('logo');
+                        $customLogo = $logoMedia ? route('media.download', $logoMedia) : null;
                         $logoUrl = $customLogo ?: '/logo.png';
                     @endphp
                     <img src="{{ current(explode('?', $logoUrl)) }}?v={{ time() }}" alt="{{ $appName }}" width="45" height="45">

@@ -1,0 +1,37 @@
+Note: Using configuration file /Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/phpstan.neon.
+ ------ ----------------------------------------------------------------- 
+  Line   Livewire/Dashboard/AdminDashboard.php                            
+ ------ ----------------------------------------------------------------- 
+  :189   Using nullsafe property access "?->value" on left side of ?? is  
+         unnecessary. Use -> instead.                                     
+         🪪  nullsafe.neverNull                                           
+  :190   Using nullsafe property access "?->value" on left side of ?? is  
+         unnecessary. Use -> instead.                                     
+         🪪  nullsafe.neverNull                                           
+  :191   Using nullsafe property access "?->value" on left side of ?? is  
+         unnecessary. Use -> instead.                                     
+         🪪  nullsafe.neverNull                                           
+ ------ ----------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------------- 
+  Line   Livewire/Iku/IkuVerification.php                                
+ ------ ---------------------------------------------------------------- 
+  :129   Using nullsafe property access "?->name" on left side of ?? is  
+         unnecessary. Use -> instead.                                    
+         🪪  nullsafe.neverNull                                          
+  :149   Using nullsafe property access "?->name" on left side of ?? is  
+         unnecessary. Use -> instead.                                    
+         🪪  nullsafe.neverNull                                          
+ ------ ---------------------------------------------------------------- 
+
+ ------ ------------------------------------------------------------------------- 
+  Line   Services/ProposalPdfService.php                                          
+ ------ ------------------------------------------------------------------------- 
+  :33    Call to an undefined method                                              
+         Illuminate\Database\Eloquent\Model&Spatie\MediaLibrary\HasMedia::getFir  
+         stMedia().                                                               
+         🪪  method.notFound                                                      
+ ------ ------------------------------------------------------------------------- 
+
+ [ERROR] Found 6 errors                                                           
+

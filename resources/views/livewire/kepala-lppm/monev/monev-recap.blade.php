@@ -8,6 +8,12 @@
                     </h2>
                     <div class="text-muted mt-1 text-uppercase">Tahun Akademik: {{ $academicYear }} | Semester:
                         {{ $semester }}</div>
+                    <div class="mt-2">
+                        <span class="badge bg-purple-lt shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline me-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                            Terintegrasi dengan Laporan Institusi Pusat
+                        </span>
+                    </div>
                 </div>
                 <div class="col-auto ms-auto">
                     <button class="btn btn-primary" wire:click="reportToRektor" wire:loading.attr="disabled"
@@ -19,6 +25,11 @@
                             <path d="M15 11l4 4l-4 4m4 -4h-11a4 4 0 0 1 0 -8h1" />
                         </svg>
                         Laporkan ke Rektor
+                    </button>
+                    <button class="btn btn-teal ms-2" wire:click="approveAll"
+                        onclick="confirm('Setujui semua hasil monev yang telah difinalisasi LPPM?') || event.stopImmediatePropagation()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                        Setujui Semua
                     </button>
                     <a href="{{ route('export.monev.recap', ['academic_year' => $academicYear, 'semester' => $semester]) }}"
                         class="btn btn-success ms-2" target="_blank">
@@ -84,8 +95,9 @@
                                 <th>Reviewer</th>
                                 <th>Skor</th>
                                 <th>Status Akhir</th>
-                                <th>Status Laporan</th>
+                                <th>Status Approval</th>
                                 <th>BA</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,20 +118,26 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($review->reported_at)
-                                            <span class="badge bg-success-lt">Sudah ke Rektor</span>
-                                        @elseif($review->reviewed_at)
-                                            <span class="badge bg-warning-lt">Review Selesai</span>
+                                        @if($review->reported_to_rektor_at)
+                                            <span class="badge bg-purple-lt">Dilaporkan ke Rektor</span>
+                                        @elseif($review->approved_by_kepala_at)
+                                            <span class="badge bg-success-lt">Disetujui Kepala</span>
+                                        @elseif($review->finalized_by_lppm_at)
+                                            <span class="badge bg-warning-lt">Menunggu Approval</span>
                                         @else
-                                            <span class="badge bg-secondary-lt">Dalam Proses</span>
+                                            <span class="badge bg-secondary-lt">Proses LPPM</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if($review->hasMedia('berita_acara'))
-                                            <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(10), ['media' => $review->getFirstMedia('berita_acara')]) }}"
-                                                target="_blank" class="btn btn-sm btn-outline-info">Unduh BA</a>
+                                        @if(!$review->approved_by_kepala_at)
+                                            <button class="btn btn-sm btn-success" wire:click="approveReview('{{ $review->id }}')" 
+                                                title="Setujui Monev">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                            </button>
                                         @else
-                                            -
+                                            <span class="text-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                            </span>
                                         @endif
                                     </td>
                                 </tr>

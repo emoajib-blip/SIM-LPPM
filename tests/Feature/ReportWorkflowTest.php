@@ -57,6 +57,7 @@ class ReportWorkflowTest extends TestCase
 
         $this->dekan = User::factory()->create();
         $this->dekan->assignRole('dekan');
+        Identity::factory()->create(['user_id' => $this->dekan->id, 'faculty_id' => $faculty->id]);
     }
 
     public function test_dosen_can_create_and_submit_progress_report()
@@ -76,13 +77,13 @@ class ReportWorkflowTest extends TestCase
         $report = $this->proposal->progressReports()->where('reporting_period', 'semester_1')->first();
 
         $this->assertNotNull($report);
-        $this->assertEquals('draft', $report->status);
+        $this->assertEquals(\App\Enums\ReportStatus::DRAFT, $report->status);
 
         // Submit the report
         $component->call('submit');
         $component->assertHasNoErrors();
 
-        $this->assertEquals('submitted', $report->fresh()->status);
+        $this->assertEquals(\App\Enums\ReportStatus::SUBMITTED, $report->fresh()->status);
     }
 
     public function test_dosen_can_create_and_submit_final_report()
@@ -102,12 +103,12 @@ class ReportWorkflowTest extends TestCase
         $report = $this->proposal->progressReports()->where('reporting_period', 'final')->first();
 
         $this->assertNotNull($report);
-        $this->assertEquals('draft', $report->status);
+        $this->assertEquals(\App\Enums\ReportStatus::DRAFT, $report->status);
 
         // Submit
         $component->call('submit');
         $component->assertHasNoErrors();
-        $this->assertEquals('submitted', $report->fresh()->status);
+        $this->assertEquals(\App\Enums\ReportStatus::SUBMITTED, $report->fresh()->status);
     }
 
     public function test_dosen_can_fill_mandatory_output_in_report()

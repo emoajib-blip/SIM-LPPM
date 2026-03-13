@@ -1,12 +1,6 @@
 <div>
     <x-slot:pageHeader>
-        <div class="row align-items-center">
-            <div class="col">
-                <h2 class="page-title">Monitoring Laporan Institusi</h2>
-                <div class="text-muted small mt-1">Lacak status pengajuan, revisi, dan persetujuan laporan ke Rektor
-                </div>
-            </div>
-        </div>
+        {{-- Custom actions can go here if needed --}}
     </x-slot:pageHeader>
 
     {{-- Filter Bar --}}
@@ -138,11 +132,19 @@
                                             'output' => 'reports.outputs',
                                             'partner' => 'reports.partners',
                                             'iku' => 'reports.iku',
+                                            'monev' => 'kepala-lppm.monev.recap',
                                             default => null
                                         };
                                         $params = ['period' => $report->year];
                                         if ($report->type === 'output')
                                             $params = ['period' => $report->year];
+                                        
+                                        if ($report->type === 'monev') {
+                                            $params = [
+                                                'academic_year' => $report->year,
+                                                'semester' => $report->metadata['semester'] ?? 'all'
+                                            ];
+                                        }
 
                                         // Handle metadata filters if present
                                         $metadata = $report->metadata ?? [];
@@ -163,32 +165,50 @@
                                         </a>
                                     @endif
 
-                                    {{-- Download PDF based on type --}}
+                                    @php
+                                        $pdfRoute = match ($report->type) {
+                                            'partner' => 'reports.partner.pdf',
+                                            'iku' => 'admin.iku.export-pdf',
+                                            'monev' => 'reports.monev.pdf',
+                                            default => null
+                                        };
+                                        
+                                        $excelRoute = match ($report->type) {
+                                            'research' => 'reports.research.excel',
+                                            'pkm' => 'reports.pkm.excel',
+                                            'output' => 'reports.output.excel',
+                                            'partner' => 'reports.partner.excel',
+                                            'iku' => 'admin.iku.export-excel',
+                                            'monev' => 'export.monev.recap',
+                                            default => null
+                                        };
+                                    @endphp
+
+                                    @if($pdfRoute)
+                                        <a href="{{ route($pdfRoute, array_merge($params, ['preview' => 1])) }}"
+                                            target="_blank" class="btn btn-outline-primary btn-sm shadow-sm"
+                                            title="Tinjau PDF" data-bs-toggle="tooltip">
+                                            <x-lucide-eye class="icon me-1" />
+                                            Tinjau PDF
+                                        </a>
+                                    @endif
+
                                     @if($report->status === \App\Enums\InstitutionalReportStatus::APPROVED || $report->status === \App\Enums\InstitutionalReportStatus::SUBMITTED)
-                                        @php
-                                            $pdfRoute = match ($report->type) {
-                                                'research' => 'reports.research.pdf',
-                                                'pkm' => 'reports.pkm.pdf',
-                                                'output' => 'reports.output.pdf',
-                                                'partner' => 'reports.partner.pdf',
-                                                'iku' => 'admin.iku.export-pdf',
-                                                default => null
-                                            };
-                                        @endphp
                                         @if($pdfRoute)
                                             <a href="{{ route($pdfRoute, array_merge($params, ['export' => 'pdf'])) }}"
-                                                class="btn btn-icon btn-outline-danger" title="Download PDF Resmi"
-                                                data-bs-toggle="tooltip">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                                    stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                                    <path
-                                                        d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                                                    <line x1="9" y1="15" x2="15" y2="15" />
-                                                    <line x1="12" y1="12" x2="12" y2="18" />
-                                                </svg>
+                                                class="btn btn-primary btn-sm shadow-sm" title="Unduh PDF Resmi"
+                                                data-bs-toggle="tooltip" data-navigate-ignore="true">
+                                                <x-lucide-printer class="icon me-1" />
+                                                Unduh PDF
+                                            </a>
+                                        @endif
+                                        
+                                        @if($excelRoute)
+                                            <a href="{{ route($excelRoute, $params) }}"
+                                                class="btn btn-success btn-sm shadow-sm" title="Unduh Excel"
+                                                data-bs-toggle="tooltip" data-navigate-ignore="true">
+                                                <x-lucide-file-spreadsheet class="icon me-1" />
+                                                Unduh Excel
                                             </a>
                                         @endif
                                     @endif

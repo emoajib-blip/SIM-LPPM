@@ -188,6 +188,13 @@
                 <input type="text" class="form-control" wire:model="dashboardName" placeholder="Contoh: SIM LPPM ITSNU">
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Judul Halaman Login</label>
+                <input type="text" class="form-control" wire:model="loginTitle"
+                    placeholder="Contoh: Masuk ke Akun Anda">
+                <p class="form-hint">Teks ini akan ditampilkan sebagai judul utama pada halaman login.</p>
+            </div>
+
             @if (session()->has('success_settings'))
                 <div class="alert alert-success mt-2">
                     {{ session('success_settings') }}

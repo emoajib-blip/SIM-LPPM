@@ -5,15 +5,23 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Lembar Penilaian Reviewer - {{ $proposal->id }}</title>
     <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
         @page {
-            margin: 1.5cm;
+            margin: 3cm 3cm 3cm 4cm;
         }
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 9pt;
-            line-height: 1.2;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12pt;
+            line-height: 1.5;
             color: #000;
+            text-align: justify;
         }
 
         .header-table {
@@ -81,7 +89,8 @@
         .scoring-table td {
             border: 1px solid #000;
             padding: 3px 5px;
-            font-size: 9pt;
+            font-size: 11pt;
+            line-height: 1.5;
         }
 
         .scoring-table th {
@@ -204,7 +213,7 @@
             @foreach ($scores as $index => $score)
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $score->criteria->criteria }}</td>
+                    <td class="text-justify" style="line-height: 1.4;">{{ $score->criteria->criteria }}</td>
                     <td style="text-align: justify;">{{ $score->acuan }}</td>
                     <td class="text-center">{{ number_format($score->weight_snapshot, 0) }}%</td>
                     <td class="text-center">{{ $score->score }}</td>

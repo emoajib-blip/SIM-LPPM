@@ -5,13 +5,18 @@
 
     <x-slot:pageActions>
         <div class="btn-list">
+            <button wire:click="previewPdf" wire:loading.attr="disabled" class="btn btn-outline-primary shadow-sm" title="Tinjau PDF">
+                <i class="ti ti-eye me-2"></i>
+                <span wire:loading.remove wire:target="previewPdf">{{ __('Tinjau PDF') }}</span>
+                <span wire:loading wire:target="previewPdf">{{ __('Memproses...') }}</span>
+            </button>
             <a href="{{ route('admin.iku.export-excel', ['period' => $period, 'search' => $search]) }}"
-                class="btn btn-outline-success shadow-sm" data-navigate-ignore="true">
+                class="btn btn-outline-success shadow-sm" data-navigate-ignore="true" title="Unduh Excel">
                 <i class="ti ti-table me-2"></i>
                 <span>{{ __('Unduh Excel') }}</span>
             </a>
             <a href="{{ route('admin.iku.export-pdf', ['period' => $period, 'search' => $search]) }}"
-                class="btn btn-outline-danger shadow-sm" data-navigate-ignore="true">
+                class="btn btn-outline-danger shadow-sm" data-navigate-ignore="true" title="Unduh PDF">
                 <i class="ti ti-file-type-pdf me-2"></i>
                 <span>{{ __('Unduh PDF') }}</span>
             </a>
@@ -49,7 +54,7 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-icon btn-white" wire:click="resetFilters" title="Reset Filter">
+                        <button class="btn btn-icon btn-white shadow-sm" wire:click="resetFilters" title="Reset Filter">
                             <i class="ti ti-refresh text-secondary"></i>
                         </button>
                     </div>
@@ -89,12 +94,12 @@
 
                         <!-- Draft Preview Icon (Support System) -->
                         <a href="{{ route('admin.iku.export-pdf', array_merge($currentFilters, ['preview' => 1])) }}"
-                            target="_blank" class="btn btn-icon btn-outline-primary" title="Tinjau Draft PDF">
-                            <i class="ti ti-eye"></i>
+                            target="_blank" class="btn btn-outline-primary shadow-sm" title="Tinjau Draft PDF">
+                            <i class="ti ti-eye me-2"></i> Tinjau PDF
                         </a>
 
                         @if(active_role() === 'kepala lppm' && (!$institutionalReport || in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::DRAFT, \App\Enums\InstitutionalReportStatus::REJECTED])))
-                            <button class="btn btn-primary"
+                            <button class="btn btn-primary shadow-sm"
                                 wire:click="submitInstitutionalReport('iku', {{ $period }}, {{ json_encode($currentFilters) }})"
                                 wire:loading.attr="disabled">
                                 <i class="ti ti-send me-2"></i>
@@ -103,12 +108,12 @@
                         @endif
 
                         @if(active_role() === 'rektor' && ($institutionalReport?->status === \App\Enums\InstitutionalReportStatus::SUBMITTED))
-                            <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                            <button class="btn btn-outline-danger shadow-sm" data-bs-toggle="modal"
                                 data-bs-target="#modal-reject-institutional">
                                 <i class="ti ti-x me-2"></i>
                                 Minta Perbaikan
                             </button>
-                            <button class="btn btn-success" wire:click="approveInstitutionalReport('iku', {{ $period }})"
+                            <button class="btn btn-success shadow-sm" wire:click="approveInstitutionalReport('iku', {{ $period }})"
                                 wire:loading.attr="disabled">
                                 <i class="ti ti-circle-check me-2"></i>
                                 Setujui & Tanda Tangani
@@ -369,7 +374,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-link link-secondary me-auto"
                             data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-danger"
+                        <button type="button" class="btn btn-danger shadow-sm"
                             wire:click="rejectInstitutionalReport('iku', '{{ $period }}')">
                             Simpan & Tolak
                         </button>

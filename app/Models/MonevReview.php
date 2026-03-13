@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * @property string $id
@@ -23,9 +25,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read \App\Models\Proposal $proposal
  * @property-read \App\Models\User $reviewer
  */
-class MonevReview extends Model
+class MonevReview extends Model implements HasMedia
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, InteractsWithMedia;
 
     protected $fillable = [
         'proposal_id',
@@ -38,6 +40,7 @@ class MonevReview extends Model
         'semester',
         'reviewed_at',
         'finalized_by_lppm_at',
+        'approved_by_kepala_at',
         'reported_to_rektor_at',
     ];
 
@@ -51,6 +54,7 @@ class MonevReview extends Model
             'borang_data' => 'array',
             'reviewed_at' => 'datetime',
             'finalized_by_lppm_at' => 'datetime',
+            'approved_by_kepala_at' => 'datetime',
             'reported_to_rektor_at' => 'datetime',
         ];
     }

@@ -85,7 +85,14 @@ class Show extends Component
      */
     public function canEdit(): bool
     {
-        return $this->form->proposal->submitter_id === Auth::id();
+        if ($this->form->proposal->submitter_id !== Auth::id()) {
+            return false;
+        }
+
+        /** @var \App\Services\LecturerEligibilityService $service */
+        $service = app(\App\Services\LecturerEligibilityService::class);
+
+        return $service->isRevisionOpen('research');
     }
 
     /**
@@ -93,7 +100,7 @@ class Show extends Component
      */
     public function save(): void
     {
-        if (! $this->canEdit()) {
+        if (!$this->canEdit()) {
             $message = 'Anda tidak memiliki akses untuk mengedit proposal ini';
             session()->flash('error', $message);
             $this->toastError($message);
@@ -147,13 +154,13 @@ class Show extends Component
 
             // Dispatch update events for UI refresh
             $this->dispatch('content-updated', fields: $changedFields);
-            $this->dispatch('show-update-notification', message: 'Perubahan berhasil disimpan: '.implode(', ', $changedFields));
+            $this->dispatch('show-update-notification', message: 'Perubahan berhasil disimpan: ' . implode(', ', $changedFields));
             $this->dispatch('proposal-refreshed');
 
             // Reset file input
             $this->substanceFile = null;
         } catch (\Exception $e) {
-            $message = 'Gagal menyimpan perubahan: '.$e->getMessage();
+            $message = 'Gagal menyimpan perubahan: ' . $e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
             $this->dispatch('show-alert', type: 'error', message: $message);

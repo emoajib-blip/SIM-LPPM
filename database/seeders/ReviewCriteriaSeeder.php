@@ -46,7 +46,10 @@ class ReviewCriteriaSeeder extends Seeder
         ];
 
         foreach ($researchCriteria as $criteria) {
-            ReviewCriteria::create(array_merge($criteria, ['type' => 'research']));
+            ReviewCriteria::updateOrCreate(
+                ['type' => 'research', 'criteria' => $criteria['criteria']],
+                $criteria
+            );
         }
 
         $pkmCriteria = [
@@ -64,7 +67,7 @@ class ReviewCriteriaSeeder extends Seeder
             ],
             [
                 'criteria' => 'Manfaat hasil PkM',
-                'description' => 'Pengembangan IPTEKS, pembangunan, dan/atau pengembangan kelembagaan',
+                'description' => 'Pengembangan IPTEKS, pembangunan, and/atau pengembangan kelembagaan',
                 'weight' => 20,
                 'order' => 3,
             ],
@@ -83,7 +86,96 @@ class ReviewCriteriaSeeder extends Seeder
         ];
 
         foreach ($pkmCriteria as $criteria) {
-            ReviewCriteria::create(array_merge($criteria, ['type' => 'community_service']));
+            ReviewCriteria::updateOrCreate(
+                ['type' => 'community_service', 'criteria' => $criteria['criteria']],
+                $criteria
+            );
+        }
+
+        $monevResearchCriteria = [
+            [
+                'criteria' => 'Capaian Luaran Wajib',
+                'description' => 'Kesesuaian dan kemajuan luaran wajib yang dijanjikan',
+                'weight' => 25,
+                'order' => 1,
+            ],
+            [
+                'criteria' => 'Capaian Luaran Tambahan',
+                'description' => 'Kesesuaian dan kemajuan luaran tambahan (jika ada)',
+                'weight' => 15,
+                'order' => 2,
+            ],
+            [
+                'criteria' => 'Kesesuaian Usulan',
+                'description' => 'Kesesuaian pelaksanaan dengan rencana usulan awal',
+                'weight' => 20,
+                'order' => 3,
+            ],
+            [
+                'criteria' => 'Kualitas Substansi & Keberlanjutan',
+                'description' => 'Kualitas hasil dan potensi keberlanjutan program',
+                'weight' => 20,
+                'order' => 4,
+            ],
+            [
+                'criteria' => 'Integrasi Pendidikan',
+                'description' => 'Integrasi hasil ke dalam pembelajaran/mata kuliah',
+                'weight' => 20,
+                'order' => 5,
+            ],
+        ];
+
+        foreach ($monevResearchCriteria as $criteria) {
+            ReviewCriteria::updateOrCreate(
+                ['type' => 'monev_research', 'criteria' => $criteria['criteria']],
+                $criteria
+            );
+        }
+
+        $monevPkmCriteria = [
+            [
+                'criteria' => 'Publikasi Jurnal/Prosiding',
+                'description' => 'Status publikasi (Draft/Submitted/Accepted/Published)',
+                'weight' => 20,
+                'order' => 1,
+            ],
+            [
+                'criteria' => 'Keberdayaan Mitra',
+                'description' => 'Tingkat kepuasan dan manfaat bagi mitra',
+                'weight' => 20,
+                'order' => 2,
+            ],
+            [
+                'criteria' => 'Produk/HKI/Sistem',
+                'description' => 'Hasil nyata berupa produk, jasa, model, atau HKI',
+                'weight' => 20,
+                'order' => 3,
+            ],
+            [
+                'criteria' => 'Video Kegiatan (Youtube)',
+                'description' => 'Dokumentasi visual dan identitas sumber dana',
+                'weight' => 15,
+                'order' => 4,
+            ],
+            [
+                'criteria' => 'Rekognisi MBKM',
+                'description' => 'Pelibatan mahasiswa dalam kegiatan MBKM',
+                'weight' => 15,
+                'order' => 5,
+            ],
+            [
+                'criteria' => 'Laporan Akhir & Administrasi',
+                'description' => 'Kelengkapan dokumen laporan akhir',
+                'weight' => 10,
+                'order' => 6,
+            ],
+        ];
+
+        foreach ($monevPkmCriteria as $criteria) {
+            ReviewCriteria::updateOrCreate(
+                ['type' => 'monev_community_service', 'criteria' => $criteria['criteria']],
+                $criteria
+            );
         }
     }
 }

@@ -29,6 +29,8 @@ class ProposalMonev extends Model implements HasMedia
         'monev_date',
         'progress_percentage',
         'notes',
+        'academic_year',
+        'semester',
     ];
 
     protected function casts(): array
