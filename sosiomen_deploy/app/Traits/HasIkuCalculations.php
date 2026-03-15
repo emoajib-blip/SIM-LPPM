@@ -76,7 +76,7 @@ trait HasIkuCalculations
         foreach ($proposalsWithPartners as $proposal) {
             $maxWeight = 0;
             foreach ($proposal->partners as $partner) {
-                $partnerWeight = (strtolower($partner->country) !== 'indonesia' && !empty($partner->country)) ? 1.5 : 1.0;
+                $partnerWeight = (strtolower($partner->country) !== 'indonesia' && ! empty($partner->country)) ? 1.5 : 1.0;
                 $maxWeight = max($maxWeight, $partnerWeight);
             }
             $currentWeight += $maxWeight;
@@ -87,7 +87,7 @@ trait HasIkuCalculations
         return [
             'code' => 'IKU-05',
             'name' => 'Kerjasama & Hilirisasi',
-            'description' => $proposalsWithPartners->count() . ' kegiatan memiliki mitra dengan total bobot ' . round($currentWeight, 2) . " dari target dasar $totalProposals.",
+            'description' => $proposalsWithPartners->count().' kegiatan memiliki mitra dengan total bobot '.round($currentWeight, 2)." dari target dasar $totalProposals.",
             'achievement' => $percentage,
             'target' => $target,
         ];
@@ -96,12 +96,12 @@ trait HasIkuCalculations
     protected function calculateIku6(string $period): array
     {
         $target = MasterIku::where('code', 'IKU-06')->value('target_percentage') ?? 20;
-        $mandatoryQuery = MandatoryOutput::whereHas('progressReport.proposal', fn($q) => $q->where('start_year', $period))
+        $mandatoryQuery = MandatoryOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period))
             ->whereIn('proposal_output_id', function ($q) {
                 $q->select('id')->from('proposal_outputs')->where('category', 'journal');
             });
 
-        $additionalQuery = AdditionalOutput::whereHas('progressReport.proposal', fn($q) => $q->where('start_year', $period))
+        $additionalQuery = AdditionalOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period))
             ->whereIn('proposal_output_id', function ($q) {
                 $q->select('id')->from('proposal_outputs')->where('category', 'journal');
             });
@@ -139,7 +139,7 @@ trait HasIkuCalculations
         return [
             'code' => 'IKU-06',
             'name' => 'Publikasi Bereputasi',
-            'description' => "$reputableCount artikel terverifikasi dengan total skor bobot " . round($currentWeight, 2) . '.',
+            'description' => "$reputableCount artikel terverifikasi dengan total skor bobot ".round($currentWeight, 2).'.',
             'achievement' => $percentage,
             'target' => $target,
         ];
@@ -247,15 +247,16 @@ trait HasIkuCalculations
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($sq) use ($search) {
                     $sq->where('title', 'like', "%{$search}%")
-                        ->orWhereHas('submitter', fn($uq) => $uq->where('name', 'like', "%{$search}%"))
-                        ->orWhereHas('partners', fn($pq) => $pq->where('name', 'like', "%{$search}%"));
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$search}%"))
+                        ->orWhereHas('partners', fn ($pq) => $pq->where('name', 'like', "%{$search}%"));
                 });
             })
             ->get()
             ->map(function ($p) {
                 $weights = $p->partners->map(function ($partner) {
-                    return (strtolower($partner->country) !== 'indonesia' && !empty($partner->country)) ? 1.5 : 1.0;
+                    return (strtolower($partner->country) !== 'indonesia' && ! empty($partner->country)) ? 1.5 : 1.0;
                 });
+
                 return [
                     'title' => $p->title,
                     'submitter' => $p->submitter->name,
@@ -268,7 +269,7 @@ trait HasIkuCalculations
 
     protected function getIku6Details(string $period, string $search = ''): array
     {
-        $mandatory = MandatoryOutput::whereHas('progressReport.proposal', fn($q) => $q->where('start_year', $period))
+        $mandatory = MandatoryOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period))
             ->whereIn('proposal_output_id', function ($q) {
                 $q->select('id')->from('proposal_outputs')->where('category', 'journal');
             })
@@ -280,7 +281,7 @@ trait HasIkuCalculations
             ->with('progressReport.proposal')
             ->get();
 
-        $additional = AdditionalOutput::whereHas('progressReport.proposal', fn($q) => $q->where('start_year', $period))
+        $additional = AdditionalOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period))
             ->whereIn('proposal_output_id', function ($q) {
                 $q->select('id')->from('proposal_outputs')->where('category', 'journal');
             })
@@ -312,10 +313,10 @@ trait HasIkuCalculations
             ->with(['sdgs', 'submitter'])
             ->when($search, function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                    ->orWhereHas('submitter', fn($uq) => $uq->where('name', 'like', "%{$search}%"));
+                    ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
             })
             ->get()
-            ->map(fn($p) => [
+            ->map(fn ($p) => [
                 'title' => $p->title,
                 'submitter' => $p->submitter->name,
                 'sdgs' => $p->sdgs->pluck('name')->implode(', '),
@@ -329,10 +330,10 @@ trait HasIkuCalculations
             ->whereHas('policyInvolvements', function ($query) {
                 $query->where('status', 'verified');
             })
-            ->when($search, fn($q) => $q->where('name', 'like', "%{$search}%"))
+            ->when($search, fn ($q) => $q->where('name', 'like', "%{$search}%"))
             ->with('policyInvolvements')
             ->get()
-            ->map(fn($u) => [
+            ->map(fn ($u) => [
                 'name' => $u->name,
                 'policies' => $u->policyInvolvements->pluck('title')->implode(', '),
             ])

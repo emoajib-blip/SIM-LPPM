@@ -73,7 +73,7 @@ class InstitutionalReportMonitoring extends Component
             ],
         ])->layout('layouts.app', [
             'pageTitle' => 'Monitoring Laporan Institusi',
-            'pageSubtitle' => 'Lacak status pengajuan, revisi, dan persetujuan laporan ke Rektor'
+            'pageSubtitle' => 'Lacak status pengajuan, revisi, dan persetujuan laporan ke Rektor',
         ]);
     }
 

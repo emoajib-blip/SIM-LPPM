@@ -1162,7 +1162,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/PartnerCollaboration.php' => 'c3634d27ee0bdffd20072d25648901745672a957e1f5280711ca45cb07622352',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/PartnerCollaboration.php' => 'a497adc9425cad3279b68c59e8bfb3a82258bc9693e4b98c421f16fbee06939f',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Concerns/HasToast.php' => '005cf1d6a13c6d7555286d4daf3ba7619e1368f86ba94c0fe7482da0c7b9474f',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithInstitutionalApproval.php' => '1b1d6fec47dc105d9024e917c84145b3251f02359ab4c90b5bb34a09393357f7',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/vendor/composer/../livewire/livewire/src/WithPagination.php' => 'c8c850c3c8cf6cb7ad7db178e4fdaa80684fb8f39f469ab0214850f38ca81685',

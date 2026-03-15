@@ -105,7 +105,7 @@ class Show extends Component
      */
     public function save(): void
     {
-        if (!$this->canEdit()) {
+        if (! $this->canEdit()) {
             $message = 'Anda tidak memiliki akses untuk mengedit proposal ini';
             session()->flash('error', $message);
             $this->toastError($message);
@@ -134,7 +134,7 @@ class Show extends Component
             // Refresh proposal data
             $this->form->setProposal($this->form->proposal->fresh());
         } catch (\Exception $e) {
-            $message = 'Gagal menyimpan perubahan: ' . $e->getMessage();
+            $message = 'Gagal menyimpan perubahan: '.$e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
         }

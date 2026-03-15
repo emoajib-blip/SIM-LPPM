@@ -15,19 +15,25 @@ class Index extends Component
     use HasToast, WithFileUploads, WithPagination;
 
     public $search = '';
+
     public $showReviewModal = false;
+
     public $selectedReview;
 
     // Evaluation fields
     public $score;
+
     public $notes;
+
     public $status; // Sangat Baik, Baik, Cukup
+
     public $berita_acara;
+
     public $borang_data = []; // Structured criteria
 
     public function mount()
     {
-        if (!Auth::user()->hasRole('reviewer')) {
+        if (! Auth::user()->hasRole('reviewer')) {
             abort(403);
         }
     }
@@ -53,7 +59,7 @@ class Index extends Component
             'status' => 'required|in:Sangat Baik,Baik,Cukup',
             'notes' => 'required|string',
             'berita_acara' => [
-                !$this->selectedReview?->hasMedia('berita_acara') ? 'required' : 'nullable',
+                ! $this->selectedReview?->hasMedia('berita_acara') ? 'required' : 'nullable',
                 'file',
                 'mimes:pdf,doc,docx',
                 'max:10240',

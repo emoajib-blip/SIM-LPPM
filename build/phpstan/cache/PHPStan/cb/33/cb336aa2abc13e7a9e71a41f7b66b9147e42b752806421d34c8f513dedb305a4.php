@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\CommunityService\DailyNote\Show
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-b31f874e17e7ecc581508fcdcf7e9529acc57a9e61910d22077cc3b17fe7c7fd',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-1239e86e53502478bf1f0770ac36e28e4ed564615dc3d34e58c85d5294a3c742',
    'data' => 
   array (
     'locatedSource' => 
@@ -36,9 +36,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     'traitClassNames' => 
     array (
-      0 => 'App\\Livewire\\Concerns\\HasToast',
-      1 => 'Livewire\\WithFileUploads',
-      2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+      0 => 'App\\Livewire\\Traits\\HasReportTemplates',
+      1 => 'App\\Livewire\\Concerns\\HasToast',
+      2 => 'Livewire\\WithFileUploads',
     ),
     'immediateConstants' => 
     array (
@@ -1174,10 +1174,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
                 array (
                   'startLine' => 245,
                   'endLine' => 245,
-                  'startTokenPos' => 1804,
-                  'startFilePos' => 8188,
-                  'endTokenPos' => 1804,
-                  'endFilePos' => 8201,
+                  'startTokenPos' => 1802,
+                  'startFilePos' => 8186,
+                  'endTokenPos' => 1802,
+                  'endFilePos' => 8199,
                 ),
               ),
             ),
@@ -1291,10 +1291,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
                 array (
                   'startLine' => 278,
                   'endLine' => 278,
-                  'startTokenPos' => 2047,
-                  'startFilePos' => 9315,
-                  'endTokenPos' => 2047,
-                  'endFilePos' => 9331,
+                  'startTokenPos' => 2042,
+                  'startFilePos' => 9310,
+                  'endTokenPos' => 2042,
+                  'endFilePos' => 9326,
                 ),
               ),
             ),

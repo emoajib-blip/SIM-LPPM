@@ -33,12 +33,12 @@ trait ReportAccess
      */
     protected function checkAccess(): void
     {
-        if (!$this->canView()) {
+        if (! $this->canView()) {
             $user = Auth::user();
             $message = 'Anda tidak memiliki akses untuk melihat laporan ini.';
 
             if ($user?->hasRole('dekan')) {
-                if (!$user->identity) {
+                if (! $user->identity) {
                     $message = 'Profil Anda belum lengkap (Identity tidak ditemukan). Silakan lengkapi profil Anda terlebih dahulu.';
                 } else {
                     $message = 'Maaf, Anda tidak memiliki akses ke fakultas dosen yang bersangkutan.';

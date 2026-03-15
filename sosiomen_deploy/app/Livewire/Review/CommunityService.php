@@ -23,7 +23,7 @@ class CommunityService extends Component
 
     public function mount(): void
     {
-        if (!Auth::user()->can('module_review')) {
+        if (! Auth::user()->can('module_review')) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
     }
@@ -49,8 +49,8 @@ class CommunityService extends Component
                 },
             ]);
 
-        if (!empty($this->search)) {
-            $searchTerm = '%' . $this->search . '%';
+        if (! empty($this->search)) {
+            $searchTerm = '%'.$this->search.'%';
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'LIKE', $searchTerm)
                     ->orWhereHas('submitter', function ($sq) use ($searchTerm) {
@@ -59,7 +59,7 @@ class CommunityService extends Component
             });
         }
 
-        if (!empty($this->selectedYear)) {
+        if (! empty($this->selectedYear)) {
             $query->whereYear('created_at', $this->selectedYear);
         }
 
@@ -80,7 +80,7 @@ class CommunityService extends Component
             ->whereHas('reviewers', function ($query) {
                 $query->where('user_id', Auth::id());
             })
-            ->selectRaw('DISTINCT ' . sql_year() . ' as year')
+            ->selectRaw('DISTINCT '.sql_year().' as year')
             ->orderByDesc('year')
             ->pluck('year');
     }

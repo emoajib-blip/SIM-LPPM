@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 /**
  * HasIkuCalculations
- * 
+ *
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager.
  * Centralized logic for IKU calculations following Kepmen 358/M/KEP/2025.
  */
@@ -38,11 +38,12 @@ trait HasIkuCalculations
                 $metrics[$key] = [
                     'code' => $iku->code,
                     'name' => $iku->name,
-                    'description' => $iku->description . " (Input Manual Aktif)",
+                    'description' => $iku->description.' (Input Manual Aktif)',
                     'achievement' => $manualValue,
                     'target' => (float) $iku->target_percentage,
-                    'is_manual' => true
+                    'is_manual' => true,
                 ];
+
                 continue;
             }
 
@@ -58,7 +59,7 @@ trait HasIkuCalculations
      */
     protected function calculateAutomatedIku($iku, string $period): array
     {
-        $method = 'calculate' . Str::studly(str_replace('-', '', $iku->code));
+        $method = 'calculate'.Str::studly(str_replace('-', '', $iku->code));
 
         if (method_exists($this, $method)) {
             return $this->$method($period, $iku);
@@ -70,7 +71,7 @@ trait HasIkuCalculations
             'description' => $iku->description,
             'achievement' => 0,
             'target' => (float) $iku->target_percentage,
-            'is_manual' => false
+            'is_manual' => false,
         ];
     }
 
@@ -150,8 +151,8 @@ trait HasIkuCalculations
      */
     protected function calculateIku06(string $period, MasterIku $iku): array
     {
-        $mandatoryQuery = MandatoryOutput::whereHas('progressReport.proposal', fn($q) => $q->where('start_year', $period));
-        $additionalQuery = AdditionalOutput::whereHas('progressReport.proposal', fn($q) => $q->where('start_year', $period));
+        $mandatoryQuery = MandatoryOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period));
+        $additionalQuery = AdditionalOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period));
 
         $totalOutputs = $mandatoryQuery->count() + $additionalQuery->count();
         $currentWeight = 0;
@@ -169,7 +170,7 @@ trait HasIkuCalculations
         return [
             'code' => $iku->code,
             'name' => $iku->name,
-            'description' => "Total bobot publikasi terverifikasi: " . round($currentWeight, 2) . " dari $totalOutputs artikel.",
+            'description' => 'Total bobot publikasi terverifikasi: '.round($currentWeight, 2)." dari $totalOutputs artikel.",
             'achievement' => $percentage,
             'target' => (float) $iku->target_percentage,
         ];
@@ -221,7 +222,7 @@ trait HasIkuCalculations
     {
         $totalDosen = User::role('dosen')->count();
         $policyDosen = User::role('dosen')
-            ->whereHas('policyInvolvements', fn($q) => $q->where('status', 'verified'))
+            ->whereHas('policyInvolvements', fn ($q) => $q->where('status', 'verified'))
             ->count();
 
         $percentage = $totalDosen > 0 ? ($policyDosen / $totalDosen) * 100 : 0;
@@ -243,7 +244,7 @@ trait HasIkuCalculations
         return [
             'code' => $iku->code,
             'name' => $iku->name,
-            'description' => "Pendapatan dari hibah eksternal dan kerjasama (Mode Manual Disarankan).",
+            'description' => 'Pendapatan dari hibah eksternal dan kerjasama (Mode Manual Disarankan).',
             'achievement' => 0,
             'target' => (float) $iku->target_percentage,
         ];
@@ -257,7 +258,7 @@ trait HasIkuCalculations
         return [
             'code' => $iku->code,
             'name' => $iku->name,
-            'description' => "Pencegahan plagiasi dan pelanggaran etik akademik.",
+            'description' => 'Pencegahan plagiasi dan pelanggaran etik akademik.',
             'achievement' => 100, // Default 100% jika tidak ada pelanggaran
             'target' => (float) $iku->target_percentage,
         ];
@@ -294,7 +295,7 @@ trait HasIkuCalculations
             })
             ->with('user')
             ->get()
-            ->map(fn($id) => [
+            ->map(fn ($id) => [
                 'name' => $id->user->name ?? 'N/A',
                 'id_number' => $id->identity_id,
                 'scopus' => $id->scopus_id,
@@ -316,7 +317,7 @@ trait HasIkuCalculations
                     });
             })
             ->get()
-            ->map(fn($p) => [
+            ->map(fn ($p) => [
                 'title' => $p->title,
                 'submitter' => $p->submitter->name,
                 'partners' => $p->partners->pluck('name')->implode(', '),
@@ -327,12 +328,12 @@ trait HasIkuCalculations
 
     protected function getIku6Details(string $period, string $search = ''): array
     {
-        $mandatory = MandatoryOutput::whereHas('progressReport.proposal', fn($q) => $q->where('start_year', $period))
+        $mandatory = MandatoryOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period))
             ->where('is_verified', true)->with('progressReport.proposal')->get();
-        $additional = AdditionalOutput::whereHas('progressReport.proposal', fn($q) => $q->where('start_year', $period))
+        $additional = AdditionalOutput::whereHas('progressReport.proposal', fn ($q) => $q->where('start_year', $period))
             ->where('is_verified', true)->with('progressReport.proposal')->get();
 
-        return $mandatory->concat($additional)->map(fn($o) => [
+        return $mandatory->concat($additional)->map(fn ($o) => [
             'title' => $o->article_title ?? 'N/A',
             'journal' => $o->journal_title ?? 'N/A',
             'rank' => $o->rank ?? 'N/A',
@@ -344,7 +345,7 @@ trait HasIkuCalculations
     protected function getIku7Details(string $period, string $search = ''): array
     {
         return Proposal::where('start_year', $period)->has('sdgs')->with(['sdgs', 'submitter'])->get()
-            ->map(fn($p) => [
+            ->map(fn ($p) => [
                 'title' => $p->title,
                 'submitter' => $p->submitter->name,
                 'sdgs' => $p->sdgs->pluck('name')->implode(', '),
@@ -354,10 +355,10 @@ trait HasIkuCalculations
     protected function getIku8Details(string $period, string $search = ''): array
     {
         return User::role('dosen')
-            ->whereHas('policyInvolvements', fn($q) => $q->where('status', 'verified'))
+            ->whereHas('policyInvolvements', fn ($q) => $q->where('status', 'verified'))
             ->with('policyInvolvements')
             ->get()
-            ->map(fn($u) => [
+            ->map(fn ($u) => [
                 'name' => $u->name,
                 'policies' => $u->policyInvolvements->pluck('title')->implode(', '),
             ])->toArray();

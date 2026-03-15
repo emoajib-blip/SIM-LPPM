@@ -110,7 +110,7 @@ class Index extends Component
 
     public function verify(string $id)
     {
-        if (!auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm'])) {
+        if (! auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm'])) {
             return;
         }
 
@@ -129,7 +129,7 @@ class Index extends Component
 
     public function reject(string $id)
     {
-        if (!auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm'])) {
+        if (! auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm'])) {
             return;
         }
 
@@ -148,7 +148,7 @@ class Index extends Component
 
     public function delete(string $id)
     {
-        $involvement = PolicyInvolvement::when(!auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm']), function ($q) {
+        $involvement = PolicyInvolvement::when(! auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm']), function ($q) {
             $q->where('user_id', Auth::id());
         })->findOrFail($id);
 
@@ -165,7 +165,7 @@ class Index extends Component
         $isAdmin = auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm']);
 
         $involvements = PolicyInvolvement::with('user')
-            ->when(!$isAdmin, function ($query) {
+            ->when(! $isAdmin, function ($query) {
                 $query->where('user_id', Auth::id());
             })
             ->orderBy('date', 'desc')

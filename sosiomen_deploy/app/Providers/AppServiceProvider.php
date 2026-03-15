@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // CRITICAL: Set file-based drivers BEFORE any service tries to use database
         // This must happen in register() before boot() is called
-        if (!$this->isInstalled()) {
+        if (! $this->isInstalled()) {
             config([
                 'cache.default' => 'file',
                 'session.driver' => 'file',
@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Force HTTPS if running behind an HTTPS proxy (Cloudflare)
         if (request()->header('X-Forwarded-Proto') === 'https' || str_contains(config('app.url'), 'https://')) {
-            if (!in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1'])) {
+            if (! in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1'])) {
                 URL::forceRootUrl(config('app.url'));
                 URL::forceScheme('https');
             }

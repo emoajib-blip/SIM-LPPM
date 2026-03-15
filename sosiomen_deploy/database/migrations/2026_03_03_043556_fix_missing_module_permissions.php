@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -36,7 +37,7 @@ return new class extends Migration {
                 ->where('guard_name', 'web')
                 ->first();
 
-            if (!$permission) {
+            if (! $permission) {
                 $permissionId = Str::uuid()->toString();
                 DB::table('permissions')->insert([
                     'id' => $permissionId,
@@ -59,7 +60,7 @@ return new class extends Migration {
                         ->where('role_id', $role->id)
                         ->exists();
 
-                    if (!$exists) {
+                    if (! $exists) {
                         DB::table('role_has_permissions')->insert([
                             'permission_id' => $permissionId,
                             'role_id' => $role->id,

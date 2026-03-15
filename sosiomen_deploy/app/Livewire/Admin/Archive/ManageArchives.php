@@ -58,10 +58,10 @@ class ManageArchives extends Component
             ->with(['submitter.identity', 'budgetItems'])
             ->where('status', ProposalStatus::COMPLETED)
             ->when($this->search, function ($q) {
-                $q->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('submitter', fn($u) => $u->where('name', 'like', '%' . $this->search . '%'));
+                $q->where('title', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('submitter', fn ($u) => $u->where('name', 'like', '%'.$this->search.'%'));
             })
-            ->when($this->yearFilter, fn($q) => $q->where('start_year', $this->yearFilter))
+            ->when($this->yearFilter, fn ($q) => $q->where('start_year', $this->yearFilter))
             ->orderByDesc('start_year')
             ->paginate(10);
 
@@ -82,10 +82,10 @@ class ManageArchives extends Component
 
             $msg = "✅ Berhasil mengimport {$importer->imported} baris data arsip.";
 
-            if (!empty($importer->failures)) {
+            if (! empty($importer->failures)) {
                 $details = implode(' | ', array_slice($importer->failures, 0, 5));
-                $more = count($importer->failures) > 5 ? ' (dan ' . (count($importer->failures) - 5) . ' lainnya...)' : '';
-                session()->flash('warning', $msg . ' ⚠ ' . count($importer->failures) . ' baris dilewati: ' . $details . $more);
+                $more = count($importer->failures) > 5 ? ' (dan '.(count($importer->failures) - 5).' lainnya...)' : '';
+                session()->flash('warning', $msg.' ⚠ '.count($importer->failures).' baris dilewati: '.$details.$more);
             } else {
                 session()->flash('success', $msg);
             }
@@ -93,7 +93,7 @@ class ManageArchives extends Component
             $this->showImportModal = false;
             $this->reset('importFile');
         } catch (\Exception $e) {
-            session()->flash('error', 'Gagal import: ' . $e->getMessage());
+            session()->flash('error', 'Gagal import: '.$e->getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ class ManageArchives extends Component
     {
         $this->validate([
             'editTitle' => 'required|string|max:255',
-            'editYear' => 'required|integer|min:2000|max:' . date('Y'),
+            'editYear' => 'required|integer|min:2000|max:'.date('Y'),
             'editDana' => 'required|numeric|min:0',
             'editSummary' => 'nullable|string|max:5000',
         ]);

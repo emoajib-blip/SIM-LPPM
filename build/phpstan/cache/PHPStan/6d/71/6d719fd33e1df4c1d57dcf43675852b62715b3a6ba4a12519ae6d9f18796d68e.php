@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/Research.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\Reports\Research
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-b81a67a0bd49e7460e850c8f6fe45796ae5f287550e6a8d85e5e3f2c4a6eece0',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-c2634943fdb7eb9e7797699285941da2e39c1ceeb44321249cd5b011a5bde046',
    'data' => 
   array (
     'locatedSource' => 
@@ -466,10 +466,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
                 array (
                   'startLine' => 97,
                   'endLine' => 97,
-                  'startTokenPos' => 725,
-                  'startFilePos' => 3047,
-                  'endTokenPos' => 725,
-                  'endFilePos' => 3058,
+                  'startTokenPos' => 727,
+                  'startFilePos' => 3049,
+                  'endTokenPos' => 727,
+                  'endFilePos' => 3060,
                 ),
               ),
             ),
@@ -524,10 +524,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
                 array (
                   'startLine' => 103,
                   'endLine' => 103,
-                  'startTokenPos' => 759,
-                  'startFilePos' => 3169,
-                  'endTokenPos' => 759,
-                  'endFilePos' => 3180,
+                  'startTokenPos' => 761,
+                  'startFilePos' => 3171,
+                  'endTokenPos' => 761,
+                  'endFilePos' => 3182,
                 ),
               ),
             ),
@@ -580,10 +580,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
                 array (
                   'startLine' => 117,
                   'endLine' => 117,
-                  'startTokenPos' => 848,
-                  'startFilePos' => 3613,
-                  'endTokenPos' => 848,
-                  'endFilePos' => 3625,
+                  'startTokenPos' => 850,
+                  'startFilePos' => 3615,
+                  'endTokenPos' => 850,
+                  'endFilePos' => 3627,
                 ),
               ),
             ),
@@ -636,10 +636,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
                 array (
                   'startLine' => 132,
                   'endLine' => 132,
-                  'startTokenPos' => 944,
-                  'startFilePos' => 4088,
-                  'endTokenPos' => 944,
-                  'endFilePos' => 4101,
+                  'startTokenPos' => 946,
+                  'startFilePos' => 4090,
+                  'endTokenPos' => 946,
+                  'endFilePos' => 4103,
                 ),
               ),
             ),

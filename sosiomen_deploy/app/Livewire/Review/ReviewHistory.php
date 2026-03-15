@@ -21,7 +21,7 @@ class ReviewHistory extends Component
 
     public function mount(): void
     {
-        if (!Auth::user()->can('module_review')) {
+        if (! Auth::user()->can('module_review')) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
     }
@@ -33,11 +33,11 @@ class ReviewHistory extends Component
             ->whereNotNull('completed_at')
             ->with(['proposal.submitter', 'proposal.detailable']);
 
-        if (!empty($this->roundFilter)) {
+        if (! empty($this->roundFilter)) {
             $query->where('round', $this->roundFilter);
         }
 
-        if (!empty($this->recommendationFilter)) {
+        if (! empty($this->recommendationFilter)) {
             $query->where('recommendation', $this->recommendationFilter);
         }
 

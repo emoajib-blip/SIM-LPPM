@@ -53,7 +53,7 @@ class ReportIndex extends Component
             ->where('reporting_period', 'final')
             ->where('status', ReportStatus::SUBMITTED);
 
-        if (!$facultyId) {
+        if (! $facultyId) {
             $query->whereRaw('1 = 0');
         } else {
             $query->whereHas('proposal.submitter.identity', function ($q) use ($facultyId) {

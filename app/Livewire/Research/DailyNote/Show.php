@@ -14,9 +14,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Show extends Component
 {
+    use \App\Livewire\Traits\HasReportTemplates;
     use HasToast;
     use WithFileUploads;
-    use \App\Livewire\Traits\HasReportTemplates;
 
     public Proposal $proposal;
 
@@ -45,7 +45,7 @@ class Show extends Component
 
     public function mount(Proposal $proposal): void
     {
-        if (!$this->canAccess($proposal)) {
+        if (! $this->canAccess($proposal)) {
             abort(403);
         }
 
@@ -75,7 +75,7 @@ class Show extends Component
 
     public function create(): void
     {
-        if (!$this->canManage($this->proposal)) {
+        if (! $this->canManage($this->proposal)) {
             abort(403);
         }
 
@@ -86,7 +86,7 @@ class Show extends Component
 
     public function save(): void
     {
-        if (!$this->canManage($this->proposal)) {
+        if (! $this->canManage($this->proposal)) {
             abort(403);
         }
 
@@ -111,7 +111,7 @@ class Show extends Component
             $remainingConstraint = $allocatedBudget - $usedBudget;
 
             if ($amount > $remainingConstraint) {
-                $this->addError('amount', 'Nominal pengeluaran (Rp ' . number_format($amount, 0, ',', '.') . ') melebihi sisa anggaran (Rp ' . number_format($remainingConstraint, 0, ',', '.') . ') untuk kategori ini.');
+                $this->addError('amount', 'Nominal pengeluaran (Rp '.number_format($amount, 0, ',', '.').') melebihi sisa anggaran (Rp '.number_format($remainingConstraint, 0, ',', '.').') untuk kategori ini.');
 
                 return;
             }
@@ -155,7 +155,7 @@ class Show extends Component
 
     public function edit(string $id): void
     {
-        if (!$this->canManage($this->proposal)) {
+        if (! $this->canManage($this->proposal)) {
             abort(403);
         }
 
@@ -180,7 +180,7 @@ class Show extends Component
 
     public function delete(string $id): void
     {
-        if (!$this->canManage($this->proposal)) {
+        if (! $this->canManage($this->proposal)) {
             abort(403);
         }
 
@@ -196,7 +196,7 @@ class Show extends Component
 
     public function deleteEvidence(string $mediaId): void
     {
-        if (!$this->canManage($this->proposal)) {
+        if (! $this->canManage($this->proposal)) {
             abort(403);
         }
 
@@ -247,7 +247,7 @@ class Show extends Component
     #[On('sign-logbook')]
     public function signLogbook()
     {
-        if (!$this->canManage($this->proposal)) {
+        if (! $this->canManage($this->proposal)) {
             abort(403);
         }
 
@@ -257,7 +257,7 @@ class Show extends Component
         $reports = $this->proposal->progressReports()->get();
         /** @var \App\Models\ProgressReport $report */
         foreach ($reports as $report) {
-            $files = glob(storage_path('app/public/pdf_cache/reports/report_' . $report->id . '_*.pdf'));
+            $files = glob(storage_path('app/public/pdf_cache/reports/report_'.$report->id.'_*.pdf'));
             if (is_array($files)) {
                 foreach ($files as $file) {
                     @unlink($file);
@@ -280,7 +280,7 @@ class Show extends Component
     #[On('approve-logbook')]
     public function approveLogbook(): void
     {
-        if (!$this->canApprove($this->proposal)) {
+        if (! $this->canApprove($this->proposal)) {
             abort(403);
         }
 

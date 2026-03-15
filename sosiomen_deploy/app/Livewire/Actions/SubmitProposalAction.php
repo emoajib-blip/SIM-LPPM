@@ -11,8 +11,7 @@ class SubmitProposalAction
 {
     public function __construct(
         protected NotificationService $notificationService
-    ) {
-    }
+    ) {}
 
     /**
      * Submit a proposal for review.
@@ -21,7 +20,7 @@ class SubmitProposalAction
     public function execute(Proposal $proposal): array
     {
         // Check if all team members accepted
-        if (!$proposal->allTeamMembersAccepted()) {
+        if (! $proposal->allTeamMembersAccepted()) {
             $pendingMembers = $proposal->getPendingTeamMembers();
 
             return [
@@ -40,7 +39,7 @@ class SubmitProposalAction
             ProposalStatus::REVISION_NEEDED,
         ];
 
-        if (!in_array($proposal->status, $allowedStatuses)) {
+        if (! in_array($proposal->status, $allowedStatuses)) {
             return [
                 'success' => false,
                 'message' => 'Proposal tidak dapat diajukan dari status saat ini.',

@@ -10,8 +10,7 @@ class ProposalExportController extends Controller
 {
     public function __construct(
         protected ProposalPdfService $pdfService
-    ) {
-    }
+    ) {}
 
     /**
      * Download the combined proposal PDF.
@@ -26,7 +25,7 @@ class ProposalExportController extends Controller
         $isLppm = $user->hasRole(['admin lppm', 'kepala lppm', 'superadmin', 'rektor', 'dekan']);
         $isAssignedReviewer = $proposal->reviewers()->where('user_id', $user->id)->exists();
 
-        if (!$isSubmitter && !$isMember && !$isLppm && !$isAssignedReviewer) {
+        if (! $isSubmitter && ! $isMember && ! $isLppm && ! $isAssignedReviewer) {
             abort(403, 'Anda tidak memiliki akses untuk mengekspor proposal ini.');
         }
 
@@ -34,7 +33,7 @@ class ProposalExportController extends Controller
             $pdfPath = $this->pdfService->export($proposal);
 
             $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
-            $filename = 'Proposal_' . $title . '.pdf';
+            $filename = 'Proposal_'.$title.'.pdf';
 
             while (ob_get_level() > 0) {
                 @ob_end_clean();
@@ -44,9 +43,9 @@ class ProposalExportController extends Controller
             // Since we use caching, we do NOT delete the file after sending
             return response()->download($pdfPath, $filename);
         } catch (\Exception $e) {
-            \Log::error('Proposal PDF Download Error: ' . $e->getMessage());
+            \Log::error('Proposal PDF Download Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh proposal PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh proposal PDF: '.$e->getMessage());
         }
     }
 
@@ -63,7 +62,7 @@ class ProposalExportController extends Controller
         $isLppm = $user->hasRole(['admin lppm', 'kepala lppm', 'superadmin', 'rektor', 'dekan']);
         $isAssignedReviewer = $proposal->reviewers()->where('user_id', $user->id)->exists();
 
-        if (!$isSubmitter && !$isMember && !$isLppm && !$isAssignedReviewer) {
+        if (! $isSubmitter && ! $isMember && ! $isLppm && ! $isAssignedReviewer) {
             abort(403, 'Anda tidak memiliki akses untuk melihat proposal ini.');
         }
 
@@ -81,9 +80,9 @@ class ProposalExportController extends Controller
                 'Content-Disposition' => 'inline',
             ]);
         } catch (\Exception $e) {
-            \Log::error('Proposal PDF Preview Error: ' . $e->getMessage());
+            \Log::error('Proposal PDF Preview Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mempratinjau proposal PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mempratinjau proposal PDF: '.$e->getMessage());
         }
     }
 
@@ -100,7 +99,7 @@ class ProposalExportController extends Controller
         $isLppm = $user->hasRole(['admin lppm', 'kepala lppm', 'superadmin', 'rektor', 'dekan']);
         $isAssignedReviewer = $proposal->reviewers()->where('user_id', $user->id)->exists();
 
-        if (!$isSubmitter && !$isMember && !$isLppm && !$isAssignedReviewer) {
+        if (! $isSubmitter && ! $isMember && ! $isLppm && ! $isAssignedReviewer) {
             abort(403, 'Anda tidak memiliki akses untuk mengekspor laporan ini.');
         }
 
@@ -121,8 +120,9 @@ class ProposalExportController extends Controller
                 ->first();
         }
 
-        if (!$report) {
-            $message = 'Data Laporan ' . ($type === 'final' ? 'Akhir' : 'Kemajuan') . ' belum tersedia. Harap simpan draft laporan terlebih dahulu.';
+        if (! $report) {
+            $message = 'Data Laporan '.($type === 'final' ? 'Akhir' : 'Kemajuan').' belum tersedia. Harap simpan draft laporan terlebih dahulu.';
+
             return back()->with('error', $message);
         }
 
@@ -131,9 +131,9 @@ class ProposalExportController extends Controller
             $pdfPath = $this->pdfService->exportReport($proposal, $report);
 
             $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
-            $filename = ucfirst($type) . '_Report_' . $title . '.pdf';
+            $filename = ucfirst($type).'_Report_'.$title.'.pdf';
 
-            if (!app()->environment('testing')) {
+            if (! app()->environment('testing')) {
                 while (ob_get_level() > 0) {
                     @ob_end_clean();
 
@@ -147,12 +147,12 @@ class ProposalExportController extends Controller
             // Return as inline for target="_blank" support in browsers (Preview)
             return response()->file($pdfPath, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+                'Content-Disposition' => 'inline; filename="'.$filename.'"',
             ]);
         } catch (\Exception $e) {
-            \Log::error('Report PDF Export Error: ' . $e->getMessage());
+            \Log::error('Report PDF Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal memulihkan dan mengunduh laporan PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memulihkan dan mengunduh laporan PDF: '.$e->getMessage());
         }
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Livewire\Traits;
 
 use App\Enums\ReportStatus;
-use App\Models\ProgressReport;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,8 +19,9 @@ trait WithReportApproval
     public function approve(): void
     {
         $report = $this->progressReport;
-        if (!$report)
+        if (! $report) {
             return;
+        }
 
         $activeRole = active_role();
         $newStatus = null;
@@ -29,20 +29,23 @@ trait WithReportApproval
         if ($activeRole === 'dekan') {
             if ($report->status !== ReportStatus::SUBMITTED) {
                 $this->toastError('Laporan harus berstatus Diajukan sebelum disetujui Dekan.');
+
                 return;
             }
 
             // Faculty check
             $dekanFacultyId = Auth::user()?->identity?->faculty_id;
             $submitterFacultyId = $report->proposal->submitter->identity?->faculty_id;
-            if (!$dekanFacultyId || $dekanFacultyId !== $submitterFacultyId) {
+            if (! $dekanFacultyId || $dekanFacultyId !== $submitterFacultyId) {
                 $this->toastError('Maaf, Anda bukan dekan dosen tersebut.');
+
                 return;
             }
 
             // Self-approval check
             if ($report->proposal->submitter_id === Auth::id()) {
                 $this->toastError('Anda tidak dapat menyetujui laporan Anda sendiri.');
+
                 return;
             }
 
@@ -50,13 +53,15 @@ trait WithReportApproval
         } elseif ($activeRole === 'kepala lppm') {
             if ($report->status !== ReportStatus::APPROVED_BY_DEKAN) {
                 $this->toastError('Laporan harus disetujui Dekan terlebih dahulu sebelum disetujui Kepala LPPM.');
+
                 return;
             }
             $newStatus = ReportStatus::APPROVED;
         }
 
-        if (!$newStatus) {
+        if (! $newStatus) {
             $this->toastError('Anda tidak memiliki wewenang untuk menyetujui laporan ini.');
+
             return;
         }
 
@@ -83,7 +88,7 @@ trait WithReportApproval
                 $this->redirect(route('dashboard'), navigate: true);
             }
         } catch (\Exception $e) {
-            $this->toastError('Gagal menyetujui laporan: ' . $e->getMessage());
+            $this->toastError('Gagal menyetujui laporan: '.$e->getMessage());
         }
     }
 
@@ -94,15 +99,17 @@ trait WithReportApproval
         ]);
 
         $report = $this->progressReport;
-        if (!$report)
+        if (! $report) {
             return;
+        }
 
         $activeRole = active_role();
         if ($activeRole === 'dekan') {
             $dekanFacultyId = Auth::user()?->identity?->faculty_id;
             $submitterFacultyId = $report->proposal->submitter->identity?->faculty_id;
-            if (!$dekanFacultyId || $dekanFacultyId !== $submitterFacultyId) {
+            if (! $dekanFacultyId || $dekanFacultyId !== $submitterFacultyId) {
                 $this->toastError('Maaf, Anda bukan dekan dosen tersebut.');
+
                 return;
             }
         }
@@ -126,7 +133,7 @@ trait WithReportApproval
                 $this->redirect(route('dashboard'), navigate: true);
             }
         } catch (\Exception $e) {
-            $this->toastError('Gagal menolak laporan: ' . $e->getMessage());
+            $this->toastError('Gagal menolak laporan: '.$e->getMessage());
         }
     }
 }

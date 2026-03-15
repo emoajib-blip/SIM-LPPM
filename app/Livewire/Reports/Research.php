@@ -76,7 +76,7 @@ class Research extends Component
             $this->selectedScheme = $report->metadata['scheme'] ?? 'all';
 
             // Only override faculty if not dekan
-            if (active_role() !== 'dekan' && !auth()->user()->activeHasRole('dekan')) {
+            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
                 $this->selectedFaculty = $report->metadata['faculty'] ?? 'all';
             }
         } else {
@@ -85,7 +85,7 @@ class Research extends Component
             $this->selectedScheme = request()->query('scheme', 'all');
 
             // Only override faculty if not dekan
-            if (active_role() !== 'dekan' && !auth()->user()->activeHasRole('dekan')) {
+            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
                 $this->selectedFaculty = request()->query('faculty', 'all');
             }
         }
@@ -170,14 +170,14 @@ class Research extends Component
         return Proposal::query()
             ->where('detailable_type', 'App\Models\Research')
             ->where('start_year', $this->period)
-            ->when($this->selectedScheme !== 'all', fn($q) => $q->where('research_scheme_id', $this->selectedScheme))
+            ->when($this->selectedScheme !== 'all', fn ($q) => $q->where('research_scheme_id', $this->selectedScheme))
             ->when($this->selectedFaculty !== 'all', function ($q) {
-                $q->whereHas('submitter.identity', fn($iq) => $iq->where('faculty_id', $this->selectedFaculty));
+                $q->whereHas('submitter.identity', fn ($iq) => $iq->where('faculty_id', $this->selectedFaculty));
             })
             ->when($this->search, function ($q) {
                 $q->where(function ($sq) {
                     $sq->where('title', 'like', "%{$this->search}%")
-                        ->orWhereHas('submitter', fn($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
                 });
             })
             ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme', 'budgetItems'])
@@ -195,7 +195,7 @@ class Research extends Component
             ->whereNotNull('start_year')
             ->orderBy('start_year', 'desc')
             ->pluck('start_year')
-            ->map(fn($year) => (string) $year)
+            ->map(fn ($year) => (string) $year)
             ->toArray() ?: [(string) date('Y')];
     }
 
@@ -207,14 +207,14 @@ class Research extends Component
         $query = Proposal::query()
             ->where('detailable_type', 'App\Models\Research')
             ->where('start_year', $this->period)
-            ->when($this->selectedScheme !== 'all', fn($q) => $q->where('research_scheme_id', $this->selectedScheme))
+            ->when($this->selectedScheme !== 'all', fn ($q) => $q->where('research_scheme_id', $this->selectedScheme))
             ->when($this->selectedFaculty !== 'all', function ($q) {
-                $q->whereHas('submitter.identity', fn($iq) => $iq->where('faculty_id', $this->selectedFaculty));
+                $q->whereHas('submitter.identity', fn ($iq) => $iq->where('faculty_id', $this->selectedFaculty));
             })
             ->when($this->search, function ($q) {
                 $q->where(function ($sq) {
                     $sq->where('title', 'like', "%{$this->search}%")
-                        ->orWhereHas('submitter', fn($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
                 });
             });
 
@@ -234,7 +234,7 @@ class Research extends Component
                 ProposalStatus::COMPLETED->value,
             ])
             ->get()
-            ->sum(fn($p) => ($p->sbk_value && $p->sbk_value > 0) ? (float) $p->sbk_value : $p->budgetItems->sum('total_price'));
+            ->sum(fn ($p) => ($p->sbk_value && $p->sbk_value > 0) ? (float) $p->sbk_value : $p->budgetItems->sum('total_price'));
 
         $reportsCount = (clone $query)
             ->whereHas('progressReports')
@@ -249,7 +249,7 @@ class Research extends Component
             ],
             [
                 'label' => __('Anggaran'),
-                'value' => 'Rp ' . number_format($totalBudget, 0, ',', '.'),
+                'value' => 'Rp '.number_format($totalBudget, 0, ',', '.'),
                 'icon' => 'currency-dollar',
                 'variant' => 'bg-blue-lt text-blue',
             ],
@@ -270,34 +270,34 @@ class Research extends Component
         $proposalIds = Proposal::query()
             ->where('detailable_type', 'App\Models\Research')
             ->where('start_year', $this->period)
-            ->when($this->selectedScheme !== 'all', fn($q) => $q->where('research_scheme_id', $this->selectedScheme))
+            ->when($this->selectedScheme !== 'all', fn ($q) => $q->where('research_scheme_id', $this->selectedScheme))
             ->when($this->selectedFaculty !== 'all', function ($q) {
-                $q->whereHas('submitter.identity', fn($iq) => $iq->where('faculty_id', $this->selectedFaculty));
+                $q->whereHas('submitter.identity', fn ($iq) => $iq->where('faculty_id', $this->selectedFaculty));
             })
             ->when($this->search, function ($q) {
                 $q->where(function ($sq) {
                     $sq->where('title', 'like', "%{$this->search}%")
-                        ->orWhereHas('submitter', fn($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
                 });
             })
             ->pluck('id');
 
         $mandatory = MandatoryOutput::query()
-            ->whereHas('progressReport', fn($q) => $q->whereIn('proposal_id', $proposalIds))
+            ->whereHas('progressReport', fn ($q) => $q->whereIn('proposal_id', $proposalIds))
             ->with('proposalOutput')
             ->get();
 
         $additional = AdditionalOutput::query()
-            ->whereHas('progressReport', fn($q) => $q->whereIn('proposal_id', $proposalIds))
+            ->whereHas('progressReport', fn ($q) => $q->whereIn('proposal_id', $proposalIds))
             ->with('proposalOutput')
             ->get();
 
         return $mandatory->concat($additional)
-            ->groupBy(fn($output) => $output->proposalOutput->category ?? 'Lainnya')
-            ->map(fn($group, $key) => [
+            ->groupBy(fn ($output) => $output->proposalOutput->category ?? 'Lainnya')
+            ->map(fn ($group, $key) => [
                 'category' => $this->translateCategory($key),
                 'count' => $group->count(),
-                'published' => $group->filter(fn($o) => in_array($o->status_type ?? $o->status, [
+                'published' => $group->filter(fn ($o) => in_array($o->status_type ?? $o->status, [
                     'published',
                     'terbit',
                     'granted',
@@ -332,12 +332,12 @@ class Research extends Component
             ->where('detailable_type', 'App\Models\Research')
             ->where('start_year', $this->period)
             ->when($this->selectedFaculty !== 'all', function ($q) {
-                $q->whereHas('submitter.identity', fn($iq) => $iq->where('faculty_id', $this->selectedFaculty));
+                $q->whereHas('submitter.identity', fn ($iq) => $iq->where('faculty_id', $this->selectedFaculty));
             })
             ->when($this->search, function ($q) {
                 $q->where(function ($sq) {
                     $sq->where('title', 'like', "%{$this->search}%")
-                        ->orWhereHas('submitter', fn($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
                 });
             })
             ->with(['researchScheme', 'budgetItems'])
@@ -349,7 +349,7 @@ class Research extends Component
                 return [
                     'name' => $first->researchScheme->name ?? __('Tanpa Skema'),
                     'count' => $proposals->count(),
-                    'budget' => $proposals->sum(fn($p) => ($p->sbk_value && $p->sbk_value > 0) ? (float) $p->sbk_value :
+                    'budget' => $proposals->sum(fn ($p) => ($p->sbk_value && $p->sbk_value > 0) ? (float) $p->sbk_value :
                         $p->budgetItems->sum('total_price')),
                 ];
             })
@@ -364,14 +364,14 @@ class Research extends Component
         return Proposal::query()
             ->where('detailable_type', 'App\Models\Research')
             ->where('start_year', $this->period)
-            ->when($this->selectedScheme !== 'all', fn($q) => $q->where('research_scheme_id', $this->selectedScheme))
+            ->when($this->selectedScheme !== 'all', fn ($q) => $q->where('research_scheme_id', $this->selectedScheme))
             ->when($this->selectedFaculty !== 'all', function ($q) {
-                $q->whereHas('submitter.identity', fn($iq) => $iq->where('faculty_id', $this->selectedFaculty));
+                $q->whereHas('submitter.identity', fn ($iq) => $iq->where('faculty_id', $this->selectedFaculty));
             })
             ->when($this->search, function ($q) {
                 $q->where(function ($sq) {
                     $sq->where('title', 'like', "%{$this->search}%")
-                        ->orWhereHas('submitter', fn($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
                 });
             })
             ->with('focusArea')
@@ -396,16 +396,16 @@ class Research extends Component
         return Proposal::query()
             ->where('detailable_type', 'App\Models\Research')
             ->where('start_year', $this->period)
-            ->when($this->selectedScheme !== 'all', fn($q) => $q->where('research_scheme_id', $this->selectedScheme))
+            ->when($this->selectedScheme !== 'all', fn ($q) => $q->where('research_scheme_id', $this->selectedScheme))
             ->when($this->search, function ($q) {
                 $q->where(function ($sq) {
                     $sq->where('title', 'like', "%{$this->search}%")
-                        ->orWhereHas('submitter', fn($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                        ->orWhereHas('submitter', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
                 });
             })
             ->with(['submitter.identity.faculty'])
             ->get()
-            ->groupBy(fn($p) => $p->submitter->identity->faculty_id)
+            ->groupBy(fn ($p) => $p->submitter->identity->faculty_id)
             ->map(function ($proposals) {
                 $first = $proposals->first();
 

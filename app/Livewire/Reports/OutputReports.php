@@ -49,7 +49,7 @@ class OutputReports extends Component
             $this->outputType = $report->metadata['outputType'] ?? 'all';
 
             // Only override faculty if not dekan
-            if (active_role() !== 'dekan' && !auth()->user()->activeHasRole('dekan')) {
+            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
                 $this->selectedFaculty = $report->metadata['faculty'] ?? 'all';
             }
         } else {
@@ -58,7 +58,7 @@ class OutputReports extends Component
             $this->selectedScheme = request()->query('scheme', 'all');
 
             // Only override faculty if not dekan
-            if (active_role() !== 'dekan' && !auth()->user()->activeHasRole('dekan')) {
+            if (active_role() !== 'dekan' && ! auth()->user()->activeHasRole('dekan')) {
                 $this->selectedFaculty = request()->query('faculty', 'all');
             }
         }
@@ -120,7 +120,7 @@ class OutputReports extends Component
      */
     public function setTab(string $tab): void
     {
-        if (!in_array($tab, ['research', 'community-service'])) {
+        if (! in_array($tab, ['research', 'community-service'])) {
             return;
         }
 
@@ -246,7 +246,7 @@ class OutputReports extends Component
             ->whereNotNull('start_year')
             ->orderBy('start_year', 'desc')
             ->pluck('start_year')
-            ->map(fn($year) => (string) $year)
+            ->map(fn ($year) => (string) $year)
             ->toArray() ?: [(string) date('Y')];
     }
 
@@ -312,7 +312,7 @@ class OutputReports extends Component
 
     public function mandatoryOutput(): ?MandatoryOutput
     {
-        if (!$this->viewingMandatoryId) {
+        if (! $this->viewingMandatoryId) {
             return null;
         }
 
@@ -337,7 +337,7 @@ class OutputReports extends Component
 
     public function additionalOutput(): ?AdditionalOutput
     {
-        if (!$this->viewingAdditionalId) {
+        if (! $this->viewingAdditionalId) {
             return null;
         }
 

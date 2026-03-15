@@ -25,7 +25,7 @@ class MonevRecap extends Component
 
     public function mount()
     {
-        if (!Auth::user()->hasRole(['kepala lppm', 'rektor'])) {
+        if (! Auth::user()->hasRole(['kepala lppm', 'rektor'])) {
             abort(403);
         }
         $this->academicYear = $this->academicYear ?: date('Y');
@@ -44,6 +44,7 @@ class MonevRecap extends Component
 
         if ($reviews->isEmpty()) {
             $this->toastWarning('Tidak ada data baru untuk dilaporkan.');
+
             return;
         }
 
@@ -51,7 +52,7 @@ class MonevRecap extends Component
             $review->update(['reported_at' => now()]);
         });
 
-        $this->toastSuccess($reviews->count() . ' hasil monev telah dilaporkan ke Rektor.');
+        $this->toastSuccess($reviews->count().' hasil monev telah dilaporkan ke Rektor.');
     }
 
     #[Computed]

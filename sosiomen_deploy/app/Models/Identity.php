@@ -200,7 +200,7 @@ class Identity extends Model
      */
     public function getSintaUrl(): ?string
     {
-        if (!$this->sinta_id) {
+        if (! $this->sinta_id) {
             return null;
         }
 
@@ -212,7 +212,7 @@ class Identity extends Model
      */
     public function getScopusUrl(): ?string
     {
-        if (!$this->scopus_id) {
+        if (! $this->scopus_id) {
             return null;
         }
 
@@ -224,7 +224,7 @@ class Identity extends Model
      */
     public function getGoogleScholarUrl(): ?string
     {
-        if (!$this->google_scholar_id) {
+        if (! $this->google_scholar_id) {
             return null;
         }
 

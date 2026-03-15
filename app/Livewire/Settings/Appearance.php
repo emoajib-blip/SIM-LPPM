@@ -18,13 +18,14 @@ class Appearance extends Component
 
     public function mount()
     {
-        if (!auth()->user()->hasRole('admin lppm')) {
+        if (! auth()->user()->hasRole('admin lppm')) {
             abort(403);
         }
 
         $this->dashboardName = Setting::where('key', 'dashboard_name')->value('value') ?? 'Dashboard';
         $this->loginTitle = Setting::where('key', 'login_title')->value('value') ?? 'Login to your account';
     }
+
     public function saveSettings()
     {
         Setting::updateOrCreate(

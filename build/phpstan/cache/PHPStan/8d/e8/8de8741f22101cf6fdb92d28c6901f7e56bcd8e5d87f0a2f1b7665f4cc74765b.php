@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/ProposalPdfService.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Services\ProposalPdfService
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-5b70476a531bc427fe95c89e3eff29a56c9dd2235bbad41914ab8bf2ad941dc5',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-49a1670cb60c204852d9e544890b77d7d7d655cf44eef8f320b7704c79bd1dd2',
    'data' => 
   array (
     'locatedSource' => 
@@ -27,7 +27,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 11,
-    'endLine' => 637,
+    'endLine' => 638,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => NULL,
@@ -135,7 +135,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * @return string Path to the combined PDF file
  */',
         'startLine' => 19,
-        'endLine' => 321,
+        'endLine' => 322,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -173,8 +173,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 326,
-            'endLine' => 326,
+            'startLine' => 327,
+            'endLine' => 327,
             'startColumn' => 34,
             'endColumn' => 51,
             'parameterIndex' => 0,
@@ -199,8 +199,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 326,
-            'endLine' => 326,
+            'startLine' => 327,
+            'endLine' => 327,
             'startColumn' => 54,
             'endColumn' => 87,
             'parameterIndex' => 1,
@@ -214,12 +214,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
               'code' => 'false',
               'attributes' => 
               array (
-                'startLine' => 326,
-                'endLine' => 326,
-                'startTokenPos' => 2613,
-                'startFilePos' => 14125,
-                'endTokenPos' => 2613,
-                'endFilePos' => 14129,
+                'startLine' => 327,
+                'endLine' => 327,
+                'startTokenPos' => 2616,
+                'startFilePos' => 14173,
+                'endTokenPos' => 2616,
+                'endFilePos' => 14177,
               ),
             ),
             'type' => 
@@ -237,8 +237,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 326,
-            'endLine' => 326,
+            'startLine' => 327,
+            'endLine' => 327,
             'startColumn' => 90,
             'endColumn' => 112,
             'parameterIndex' => 2,
@@ -261,8 +261,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Export a report to PDF.
  */',
-        'startLine' => 326,
-        'endLine' => 636,
+        'startLine' => 327,
+        'endLine' => 637,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

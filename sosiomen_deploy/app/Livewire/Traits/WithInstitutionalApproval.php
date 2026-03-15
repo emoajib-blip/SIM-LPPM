@@ -14,6 +14,7 @@ trait WithInstitutionalApproval
     {
         if (active_role() !== 'kepala lppm') {
             $this->toastError('Hanya Kepala LPPM yang dapat mengajukan laporan institusi.');
+
             return;
         }
 
@@ -33,7 +34,7 @@ trait WithInstitutionalApproval
             $this->toastSuccess('Laporan berhasil diajukan ke Rektor.');
             $this->dispatch('institutional-report-submitted');
         } catch (\Exception $e) {
-            $this->toastError('Gagal mengajukan laporan: ' . $e->getMessage());
+            $this->toastError('Gagal mengajukan laporan: '.$e->getMessage());
         }
     }
 
@@ -41,13 +42,14 @@ trait WithInstitutionalApproval
     {
         if (active_role() !== 'rektor') {
             $this->toastError('Hanya Rektor yang dapat menyetujui laporan institusi.');
+
             return;
         }
 
         try {
             DB::transaction(function () use ($type, $year) {
                 $report = InstitutionalReport::where('type', $type)->where('year', $year)->first();
-                if (!$report || $report->status !== InstitutionalReportStatus::SUBMITTED) {
+                if (! $report || $report->status !== InstitutionalReportStatus::SUBMITTED) {
                     throw new \Exception('Laporan tidak ditemukan atau belum diajukan.');
                 }
 
@@ -63,7 +65,7 @@ trait WithInstitutionalApproval
             $this->toastSuccess('Laporan berhasil disetujui.');
             $this->dispatch('institutional-report-approved');
         } catch (\Exception $e) {
-            $this->toastError('Gagal menyetujui laporan: ' . $e->getMessage());
+            $this->toastError('Gagal menyetujui laporan: '.$e->getMessage());
         }
     }
 
@@ -71,6 +73,7 @@ trait WithInstitutionalApproval
     {
         if (active_role() !== 'rektor') {
             $this->toastError('Hanya Rektor yang dapat menolak laporan institusi.');
+
             return;
         }
 
@@ -81,7 +84,7 @@ trait WithInstitutionalApproval
         try {
             DB::transaction(function () use ($type, $year) {
                 $report = InstitutionalReport::where('type', $type)->where('year', $year)->first();
-                if (!$report || $report->status !== InstitutionalReportStatus::SUBMITTED) {
+                if (! $report || $report->status !== InstitutionalReportStatus::SUBMITTED) {
                     throw new \Exception('Laporan tidak ditemukan atau belum diajukan.');
                 }
 
@@ -94,7 +97,7 @@ trait WithInstitutionalApproval
             $this->toastSuccess('Laporan telah dikembalikan untuk perbaikan.');
             $this->dispatch('institutional-report-rejected');
         } catch (\Exception $e) {
-            $this->toastError('Gagal memproses penolakan: ' . $e->getMessage());
+            $this->toastError('Gagal memproses penolakan: '.$e->getMessage());
         }
     }
 

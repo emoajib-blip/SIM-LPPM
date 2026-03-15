@@ -334,7 +334,7 @@ class MenuComposer
         ];
 
         return array_values(array_filter(array_map(
-            fn(array $item) => $this->formatItem($item, $user),
+            fn (array $item) => $this->formatItem($item, $user),
             $items,
         )));
     }
@@ -343,7 +343,7 @@ class MenuComposer
     {
         $allowedRoles = $item['roles'] ?? null;
 
-        if ($allowedRoles !== null && (!$user || !active_has_any_role($allowedRoles))) {
+        if ($allowedRoles !== null && (! $user || ! active_has_any_role($allowedRoles))) {
             return null;
         }
 
@@ -353,7 +353,7 @@ class MenuComposer
         $children = null;
         if (isset($item['children']) && is_array($item['children'])) {
             $children = array_values(array_filter(array_map(
-                fn(array $child) => $this->formatDropdownItem($child, $user),
+                fn (array $child) => $this->formatDropdownItem($child, $user),
                 $item['children'],
             )));
         }
@@ -393,7 +393,7 @@ class MenuComposer
     {
         $allowedRoles = $item['roles'] ?? null;
 
-        if ($allowedRoles !== null && (!$user || !active_has_any_role($allowedRoles))) {
+        if ($allowedRoles !== null && (! $user || ! active_has_any_role($allowedRoles))) {
             return null;
         }
 
@@ -403,7 +403,7 @@ class MenuComposer
         $children = null;
         if (isset($item['children']) && is_array($item['children'])) {
             $children = array_values(array_filter(array_map(
-                fn(array $child) => $this->formatDropdownItem($child, $user),
+                fn (array $child) => $this->formatDropdownItem($child, $user),
                 $item['children'],
             )));
         }
@@ -461,7 +461,7 @@ class MenuComposer
             // Check for query parameter matches (e.g. group=academic-structure)
             if (str_contains($pattern, '=')) {
                 // Ensure the route matches if one is defined
-                if ($routeName && !request()->routeIs($routeName)) {
+                if ($routeName && ! request()->routeIs($routeName)) {
                     continue;
                 }
 
@@ -488,7 +488,7 @@ class MenuComposer
             if ($expandIndex && str_ends_with($pattern, '.index')) {
                 $resourceRoute = substr($pattern, 0, -6);
 
-                if (request()->routeIs($resourceRoute . '.*')) {
+                if (request()->routeIs($resourceRoute.'.*')) {
                     return true;
                 }
             }

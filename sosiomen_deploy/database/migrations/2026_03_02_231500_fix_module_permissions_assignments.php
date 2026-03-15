@@ -3,7 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -20,7 +21,7 @@ return new class extends Migration {
             // Use DB table directly to avoid Eloquent UUID -> Integer casting (which results in 0)
             $permission = DB::table('permissions')->where('name', $permissionName)->where('guard_name', 'web')->first();
 
-            if (!$permission) {
+            if (! $permission) {
                 continue;
             }
 

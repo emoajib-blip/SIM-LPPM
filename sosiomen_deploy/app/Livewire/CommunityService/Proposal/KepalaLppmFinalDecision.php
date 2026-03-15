@@ -87,7 +87,7 @@ class KepalaLppmFinalDecision extends Component
         $user = Auth::user();
         $isKepalaLppm = $user->hasRole(['kepala lppm']);
 
-        if (!$isKepalaLppm) {
+        if (! $isKepalaLppm) {
             $message = 'Anda tidak memiliki akses untuk membuat keputusan';
             session()->flash('error', $message);
             $this->toastError($message);
@@ -105,7 +105,7 @@ class KepalaLppmFinalDecision extends Component
             return;
         }
 
-        if (!$proposal->allReviewsCompleted()) {
+        if (! $proposal->allReviewsCompleted()) {
             $message = 'Semua reviewer harus menyelesaikan review terlebih dahulu';
             session()->flash('error', $message);
             $this->toastError($message);
@@ -113,7 +113,7 @@ class KepalaLppmFinalDecision extends Component
             return;
         }
 
-        if (!in_array($this->decision, ['completed', 'revision_needed', 'rejected'])) {
+        if (! in_array($this->decision, ['completed', 'revision_needed', 'rejected'])) {
             $message = 'Keputusan tidak valid';
             session()->flash('error', $message);
             $this->toastError($message);
@@ -129,7 +129,7 @@ class KepalaLppmFinalDecision extends Component
             };
 
             // Validate transition
-            if (!$proposal->status->canTransitionTo($newStatus)) {
+            if (! $proposal->status->canTransitionTo($newStatus)) {
                 $message = 'Transisi status tidak diizinkan';
                 session()->flash('error', $message);
                 $this->toastError($message);
@@ -172,7 +172,7 @@ class KepalaLppmFinalDecision extends Component
                 'error' => $e->getMessage(),
             ]);
 
-            $message = 'Terjadi kesalahan saat membuat keputusan: ' . $e->getMessage();
+            $message = 'Terjadi kesalahan saat membuat keputusan: '.$e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
         }

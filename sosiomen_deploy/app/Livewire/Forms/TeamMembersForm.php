@@ -63,7 +63,7 @@ class TeamMembersForm extends Component
 
     public function openDeleteModal(int $index): void
     {
-        $this->dispatch('open-modal', modalId: 'modal-confirm-delete-' . $index);
+        $this->dispatch('open-modal', modalId: 'modal-confirm-delete-'.$index);
     }
 
     /**
@@ -127,7 +127,7 @@ class TeamMembersForm extends Component
 
         $this->validate($validationRules);
 
-        if (!$this->memberFound || (!$this->isManual && !$this->foundMember)) {
+        if (! $this->memberFound || (! $this->isManual && ! $this->foundMember)) {
             $this->addError('member_nidn', 'Silakan cek anggota terlebih dahulu');
 
             return;
@@ -236,7 +236,7 @@ class TeamMembersForm extends Component
 
     public function toggleManual(): void
     {
-        $this->isManual = !$this->isManual;
+        $this->isManual = ! $this->isManual;
         if ($this->isManual) {
             $this->member_type = 'mahasiswa';
             $this->memberFound = true; // Bypass check

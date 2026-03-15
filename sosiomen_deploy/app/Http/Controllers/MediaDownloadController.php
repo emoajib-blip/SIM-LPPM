@@ -13,7 +13,7 @@ class MediaDownloadController extends Controller
     public function download(Request $request, Media $media)
     {
         // 1. Strict UUID Validation
-        if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $media->uuid)) {
+        if (! preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $media->uuid)) {
             abort(400, 'Malformed Identifier');
         }
 
@@ -29,11 +29,11 @@ class MediaDownloadController extends Controller
 
         // Security Barrier: Ensure path is restricted to authorized storage
         $storagePath = realpath(storage_path());
-        if ($realPath === false || $storagePath === false || !str_starts_with($realPath, $storagePath)) {
+        if ($realPath === false || $storagePath === false || ! str_starts_with($realPath, $storagePath)) {
             abort(403, 'Path traversal detected or illegal file path access.');
         }
 
-        if (!file_exists($realPath)) {
+        if (! file_exists($realPath)) {
             abort(404, 'File fisik tidak ditemukan di server.');
         }
 
@@ -60,7 +60,7 @@ class MediaDownloadController extends Controller
         }
 
         if ($normalizedActualForCheck !== $normalizedRecorded) {
-            Log::critical('SECURITY ALERT: MIME-Type Mismatch for file ' . $media->uuid, [
+            Log::critical('SECURITY ALERT: MIME-Type Mismatch for file '.$media->uuid, [
                 'recorded_mime' => $media->mime_type,
                 'actual_mime' => $actualMime,
                 'user_id' => Auth::id(),

@@ -38,6 +38,262 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      'ff94b23d2dc922dd3dfb2bd47fef61dc' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'setting' => 'App\\Models\\Setting',
+          'masterdataservice' => 'App\\Services\\MasterDataService',
+          'computed' => 'Livewire\\Attributes\\Computed',
+        ),
+         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+         'functionName' => NULL,
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
+          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '6348a10afc7cd676876db9fd51833ce1' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'setting' => 'App\\Models\\Setting',
+          'masterdataservice' => 'App\\Services\\MasterDataService',
+          'computed' => 'Livewire\\Attributes\\Computed',
+        ),
+         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+         'functionName' => 'templateUrl',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
+          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'b591acac572c7bf7675e1a2cadbd7847' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'setting' => 'App\\Models\\Setting',
+          'masterdataservice' => 'App\\Services\\MasterDataService',
+          'computed' => 'Livewire\\Attributes\\Computed',
+        ),
+         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+         'functionName' => 'reportApprovalMode',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
+          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'a34e66108e9f9482b2074af2b163e109' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'setting' => 'App\\Models\\Setting',
+          'masterdataservice' => 'App\\Services\\MasterDataService',
+          'computed' => 'Livewire\\Attributes\\Computed',
+        ),
+         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+         'functionName' => 'proposalApprovalMode',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
+          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '6b28ecaf835257159b3b286c2c7202d0' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'setting' => 'App\\Models\\Setting',
+          'masterdataservice' => 'App\\Services\\MasterDataService',
+          'computed' => 'Livewire\\Attributes\\Computed',
+        ),
+         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+         'functionName' => 'logbookApprovalMode',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
+          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '18a54d3773299ffa0feab55886b0ccef' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'setting' => 'App\\Models\\Setting',
+          'masterdataservice' => 'App\\Services\\MasterDataService',
+          'computed' => 'Livewire\\Attributes\\Computed',
+        ),
+         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+         'functionName' => 'getReportType',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
+          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'f207385183ee3e7d9e0f179edfbd0721' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'setting' => 'App\\Models\\Setting',
+          'masterdataservice' => 'App\\Services\\MasterDataService',
+          'computed' => 'Livewire\\Attributes\\Computed',
+        ),
+         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+         'functionName' => 'reportApprovalPageTemplateUrl',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
+          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'd23d21cc890d32f531eafb6845e5e183' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'setting' => 'App\\Models\\Setting',
+          'masterdataservice' => 'App\\Services\\MasterDataService',
+          'computed' => 'Livewire\\Attributes\\Computed',
+        ),
+         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+         'functionName' => 'downloadReportApprovalPageTemplate',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
+          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
+          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
       '4449834978cc3e2707241f0418be88c0' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Livewire\\Concerns',
@@ -595,262 +851,6 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           4 => NULL,
         ),
       )),
-      'ff94b23d2dc922dd3dfb2bd47fef61dc' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Livewire\\Traits',
-         'uses' => 
-        array (
-          'setting' => 'App\\Models\\Setting',
-          'masterdataservice' => 'App\\Services\\MasterDataService',
-          'computed' => 'Livewire\\Attributes\\Computed',
-        ),
-         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-         'functionName' => NULL,
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
-         'traitData' => 
-        array (
-          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
-          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
-          3 => NULL,
-          4 => NULL,
-        ),
-      )),
-      '6348a10afc7cd676876db9fd51833ce1' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Livewire\\Traits',
-         'uses' => 
-        array (
-          'setting' => 'App\\Models\\Setting',
-          'masterdataservice' => 'App\\Services\\MasterDataService',
-          'computed' => 'Livewire\\Attributes\\Computed',
-        ),
-         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-         'functionName' => 'templateUrl',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
-         'traitData' => 
-        array (
-          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
-          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
-          3 => NULL,
-          4 => NULL,
-        ),
-      )),
-      'b591acac572c7bf7675e1a2cadbd7847' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Livewire\\Traits',
-         'uses' => 
-        array (
-          'setting' => 'App\\Models\\Setting',
-          'masterdataservice' => 'App\\Services\\MasterDataService',
-          'computed' => 'Livewire\\Attributes\\Computed',
-        ),
-         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-         'functionName' => 'reportApprovalMode',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
-         'traitData' => 
-        array (
-          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
-          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
-          3 => NULL,
-          4 => NULL,
-        ),
-      )),
-      'a34e66108e9f9482b2074af2b163e109' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Livewire\\Traits',
-         'uses' => 
-        array (
-          'setting' => 'App\\Models\\Setting',
-          'masterdataservice' => 'App\\Services\\MasterDataService',
-          'computed' => 'Livewire\\Attributes\\Computed',
-        ),
-         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-         'functionName' => 'proposalApprovalMode',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
-         'traitData' => 
-        array (
-          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
-          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
-          3 => NULL,
-          4 => NULL,
-        ),
-      )),
-      '6b28ecaf835257159b3b286c2c7202d0' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Livewire\\Traits',
-         'uses' => 
-        array (
-          'setting' => 'App\\Models\\Setting',
-          'masterdataservice' => 'App\\Services\\MasterDataService',
-          'computed' => 'Livewire\\Attributes\\Computed',
-        ),
-         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-         'functionName' => 'logbookApprovalMode',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
-         'traitData' => 
-        array (
-          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
-          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
-          3 => NULL,
-          4 => NULL,
-        ),
-      )),
-      '18a54d3773299ffa0feab55886b0ccef' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Livewire\\Traits',
-         'uses' => 
-        array (
-          'setting' => 'App\\Models\\Setting',
-          'masterdataservice' => 'App\\Services\\MasterDataService',
-          'computed' => 'Livewire\\Attributes\\Computed',
-        ),
-         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-         'functionName' => 'getReportType',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
-         'traitData' => 
-        array (
-          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
-          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
-          3 => NULL,
-          4 => NULL,
-        ),
-      )),
-      'f207385183ee3e7d9e0f179edfbd0721' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Livewire\\Traits',
-         'uses' => 
-        array (
-          'setting' => 'App\\Models\\Setting',
-          'masterdataservice' => 'App\\Services\\MasterDataService',
-          'computed' => 'Livewire\\Attributes\\Computed',
-        ),
-         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-         'functionName' => 'reportApprovalPageTemplateUrl',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
-         'traitData' => 
-        array (
-          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
-          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
-          3 => NULL,
-          4 => NULL,
-        ),
-      )),
-      'd23d21cc890d32f531eafb6845e5e183' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Livewire\\Traits',
-         'uses' => 
-        array (
-          'setting' => 'App\\Models\\Setting',
-          'masterdataservice' => 'App\\Services\\MasterDataService',
-          'computed' => 'Livewire\\Attributes\\Computed',
-        ),
-         'className' => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-         'functionName' => 'downloadReportApprovalPageTemplate',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => 'App\\Livewire\\Traits\\HasReportTemplates',
-         'traitData' => 
-        array (
-          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php',
-          1 => 'App\\Livewire\\CommunityService\\DailyNote\\Show',
-          2 => 'App\\Livewire\\Traits\\HasReportTemplates',
-          3 => NULL,
-          4 => NULL,
-        ),
-      )),
       '4266dba311172a2fac437faa30e2486b' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Livewire\\CommunityService\\DailyNote',
@@ -1288,11 +1288,11 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php' => 'b31f874e17e7ecc581508fcdcf7e9529acc57a9e61910d22077cc3b17fe7c7fd',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php' => '1239e86e53502478bf1f0770ac36e28e4ed564615dc3d34e58c85d5294a3c742',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/HasReportTemplates.php' => '5605122fff4fdddae2da814b88a0813f2073cda6f2c1a5bfa938d8172be58f44',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Concerns/HasToast.php' => '005cf1d6a13c6d7555286d4daf3ba7619e1368f86ba94c0fe7482da0c7b9474f',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/vendor/composer/../livewire/livewire/src/WithFileUploads.php' => 'd0dfb990e95ccd774c27719889835f46734cd1c9514903def29b8eba8572a8fe',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/vendor/composer/../livewire/livewire/src/Features/SupportFileUploads/WithFileUploads.php' => 'ac166713d47e8cee6b86d906d8a163b73d825599c9450b50600f8ad5e767ec3e',
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/HasReportTemplates.php' => '5605122fff4fdddae2da814b88a0813f2073cda6f2c1a5bfa938d8172be58f44',
     ),
   ),
 ));

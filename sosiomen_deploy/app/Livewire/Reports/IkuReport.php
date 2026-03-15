@@ -3,8 +3,8 @@
 namespace App\Livewire\Reports;
 
 use App\Livewire\Concerns\HasToast;
-use App\Traits\HasIkuCalculations;
 use App\Livewire\Traits\WithInstitutionalApproval;
+use App\Traits\HasIkuCalculations;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -12,10 +12,12 @@ use Livewire\Component;
 #[Layout('components.layouts.app', ['title' => 'Laporan Capaian IKU', 'pageTitle' => 'Laporan Capaian IKU'])]
 class IkuReport extends Component
 {
-    use HasIkuCalculations, WithInstitutionalApproval, HasToast;
+    use HasIkuCalculations, HasToast, WithInstitutionalApproval;
 
     public string $period;
+
     public string $search = '';
+
     public ?string $selectedIku = null;
 
     public function updatedSearch(): void

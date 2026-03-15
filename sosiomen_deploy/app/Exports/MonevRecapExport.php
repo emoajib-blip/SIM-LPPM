@@ -14,8 +14,7 @@ class MonevRecapExport implements FromView, ShouldAutoSize, WithStyles
     public function __construct(
         protected string $academicYear,
         protected ?string $semester = null
-    ) {
-    }
+    ) {}
 
     public function view(): View
     {
@@ -28,7 +27,7 @@ class MonevRecapExport implements FromView, ShouldAutoSize, WithStyles
                 'monevReviews.reviewer',
                 'progressReports' => function ($q) {
                     $q->where('reporting_period', 'final')->latest();
-                }
+                },
             ]);
 
         if ($this->semester) {

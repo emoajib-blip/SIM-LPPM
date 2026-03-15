@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $reviewed_at
  * @property \Illuminate\Support\Carbon|null $finalized_by_lppm_at
  * @property \Illuminate\Support\Carbon|null $reported_to_rektor_at
- *
  * @property-read \App\Models\Proposal $proposal
  * @property-read \App\Models\User $reviewer
  */

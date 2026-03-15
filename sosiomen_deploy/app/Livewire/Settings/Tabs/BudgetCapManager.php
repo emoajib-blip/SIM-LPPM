@@ -45,7 +45,7 @@ class BudgetCapManager extends Component
      */
     public function mount(): void
     {
-        if (!Auth::user()->hasRole('admin lppm')) {
+        if (! Auth::user()->hasRole('admin lppm')) {
             abort(403, 'Hanya Admin LPPM yang dapat mengakses pengaturan anggaran.');
         }
     }
@@ -77,7 +77,7 @@ class BudgetCapManager extends Component
             ->exists();
 
         if ($exists) {
-            $this->addError('year', 'Pengaturan anggaran untuk tahun ' . $this->year . ' sudah ada.');
+            $this->addError('year', 'Pengaturan anggaran untuk tahun '.$this->year.' sudah ada.');
 
             return;
         }

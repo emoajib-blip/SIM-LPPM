@@ -113,12 +113,12 @@ class IkuVerification extends Component
     public function render()
     {
         $mandatory = MandatoryOutput::with(['progressReport.proposal.submitter', 'proposalOutput'])
-            ->when($this->status === 'unverified', fn($q) => $q->where('is_verified', false))
-            ->when($this->status === 'verified', fn($q) => $q->where('is_verified', true))
+            ->when($this->status === 'unverified', fn ($q) => $q->where('is_verified', false))
+            ->when($this->status === 'verified', fn ($q) => $q->where('is_verified', true))
             ->when($this->search, function ($q) {
                 $q->where('journal_title', 'like', "%{$this->search}%")
                     ->orWhere('article_title', 'like', "%{$this->search}%")
-                    ->orWhereHas('progressReport.proposal', fn($pq) => $pq->where('title', 'like', "%{$this->search}%"));
+                    ->orWhereHas('progressReport.proposal', fn ($pq) => $pq->where('title', 'like', "%{$this->search}%"));
             })
             ->get()
             ->map(function (\App\Models\MandatoryOutput $item) {
@@ -127,18 +127,18 @@ class IkuVerification extends Component
                 $item->display_title = $item->journal_title ?? $item->article_title;
                 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 $item->submitter_name = $item->progressReport?->proposal?->submitter->name ?? 'Unknown';
-                $item->document_url = $item->document_file ? asset('storage/' . $item->document_file) : null;
+                $item->document_url = $item->document_file ? asset('storage/'.$item->document_file) : null;
 
                 return $item;
             });
 
         $additional = AdditionalOutput::with(['progressReport.proposal.submitter', 'proposalOutput'])
-            ->when($this->status === 'unverified', fn($q) => $q->where('is_verified', false))
-            ->when($this->status === 'verified', fn($q) => $q->where('is_verified', true))
+            ->when($this->status === 'unverified', fn ($q) => $q->where('is_verified', false))
+            ->when($this->status === 'verified', fn ($q) => $q->where('is_verified', true))
             ->when($this->search, function ($q) {
                 $q->where('journal_title', 'like', "%{$this->search}%")
                     ->orWhere('book_title', 'like', "%{$this->search}%")
-                    ->orWhereHas('progressReport.proposal', fn($pq) => $pq->where('title', 'like', "%{$this->search}%"));
+                    ->orWhereHas('progressReport.proposal', fn ($pq) => $pq->where('title', 'like', "%{$this->search}%"));
             })
             ->get()
             ->map(function (\App\Models\AdditionalOutput $item) {
@@ -147,17 +147,17 @@ class IkuVerification extends Component
                 $item->display_title = $item->journal_title ?? $item->book_title ?? $item->product_name;
                 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 $item->submitter_name = $item->progressReport?->proposal?->submitter->name ?? 'Unknown';
-                $item->document_url = $item->document_file ? asset('storage/' . $item->document_file) : null;
+                $item->document_url = $item->document_file ? asset('storage/'.$item->document_file) : null;
 
                 return $item;
             });
 
         $policies = \App\Models\PolicyInvolvement::with('user.identity')
-            ->when($this->status === 'unverified', fn($q) => $q->where('status', 'pending'))
-            ->when($this->status === 'verified', fn($q) => $q->where('status', 'verified'))
+            ->when($this->status === 'unverified', fn ($q) => $q->where('status', 'pending'))
+            ->when($this->status === 'verified', fn ($q) => $q->where('status', 'verified'))
             ->when($this->search, function ($q) {
                 $q->where('title', 'like', "%{$this->search}%")
-                    ->orWhereHas('user', fn($uq) => $uq->where('name', 'like', "%{$this->search}%"));
+                    ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
             })
             ->get()
             ->map(function (\App\Models\PolicyInvolvement $item) {

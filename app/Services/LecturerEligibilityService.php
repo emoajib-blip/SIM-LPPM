@@ -47,7 +47,7 @@ class LecturerEligibilityService
 
         // --- 1. Schedule Validation ---
         $scheduleInfo = $this->getScheduleStatus($user);
-        if (!$scheduleInfo['research_open'] && !$scheduleInfo['pkm_open']) {
+        if (! $scheduleInfo['research_open'] && ! $scheduleInfo['pkm_open']) {
             $reasons[] = 'Sistem saat ini ditutup untuk pengajuan usulan baru (bukan periode pendaftaran).';
         }
 
@@ -74,7 +74,7 @@ class LecturerEligibilityService
         foreach ($prevProposals as $proposal) {
             // Check for Final Report
             $hasFinalReport = ProgressReport::where('proposal_id', $proposal->id)->where('reporting_period', 'final')->whereIn('status', ['approved', 'completed'])->exists();
-            if (!$hasFinalReport) {
+            if (! $hasFinalReport) {
                 $reasons[] = "Proposal '{$proposal->title}' belum memiliki Laporan Akhir yang disetujui.";
             }
 
@@ -83,7 +83,7 @@ class LecturerEligibilityService
             /** @var \App\Models\ProposalOutput $target */
             foreach ($targets as $target) {
                 $isSubmitted = DB::table('mandatory_outputs')->join('progress_reports', 'mandatory_outputs.progress_report_id', '=', 'progress_reports.id')->where('progress_reports.proposal_id', $proposal->id)->where('mandatory_outputs.proposal_output_id', $target->id)->exists();
-                if (!$isSubmitted) {
+                if (! $isSubmitted) {
                     $reasons[] = "Proposal '{$proposal->title}' belum memenuhi luaran wajib: {$target->type}.";
                 }
             }
@@ -156,7 +156,7 @@ class LecturerEligibilityService
         $end = \App\Models\Setting::where('key', $endKey)->value('value');
 
         // If dates are not set, default to open (as per plan for flexibility)
-        if (!$start || !$end) {
+        if (! $start || ! $end) {
             return true;
         }
 
@@ -175,7 +175,7 @@ class LecturerEligibilityService
         $start = \App\Models\Setting::where('key', $startKey)->value('value');
         $end = \App\Models\Setting::where('key', $endKey)->value('value');
 
-        if (!$start || !$end) {
+        if (! $start || ! $end) {
             return true;
         }
 

@@ -26,9 +26,10 @@ Route::get('install', InstallerWizard::class)
 Route::get('/dev/migrate', function () {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        return "Migrasi Berhasil: " . \Illuminate\Support\Facades\Artisan::output();
+
+        return 'Migrasi Berhasil: '.\Illuminate\Support\Facades\Artisan::output();
     } catch (\Exception $e) {
-        return "Error Migrasi: " . $e->getMessage();
+        return 'Error Migrasi: '.$e->getMessage();
     }
 });
 
@@ -271,7 +272,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('media.download');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
 
 // Rute Ekspor Laporan via Standar HTTP (Bypass Livewire)
 Route::group(['middleware' => ['auth', 'verified', 'permission:module_laporan']], function () {

@@ -37,7 +37,7 @@ trait WithApproval
                 default => throw new \Exception('Keputusan persetujuan tidak valid.'),
             };
 
-            if (!$proposal->status->canTransitionTo($newStatus)) {
+            if (! $proposal->status->canTransitionTo($newStatus)) {
                 throw new \Exception('Status transisi tidak valid.');
             }
 
@@ -97,7 +97,7 @@ trait WithApproval
                 default => throw new \Exception('Keputusan dekan tidak valid.'),
             };
 
-            if (!$proposal->status->canTransitionTo($newStatus)) {
+            if (! $proposal->status->canTransitionTo($newStatus)) {
                 throw new \Exception('Status transisi tidak valid.');
             }
 

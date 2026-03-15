@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/EligibilityService.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Services\EligibilityService
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-5f68fa2ab285097ec19bdbad162b815065771b3deb2e814543141ee42eaaa774',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-b0530864d114e34566d4e7a5c7db486f92a967c9e1e235e7fe84afe461e5de7b',
    'data' => 
   array (
     'locatedSource' => 
@@ -362,7 +362,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * Get all eligible research schemes for a dosen
  */',
         'startLine' => 40,
-        'endLine' => 46,
+        'endLine' => 45,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -400,8 +400,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 51,
-            'endLine' => 51,
+            'startLine' => 50,
+            'endLine' => 50,
             'startColumn' => 50,
             'endColumn' => 67,
             'parameterIndex' => 0,
@@ -424,8 +424,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all ineligible research schemes for a dosen with reasons
  */',
-        'startLine' => 51,
-        'endLine' => 66,
+        'startLine' => 50,
+        'endLine' => 64,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -463,8 +463,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 71,
-            'endLine' => 71,
+            'startLine' => 69,
+            'endLine' => 69,
             'startColumn' => 56,
             'endColumn' => 73,
             'parameterIndex' => 0,
@@ -487,8 +487,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all eligible community service schemes for a dosen
  */',
-        'startLine' => 71,
-        'endLine' => 77,
+        'startLine' => 69,
+        'endLine' => 75,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -526,8 +526,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 84,
-            'endLine' => 84,
+            'startLine' => 82,
+            'endLine' => 82,
             'startColumn' => 39,
             'endColumn' => 56,
             'parameterIndex' => 0,
@@ -552,8 +552,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 84,
-            'endLine' => 84,
+            'startLine' => 82,
+            'endLine' => 82,
             'startColumn' => 59,
             'endColumn' => 70,
             'parameterIndex' => 1,
@@ -578,8 +578,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  *
  * @return array [\'eligible\' => bool, \'passed_checks\' => [], \'failed_checks\' => []]
  */',
-        'startLine' => 84,
-        'endLine' => 259,
+        'startLine' => 82,
+        'endLine' => 257,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -617,8 +617,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 264,
-            'endLine' => 264,
+            'startLine' => 262,
+            'endLine' => 262,
             'startColumn' => 52,
             'endColumn' => 73,
             'parameterIndex' => 0,
@@ -641,8 +641,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get count of dosen eligible for a research scheme
  */',
-        'startLine' => 264,
-        'endLine' => 274,
+        'startLine' => 262,
+        'endLine' => 272,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -680,8 +680,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 279,
-            'endLine' => 279,
+            'startLine' => 277,
+            'endLine' => 277,
             'startColumn' => 59,
             'endColumn' => 80,
             'parameterIndex' => 0,
@@ -704,8 +704,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get count of dosen ineligible for a research scheme with breakdown
  */',
-        'startLine' => 279,
-        'endLine' => 313,
+        'startLine' => 277,
+        'endLine' => 311,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -743,8 +743,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 318,
-            'endLine' => 318,
+            'startLine' => 316,
+            'endLine' => 316,
             'startColumn' => 58,
             'endColumn' => 79,
             'parameterIndex' => 0,
@@ -767,7 +767,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get detailed eligibility status for all dosen against a scheme
  */',
-        'startLine' => 318,
+        'startLine' => 316,
         'endLine' => 338,
         'startColumn' => 5,
         'endColumn' => 5,

@@ -10,15 +10,15 @@ class ApproveProposalAction
 {
     public function __construct(
         protected NotificationService $notificationService
-    ) {
-    }
+    ) {}
+
     /**
      * Approve or reject a proposal.
      * Only possible if all reviewers have completed their reviews.
      */
     public function execute(Proposal $proposal, string $decision): array
     {
-        if (!in_array($decision, [ProposalStatus::COMPLETED->value, ProposalStatus::REJECTED->value])) {
+        if (! in_array($decision, [ProposalStatus::COMPLETED->value, ProposalStatus::REJECTED->value])) {
             return [
                 'success' => false,
                 'message' => 'Keputusan harus "completed" atau "rejected".',
@@ -26,7 +26,7 @@ class ApproveProposalAction
         }
 
         // Check if all reviewers completed
-        if (!$proposal->allReviewersCompleted()) {
+        if (! $proposal->allReviewersCompleted()) {
             $pendingReviewers = $proposal->getPendingReviewers();
 
             return [

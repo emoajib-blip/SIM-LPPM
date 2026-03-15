@@ -14,8 +14,7 @@ class CompleteReviewAction
 {
     public function __construct(
         protected NotificationService $notificationService
-    ) {
-    }
+    ) {}
 
     /**
      * Complete a review submission.
@@ -39,7 +38,7 @@ class CompleteReviewAction
         }
 
         $validRecommendations = ['approved', 'rejected', 'revision_needed'];
-        if (!in_array($recommendation, $validRecommendations)) {
+        if (! in_array($recommendation, $validRecommendations)) {
             return [
                 'success' => false,
                 'message' => 'Rekomendasi harus "approved", "rejected", atau "revision_needed".',
@@ -112,7 +111,7 @@ class CompleteReviewAction
         $recipients = collect()
             ->push($proposal->submitter) // Submitter
             ->merge($proposal->teamMembers) // Team Members
-            ->filter(fn($user) => $user && $user->id !== $reviewer->id) // Exclude reviewer
+            ->filter(fn ($user) => $user && $user->id !== $reviewer->id) // Exclude reviewer
             ->unique('id')
             ->values();
 

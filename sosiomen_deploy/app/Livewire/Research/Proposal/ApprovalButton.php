@@ -66,7 +66,7 @@ class ApprovalButton extends Component
         $user = Auth::user();
         $isAdmin = $user->hasRole(['admin lppm', 'kepala lppm', 'rektor']);
 
-        if (!$isAdmin) {
+        if (! $isAdmin) {
             $message = 'Anda tidak memiliki akses untuk approve proposal';
             $this->dispatch('error', message: $message);
             $this->toastError($message);
@@ -94,7 +94,7 @@ class ApprovalButton extends Component
         $user = Auth::user();
         $isAdmin = $user->hasRole(['admin lppm', 'kepala lppm', 'rektor']);
 
-        if (!$isAdmin) {
+        if (! $isAdmin) {
             $message = 'Anda tidak memiliki akses untuk reject proposal';
             $this->dispatch('error', message: $message);
             $this->toastError($message);

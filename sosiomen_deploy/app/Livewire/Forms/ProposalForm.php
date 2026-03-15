@@ -247,7 +247,7 @@ class ProposalForm extends Form
             ->toArray();
 
         // Load student members from JSON column
-        if (!empty($proposal->student_members)) {
+        if (! empty($proposal->student_members)) {
             $studentMembersJSON = $proposal->student_members;
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
@@ -385,7 +385,7 @@ class ProposalForm extends Form
             'cluster_level1_id' => $this->cluster_level1_id,
             'cluster_level2_id' => $this->cluster_level2_id ?: null,
             'cluster_level3_id' => $this->cluster_level3_id ?: null,
-            'sbk_value' => !empty($this->sbk_value) ? $this->sbk_value : null,
+            'sbk_value' => ! empty($this->sbk_value) ? $this->sbk_value : null,
             'duration_in_years' => (int) $this->duration_in_years,
             'start_year' => (int) $this->start_year,
             'summary' => $this->summary,
@@ -402,12 +402,12 @@ class ProposalForm extends Form
         $this->attachTargetedIkus($proposal);
 
         // Attach TKT Levels
-        if (!empty($this->tkt_results)) {
+        if (! empty($this->tkt_results)) {
             $research->tktLevels()->sync($this->tkt_results);
         }
 
         // Attach TKT Indicators
-        if (!empty($this->tkt_indicator_scores)) {
+        if (! empty($this->tkt_indicator_scores)) {
             $indicatorSyncData = [];
             foreach ($this->tkt_indicator_scores as $indicatorId => $score) {
                 $indicatorSyncData[$indicatorId] = ['score' => $score];
@@ -472,7 +472,7 @@ class ProposalForm extends Form
             'cluster_level1_id' => $this->cluster_level1_id,
             'cluster_level2_id' => $this->cluster_level2_id ?: null,
             'cluster_level3_id' => $this->cluster_level3_id ?: null,
-            'sbk_value' => !empty($this->sbk_value) ? $this->sbk_value : null,
+            'sbk_value' => ! empty($this->sbk_value) ? $this->sbk_value : null,
             'duration_in_years' => (int) $this->duration_in_years,
             'start_year' => (int) $this->start_year,
             'summary' => $this->summary,
@@ -519,7 +519,7 @@ class ProposalForm extends Form
                     ]);
 
                     // Update substance file ONLY if a new file is uploaded
-                    if ($this->substance_file && !is_string($this->substance_file)) {
+                    if ($this->substance_file && ! is_string($this->substance_file)) {
                         $detailable
                             ->addMedia($this->substance_file->getRealPath())
                             ->usingName($this->substance_file->getClientOriginalName())
@@ -532,7 +532,7 @@ class ProposalForm extends Form
                     }
 
                     // Update approval file ONLY if a new file is uploaded
-                    if ($this->approval_file && !is_string($this->approval_file)) {
+                    if ($this->approval_file && ! is_string($this->approval_file)) {
                         $detailable
                             ->addMedia($this->approval_file->getRealPath())
                             ->usingName($this->approval_file->getClientOriginalName())
@@ -546,12 +546,12 @@ class ProposalForm extends Form
                     // This preserves the existing file in the media collection.
 
                     // Sync TKT Levels
-                    if (!empty($this->tkt_results)) {
+                    if (! empty($this->tkt_results)) {
                         $detailable->tktLevels()->sync($this->tkt_results);
                     }
 
                     // Sync TKT Indicators
-                    if (!empty($this->tkt_indicator_scores)) {
+                    if (! empty($this->tkt_indicator_scores)) {
                         $indicatorSyncData = [];
                         foreach ($this->tkt_indicator_scores as $indicatorId => $score) {
                             $indicatorSyncData[$indicatorId] = ['score' => $score];
@@ -570,7 +570,7 @@ class ProposalForm extends Form
                     ]);
 
                     // Update substance file ONLY if a new file is uploaded
-                    if ($this->substance_file && !is_string($this->substance_file)) {
+                    if ($this->substance_file && ! is_string($this->substance_file)) {
                         $detailable
                             ->addMedia($this->substance_file->getRealPath())
                             ->usingName($this->substance_file->getClientOriginalName())
@@ -583,7 +583,7 @@ class ProposalForm extends Form
                     }
 
                     // Update approval file ONLY if a new file is uploaded
-                    if ($this->approval_file && !is_string($this->approval_file)) {
+                    if ($this->approval_file && ! is_string($this->approval_file)) {
                         $detailable
                             ->addMedia($this->approval_file->getRealPath())
                             ->usingName($this->approval_file->getClientOriginalName())
@@ -607,7 +607,7 @@ class ProposalForm extends Form
                 'cluster_level1_id' => $this->cluster_level1_id,
                 'cluster_level2_id' => $this->cluster_level2_id ?: null,
                 'cluster_level3_id' => $this->cluster_level3_id ?: null,
-                'sbk_value' => !empty($this->sbk_value) ? $this->sbk_value : null,
+                'sbk_value' => ! empty($this->sbk_value) ? $this->sbk_value : null,
                 'duration_in_years' => (int) $this->duration_in_years,
                 'start_year' => (int) $this->start_year,
                 'summary' => $this->summary,
@@ -679,7 +679,7 @@ class ProposalForm extends Form
             'eligibility_check' => [
                 function ($attribute, $value, $fail) {
                     $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
-                    if (!$schemeId) {
+                    if (! $schemeId) {
                         return;
                     }
 
@@ -687,12 +687,12 @@ class ProposalForm extends Form
                         ? \App\Models\ResearchScheme::find($schemeId)
                         : \App\Models\CommunityServiceScheme::find($schemeId);
 
-                    if (!$scheme) {
+                    if (! $scheme) {
                         return;
                     }
 
                     $result = app(\App\Actions\Proposal\IdentityEligibilityAction::class)->execute(Auth::user(), $scheme);
-                    if (!$result['is_eligible']) {
+                    if (! $result['is_eligible']) {
                         $fail($result['reason']);
                     }
                 },
@@ -809,7 +809,7 @@ class ProposalForm extends Form
         $existingMemberIds = $existingMembers->keys()->toArray();
 
         // Add other team members (anggota) - filter out ketua if it exists in members array
-        if (!empty($this->members)) {
+        if (! empty($this->members)) {
             foreach ($this->members as $member) {
                 // Skip the ketua (submitter) from the members list
                 if (isset($member['role']) && $member['role'] === 'ketua') {
@@ -833,7 +833,7 @@ class ProposalForm extends Form
                 $identity = \App\Models\Identity::where('identity_id', $member['nidn'])->first();
 
                 // If not found and it's a manual entry, create a shadow user
-                if (!$identity && !empty($member['is_manual'])) {
+                if (! $identity && ! empty($member['is_manual'])) {
                     $user = \App\Models\User::firstOrCreate(
                         ['email' => $member['email']],
                         [
@@ -842,8 +842,8 @@ class ProposalForm extends Form
                         ]
                     );
 
-                    if (!$user->identity) {
-                        $institutionId = \App\Models\Institution::where('name', 'like', '%' . ($member['institution'] ?? '') . '%')->first()?->id;
+                    if (! $user->identity) {
+                        $institutionId = \App\Models\Institution::where('name', 'like', '%'.($member['institution'] ?? '').'%')->first()?->id;
 
                         $user->identity()->create([
                             'identity_id' => $member['nidn'],
@@ -856,7 +856,7 @@ class ProposalForm extends Form
                     // Only assign if the role actually exists in the system
                     $roleExists = \Spatie\Permission\Models\Role::where('name', $roleName)->exists();
 
-                    if ($roleExists && !$user->hasRole($roleName)) {
+                    if ($roleExists && ! $user->hasRole($roleName)) {
                         $user->assignRole($roleName);
                     }
 
@@ -867,7 +867,7 @@ class ProposalForm extends Form
                     $userId = $identity->user_id;
 
                     // Preserve status if already exists, otherwise default to pending
-                    $status = !empty($member['is_manual']) ? 'accepted' : 'pending';
+                    $status = ! empty($member['is_manual']) ? 'accepted' : 'pending';
                     if (isset($existingMembers[$userId])) {
                         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                         // @phpstan-ignore-next-line
@@ -881,7 +881,7 @@ class ProposalForm extends Form
                     ];
 
                     // Send invitation notification ONLY if it's a completely new member AND not manual
-                    if (!in_array($userId, $existingMemberIds) && empty($member['is_manual'])) {
+                    if (! in_array($userId, $existingMemberIds) && empty($member['is_manual'])) {
                         $invitee = $identity->user;
                         $notificationService = app(\App\Services\NotificationService::class);
                         $notificationService->notifyTeamInvitationSent($proposal, $submitter, $invitee);
@@ -899,7 +899,7 @@ class ProposalForm extends Form
 
     private function attachOutputs(Proposal $proposal): void
     {
-        if (!empty($this->outputs)) {
+        if (! empty($this->outputs)) {
             foreach ($this->outputs as $output) {
                 $proposal->outputs()->create([
                     'output_year' => $output['year'] ?? 1, // date('Y'),
@@ -915,7 +915,7 @@ class ProposalForm extends Form
 
     private function attachBudgetItems(Proposal $proposal): void
     {
-        if (!empty($this->budget_items)) {
+        if (! empty($this->budget_items)) {
             // Validate budget before saving
             $this->validateBudgetGroupPercentages();
             $this->validateBudgetCap($this->getProposalType());
@@ -927,8 +927,8 @@ class ProposalForm extends Form
                 }
 
                 // Ensure IDs are null if empty string to avoid DB errors
-                $groupId = !empty($item['budget_group_id']) ? $item['budget_group_id'] : null;
-                $componentId = !empty($item['budget_component_id']) ? $item['budget_component_id'] : null;
+                $groupId = ! empty($item['budget_group_id']) ? $item['budget_group_id'] : null;
+                $componentId = ! empty($item['budget_component_id']) ? $item['budget_component_id'] : null;
 
                 $proposal->budgetItems()->create([
                     'year' => $item['year'] ?? 1,
@@ -947,18 +947,18 @@ class ProposalForm extends Form
 
     private function attachPartners(Proposal $proposal): void
     {
-        if (!empty($this->partner_ids)) {
+        if (! empty($this->partner_ids)) {
             $proposal->partners()->sync($this->partner_ids);
         }
     }
 
     private function attachKeywords(Proposal $proposal): void
     {
-        if (!empty($this->keywords)) {
+        if (! empty($this->keywords)) {
             $keywordIds = [];
             foreach ($this->keywords as $keywordName) {
                 $trimmedName = trim($keywordName);
-                if (!empty($trimmedName)) {
+                if (! empty($trimmedName)) {
                     $keyword = \App\Models\Keyword::firstOrCreate(['name' => $trimmedName]);
                     $keywordIds[] = $keyword->id;
                 }
@@ -971,7 +971,7 @@ class ProposalForm extends Form
 
     private function attachSdgs(Proposal $proposal): void
     {
-        if (!empty($this->sdg_ids)) {
+        if (! empty($this->sdg_ids)) {
             $proposal->sdgs()->sync($this->sdg_ids);
         } else {
             $proposal->sdgs()->detach();
@@ -980,7 +980,7 @@ class ProposalForm extends Form
 
     private function attachTargetedIkus(Proposal $proposal): void
     {
-        if (!empty($this->targeted_iku_ids)) {
+        if (! empty($this->targeted_iku_ids)) {
             $proposal->targetedIkus()->sync($this->targeted_iku_ids);
         } else {
             $proposal->targetedIkus()->detach();
@@ -1028,7 +1028,7 @@ class ProposalForm extends Form
             // Calculate total spent in this group
             $groupTotal = collect($this->budget_items)
                 ->where('budget_group_id', $group->id)
-                ->sum(fn($item) => (float) ($item['total'] ?? 0));
+                ->sum(fn ($item) => (float) ($item['total'] ?? 0));
 
             // Calculate percentage used BASED ON BUDGET CAP
             $percentageUsed = ($groupTotal / $budgetCap) * 100;
@@ -1047,7 +1047,7 @@ class ProposalForm extends Form
             }
         }
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             throw \Illuminate\Validation\ValidationException::withMessages([
                 'budget_items' => $errors,
             ]);
@@ -1068,7 +1068,7 @@ class ProposalForm extends Form
         }
 
         // Calculate total budget
-        $totalBudget = collect($this->budget_items)->sum(fn($item) => (float) ($item['total'] ?? 0));
+        $totalBudget = collect($this->budget_items)->sum(fn ($item) => (float) ($item['total'] ?? 0));
 
         if ($totalBudget <= 0) {
             return;

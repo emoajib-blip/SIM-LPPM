@@ -53,7 +53,7 @@ class MonevIndex extends Component
 
     public function mount()
     {
-        if (!Auth::user()->hasRole('admin lppm')) {
+        if (! Auth::user()->hasRole('admin lppm')) {
             abort(403);
         }
 
@@ -106,26 +106,26 @@ class MonevIndex extends Component
 
     public function saveMonev()
     {
-        $isNew = !$this->selectedMonev;
+        $isNew = ! $this->selectedMonev;
 
         $this->validate([
             'monev_date' => 'required|date',
             'progress_percentage' => 'required|integer|min:0|max:100',
             'notes' => 'nullable|string',
             'berita_acara' => [
-                $isNew || !$this->selectedMonev?->hasMedia('berita_acara') ? 'required' : 'nullable',
+                $isNew || ! $this->selectedMonev?->hasMedia('berita_acara') ? 'required' : 'nullable',
                 'file',
                 'mimes:pdf,doc,docx',
                 'max:10240',
             ],
             'borang' => [
-                $isNew || !$this->selectedMonev?->hasMedia('borang') ? 'required' : 'nullable',
+                $isNew || ! $this->selectedMonev?->hasMedia('borang') ? 'required' : 'nullable',
                 'file',
                 'mimes:pdf,doc,docx',
                 'max:10240',
             ],
             'rekap_penilaian' => [
-                $isNew || !$this->selectedMonev?->hasMedia('rekap_penilaian') ? 'required' : 'nullable',
+                $isNew || ! $this->selectedMonev?->hasMedia('rekap_penilaian') ? 'required' : 'nullable',
                 'file',
                 'mimes:pdf,doc,docx',
                 'max:10240',

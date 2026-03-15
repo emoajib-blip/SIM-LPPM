@@ -21,7 +21,7 @@ class ReviewMonitoring extends Component
 
     public function mount()
     {
-        if (!Auth::user()->hasRole('admin lppm')) {
+        if (! Auth::user()->hasRole('admin lppm')) {
             abort(403);
         }
     }

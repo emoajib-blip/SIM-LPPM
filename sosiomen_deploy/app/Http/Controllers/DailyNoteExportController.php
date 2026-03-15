@@ -20,12 +20,12 @@ class DailyNoteExportController extends Controller
         $isSubmitter = $proposal->submitter_id === $user->id;
         $isLppm = $user->hasRole(['admin lppm', 'kepala lppm', 'superadmin', 'rektor', 'dekan']);
 
-        if (!$isSubmitter && !$isMember && !$isLppm) {
+        if (! $isSubmitter && ! $isMember && ! $isLppm) {
             abort(403, 'Anda tidak memiliki akses untuk mengekspor catatan harian ini.');
         }
 
         $proposal->load([
-            'dailyNotes' => fn($q) => $q->with(['media.model', 'budgetGroup'])->latest('activity_date'),
+            'dailyNotes' => fn ($q) => $q->with(['media.model', 'budgetGroup'])->latest('activity_date'),
             'submitter.identity.studyProgram',
             'researchScheme',
             'communityServiceScheme',
@@ -40,7 +40,7 @@ class DailyNoteExportController extends Controller
         ])->setPaper('a4', 'portrait');
 
         $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
-        $filename = 'Catatan_Harian_' . $title . '.pdf';
+        $filename = 'Catatan_Harian_'.$title.'.pdf';
 
         if (ob_get_level()) {
 

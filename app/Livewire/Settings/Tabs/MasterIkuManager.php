@@ -5,13 +5,12 @@ namespace App\Livewire\Settings\Tabs;
 use App\Livewire\Concerns\HasToast;
 use App\Models\MasterIku;
 use App\Models\Setting;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 /**
  * MasterIkuManager
- * 
+ *
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager.
  * This component manages IKU targets, weights, and manual override status.
  */
@@ -20,25 +19,31 @@ class MasterIkuManager extends Component
     use HasToast, WithPagination;
 
     public ?int $editingId = null;
+
     public string $modalTitle = 'Master IKU';
 
     public string $name = '';
+
     public string $code = '';
+
     public string $description = '';
 
     public $target_percentage = 0;
+
     public $internal_weight = 0;
+
     public bool $is_active = true;
 
     // Manual Override Fields (Stored in Settings)
     public bool $is_manual = false;
+
     public $manual_value = 0;
 
     protected function rules()
     {
         return [
             'name' => 'required|min:3',
-            'code' => 'required|min:2|unique:master_ikus,code,' . $this->editingId,
+            'code' => 'required|min:2|unique:master_ikus,code,'.$this->editingId,
             'target_percentage' => 'required|numeric|min:0|max:100',
             'internal_weight' => 'required|numeric|min:0|max:100',
         ];
@@ -72,7 +77,7 @@ class MasterIkuManager extends Component
         $this->is_manual = (bool) Setting::where('key', "iku_manual_{$item->code}")->value('value');
         $this->manual_value = Setting::where('key', "iku_manual_value_{$item->code}")->value('value') ?? 0;
 
-        $this->modalTitle = 'Edit Master IKU: ' . $item->code;
+        $this->modalTitle = 'Edit Master IKU: '.$item->code;
         $this->dispatch('open-modal', modalId: 'modal-master-iku');
     }
 
@@ -110,7 +115,7 @@ class MasterIkuManager extends Component
 
     public function toggleStatus(MasterIku $item): void
     {
-        $item->update(['is_active' => !$item->is_active]);
+        $item->update(['is_active' => ! $item->is_active]);
         $this->toastSuccess('Status berhasil diubah');
     }
 

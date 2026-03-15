@@ -70,7 +70,7 @@ class ReviewerForm extends Component
 
         // Initialize empty scores for active criteria if not exists
         foreach ($this->activeCriterias as $criteria) {
-            if (!isset($this->scores[$criteria->id])) {
+            if (! isset($this->scores[$criteria->id])) {
                 $this->scores[$criteria->id] = [
                     'score' => '',
                     'acuan' => '',
@@ -208,7 +208,7 @@ class ReviewerForm extends Component
     public function canEditReview(): bool
     {
         $review = $this->myReview;
-        if (!$review) {
+        if (! $review) {
             return false;
         }
 
@@ -259,7 +259,7 @@ class ReviewerForm extends Component
     public function previousRoundLogs()
     {
         $review = $this->myReview;
-        if (!$review) {
+        if (! $review) {
             return collect();
         }
 
@@ -274,7 +274,7 @@ class ReviewerForm extends Component
     public function getScoresForRound(int $round)
     {
         $review = $this->myReview;
-        if (!$review) {
+        if (! $review) {
             return collect();
         }
 
@@ -300,7 +300,7 @@ class ReviewerForm extends Component
 
     public function toggleForm(): void
     {
-        $this->showForm = !$this->showForm;
+        $this->showForm = ! $this->showForm;
 
         // Mark as started when form is opened
         if ($this->showForm) {
@@ -315,7 +315,7 @@ class ReviewerForm extends Component
 
         $review = $this->myReview;
 
-        if (!$review) {
+        if (! $review) {
             $message = 'Anda bukan reviewer untuk proposal ini';
             $this->toastError($message);
             $this->dispatch('error', message: $message);
@@ -347,7 +347,7 @@ class ReviewerForm extends Component
                 // This handles: status update, logging, notifications, and final decision check
                 $result = $completeReviewAction->execute($review, $this->reviewNotes, $this->recommendation);
 
-                if (!$result['success']) {
+                if (! $result['success']) {
                     throw new \Exception($result['message']);
                 }
             });
@@ -368,7 +368,7 @@ class ReviewerForm extends Component
             $this->toastSuccess($message);
             $this->dispatch('review-submitted', proposalId: $this->proposalId);
         } catch (\Exception $e) {
-            $message = 'Gagal menyimpan review: ' . $e->getMessage();
+            $message = 'Gagal menyimpan review: '.$e->getMessage();
             $this->addError('error', $message);
             $this->toastError($message);
         }

@@ -61,7 +61,7 @@ class RoleSeeder extends Seeder
 
             foreach ($roleNames as $roleName) {
                 $role = \App\Models\Role::where('name', $roleName)->where('guard_name', 'web')->first();
-                if ($role && !$role->hasPermissionTo($permissionName)) {
+                if ($role && ! $role->hasPermissionTo($permissionName)) {
                     $role->givePermissionTo($permission);
                 }
             }

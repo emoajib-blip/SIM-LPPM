@@ -53,7 +53,7 @@ class Show extends Component
         /** @var \App\Services\LecturerEligibilityService $service */
         $service = app(\App\Services\LecturerEligibilityService::class);
 
-        if ($this->canEdit && !$service->isFinalReportOpen($type)) {
+        if ($this->canEdit && ! $service->isFinalReportOpen($type)) {
             $this->canEdit = false;
         }
 
@@ -94,7 +94,7 @@ class Show extends Component
      */
     public function save(): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             abort(403);
         }
 
@@ -124,7 +124,7 @@ class Show extends Component
             // Let Livewire handle validation errors
             throw $e;
         } catch (\Exception $e) {
-            $message = 'Gagal menyimpan laporan: ' . $e->getMessage();
+            $message = 'Gagal menyimpan laporan: '.$e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
         }
@@ -135,7 +135,7 @@ class Show extends Component
      */
     public function submit(): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             abort(403);
         }
 
@@ -144,7 +144,7 @@ class Show extends Component
         $totalUsedBudget = (float) $this->proposal->dailyNotes()->sum('amount');
 
         if ($totalProposedBudget > 0 && $totalUsedBudget != $totalProposedBudget) {
-            $message = 'Gagal mengajukan: Total pemakaian anggaran di Catatan Harian (Rp ' . number_format($totalUsedBudget, 0, ',', '.') . ') belum mencapai 100% dari total RAB yang disetujui (Rp ' . number_format($totalProposedBudget, 0, ',', '.') . ').';
+            $message = 'Gagal mengajukan: Total pemakaian anggaran di Catatan Harian (Rp '.number_format($totalUsedBudget, 0, ',', '.').') belum mencapai 100% dari total RAB yang disetujui (Rp '.number_format($totalProposedBudget, 0, ',', '.').').';
             session()->flash('error', $message);
             $this->toastError($message);
 
@@ -174,7 +174,7 @@ class Show extends Component
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
-            $message = 'Gagal mengajukan laporan: ' . $e->getMessage();
+            $message = 'Gagal mengajukan laporan: '.$e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
         }
@@ -237,7 +237,7 @@ class Show extends Component
      */
     public function updatedSubstanceFile(): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             $this->substanceFile = null;
 
             return;
@@ -252,7 +252,7 @@ class Show extends Component
      */
     public function updatedRealizationFile(): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             $this->realizationFile = null;
 
             return;
@@ -267,7 +267,7 @@ class Show extends Component
      */
     public function updatedPresentationFile(): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             $this->presentationFile = null;
 
             return;
@@ -282,7 +282,7 @@ class Show extends Component
      */
     public function updatedTempMandatoryFiles($value, $key): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             return;
         }
 
@@ -301,7 +301,7 @@ class Show extends Component
             session()->flash('success', $message);
             $this->toastSuccess($message);
         } catch (\Exception $e) {
-            $message = 'Gagal mengunggah file: ' . $e->getMessage();
+            $message = 'Gagal mengunggah file: '.$e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
         }
@@ -312,7 +312,7 @@ class Show extends Component
      */
     public function updatedTempAdditionalFiles($value, $key): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             return;
         }
 
@@ -330,7 +330,7 @@ class Show extends Component
             session()->flash('success', $message);
             $this->toastSuccess($message);
         } catch (\Exception $e) {
-            $message = 'Gagal mengunggah file: ' . $e->getMessage();
+            $message = 'Gagal mengunggah file: '.$e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
         }
@@ -341,7 +341,7 @@ class Show extends Component
      */
     public function updatedTempAdditionalCerts($value, $key): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             return;
         }
 
@@ -359,7 +359,7 @@ class Show extends Component
             session()->flash('success', $message);
             $this->toastSuccess($message);
         } catch (\Exception $e) {
-            $message = 'Gagal mengunggah file: ' . $e->getMessage();
+            $message = 'Gagal mengunggah file: '.$e->getMessage();
             session()->flash('error', $message);
             $this->toastError($message);
         }
@@ -370,7 +370,7 @@ class Show extends Component
      */
     public function removeSubstanceFile(): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             abort(403);
         }
 
@@ -387,7 +387,7 @@ class Show extends Component
      */
     public function removeRealizationFile(): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             abort(403);
         }
 
@@ -404,7 +404,7 @@ class Show extends Component
      */
     public function removePresentationFile(): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             abort(403);
         }
 
@@ -429,7 +429,7 @@ class Show extends Component
      */
     public function saveMandatoryOutput(int $proposalOutputId): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             abort(403);
         }
 
@@ -453,11 +453,11 @@ class Show extends Component
      */
     public function saveAdditionalOutput(int $proposalOutputId): void
     {
-        if (!$this->canEdit) {
+        if (! $this->canEdit) {
             abort(403);
         }
 
-        if (!$this->progressReport) {
+        if (! $this->progressReport) {
             $message = 'Laporan belum dibuat. Silakan upload file substansi terlebih dahulu.';
             session()->flash('error', $message);
             $this->toastError($message);
@@ -480,7 +480,7 @@ class Show extends Component
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
-            $this->toastError('Gagal menyimpan: ' . $e->getMessage());
+            $this->toastError('Gagal menyimpan: '.$e->getMessage());
         }
     }
 
@@ -506,7 +506,7 @@ class Show extends Component
     #[Computed]
     public function mandatoryOutput(): ?\App\Models\MandatoryOutput
     {
-        if (!$this->progressReport || !$this->form->editingMandatoryId) {
+        if (! $this->progressReport || ! $this->form->editingMandatoryId) {
             return null;
         }
 
@@ -521,7 +521,7 @@ class Show extends Component
     #[Computed]
     public function additionalOutput(): ?\App\Models\AdditionalOutput
     {
-        if (!$this->progressReport || !$this->form->editingAdditionalId) {
+        if (! $this->progressReport || ! $this->form->editingAdditionalId) {
             return null;
         }
 

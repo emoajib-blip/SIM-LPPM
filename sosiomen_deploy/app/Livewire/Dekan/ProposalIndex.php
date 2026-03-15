@@ -61,7 +61,7 @@ class ProposalIndex extends Component
     {
         $facultyId = $this->dekanFacultyId;
 
-        if (!$facultyId) {
+        if (! $facultyId) {
             $query->whereRaw('1 = 0');
         } else {
             $query->whereHas('submitter.identity', function ($q) use ($facultyId) {
@@ -142,7 +142,7 @@ class ProposalIndex extends Component
         }
 
         return $query
-            ->selectRaw(sql_year() . ' as year')
+            ->selectRaw(sql_year().' as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year')

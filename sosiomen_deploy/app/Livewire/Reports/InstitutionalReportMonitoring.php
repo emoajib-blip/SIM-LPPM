@@ -11,8 +11,11 @@ class InstitutionalReportMonitoring extends Component
     use WithPagination;
 
     public $search = '';
+
     public $type = 'all';
+
     public $status = 'all';
+
     public $year = 'all';
 
     protected $queryString = [
@@ -37,8 +40,8 @@ class InstitutionalReportMonitoring extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('notes', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('submitter', fn($u) => $u->where('name', 'like', '%' . $this->search . '%'));
+                $q->where('notes', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('submitter', fn ($u) => $u->where('name', 'like', '%'.$this->search.'%'));
             });
         }
 

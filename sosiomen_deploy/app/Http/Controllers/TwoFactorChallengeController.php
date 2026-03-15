@@ -16,7 +16,7 @@ class TwoFactorChallengeController extends Controller
      */
     public function create(Request $request)
     {
-        if (!$request->session()->has('login.id')) {
+        if (! $request->session()->has('login.id')) {
             return redirect()->route('login');
         }
 
@@ -28,7 +28,7 @@ class TwoFactorChallengeController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if (!$request->session()->has('login.id')) {
+        if (! $request->session()->has('login.id')) {
             return redirect()->route('login');
         }
 
@@ -40,7 +40,7 @@ class TwoFactorChallengeController extends Controller
         // Prevent array injection vulnerability returning a Collection
         $user = \App\Models\User::where('id', $userId)->first();
 
-        if (!$user) {
+        if (! $user) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -57,7 +57,7 @@ class TwoFactorChallengeController extends Controller
             $valid = $this->verifyCode($user, $code);
         }
 
-        if (!$valid) {
+        if (! $valid) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -79,7 +79,7 @@ class TwoFactorChallengeController extends Controller
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -93,7 +93,7 @@ class TwoFactorChallengeController extends Controller
      */
     protected function throttleKey(): string
     {
-        return 'two-factor-auth:' . request()->ip();
+        return 'two-factor-auth:'.request()->ip();
     }
 
     /**
@@ -101,7 +101,7 @@ class TwoFactorChallengeController extends Controller
      */
     protected function verifyCode($user, string $code): bool
     {
-        if (!$user->two_factor_secret) {
+        if (! $user->two_factor_secret) {
             return false;
         }
 
@@ -123,7 +123,7 @@ class TwoFactorChallengeController extends Controller
      */
     protected function verifyRecoveryCode($user, string $recoveryCode): bool
     {
-        if (!$user->two_factor_recovery_codes) {
+        if (! $user->two_factor_recovery_codes) {
             return false;
         }
 
@@ -131,7 +131,7 @@ class TwoFactorChallengeController extends Controller
             $decodedCodes = decrypt($user->two_factor_recovery_codes);
             $codes = json_decode($decodedCodes, true);
 
-            if (!is_array($codes)) {
+            if (! is_array($codes)) {
                 return false;
             }
 

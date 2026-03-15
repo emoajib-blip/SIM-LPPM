@@ -1517,7 +1517,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Auth/Login.php' => 
     array (
-      0 => 'c638f6524c6ffa367957e2dbf55602adf08df72c6c6a95eeb6b8f5703915981e',
+      0 => 'b8a067be51551b26d8999e755aa1634e37a7ec8fa3d2e5944ae75d5e275d44c6',
       1 => 
       array (
         0 => 'app\\livewire\\auth\\login',
@@ -1588,7 +1588,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php' => 
     array (
-      0 => 'b31f874e17e7ecc581508fcdcf7e9529acc57a9e61910d22077cc3b17fe7c7fd',
+      0 => '1239e86e53502478bf1f0770ac36e28e4ed564615dc3d34e58c85d5294a3c742',
       1 => 
       array (
         0 => 'app\\livewire\\communityservice\\dailynote\\show',
@@ -1634,7 +1634,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/FinalReport/Show.php' => 
     array (
-      0 => 'c7b018e70ee25959db688d61766bf95ad5bbba423bda183f4997f28a28781920',
+      0 => '67d197255fd995bc0d6cb1bbde11a6866d8f365c1ec7366aa968ae2c8eb90775',
       1 => 
       array (
         0 => 'app\\livewire\\communityservice\\finalreport\\show',
@@ -2065,7 +2065,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/ProposalRevision/Show.php' => 
     array (
-      0 => '1254bbd5999a09ef54778cf2b2d11216a0e5c99c1ce5b9254a69a9fb743091ff',
+      0 => '3b84d0adfbd83de3b188998f4903a00bfea58f291932dbc8070a9b41f845b518',
       1 => 
       array (
         0 => 'app\\livewire\\communityservice\\proposalrevision\\show',
@@ -2537,7 +2537,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Iku/IkuDashboard.php' => 
     array (
-      0 => '6eb1a08940756310899bdceb0ecc9e20f9f280ec3888a959b94ba3fad7d56697',
+      0 => '2b442e35c3e69331847d376a68bafcbe082b1b587c3c5f82806a97e826a4ab3e',
       1 => 
       array (
         0 => 'app\\livewire\\iku\\ikudashboard',
@@ -2817,7 +2817,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/CommunityService.php' => 
     array (
-      0 => 'e04af439250ea3ada320d48df0c4a929d92ae4f7c1b6d38f0bcf35e81da7fb57',
+      0 => '061166daff087724f0067c567f7fe03f351808b39e1d88cdf325b05fe196390f',
       1 => 
       array (
         0 => 'app\\livewire\\reports\\communityservice',
@@ -2871,7 +2871,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/InstitutionalReportMonitoring.php' => 
     array (
-      0 => 'fe8f1562710515f0aac9b64de0e7cd8136a774cff09c024e9ccad0da3d601288',
+      0 => '5098be1c5875f8578c1b3cf821395a8ac041ae7726eac8c048faddcfe1a68366',
       1 => 
       array (
         0 => 'app\\livewire\\reports\\institutionalreportmonitoring',
@@ -2889,7 +2889,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/OutputReports.php' => 
     array (
-      0 => '97b08ab3b83e707f52ea13499d555ea1a7b2ea41014a0d5c213881eb34f07779',
+      0 => '1389ae399fae0496b1dac432f79c5897b3516e082f9fd19308201710f6d07d9d',
       1 => 
       array (
         0 => 'app\\livewire\\reports\\outputreports',
@@ -2926,7 +2926,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/PartnerCollaboration.php' => 
     array (
-      0 => 'c3634d27ee0bdffd20072d25648901745672a957e1f5280711ca45cb07622352',
+      0 => 'a497adc9425cad3279b68c59e8bfb3a82258bc9693e4b98c421f16fbee06939f',
       1 => 
       array (
         0 => 'app\\livewire\\reports\\partnercollaboration',
@@ -2950,7 +2950,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/Research.php' => 
     array (
-      0 => 'b81a67a0bd49e7460e850c8f6fe45796ae5f287550e6a8d85e5e3f2c4a6eece0',
+      0 => 'c2634943fdb7eb9e7797699285941da2e39c1ceeb44321249cd5b011a5bde046',
       1 => 
       array (
         0 => 'app\\livewire\\reports\\research',
@@ -3030,7 +3030,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/DailyNote/Show.php' => 
     array (
-      0 => '4362ff7a678ec3a91d3d65d052111bfcc45933e6c60e60c3fa4b919f70ec3b6a',
+      0 => 'd99aac0fe562d888b17317fe7be07768e72524454aa22e5fbf1ad75a554896c9',
       1 => 
       array (
         0 => 'app\\livewire\\research\\dailynote\\show',
@@ -3076,7 +3076,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/FinalReport/Show.php' => 
     array (
-      0 => '21dbef2974adcc8c4e95ab84dc429c725b2f250ee9e25957ad28e66365ad391b',
+      0 => '4b502e818c0fdd4c087cb99a037d17178e8bc78be82451d4bb58f42d1481f0a1',
       1 => 
       array (
         0 => 'app\\livewire\\research\\finalreport\\show',
@@ -3533,7 +3533,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/ProposalRevision/Show.php' => 
     array (
-      0 => 'cf92a830bc4e5b0583310399efe26f32d2d381269218088a68ec3da9881d19b3',
+      0 => 'fd836301c5117f70222a9b54ed49b19196cf14d0ee079ddad58f952dc34939f3',
       1 => 
       array (
         0 => 'app\\livewire\\research\\proposalrevision\\show',
@@ -3638,7 +3638,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Appearance.php' => 
     array (
-      0 => '6210bd012ac09419a39b1804e0f80eef99b4b7f95e52117bc08dc4afdb378f9e',
+      0 => '6d7e9d45d08ff2821056033d34fa7128d5f77ae6d64b6d7cb1e51419832d4166',
       1 => 
       array (
         0 => 'app\\livewire\\settings\\appearance',
@@ -4097,7 +4097,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/MasterIkuManager.php' => 
     array (
-      0 => 'a963bf57df4fb49728398441632b34b70ce16ff2e2b5a843d7fdf7c1b8b9758c',
+      0 => '88672da2acb8dd67b58998669eb86bdc910100b3af047d4e87e423f370827e68',
       1 => 
       array (
         0 => 'app\\livewire\\settings\\tabs\\masterikumanager',
@@ -5277,7 +5277,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Proposal.php' => 
     array (
-      0 => 'f50a56bbe3bce1e83a2c89bafbb02fde26f7ce0e46e935298692070aaedfc048',
+      0 => 'b17629405f308afc4c72770550008d950b8f0185e4bc7f57eec22b70d8a35d67',
       1 => 
       array (
         0 => 'app\\models\\proposal',
@@ -6307,7 +6307,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/LecturerEligibilityService.php' => 
     array (
-      0 => 'd4ae6421e369e3aa58aaf00077ab0c9ab0cca9292ef48b1053a2f4b011af6aaa',
+      0 => 'f24f5f50a51361ecfb3f7ba496c5af073464aecff1f1cdd57d557318a79d01cd',
       1 => 
       array (
         0 => 'app\\services\\lecturereligibilityservice',
@@ -6413,7 +6413,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/ProposalPdfService.php' => 
     array (
-      0 => '5b70476a531bc427fe95c89e3eff29a56c9dd2235bbad41914ab8bf2ad941dc5',
+      0 => '49a1670cb60c204852d9e544890b77d7d7d655cf44eef8f320b7704c79bd1dd2',
       1 => 
       array (
         0 => 'app\\services\\proposalpdfservice',
@@ -6490,7 +6490,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Traits/HasIkuCalculations.php' => 
     array (
-      0 => '4d01213ebd645ba017d10fa7b1b94ba70f179d5f996de779acc2f3e03c89ed4c',
+      0 => '83002e7a9f0097c70fd4cfb4926444428b06a0bdc961e7d08d11395468c95253',
       1 => 
       array (
         0 => 'app\\traits\\hasikucalculations',
@@ -6772,7 +6772,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/EligibilityService.php' => 
     array (
-      0 => '5f68fa2ab285097ec19bdbad162b815065771b3deb2e814543141ee42eaaa774',
+      0 => 'b0530864d114e34566d4e7a5c7db486f92a967c9e1e235e7fe84afe461e5de7b',
       1 => 
       array (
         0 => 'app\\services\\eligibilityservice',

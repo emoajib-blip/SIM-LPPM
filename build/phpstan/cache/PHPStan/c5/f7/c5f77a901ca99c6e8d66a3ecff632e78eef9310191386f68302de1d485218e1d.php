@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/LecturerEligibilityService.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Services\LecturerEligibilityService
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-d4ae6421e369e3aa58aaf00077ab0c9ab0cca9292ef48b1053a2f4b011af6aaa',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-f24f5f50a51361ecfb3f7ba496c5af073464aecff1f1cdd57d557318a79d01cd',
    'data' => 
   array (
     'locatedSource' => 
@@ -129,10 +129,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
               array (
                 'startLine' => 108,
                 'endLine' => 108,
-                'startTokenPos' => 776,
-                'startFilePos' => 4484,
-                'endTokenPos' => 776,
-                'endFilePos' => 4487,
+                'startTokenPos' => 780,
+                'startFilePos' => 4488,
+                'endTokenPos' => 780,
+                'endFilePos' => 4491,
               ),
             ),
             'type' => 

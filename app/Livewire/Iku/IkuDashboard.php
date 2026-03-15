@@ -52,7 +52,7 @@ class IkuDashboard extends Component
             ->whereNotNull('start_year')
             ->orderBy('start_year', 'desc')
             ->pluck('start_year')
-            ->map(fn($y) => (string) $y)
+            ->map(fn ($y) => (string) $y)
             ->toArray() ?: [(string) date('Y')];
     }
 
@@ -71,7 +71,7 @@ class IkuDashboard extends Component
     #[Computed]
     public function selectedMetricDetails(): array
     {
-        if (!$this->selectedIku) {
+        if (! $this->selectedIku) {
             return [];
         }
 

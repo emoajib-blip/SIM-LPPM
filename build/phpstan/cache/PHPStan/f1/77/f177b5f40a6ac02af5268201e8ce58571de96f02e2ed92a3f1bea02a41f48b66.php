@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Traits/HasIkuCalculations.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Traits\HasIkuCalculations
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-4d01213ebd645ba017d10fa7b1b94ba70f179d5f996de779acc2f3e03c89ed4c',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-83002e7a9f0097c70fd4cfb4926444428b06a0bdc961e7d08d11395468c95253',
    'data' => 
   array (
     'locatedSource' => 
@@ -24,7 +24,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'modifiers' => 0,
     'docComment' => '/**
  * HasIkuCalculations
- * 
+ *
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager.
  * Centralized logic for IKU calculations following Kepmen 358/M/KEP/2025.
  */',
@@ -32,7 +32,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 20,
-    'endLine' => 365,
+    'endLine' => 366,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => NULL,
@@ -99,7 +99,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * Get all IKU metrics for a given period.
  */',
         'startLine' => 25,
-        'endLine' => 54,
+        'endLine' => 55,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -129,8 +129,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 59,
-            'endLine' => 59,
+            'startLine' => 60,
+            'endLine' => 60,
             'startColumn' => 46,
             'endColumn' => 49,
             'parameterIndex' => 0,
@@ -155,8 +155,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 59,
-            'endLine' => 59,
+            'startLine' => 60,
+            'endLine' => 60,
             'startColumn' => 52,
             'endColumn' => 65,
             'parameterIndex' => 1,
@@ -179,8 +179,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Dispatcher for automated calculations based on IKU code.
  */',
-        'startLine' => 59,
-        'endLine' => 75,
+        'startLine' => 60,
+        'endLine' => 76,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -218,8 +218,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 81,
-            'endLine' => 81,
+            'startLine' => 82,
+            'endLine' => 82,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -244,8 +244,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 81,
-            'endLine' => 81,
+            'startLine' => 82,
+            'endLine' => 82,
             'startColumn' => 55,
             'endColumn' => 68,
             'parameterIndex' => 1,
@@ -269,8 +269,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * IKU 3: Mahasiswa di Luar Kampus
  * Rumus: (Mhs Pengalaman Luar + Prestasi) / Total Mhs * 100
  */',
-        'startLine' => 81,
-        'endLine' => 98,
+        'startLine' => 82,
+        'endLine' => 99,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -308,8 +308,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 104,
-            'endLine' => 104,
+            'startLine' => 105,
+            'endLine' => 105,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -334,8 +334,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 104,
-            'endLine' => 104,
+            'startLine' => 105,
+            'endLine' => 105,
             'startColumn' => 55,
             'endColumn' => 68,
             'parameterIndex' => 1,
@@ -359,8 +359,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * IKU 4: Rekognisi Internasional Dosen
  * Rumus: (Dosen rekognisi int) / Total Dosen PT * 100
  */',
-        'startLine' => 104,
-        'endLine' => 123,
+        'startLine' => 105,
+        'endLine' => 124,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -398,8 +398,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 129,
-            'endLine' => 129,
+            'startLine' => 130,
+            'endLine' => 130,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -424,8 +424,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 129,
-            'endLine' => 129,
+            'startLine' => 130,
+            'endLine' => 130,
             'startColumn' => 55,
             'endColumn' => 68,
             'parameterIndex' => 1,
@@ -449,8 +449,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * IKU 5: Luaran Kerja Sama Mitra
  * Rumus: (Jumlah Luaran Kerjasama) / Total Dosen PT * 100
  */',
-        'startLine' => 129,
-        'endLine' => 145,
+        'startLine' => 130,
+        'endLine' => 146,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -488,8 +488,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 151,
-            'endLine' => 151,
+            'startLine' => 152,
+            'endLine' => 152,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -514,8 +514,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 151,
-            'endLine' => 151,
+            'startLine' => 152,
+            'endLine' => 152,
             'startColumn' => 55,
             'endColumn' => 68,
             'parameterIndex' => 1,
@@ -539,8 +539,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * IKU 6: Publikasi Global
  * Rumus: (Bobot Publikasi + Bonus Kolab) / Total Publikasi PT * 100
  */',
-        'startLine' => 151,
-        'endLine' => 176,
+        'startLine' => 152,
+        'endLine' => 177,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -570,8 +570,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 178,
-            'endLine' => 178,
+            'startLine' => 179,
+            'endLine' => 179,
             'startColumn' => 45,
             'endColumn' => 51,
             'parameterIndex' => 0,
@@ -592,8 +592,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 178,
-        'endLine' => 196,
+        'startLine' => 179,
+        'endLine' => 197,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -631,8 +631,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 201,
-            'endLine' => 201,
+            'startLine' => 202,
+            'endLine' => 202,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -657,8 +657,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 201,
-            'endLine' => 201,
+            'startLine' => 202,
+            'endLine' => 202,
             'startColumn' => 55,
             'endColumn' => 68,
             'parameterIndex' => 1,
@@ -681,8 +681,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * IKU 7: Keterlibatan SDGs
  */',
-        'startLine' => 201,
-        'endLine' => 215,
+        'startLine' => 202,
+        'endLine' => 216,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -720,8 +720,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 220,
-            'endLine' => 220,
+            'startLine' => 221,
+            'endLine' => 221,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -746,8 +746,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 220,
-            'endLine' => 220,
+            'startLine' => 221,
+            'endLine' => 221,
             'startColumn' => 55,
             'endColumn' => 68,
             'parameterIndex' => 1,
@@ -770,8 +770,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * IKU 8: SDM Terlibat Penyusunan Kebijakan
  */',
-        'startLine' => 220,
-        'endLine' => 236,
+        'startLine' => 221,
+        'endLine' => 237,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -809,8 +809,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 241,
-            'endLine' => 241,
+            'startLine' => 242,
+            'endLine' => 242,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -835,8 +835,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 241,
-            'endLine' => 241,
+            'startLine' => 242,
+            'endLine' => 242,
             'startColumn' => 55,
             'endColumn' => 68,
             'parameterIndex' => 1,
@@ -859,8 +859,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * IKU 9: Pendapatan Non-UKT
  */',
-        'startLine' => 241,
-        'endLine' => 250,
+        'startLine' => 242,
+        'endLine' => 251,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -898,8 +898,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 255,
-            'endLine' => 255,
+            'startLine' => 256,
+            'endLine' => 256,
             'startColumn' => 40,
             'endColumn' => 53,
             'parameterIndex' => 0,
@@ -924,8 +924,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 255,
-            'endLine' => 255,
+            'startLine' => 256,
+            'endLine' => 256,
             'startColumn' => 56,
             'endColumn' => 69,
             'parameterIndex' => 1,
@@ -948,8 +948,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * IKU 11c: Integritas Akademik
  */',
-        'startLine' => 255,
-        'endLine' => 264,
+        'startLine' => 256,
+        'endLine' => 265,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -987,8 +987,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 269,
-            'endLine' => 269,
+            'startLine' => 270,
+            'endLine' => 270,
             'startColumn' => 35,
             'endColumn' => 49,
             'parameterIndex' => 0,
@@ -1013,8 +1013,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 269,
-            'endLine' => 269,
+            'startLine' => 270,
+            'endLine' => 270,
             'startColumn' => 52,
             'endColumn' => 65,
             'parameterIndex' => 1,
@@ -1028,12 +1028,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
               'code' => '\'\'',
               'attributes' => 
               array (
-                'startLine' => 269,
-                'endLine' => 269,
-                'startTokenPos' => 1851,
-                'startFilePos' => 9369,
-                'endTokenPos' => 1851,
-                'endFilePos' => 9370,
+                'startLine' => 270,
+                'endLine' => 270,
+                'startTokenPos' => 1848,
+                'startFilePos' => 9366,
+                'endTokenPos' => 1848,
+                'endFilePos' => 9367,
               ),
             ),
             'type' => 
@@ -1051,8 +1051,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 269,
-            'endLine' => 269,
+            'startLine' => 270,
+            'endLine' => 270,
             'startColumn' => 68,
             'endColumn' => 86,
             'parameterIndex' => 2,
@@ -1075,8 +1075,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get detailed data for a specific IKU metric.
  */',
-        'startLine' => 269,
-        'endLine' => 280,
+        'startLine' => 270,
+        'endLine' => 281,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1114,8 +1114,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 282,
-            'endLine' => 282,
+            'startLine' => 283,
+            'endLine' => 283,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -1129,12 +1129,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
               'code' => '\'\'',
               'attributes' => 
               array (
-                'startLine' => 282,
-                'endLine' => 282,
-                'startTokenPos' => 1988,
-                'startFilePos' => 9952,
-                'endTokenPos' => 1988,
-                'endFilePos' => 9953,
+                'startLine' => 283,
+                'endLine' => 283,
+                'startTokenPos' => 1985,
+                'startFilePos' => 9949,
+                'endTokenPos' => 1985,
+                'endFilePos' => 9950,
               ),
             ),
             'type' => 
@@ -1152,8 +1152,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 282,
-            'endLine' => 282,
+            'startLine' => 283,
+            'endLine' => 283,
             'startColumn' => 55,
             'endColumn' => 73,
             'parameterIndex' => 1,
@@ -1174,8 +1174,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 282,
-        'endLine' => 305,
+        'startLine' => 283,
+        'endLine' => 306,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1213,8 +1213,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 307,
-            'endLine' => 307,
+            'startLine' => 308,
+            'endLine' => 308,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -1228,12 +1228,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
               'code' => '\'\'',
               'attributes' => 
               array (
-                'startLine' => 307,
-                'endLine' => 307,
-                'startTokenPos' => 2229,
-                'startFilePos' => 10903,
-                'endTokenPos' => 2229,
-                'endFilePos' => 10904,
+                'startLine' => 308,
+                'endLine' => 308,
+                'startTokenPos' => 2227,
+                'startFilePos' => 10901,
+                'endTokenPos' => 2227,
+                'endFilePos' => 10902,
               ),
             ),
             'type' => 
@@ -1251,8 +1251,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 307,
-            'endLine' => 307,
+            'startLine' => 308,
+            'endLine' => 308,
             'startColumn' => 55,
             'endColumn' => 73,
             'parameterIndex' => 1,
@@ -1273,8 +1273,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 307,
-        'endLine' => 326,
+        'startLine' => 308,
+        'endLine' => 327,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1312,8 +1312,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 328,
-            'endLine' => 328,
+            'startLine' => 329,
+            'endLine' => 329,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -1327,12 +1327,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
               'code' => '\'\'',
               'attributes' => 
               array (
-                'startLine' => 328,
-                'endLine' => 328,
-                'startTokenPos' => 2443,
-                'startFilePos' => 11719,
-                'endTokenPos' => 2443,
-                'endFilePos' => 11720,
+                'startLine' => 329,
+                'endLine' => 329,
+                'startTokenPos' => 2442,
+                'startFilePos' => 11718,
+                'endTokenPos' => 2442,
+                'endFilePos' => 11719,
               ),
             ),
             'type' => 
@@ -1350,8 +1350,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 328,
-            'endLine' => 328,
+            'startLine' => 329,
+            'endLine' => 329,
             'startColumn' => 55,
             'endColumn' => 73,
             'parameterIndex' => 1,
@@ -1372,8 +1372,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 328,
-        'endLine' => 342,
+        'startLine' => 329,
+        'endLine' => 343,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1411,8 +1411,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 344,
-            'endLine' => 344,
+            'startLine' => 345,
+            'endLine' => 345,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -1426,12 +1426,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
               'code' => '\'\'',
               'attributes' => 
               array (
-                'startLine' => 344,
-                'endLine' => 344,
-                'startTokenPos' => 2658,
-                'startFilePos' => 12562,
-                'endTokenPos' => 2658,
-                'endFilePos' => 12563,
+                'startLine' => 345,
+                'endLine' => 345,
+                'startTokenPos' => 2660,
+                'startFilePos' => 12564,
+                'endTokenPos' => 2660,
+                'endFilePos' => 12565,
               ),
             ),
             'type' => 
@@ -1449,8 +1449,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 344,
-            'endLine' => 344,
+            'startLine' => 345,
+            'endLine' => 345,
             'startColumn' => 55,
             'endColumn' => 73,
             'parameterIndex' => 1,
@@ -1471,8 +1471,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 344,
-        'endLine' => 352,
+        'startLine' => 345,
+        'endLine' => 353,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1510,8 +1510,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 354,
-            'endLine' => 354,
+            'startLine' => 355,
+            'endLine' => 355,
             'startColumn' => 39,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -1525,12 +1525,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
               'code' => '\'\'',
               'attributes' => 
               array (
-                'startLine' => 354,
-                'endLine' => 354,
-                'startTokenPos' => 2775,
-                'startFilePos' => 12973,
-                'endTokenPos' => 2775,
-                'endFilePos' => 12974,
+                'startLine' => 355,
+                'endLine' => 355,
+                'startTokenPos' => 2778,
+                'startFilePos' => 12976,
+                'endTokenPos' => 2778,
+                'endFilePos' => 12977,
               ),
             ),
             'type' => 
@@ -1548,8 +1548,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 354,
-            'endLine' => 354,
+            'startLine' => 355,
+            'endLine' => 355,
             'startColumn' => 55,
             'endColumn' => 73,
             'parameterIndex' => 1,
@@ -1570,8 +1570,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 354,
-        'endLine' => 364,
+        'startLine' => 355,
+        'endLine' => 365,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

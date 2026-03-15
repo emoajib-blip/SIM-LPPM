@@ -12,7 +12,6 @@ class StrataManager extends Component
 {
     use HasToast, WithPagination;
 
-
     #[Validate('required|min:2|max:255')]
     public string $name = '';
 

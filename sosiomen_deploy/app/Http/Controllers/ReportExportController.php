@@ -39,12 +39,12 @@ class ReportExportController extends Controller
                 'institutionalReport' => $institutionalReport,
             ])->setPaper('a4', 'portrait');
 
-            return $pdf->download('laporan-rekap-iku-' . $period . '-' . now()->format('YmdHis') . '.pdf');
+            return $pdf->download('laporan-rekap-iku-'.$period.'-'.now()->format('YmdHis').'.pdf');
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('IKU PDF Export Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('IKU PDF Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
         }
     }
 
@@ -56,15 +56,15 @@ class ReportExportController extends Controller
 
             $download = Excel::download(
                 new \App\Exports\IkuReportExport($period),
-                'laporan-rekap-iku-' . $period . '-' . now()->format('YmdHis') . '.xlsx'
+                'laporan-rekap-iku-'.$period.'-'.now()->format('YmdHis').'.xlsx'
             );
 
             return $download;
         } catch (\Exception $e) {
 
-            Log::error('IKU Excel Export Error: ' . $e->getMessage());
+            Log::error('IKU Excel Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh Excel: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh Excel: '.$e->getMessage());
         }
     }
 
@@ -85,12 +85,12 @@ class ReportExportController extends Controller
                 ->when($search, function ($q) use ($search) {
                     $q->where(function ($sub) use ($search) {
                         $sub->where('title', 'like', "%{$search}%")
-                            ->orWhereHas('submitter', fn($u) => $u->where('name', 'like', "%{$search}%"));
+                            ->orWhereHas('submitter', fn ($u) => $u->where('name', 'like', "%{$search}%"));
                     });
                 })
-                ->when($scheme && $scheme !== 'all', fn($q) => $q->where('research_scheme_id', $scheme))
+                ->when($scheme && $scheme !== 'all', fn ($q) => $q->where('research_scheme_id', $scheme))
                 ->when($faculty && $faculty !== 'all', function ($q) use ($faculty) {
-                    $q->whereHas('submitter.identity', fn($i) => $i->where('faculty_id', $faculty));
+                    $q->whereHas('submitter.identity', fn ($i) => $i->where('faculty_id', $faculty));
                 })
                 ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme', 'budgetItems'])
                 ->latest()
@@ -114,13 +114,14 @@ class ReportExportController extends Controller
                 'isPreview' => $isPreview,
             ])->setPaper('a4', 'landscape');
 
-            $filename = ($isPreview ? 'PREVIEW-' : '') . 'laporan-penelitian-' . $period . '-' . now()->format('YmdHis') . '.pdf';
+            $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-penelitian-'.$period.'-'.now()->format('YmdHis').'.pdf';
+
             return $pdf->download($filename);
         } catch (\Exception $e) {
 
-            Log::error('Research PDF Export Error: ' . $e->getMessage());
+            Log::error('Research PDF Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
         }
     }
 
@@ -135,15 +136,15 @@ class ReportExportController extends Controller
 
             $download = Excel::download(
                 new \App\Exports\ResearchReportExport($period, $search, $scheme, $faculty),
-                'laporan-penelitian-' . $period . '-' . now()->format('YmdHis') . '.xlsx'
+                'laporan-penelitian-'.$period.'-'.now()->format('YmdHis').'.xlsx'
             );
 
             return $download;
         } catch (\Exception $e) {
 
-            Log::error('Research Excel Export Error: ' . $e->getMessage());
+            Log::error('Research Excel Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh Excel: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh Excel: '.$e->getMessage());
         }
     }
 
@@ -164,12 +165,12 @@ class ReportExportController extends Controller
                 ->when($search, function ($q) use ($search) {
                     $q->where(function ($sub) use ($search) {
                         $sub->where('title', 'like', "%{$search}%")
-                            ->orWhereHas('submitter', fn($u) => $u->where('name', 'like', "%{$search}%"));
+                            ->orWhereHas('submitter', fn ($u) => $u->where('name', 'like', "%{$search}%"));
                     });
                 })
-                ->when($scheme && $scheme !== 'all', fn($q) => $q->where('research_scheme_id', $scheme))
+                ->when($scheme && $scheme !== 'all', fn ($q) => $q->where('research_scheme_id', $scheme))
                 ->when($faculty && $faculty !== 'all', function ($q) use ($faculty) {
-                    $q->whereHas('submitter.identity', fn($i) => $i->where('faculty_id', $faculty));
+                    $q->whereHas('submitter.identity', fn ($i) => $i->where('faculty_id', $faculty));
                 })
                 ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'researchScheme', 'budgetItems'])
                 ->latest()
@@ -193,13 +194,14 @@ class ReportExportController extends Controller
                 'isPreview' => $isPreview,
             ])->setPaper('a4', 'landscape');
 
-            $filename = ($isPreview ? 'PREVIEW-' : '') . 'laporan-pkm-' . $period . '-' . now()->format('YmdHis') . '.pdf';
+            $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-pkm-'.$period.'-'.now()->format('YmdHis').'.pdf';
+
             return $pdf->download($filename);
         } catch (\Exception $e) {
 
-            Log::error('PKM PDF Export Error: ' . $e->getMessage());
+            Log::error('PKM PDF Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
         }
     }
 
@@ -214,15 +216,15 @@ class ReportExportController extends Controller
 
             $download = Excel::download(
                 new \App\Exports\CommunityServiceReportExport($period, $search, $scheme, $faculty),
-                'laporan-pkm-' . $period . '-' . now()->format('YmdHis') . '.xlsx'
+                'laporan-pkm-'.$period.'-'.now()->format('YmdHis').'.xlsx'
             );
 
             return $download;
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('PKM Excel Export Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('PKM Excel Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh Excel: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh Excel: '.$e->getMessage());
         }
     }
 
@@ -261,13 +263,14 @@ class ReportExportController extends Controller
                 'isPreview' => $isPreview,
             ])->setPaper('a4', 'landscape');
 
-            $filename = ($isPreview ? 'PREVIEW-' : '') . 'laporan-luaran-' . $activeTab . '-' . now()->format('YmdHis') . '.pdf';
+            $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-luaran-'.$activeTab.'-'.now()->format('YmdHis').'.pdf';
+
             return $pdf->download($filename);
         } catch (\Exception $e) {
 
-            Log::error('Output PDF Export Error: ' . $e->getMessage());
+            Log::error('Output PDF Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
         }
     }
 
@@ -284,15 +287,15 @@ class ReportExportController extends Controller
 
             $download = Excel::download(
                 new \App\Exports\OutputReportExport($activeTab, $search, $outputType, $period, $scheme, $faculty),
-                'laporan-luaran-' . $activeTab . '-' . now()->format('YmdHis') . '.xlsx'
+                'laporan-luaran-'.$activeTab.'-'.now()->format('YmdHis').'.xlsx'
             );
 
             return $download;
         } catch (\Exception $e) {
 
-            Log::error('Output Excel Export Error: ' . $e->getMessage());
+            Log::error('Output Excel Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh Excel: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh Excel: '.$e->getMessage());
         }
     }
 
@@ -303,7 +306,7 @@ class ReportExportController extends Controller
         $query = Proposal::query()
             ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'progressReports.mandatoryOutputs.proposalOutput', 'progressReports.additionalOutputs.proposalOutput'])
             ->where('detailable_type', $detailableType)
-            ->when($period, fn($q) => $q->where('start_year', $period))
+            ->when($period, fn ($q) => $q->where('start_year', $period))
             ->where(function (Builder $query) {
                 $query->whereHas('progressReports.mandatoryOutputs')
                     ->orWhereHas('progressReports.additionalOutputs');
@@ -366,12 +369,12 @@ class ReportExportController extends Controller
                 'institutionalReport' => $institutionalReport,
             ])->setPaper('a4', 'landscape');
 
-            return $pdf->download('laporan-mitra-' . now()->format('Y-m-d') . '.pdf');
+            return $pdf->download('laporan-mitra-'.now()->format('Y-m-d').'.pdf');
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('Partner PDF Export Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Partner PDF Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
         }
     }
 
@@ -385,15 +388,15 @@ class ReportExportController extends Controller
 
             $download = Excel::download(
                 new \App\Exports\PartnerCollaborationExport($search, $typeFilter, $periodFilter),
-                'laporan-mitra-' . now()->format('Y-m-d') . '.xlsx'
+                'laporan-mitra-'.now()->format('Y-m-d').'.xlsx'
             );
 
             return $download;
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('Partner Excel Export Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Partner Excel Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh Excel: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh Excel: '.$e->getMessage());
         }
     }
 
@@ -404,7 +407,7 @@ class ReportExportController extends Controller
         try {
             $search = $request->query('search', '');
             $yearFilter = $request->query('yearFilter', '');
-            $filename = 'Export_Arsip_Kegiatan_' . date('Ymd_His') . '.xlsx';
+            $filename = 'Export_Arsip_Kegiatan_'.date('Ymd_His').'.xlsx';
 
             $download = Excel::download(
                 new \App\Exports\ArchiveDataExport($search, $yearFilter),
@@ -414,9 +417,9 @@ class ReportExportController extends Controller
             return $download;
         } catch (\Exception $e) {
 
-            Log::error('Archive Export Error: ' . $e->getMessage());
+            Log::error('Archive Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh Export: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh Export: '.$e->getMessage());
         }
     }
 
@@ -432,9 +435,9 @@ class ReportExportController extends Controller
             return $download;
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('Archive Template Export Error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Archive Template Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh Template: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh Template: '.$e->getMessage());
         }
     }
 
@@ -454,9 +457,9 @@ class ReportExportController extends Controller
             return $download;
         } catch (\Exception $e) {
 
-            Log::error('Dashboard Research Export Error: ' . $e->getMessage());
+            Log::error('Dashboard Research Export Error: '.$e->getMessage());
 
-            return back()->with('error', 'Gagal mengunduh Export: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh Export: '.$e->getMessage());
         }
     }
 
@@ -473,7 +476,7 @@ class ReportExportController extends Controller
         $academicYear = $request->academic_year;
         $semester = $request->semester;
 
-        $fileName = "Monev_Recap_{$academicYear}_" . ($semester ?? 'all') . ".xlsx";
+        $fileName = "Monev_Recap_{$academicYear}_".($semester ?? 'all').'.xlsx';
 
         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\MonevRecapExport($academicYear, $semester), $fileName);
     }

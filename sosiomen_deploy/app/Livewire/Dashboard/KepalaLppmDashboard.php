@@ -53,7 +53,7 @@ class KepalaLppmDashboard extends Component
 
     private function getAvailableYears(): array
     {
-        $years = Proposal::select(DB::raw(sql_year() . ' as year'))
+        $years = Proposal::select(DB::raw(sql_year().' as year'))
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year')
@@ -101,8 +101,8 @@ class KepalaLppmDashboard extends Component
      */
     private function transformStats(Collection $raw, string $yearFilter): array
     {
-        $research = $raw->filter(fn($r) => str_contains($r->detailable_type, 'Research'));
-        $communityService = $raw->filter(fn($r) => str_contains($r->detailable_type, 'CommunityService'));
+        $research = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'Research'));
+        $communityService = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'CommunityService'));
 
         $researchPending = $research->where('status', 'reviewed')->sum('count');
         $communityServicePending = $communityService->where('status', 'reviewed')->sum('count');
@@ -147,12 +147,12 @@ class KepalaLppmDashboard extends Component
             ->get();
 
         $this->recentResearch = $recentProposals
-            ->filter(fn($p) => str_contains($p->detailable_type, 'Research'))
+            ->filter(fn ($p) => str_contains($p->detailable_type, 'Research'))
             ->take(10)
             ->values();
 
         $this->recentCommunityService = $recentProposals
-            ->filter(fn($p) => str_contains($p->detailable_type, 'CommunityService'))
+            ->filter(fn ($p) => str_contains($p->detailable_type, 'CommunityService'))
             ->take(10)
             ->values();
     }

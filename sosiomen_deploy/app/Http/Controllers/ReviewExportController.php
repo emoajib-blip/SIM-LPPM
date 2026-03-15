@@ -21,11 +21,11 @@ class ReviewExportController extends Controller
         $isReviewer = $proposalReviewer->user_id === $user->id;
         $isLppm = $user->hasRole(['admin lppm', 'kepala lppm', 'superadmin', 'rektor']);
 
-        if (!$isReviewer && !$isLppm) {
+        if (! $isReviewer && ! $isLppm) {
             abort(403, 'Anda tidak memiliki akses untuk mengekspor penilaian ini.');
         }
 
-        if (!$proposalReviewer->isCompleted()) {
+        if (! $proposalReviewer->isCompleted()) {
             abort(400, 'Penilaian belum diselesaikan.');
         }
 
@@ -56,7 +56,7 @@ class ReviewExportController extends Controller
         ]);
 
         $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 30));
-        $filename = 'Penilaian_Reviewer_' . $title . '.pdf';
+        $filename = 'Penilaian_Reviewer_'.$title.'.pdf';
 
         if (ob_get_level()) {
 

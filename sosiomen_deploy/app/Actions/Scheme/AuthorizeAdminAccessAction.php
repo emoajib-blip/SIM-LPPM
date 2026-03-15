@@ -16,12 +16,12 @@ class AuthorizeAdminAccessAction
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             throw new AuthorizationException('Unauthenticated.');
         }
 
         // 1. Check if user has the actual permission (RBAC)
-        if (!$user->can($permission)) {
+        if (! $user->can($permission)) {
             throw new AuthorizationException("Anda tidak memiliki izin ($permission) untuk mengakses fitur ini.");
         }
 
@@ -31,7 +31,7 @@ class AuthorizeAdminAccessAction
 
         $allowedRoles = ['admin lppm', 'kepala lppm', 'superadmin'];
 
-        if (!in_array($activeRole, $allowedRoles)) {
+        if (! in_array($activeRole, $allowedRoles)) {
             throw new AuthorizationException("Akses ditolak: Peran aktif Anda ($activeRole) tidak berwenang mengelola data ini.");
         }
     }

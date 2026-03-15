@@ -57,8 +57,8 @@ enum ReportStatus: string
      */
     public static function filterOptions(): array
     {
-        return collect(self::cases())->mapWithKeys(fn($status) => [
-            $status->value => $status->label()
+        return collect(self::cases())->mapWithKeys(fn ($status) => [
+            $status->value => $status->label(),
         ])->toArray();
     }
 }

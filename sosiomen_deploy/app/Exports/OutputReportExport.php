@@ -19,8 +19,7 @@ class OutputReportExport implements FromView, ShouldAutoSize, WithStyles
         protected ?string $period = null,
         protected ?string $scheme = null,
         protected ?string $faculty = null
-    ) {
-    }
+    ) {}
 
     public function view(): View
     {
@@ -29,7 +28,7 @@ class OutputReportExport implements FromView, ShouldAutoSize, WithStyles
         $query = Proposal::query()
             ->with(['submitter.identity.faculty', 'submitter.identity.studyProgram', 'progressReports.mandatoryOutputs.proposalOutput', 'progressReports.additionalOutputs.proposalOutput'])
             ->where('detailable_type', $detailableType)
-            ->when($this->period, fn($q) => $q->where('start_year', $this->period))
+            ->when($this->period, fn ($q) => $q->where('start_year', $this->period))
             ->where(function (Builder $query) {
                 $query->whereHas('progressReports.mandatoryOutputs')
                     ->orWhereHas('progressReports.additionalOutputs');

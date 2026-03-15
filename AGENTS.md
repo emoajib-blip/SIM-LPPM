@@ -1,5 +1,29 @@
 # SIM LPPM ITSNU - Agent Guidelines
 
+## 0. AI DevTeam Orchestrator (Optional Tool)
+
+For rapid prototyping and scaffolding, you can use the **AI DevTeam Orchestrator v2** Python script (`AGENT DevTeam IT v2.PY`) which uses Gemini API to generate full-stack project prototypes.
+
+### Usage
+```bash
+# Setup
+cp .env.example .env
+# Add API_KEY=your_gemini_api_key to .env
+
+# Run the orchestrator
+python AGENT\ DevTeam\ IT\ v2.PY
+```
+
+### Workflow
+The orchestrator runs these phases:
+1. **Product Manager** - Creates MVP specifications
+2. **UI/UX Designer** - Generates design specs (with revision loop)
+3. **Web/Android Developer** - Generates code in parallel
+4. **QA** - Reviews code for bugs, security, logic
+5. **DevOps** - Creates Dockerfile, GitHub Actions, setup instructions
+
+> **Note:** For this Laravel project, use the orchestrator for conceptual prototyping only. All production code must follow the Laravel patterns in this document.
+
 ## 1. Project Summary & Stack
 Research & Community Service Management System for Institut Teknologi dan Sains Nahdlatul Ulama (ITSNU) Pekalongan.
 - **Stack:** PHP 8.4, Laravel 12, Livewire v4,  Tailwind v4, Tabler + Bootstrap 5, Pest v4, Pint.

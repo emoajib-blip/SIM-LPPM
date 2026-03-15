@@ -258,7 +258,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/LecturerEligibilityService.php' => 'd4ae6421e369e3aa58aaf00077ab0c9ab0cca9292ef48b1053a2f4b011af6aaa',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/LecturerEligibilityService.php' => 'f24f5f50a51361ecfb3f7ba496c5af073464aecff1f1cdd57d557318a79d01cd',
     ),
   ),
 ));
