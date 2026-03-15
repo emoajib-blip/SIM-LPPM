@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/ProposalPdfService.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Services\ProposalPdfService
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-88fd8bd5e87733498297e902b0cc1003f45711e35ea215c8ac6b9e9bb10ae8cd',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-5b70476a531bc427fe95c89e3eff29a56c9dd2235bbad41914ab8bf2ad941dc5',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 10,
-    'endLine' => 611,
+    'startLine' => 11,
+    'endLine' => 637,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => NULL,
@@ -69,12 +69,50 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 18,
-            'endLine' => 18,
+            'startLine' => 19,
+            'endLine' => 19,
             'startColumn' => 28,
             'endColumn' => 45,
             'parameterIndex' => 0,
             'isOptional' => false,
+          ),
+          'isPreview' => 
+          array (
+            'name' => 'isPreview',
+            'default' => 
+            array (
+              'code' => 'false',
+              'attributes' => 
+              array (
+                'startLine' => 19,
+                'endLine' => 19,
+                'startTokenPos' => 57,
+                'startFilePos' => 462,
+                'endTokenPos' => 57,
+                'endFilePos' => 466,
+              ),
+            ),
+            'type' => 
+            array (
+              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+              'data' => 
+              array (
+                'name' => 'bool',
+                'isIdentifier' => true,
+              ),
+            ),
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 19,
+            'endLine' => 19,
+            'startColumn' => 48,
+            'endColumn' => 70,
+            'parameterIndex' => 1,
+            'isOptional' => true,
           ),
         ),
         'returnsReference' => false,
@@ -96,8 +134,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  *
  * @return string Path to the combined PDF file
  */',
-        'startLine' => 18,
-        'endLine' => 317,
+        'startLine' => 19,
+        'endLine' => 321,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -135,8 +173,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 322,
-            'endLine' => 322,
+            'startLine' => 326,
+            'endLine' => 326,
             'startColumn' => 34,
             'endColumn' => 51,
             'parameterIndex' => 0,
@@ -161,12 +199,50 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 322,
-            'endLine' => 322,
+            'startLine' => 326,
+            'endLine' => 326,
             'startColumn' => 54,
             'endColumn' => 87,
             'parameterIndex' => 1,
             'isOptional' => false,
+          ),
+          'isPreview' => 
+          array (
+            'name' => 'isPreview',
+            'default' => 
+            array (
+              'code' => 'false',
+              'attributes' => 
+              array (
+                'startLine' => 326,
+                'endLine' => 326,
+                'startTokenPos' => 2613,
+                'startFilePos' => 14125,
+                'endTokenPos' => 2613,
+                'endFilePos' => 14129,
+              ),
+            ),
+            'type' => 
+            array (
+              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+              'data' => 
+              array (
+                'name' => 'bool',
+                'isIdentifier' => true,
+              ),
+            ),
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 326,
+            'endLine' => 326,
+            'startColumn' => 90,
+            'endColumn' => 112,
+            'parameterIndex' => 2,
+            'isOptional' => true,
           ),
         ),
         'returnsReference' => false,
@@ -185,8 +261,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Export a report to PDF.
  */',
-        'startLine' => 322,
-        'endLine' => 610,
+        'startLine' => 326,
+        'endLine' => 636,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/SubmitProposalAction.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\Actions\SubmitProposalAction
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-d925914574779ccdc4deb57c2c62db98570d7a8c0b2364d221a864a4598e5ea4',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-66940b272f4e4e4db2003b2a27bebc9b6b2120069b2dc5b45b7a560bdf557d53',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 10,
-    'endLine' => 111,
+    'startLine' => 11,
+    'endLine' => 125,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => NULL,
@@ -62,8 +62,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 13,
-        'endLine' => 13,
+        'startLine' => 14,
+        'endLine' => 14,
         'startColumn' => 9,
         'endColumn' => 58,
         'isPromoted' => true,
@@ -100,8 +100,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 13,
-            'endLine' => 13,
+            'startLine' => 14,
+            'endLine' => 14,
             'startColumn' => 9,
             'endColumn' => 58,
             'parameterIndex' => 0,
@@ -114,8 +114,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 12,
-        'endLine' => 14,
+        'startLine' => 13,
+        'endLine' => 15,
         'startColumn' => 5,
         'endColumn' => 8,
         'couldThrow' => false,
@@ -153,8 +153,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 20,
-            'endLine' => 20,
+            'startLine' => 21,
+            'endLine' => 21,
             'startColumn' => 29,
             'endColumn' => 46,
             'parameterIndex' => 0,
@@ -178,8 +178,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * Submit a proposal for review.
  * Only possible if all team members have accepted.
  */',
-        'startLine' => 20,
-        'endLine' => 68,
+        'startLine' => 21,
+        'endLine' => 82,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -217,8 +217,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 73,
-            'endLine' => 73,
+            'startLine' => 87,
+            'endLine' => 87,
             'startColumn' => 40,
             'endColumn' => 57,
             'parameterIndex' => 0,
@@ -241,8 +241,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Trigger re-review process for existing reviewers.
  */',
-        'startLine' => 73,
-        'endLine' => 83,
+        'startLine' => 87,
+        'endLine' => 97,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -280,8 +280,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 88,
-            'endLine' => 88,
+            'startLine' => 102,
+            'endLine' => 102,
             'startColumn' => 42,
             'endColumn' => 59,
             'parameterIndex' => 0,
@@ -304,8 +304,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Send notifications to relevant stakeholders
  */',
-        'startLine' => 88,
-        'endLine' => 110,
+        'startLine' => 102,
+        'endLine' => 124,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

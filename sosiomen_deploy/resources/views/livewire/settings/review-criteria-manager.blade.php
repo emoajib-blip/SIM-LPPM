@@ -11,8 +11,12 @@
         {{-- Penelitian --}}
         <div class="mb-4 col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex align-items-center justify-content-between">
                     <h3 class="card-title">Penelitian</h3>
+                    <button class="btn btn-sm btn-primary" wire:click="openCreate('research')">
+                        <x-lucide-plus class="icon" />
+                        Tambah Kriteria
+                    </button>
                 </div>
                 <div class="table-responsive">
                     <table class="card-table table table-vcenter text-nowrap datatable">
@@ -41,10 +45,17 @@
                                         </label>
                                     </td>
                                     <td>
-                                        <button class="btn btn-icon btn-ghost-primary"
-                                            wire:click="edit({{ $criteria->id }})">
-                                            <x-lucide-edit class="icon" />
-                                        </button>
+                                        <div class="btn-list gap-1">
+                                            <button class="btn btn-icon btn-ghost-primary"
+                                                wire:click="edit({{ $criteria->id }})">
+                                                <x-lucide-edit class="icon" />
+                                            </button>
+                                            <button class="btn btn-icon btn-ghost-danger"
+                                                wire:click="delete({{ $criteria->id }})"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus kriteria ini?')">
+                                                <x-lucide-trash-2 class="icon" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -63,8 +74,12 @@
         {{-- Pengabdian --}}
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex align-items-center justify-content-between">
                     <h3 class="card-title">Pengabdian Masyarakat (PkM)</h3>
+                    <button class="btn btn-sm btn-primary" wire:click="openCreate('community_service')">
+                        <x-lucide-plus class="icon" />
+                        Tambah Kriteria
+                    </button>
                 </div>
                 <div class="table-responsive">
                     <table class="card-table table table-vcenter text-nowrap datatable">
@@ -93,10 +108,17 @@
                                         </label>
                                     </td>
                                     <td>
-                                        <button class="btn btn-icon btn-ghost-primary"
-                                            wire:click="edit({{ $criteria->id }})">
-                                            <x-lucide-edit class="icon" />
-                                        </button>
+                                        <div class="btn-list gap-1">
+                                            <button class="btn btn-icon btn-ghost-primary"
+                                                wire:click="edit({{ $criteria->id }})">
+                                                <x-lucide-edit class="icon" />
+                                            </button>
+                                            <button class="btn btn-icon btn-ghost-danger"
+                                                wire:click="delete({{ $criteria->id }})"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus kriteria ini?')">
+                                                <x-lucide-trash-2 class="icon" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -158,6 +180,73 @@
                         </button>
                         <button type="button" class="ms-auto btn btn-primary" wire:click="save">
                             Simpan Perubahan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Create Modal --}}
+    @if ($creating)
+        <div class="modal modal-blur fade show" style="display: block; background: rgba(0,0,0,0.5);" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Kriteria Penilaian</h5>
+                        <button type="button" class="btn-close" wire:click="cancelCreate"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label required">Jenis Kriteria</label>
+                            <select class="form-select @error('creating.type') is-invalid @enderror"
+                                wire:model="creating.type" disabled>
+                                <option value="">-- Pilih Jenis --</option>
+                                <option value="research">Penelitian</option>
+                                <option value="community_service">Pengabdian Masyarakat (PkM)</option>
+                                <option value="monev_research">Monev Penelitian</option>
+                                <option value="monev_community_service">Monev Pengabdian Masyarakat (PkM)</option>
+                            </select>
+                            @error('creating.type')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label required">Nama Kriteria</label>
+                            <input type="text" class="form-control @error('creating.criteria') is-invalid @enderror"
+                                wire:model="creating.criteria" placeholder="Contoh: Originalitas, Metodologi, dll">
+                            @error('creating.criteria')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label required">Deskripsi / Acuan Penilaian</label>
+                            <textarea class="form-control @error('creating.description') is-invalid @enderror" rows="3"
+                                wire:model="creating.description" placeholder="Jelaskan kriteria penilaian ini..."></textarea>
+                            @error('creating.description')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label required">Bobot (%)</label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" min="0" max="100"
+                                    class="form-control @error('creating.weight') is-invalid @enderror"
+                                    wire:model="creating.weight" placeholder="Contoh: 25">
+                                <span class="input-group-text">%</span>
+                                @error('creating.weight')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <small class="text-muted">Pastikan total bobot semua kriteria = 100%</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary" wire:click="cancelCreate">
+                            Batal
+                        </button>
+                        <button type="button" class="ms-auto btn btn-primary" wire:click="createCriteria">
+                            Tambah Kriteria
                         </button>
                     </div>
                 </div>

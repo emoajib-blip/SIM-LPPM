@@ -11,16 +11,16 @@ return new class extends Migration
         Schema::create('identities', function (Blueprint $table) {
             $table->id();
             $table->string('identity_id')->unique()->comment('NIDN / NIM');
-            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade')->comment('User');
+            $table->foreignUuid('user_id')->comment('User')->constrained('users')->onDelete('cascade');
             $table->string('sinta_id')->nullable()->comment('ID SINTA');
             $table->enum('type', ['dosen', 'mahasiswa'])->comment('Tipe User');
             $table->string('address')->nullable()->comment('Alamat');
             $table->date('birthdate')->nullable()->comment('Tanggal Lahir');
             $table->string('birthplace')->nullable()->comment('Tempat Lahir');
-            $table->foreignId('institution_id')->nullable()->constrained('institutions')->onDelete('set null')->comment('Institusi');
-            $table->foreignId('study_program_id')->nullable()->constrained('study_programs')->onDelete('set null')->comment('Program Studi');
+            $table->foreignId('institution_id')->nullable()->comment('Institusi')->constrained('institutions')->onDelete('set null');
+            $table->foreignId('study_program_id')->nullable()->comment('Program Studi')->constrained('study_programs')->onDelete('set null');
             $table->string('profile_picture')->nullable()->comment('Foto Profil');
-            $table->foreignId('faculty_id')->nullable()->constrained('faculties')->onDelete('set null')->comment('Fakultas');
+            $table->foreignId('faculty_id')->nullable()->comment('Fakultas')->constrained('faculties')->onDelete('set null');
             $table->timestamps();
         });
     }

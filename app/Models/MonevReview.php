@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -21,9 +22,13 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string $semester
  * @property \Illuminate\Support\Carbon|null $reviewed_at
  * @property \Illuminate\Support\Carbon|null $finalized_by_lppm_at
+ * @property string|null $finalized_by_lppm_by
+ * @property \Illuminate\Support\Carbon|null $approved_by_kepala_at
+ * @property string|null $approved_by_kepala_by
  * @property \Illuminate\Support\Carbon|null $reported_to_rektor_at
  * @property-read \App\Models\Proposal $proposal
  * @property-read \App\Models\User $reviewer
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentSignature[] $signatures
  */
 class MonevReview extends Model implements HasMedia
 {
@@ -40,7 +45,9 @@ class MonevReview extends Model implements HasMedia
         'semester',
         'reviewed_at',
         'finalized_by_lppm_at',
+        'finalized_by_lppm_by',
         'approved_by_kepala_at',
+        'approved_by_kepala_by',
         'reported_to_rektor_at',
     ];
 
@@ -73,5 +80,13 @@ class MonevReview extends Model implements HasMedia
     public function reviewer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewer_id');
+    }
+
+    /**
+     * Get all digital signatures for the monev review.
+     */
+    public function signatures(): MorphMany
+    {
+        return $this->morphMany(DocumentSignature::class, 'document', 'document_type', 'document_id');
     }
 }

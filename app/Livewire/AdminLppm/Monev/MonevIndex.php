@@ -6,6 +6,8 @@ use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
 use App\Models\ProposalMonev;
 use App\Models\Setting;
+use App\Models\User;
+use App\Notifications\MonevReportReminderNotification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -32,7 +34,9 @@ class MonevIndex extends Component
     public $selectedProposal;
 
     public $selectedMonev;
+
     public $selectedMonevReview;
+
     public $reviewer_id;
 
     public $monev_date;
@@ -53,7 +57,8 @@ class MonevIndex extends Component
 
     public function mount()
     {
-        if (! Auth::user()->hasRole('admin lppm')) {
+        $user = Auth::user();
+        if (! $user instanceof User || ! $user->hasRole('admin lppm')) {
             abort(403);
         }
 
@@ -69,11 +74,18 @@ class MonevIndex extends Component
 
                 // Populate initial data
                 \Illuminate\Support\Facades\DB::statement("
-                    UPDATE proposal_monevs 
-                    INNER JOIN proposals ON proposal_monevs.proposal_id = proposals.id
-                    SET proposal_monevs.academic_year = proposals.start_year,
-                        proposal_monevs.semester = IFNULL(proposals.semester, 'ganjil')
-                    WHERE proposal_monevs.academic_year IS NULL
+                    UPDATE proposal_monevs
+                    SET academic_year = (
+                        SELECT start_year
+                        FROM proposals
+                        WHERE proposals.id = proposal_monevs.proposal_id
+                    ),
+                        semester = COALESCE((
+                            SELECT semester
+                            FROM proposals
+                            WHERE proposals.id = proposal_monevs.proposal_id
+                        ), 'ganjil')
+                    WHERE academic_year IS NULL
                 ");
             }
             if (! \Illuminate\Support\Facades\Schema::hasColumn('monev_reviews', 'approved_by_kepala_at')) {
@@ -84,10 +96,10 @@ class MonevIndex extends Component
 
             // Automate seeding if Monev criteria are empty
             if (\App\Models\ReviewCriteria::where('type', 'like', 'monev_%')->count() === 0) {
-                (new \Database\Seeders\ReviewCriteriaSeeder())->run();
+                (new \Database\Seeders\ReviewCriteriaSeeder)->run();
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Monev Self-Healing Failed: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Monev Self-Healing Failed: '.$e->getMessage());
         }
     }
 
@@ -100,6 +112,7 @@ class MonevIndex extends Component
         // 1. CONFLICT OF INTEREST CHECK: Submitter
         if ($this->selectedProposal->submitter_id === $this->reviewer_id) {
             $this->toastError('Pelanggaran CoI: Pengusul tidak boleh menjadi reviewer bagi proposalnya sendiri.');
+
             return;
         }
 
@@ -107,6 +120,7 @@ class MonevIndex extends Component
         $isTeamMember = $this->selectedProposal->teamMembers()->where('users.id', $this->reviewer_id)->exists();
         if ($isTeamMember) {
             $this->toastError('Pelanggaran CoI: Anggota tim proposal tidak boleh menjadi reviewer.');
+
             return;
         }
 
@@ -129,21 +143,69 @@ class MonevIndex extends Component
     public function finalizeReview(string $id)
     {
         $review = \App\Models\MonevReview::findOrFail($id);
-        $review->update(['finalized_by_lppm_at' => now()]);
-        $this->toastSuccess('Hasil evaluasi berhasil difinalisasi.');
+        $review->update([
+            'finalized_by_lppm_at' => now(),
+            'finalized_by_lppm_by' => \Illuminate\Support\Facades\Auth::id(),
+        ]);
+        $this->toastSuccess('Hasil evaluasi berhasil diverifikasi dan BA telah ditandatangani.');
         $this->loadSelectedProposal();
+    }
+
+    public function unfinalizeReview(string $id)
+    {
+        $review = \App\Models\MonevReview::findOrFail($id);
+        $review->update([
+            'finalized_by_lppm_at' => null,
+            'finalized_by_lppm_by' => null,
+            'reviewed_at' => null, // Give it back to reviewer to resubmit
+        ]);
+        $this->toastSuccess('Hasil evaluasi dikembalikan ke Reviewer.');
+        $this->loadSelectedProposal();
+    }
+
+    public function sendReminderToKepala()
+    {
+        $pendingCount = \App\Models\MonevReview::where('academic_year', $this->academicYear)
+            ->when($this->semester !== 'all', fn ($q) => $q->where('semester', $this->semester))
+            ->whereNotNull('approved_by_kepala_at')
+            ->whereNull('reported_to_rektor_at')
+            ->count();
+
+        if ($pendingCount === 0) {
+            $this->toastWarning('Tidak ada laporan yang perlu diingatkan (Semua sudah dilaporkan).');
+
+            return;
+        }
+
+        $kepala = User::role('kepala lppm')->first();
+        if ($kepala) {
+            $kepala->notify(new MonevReportReminderNotification($pendingCount, $this->academicYear, $this->semester));
+            $this->toastSuccess("Berhasil mengirim pengingat ke {$kepala->name}.");
+        } else {
+            $this->toastError('Kepala LPPM tidak ditemukan.');
+        }
+    }
+
+    #[Computed]
+    public function pendingRektorCount()
+    {
+        return \App\Models\MonevReview::where('academic_year', $this->academicYear)
+            ->when($this->semester !== 'all', fn ($q) => $q->where('semester', $this->semester))
+            ->whereNotNull('approved_by_kepala_at')
+            ->whereNull('reported_to_rektor_at')
+            ->count();
     }
 
     public function selectProposal(string $id)
     {
         $this->selectedProposal = Proposal::with([
-            'monevs', 
+            'monevs',
             'monevReviews' => function ($q) {
                 $q->where('academic_year', $this->academicYear)
                     ->when($this->semester !== 'all', fn ($sq) => $sq->where('semester', $this->semester));
-            }, 
+            },
             'monevReviews.reviewer',
-            'progressReports' => fn($q) => $q->where('reporting_period', 'final')
+            'progressReports' => fn ($q) => $q->where('reporting_period', 'final'),
         ])->findOrFail($id);
         $this->showListModal = true;
     }
@@ -162,7 +224,7 @@ class MonevIndex extends Component
                         ->when($this->semester !== 'all', fn ($sq) => $sq->where('semester', $this->semester));
                 },
                 'monevReviews.reviewer',
-                'progressReports' => fn($q) => $q->where('reporting_period', 'final')
+                'progressReports' => fn ($q) => $q->where('reporting_period', 'final'),
             ]);
         }
     }
@@ -193,38 +255,34 @@ class MonevIndex extends Component
             'progress_percentage' => 'required|integer|min:0|max:100',
             'notes' => 'nullable|string',
             'berita_acara' => [
-                $isNew || ! $this->selectedMonev?->hasMedia('berita_acara') ? 'required' : 'nullable',
+                $isNew ? 'required' : 'nullable',
                 'file',
                 'mimes:pdf,doc,docx',
                 'max:10240',
             ],
             'borang' => [
-                $isNew || ! $this->selectedMonev?->hasMedia('borang') ? 'required' : 'nullable',
+                $isNew ? 'required' : 'nullable',
                 'file',
                 'mimes:pdf,doc,docx',
                 'max:10240',
             ],
             'rekap_penilaian' => [
-                $isNew || ! $this->selectedMonev?->hasMedia('rekap_penilaian') ? 'required' : 'nullable',
+                $isNew ? 'required' : 'nullable',
                 'file',
                 'mimes:pdf,doc,docx',
                 'max:10240',
             ],
-        ], [
-            'berita_acara.required' => 'File Berita Acara wajib diunggah.',
-            'borang.required' => 'File Borang Monev wajib diunggah.',
-            'rekap_penilaian.required' => 'File Rekap Penilaian wajib diunggah.',
         ]);
 
         $monev = $this->selectedMonev ?? new ProposalMonev(['proposal_id' => $this->selectedProposal->id]);
         $monev->monev_date = \Carbon\Carbon::parse($this->monev_date);
         $monev->progress_percentage = $this->progress_percentage;
         $monev->notes = $this->notes;
-        
+
         // Ensure period is saved (fallback to current filter or proposal data)
         $monev->academic_year = $this->academicYear ?: $this->selectedProposal->start_year;
         $monev->semester = ($this->semester !== 'all') ? $this->semester : ($this->selectedProposal->semester ?: 'ganjil');
-        
+
         $monev->save();
 
         if ($this->berita_acara) {
@@ -306,13 +364,13 @@ class MonevIndex extends Component
         return Proposal::query()
             ->where('status', \App\Enums\ProposalStatus::COMPLETED)
             ->with([
-                'submitter', 
-                'detailable', 
+                'submitter',
+                'detailable',
                 'monevs' => function ($q) {
                     // Only filter by year/semester if columns exist to prevent 500 errors during transition
-                    $q->when(\Illuminate\Support\Facades\Schema::hasColumn('proposal_monevs', 'academic_year'), function($sq) {
+                    $q->when(\Illuminate\Support\Facades\Schema::hasColumn('proposal_monevs', 'academic_year'), function ($sq) {
                         $sq->where('academic_year', $this->academicYear)
-                          ->when($this->semester !== 'all', fn ($ssq) => $ssq->where('semester', $this->semester));
+                            ->when($this->semester !== 'all', fn ($ssq) => $ssq->where('semester', $this->semester));
                     })->latest();
                 },
                 'monevReviews' => function ($q) {
@@ -320,7 +378,7 @@ class MonevIndex extends Component
                         ->when($this->semester !== 'all', fn ($sq) => $sq->where('semester', $this->semester));
                 },
                 'monevReviews.reviewer',
-                'progressReports' => fn($q) => $q->where('reporting_period', 'final')
+                'progressReports' => fn ($q) => $q->where('reporting_period', 'final'),
             ])
             ->when($this->search, function ($query) {
                 $query->where('title', 'like', "%{$this->search}%")

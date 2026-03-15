@@ -17,15 +17,15 @@
             @endif
             @if ($progressReport && $progressReport->reporting_period === 'final')
                 <a data-navigate-ignore="true"
-                    href="{{ route('reports.export-pdf', ['proposal' => $proposal, 'type' => 'final']) }}" target="_blank"
-                    class="btn-outline-primary btn">
-                    <x-lucide-eye class="icon" />
-                    Tinjau (PDF)
+                    href="{{ route('reports.export-pdf', ['proposal' => $proposal, 'type' => 'final', 'preview' => 1]) }}" target="_blank"
+                    class="btn btn-outline-info shadow-sm">
+                    <i class="ti ti-eye me-2"></i>
+                    Tinjau PDF
                 </a>
                 <a data-navigate-ignore="true"
                     href="{{ route('reports.export-pdf', ['proposal' => $proposal, 'type' => 'final', 'download' => 'true']) }}"
-                    class="btn-primary btn">
-                    <x-lucide-download class="icon" />
+                    class="btn btn-primary shadow-sm">
+                    <x-lucide-download class="icon me-2" />
                     Unduh Laporan
                 </a>
             @endif

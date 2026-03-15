@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Proposal;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use setasign\Fpdi\Fpdi;
 
 class ProposalPdfService
@@ -15,11 +16,11 @@ class ProposalPdfService
      *
      * @return string Path to the combined PDF file
      */
-    public function export(Proposal $proposal): string
+    public function export(Proposal $proposal, bool $isPreview = false): string
     {
         // 0. Cache Check
         $cacheDir = storage_path('app/public/pdf_cache/proposals');
-        if (!file_exists($cacheDir)) {
+        if (! file_exists($cacheDir)) {
             mkdir($cacheDir, 0755, true);
         }
 
@@ -47,18 +48,19 @@ class ProposalPdfService
         }
 
         $cacheFileName = sprintf(
-            'proposal_%s_%s.pdf',
+            '%sproposal_%s_%s.pdf',
+            $isPreview ? 'preview_' : '',
             $proposal->id,
             $latestTimestamp
         );
-        $cachePath = $cacheDir . DIRECTORY_SEPARATOR . $cacheFileName;
+        $cachePath = $cacheDir.DIRECTORY_SEPARATOR.$cacheFileName;
 
         if (file_exists($cachePath)) {
             return $cachePath;
         }
 
         // Cleanup old versions of this proposal's PDF
-        $oldPdfs = glob($cacheDir . DIRECTORY_SEPARATOR . "proposal_{$proposal->id}_*.pdf");
+        $oldPdfs = glob($cacheDir.DIRECTORY_SEPARATOR."proposal_{$proposal->id}_*.pdf");
         foreach ($oldPdfs as $oldPdf) {
             @unlink($oldPdf);
         }
@@ -77,13 +79,13 @@ class ProposalPdfService
             $suffix = $identity->title_suffix;
 
             // Only prepend prefix if not already present
-            if ($prefix && !str_starts_with($name, $prefix) && !str_contains($name, $prefix . ' ')) {
-                $name = $prefix . ' ' . $name;
+            if ($prefix && ! str_starts_with($name, $prefix) && ! str_contains($name, $prefix.' ')) {
+                $name = $prefix.' '.$name;
             }
 
             // Only append suffix if not already present
-            if ($suffix && !str_ends_with($name, $suffix) && !str_contains($name, ', ' . $suffix)) {
-                $name = $name . ', ' . $suffix;
+            if ($suffix && ! str_ends_with($name, $suffix) && ! str_contains($name, ', '.$suffix)) {
+                $name = $name.', '.$suffix;
             }
 
             $deanName = $name;
@@ -110,11 +112,11 @@ class ProposalPdfService
                 $nm = $candidate->name;
                 $px = $idn->title_prefix;
                 $sx = $idn->title_suffix;
-                if ($px && !str_starts_with($nm, $px) && !str_contains($nm, $px . ' ')) {
-                    $nm = $px . ' ' . $nm;
+                if ($px && ! str_starts_with($nm, $px) && ! str_contains($nm, $px.' ')) {
+                    $nm = $px.' '.$nm;
                 }
-                if ($sx && !str_ends_with($nm, $sx) && !str_contains($nm, ', ' . $sx)) {
-                    $nm = $nm . ', ' . $sx;
+                if ($sx && ! str_ends_with($nm, $sx) && ! str_contains($nm, ', '.$sx)) {
+                    $nm = $nm.', '.$sx;
                 }
                 $deanName = $nm;
                 $deanId = $idn->identity_id ?? '';
@@ -134,11 +136,11 @@ class ProposalPdfService
             $prefix = $identity->title_prefix;
             $suffix = $identity->title_suffix;
 
-            if ($prefix && !str_contains($fullName, $prefix)) {
-                $fullName = $prefix . ' ' . $fullName;
+            if ($prefix && ! str_contains($fullName, $prefix)) {
+                $fullName = $prefix.' '.$fullName;
             }
-            if ($suffix && !str_contains($fullName, $suffix)) {
-                $fullName = $fullName . ', ' . $suffix;
+            if ($suffix && ! str_contains($fullName, $suffix)) {
+                $fullName = $fullName.', '.$suffix;
             }
 
             $lppmHeadName = $fullName;
@@ -164,11 +166,11 @@ class ProposalPdfService
                 $nm = $candidate->name;
                 $px = $idn->title_prefix;
                 $sx = $idn->title_suffix;
-                if ($px && !str_contains($nm, $px)) {
-                    $nm = $px . ' ' . $nm;
+                if ($px && ! str_contains($nm, $px)) {
+                    $nm = $px.' '.$nm;
                 }
-                if ($sx && !str_contains($nm, $sx)) {
-                    $nm = $nm . ', ' . $sx;
+                if ($sx && ! str_contains($nm, $sx)) {
+                    $nm = $nm.', '.$sx;
                 }
                 $lppmHeadName = $nm;
                 $deanId = $idn->identity_id ?? '';
@@ -202,6 +204,7 @@ class ProposalPdfService
 
         // 1. Generate the basic info PDF using DomPDF
         $infoPdfContent = Pdf::loadView('pdf.proposal-export', [
+            'isPreview' => $isPreview,
             'proposal' => $proposal->load([
                 'submitter.identity.institution',
                 'submitter.identity.studyProgram',
@@ -219,6 +222,7 @@ class ProposalPdfService
                 'partners',
                 'detailable.macroResearchGroup',
                 'outputs',
+                'signatures',
             ]),
             'dean_name' => $deanName,
             'dean_id' => $deanId,
@@ -230,7 +234,7 @@ class ProposalPdfService
             'lecturer_signed_at' => $lecturerSignedAt,
         ])->setPaper('a4', 'portrait')->output();
 
-        $tempInfoPath = tempnam(sys_get_temp_dir(), 'proposal_info_');
+        $tempInfoPath = tempnam($cacheDir, 'proposal_info_');
         file_put_contents($tempInfoPath, $infoPdfContent);
 
         // 2. Prepare FPDI for merging
@@ -260,7 +264,7 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    \Log::warning('FPDI Merge Fail (Approval File) for ' . $proposal->id . ': ' . $e->getMessage());
+                    \Log::warning('FPDI Merge Fail (Approval File) for '.$proposal->id.': '.$e->getMessage());
                 }
             }
         }
@@ -280,10 +284,10 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                Log::warning('FPDI Merge Fail (Substance File) for ' . $proposal->id . ': ' . $e->getMessage());
+                Log::warning('FPDI Merge Fail (Substance File) for '.$proposal->id.': '.$e->getMessage());
             }
         } elseif ($substanceFile && file_exists($substanceFile->getPath())) {
-            Log::warning('Proposal PDF Export: Skipping non-PDF substance file for proposal ' . $proposal->id . ' (MIME: ' . $substanceFile->mime_type . ')');
+            Log::warning('Proposal PDF Export: Skipping non-PDF substance file for proposal '.$proposal->id.' (MIME: '.$substanceFile->mime_type.')');
         }
 
         // 4. Add pages from partner commitment letters
@@ -303,7 +307,7 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    Log::warning('FPDI Merge Fail (Partner Commitment Letter) for partner ' . $partner->id . ' in proposal ' . $proposal->id . ': ' . $e->getMessage());
+                    Log::warning('FPDI Merge Fail (Partner Commitment Letter) for partner '.$partner->id.' in proposal '.$proposal->id.': '.$e->getMessage());
                 }
             }
         }
@@ -319,11 +323,11 @@ class ProposalPdfService
     /**
      * Export a report to PDF.
      */
-    public function exportReport(Proposal $proposal, \App\Models\ProgressReport $report): string
+    public function exportReport(Proposal $proposal, \App\Models\ProgressReport $report, bool $isPreview = false): string
     {
         // 0. Cache Check
         $cacheDir = storage_path('app/public/pdf_cache/reports');
-        if (!file_exists($cacheDir)) {
+        if (! file_exists($cacheDir)) {
             mkdir($cacheDir, 0755, true);
         }
 
@@ -352,18 +356,19 @@ class ProposalPdfService
         }
 
         $cacheFileName = sprintf(
-            'report_%s_%s.pdf',
+            '%sreport_%s_%s.pdf',
+            $isPreview ? 'preview_' : '',
             $report->id,
             $latestTimestamp
         );
-        $cachePath = $cacheDir . DIRECTORY_SEPARATOR . $cacheFileName;
+        $cachePath = $cacheDir.DIRECTORY_SEPARATOR.$cacheFileName;
 
         if (file_exists($cachePath)) {
             return $cachePath;
         }
 
         // Cleanup old versions of this report's PDF
-        $oldPdfs = glob($cacheDir . DIRECTORY_SEPARATOR . "report_{$report->id}_*.pdf");
+        $oldPdfs = glob($cacheDir.DIRECTORY_SEPARATOR."report_{$report->id}_*.pdf");
         foreach ($oldPdfs as $oldPdf) {
             @unlink($oldPdf);
         }
@@ -436,9 +441,26 @@ class ProposalPdfService
 
         $lecturerSignedAt = $report->submitted_at ?? ($report->created_at ?? now());
 
-        // Fetch monev date as reviewer signed date
-        $monevDate = \App\Models\ProposalMonev::where('proposal_id', $proposal->id)->latest('monev_date')->value('monev_date');
-        $reviewerSignedAt = $monevDate;
+        // Fetch digital signatures for QR codes
+        /** @var \Illuminate\Support\Collection<string, \App\Models\DocumentSignature> $reportSigs */
+        $reportSigs = $report->signatures()
+            ->get()
+            ->keyBy(function (\Illuminate\Database\Eloquent\Model $s) {
+                /** @var \App\Models\DocumentSignature $s */
+                return "{$s->action}|{$s->signed_role}";
+            });
+
+        $qrLecturerUrl = isset($reportSigs['submitted|lecturer'])
+            ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['submitted|lecturer']->id])
+            : \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => Str::uuid()]); // Fallback for legacy
+
+        $qrDeanUrl = isset($reportSigs['approved|dekan'])
+            ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['approved|dekan']->id])
+            : null;
+
+        $qrLppmUrl = isset($reportSigs['finalized|kepala_lppm'])
+            ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['finalized|kepala_lppm']->id])
+            : null;
 
         // Generate report content PDF
         $infoPdfContent = Pdf::loadView('pdf.report-export', [
@@ -451,7 +473,9 @@ class ProposalPdfService
             'report' => $report->load([
                 'mandatoryOutputs.proposalOutput',
                 'additionalOutputs.proposalOutput',
+                'signatures',
             ]),
+            'isPreview' => $isPreview,
             'dean_name' => $deanName,
             'dean_id' => $deanId,
             'lppm_head_name' => $lppmHeadName,
@@ -460,10 +484,12 @@ class ProposalPdfService
             'dean_signed_at' => $deanSignedAt,
             'lppm_signed_at' => $lppmSignedAt,
             'lecturer_signed_at' => $lecturerSignedAt,
-            'reviewer_signed_at' => $reviewerSignedAt,
+            'qrLecturerUrl' => $qrLecturerUrl,
+            'qrDeanUrl' => $qrDeanUrl,
+            'qrLppmUrl' => $qrLppmUrl,
         ])->setPaper('a4', 'portrait')->output();
 
-        $tempInfoPath = tempnam(sys_get_temp_dir(), 'report_info_');
+        $tempInfoPath = tempnam($cacheDir, 'report_info_');
         file_put_contents($tempInfoPath, $infoPdfContent);
 
         $pdf = new Fpdi;
@@ -488,7 +514,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Signature Page) for ' . $report->id . ': ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Signature Page) for '.$report->id.': '.$e->getMessage());
             }
         }
 
@@ -506,7 +532,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Substance) for ' . $report->id . ': ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Substance) for '.$report->id.': '.$e->getMessage());
             }
         }
 
@@ -523,7 +549,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Realization File) for ' . $report->id . ': ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Realization File) for '.$report->id.': '.$e->getMessage());
             }
         }
 
@@ -541,7 +567,7 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Presentation File) for ' . $report->id . ': ' . $e->getMessage());
+                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Presentation File) for '.$report->id.': '.$e->getMessage());
                 }
             }
         }
@@ -565,7 +591,7 @@ class ProposalPdfService
                             $pdf->useTemplate($templateId);
                         }
                     } catch (\Throwable $e) {
-                        \Illuminate\Support\Facades\Log::warning("FPDI Merge Fail (Output File - {$collection}) for report " . $report->id . ': ' . $e->getMessage());
+                        \Illuminate\Support\Facades\Log::warning("FPDI Merge Fail (Output File - {$collection}) for report ".$report->id.': '.$e->getMessage());
                     }
                 }
             }
@@ -586,7 +612,7 @@ class ProposalPdfService
                 'logbookApprovalMode' => \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital',
             ])->setPaper('a4', 'portrait')->output();
 
-            $tempNotesPath = tempnam(sys_get_temp_dir(), 'report_notes_');
+            $tempNotesPath = tempnam(storage_path('app'), 'report_notes_');
             file_put_contents($tempNotesPath, $notesPdfContent);
 
             try {
@@ -598,7 +624,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Daily Notes) for ' . $report->id . ': ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Daily Notes) for '.$report->id.': '.$e->getMessage());
             }
             @unlink($tempNotesPath);
         }

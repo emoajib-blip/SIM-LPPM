@@ -2,7 +2,7 @@
 
 // osfsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/database/factories/BudgetItemFactory.php-PHPStan\BetterReflection\Reflection\ReflectionClass-Database\Factories\BudgetItemFactory
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-87ad07a57bee101bc1e4afa088ee759f047e177ca6a7d3df071133f0e97771ce-8.4.1-6.65.0.9',
+   'variableKey' => 'v2-0326c46c4e79bd838ffcd3d059fd72571bea85db0a52909efd9042f7413d6252-8.4.1-6.65.0.9',
    'data' => 
   array (
     'locatedSource' => 
@@ -29,7 +29,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 10,
-    'endLine' => 40,
+    'endLine' => 54,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Factories\\Factory',
@@ -72,7 +72,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * @return array<string, mixed>
  */',
         'startLine' => 17,
-        'endLine' => 39,
+        'endLine' => 53,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

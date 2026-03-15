@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('budget_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('proposal_id')->constrained('proposals')->onDelete('cascade')->comment('Proposal');
+            $table->foreignUuid('proposal_id')->comment('Proposal')->constrained('proposals')->onDelete('cascade');
             $table->foreignId('budget_group_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('budget_component_id')->nullable()->constrained()->nullOnDelete();
             $table->string('group')->comment('Kelompok RAB (Honor/Peralatan/dll)');

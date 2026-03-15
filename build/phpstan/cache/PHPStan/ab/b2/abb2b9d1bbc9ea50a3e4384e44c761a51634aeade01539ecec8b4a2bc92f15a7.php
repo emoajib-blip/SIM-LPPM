@@ -17,6 +17,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'view' => 'Illuminate\\View\\View',
           'layout' => 'Livewire\\Attributes\\Layout',
+          'on' => 'Livewire\\Attributes\\On',
           'component' => 'Livewire\\Component',
         ),
          'className' => 'App\\Livewire\\Reports\\IkuReport',
@@ -1693,6 +1694,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'view' => 'Illuminate\\View\\View',
           'layout' => 'Livewire\\Attributes\\Layout',
+          'on' => 'Livewire\\Attributes\\On',
           'component' => 'Livewire\\Component',
         ),
          'className' => 'App\\Livewire\\Reports\\IkuReport',
@@ -1721,6 +1723,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'view' => 'Illuminate\\View\\View',
           'layout' => 'Livewire\\Attributes\\Layout',
+          'on' => 'Livewire\\Attributes\\On',
           'component' => 'Livewire\\Component',
         ),
          'className' => 'App\\Livewire\\Reports\\IkuReport',
@@ -1749,6 +1752,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'view' => 'Illuminate\\View\\View',
           'layout' => 'Livewire\\Attributes\\Layout',
+          'on' => 'Livewire\\Attributes\\On',
           'component' => 'Livewire\\Component',
         ),
          'className' => 'App\\Livewire\\Reports\\IkuReport',
@@ -1777,6 +1781,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'view' => 'Illuminate\\View\\View',
           'layout' => 'Livewire\\Attributes\\Layout',
+          'on' => 'Livewire\\Attributes\\On',
           'component' => 'Livewire\\Component',
         ),
          'className' => 'App\\Livewire\\Reports\\IkuReport',
@@ -1805,10 +1810,40 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'view' => 'Illuminate\\View\\View',
           'layout' => 'Livewire\\Attributes\\Layout',
+          'on' => 'Livewire\\Attributes\\On',
           'component' => 'Livewire\\Component',
         ),
          'className' => 'App\\Livewire\\Reports\\IkuReport',
          'functionName' => 'toggleDetails',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '6eb2539e87a5e0ec04a40b16e5a56ce8' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Reports',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'withinstitutionalapproval' => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+          'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
+          'view' => 'Illuminate\\View\\View',
+          'layout' => 'Livewire\\Attributes\\Layout',
+          'on' => 'Livewire\\Attributes\\On',
+          'component' => 'Livewire\\Component',
+        ),
+         'className' => 'App\\Livewire\\Reports\\IkuReport',
+         'functionName' => 'previewPdf',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -1833,6 +1868,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'view' => 'Illuminate\\View\\View',
           'layout' => 'Livewire\\Attributes\\Layout',
+          'on' => 'Livewire\\Attributes\\On',
           'component' => 'Livewire\\Component',
         ),
          'className' => 'App\\Livewire\\Reports\\IkuReport',
@@ -1854,7 +1890,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/IkuReport.php' => 'ffaecc29a9cca5ccc5f99271e8e4e5c23793afadd2b0d684fd58d1c2be1596b9',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/IkuReport.php' => '6701748b65c6ff5ed550044b42afb09ea920532d94df71626f53d0ba7621e72d',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Traits/HasIkuCalculations.php' => '4d01213ebd645ba017d10fa7b1b94ba70f179d5f996de779acc2f3e03c89ed4c',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Concerns/HasToast.php' => '005cf1d6a13c6d7555286d4daf3ba7619e1368f86ba94c0fe7482da0c7b9474f',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithInstitutionalApproval.php' => '1b1d6fec47dc105d9024e917c84145b3251f02359ab4c90b5bb34a09393357f7',

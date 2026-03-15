@@ -4,38 +4,131 @@
     <title>Berita Acara Monev</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
-        html, body { margin: 0; padding: 0; border: 0; }
-        @page { margin: 2.5cm 2.5cm 2.5cm 3cm; }
-        body { font-family: "Arial", sans-serif; font-size: 11pt; line-height: 1.5; color: #000; }
-        .kop-surat { border-bottom: 2pt solid #000; padding-bottom: 5px; margin-bottom: 20px; text-align: center; position: relative; }
-        .logo { position: absolute; left: 0; top: 0; width: 70px; }
-        .inst-name { font-size: 14pt; font-weight: bold; }
-        .lppm-name { font-size: 12pt; font-weight: bold; margin-top: 2px; }
-        .inst-address { font-size: 9pt; color: #333; margin-top: 5px; }
+        @page { 
+            size: A4;
+            margin: 4cm 3cm 3cm 4cm; /* Top Right Bottom Left - Standar Tata Naskah Dinas */
+        }
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            border: 0; 
+            font-family: "Arial", "Helvetica", sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #000;
+        }
+        body { 
+            text-align: justify; 
+            text-justify: inter-word;
+        }
+        .kop-surat { 
+            border-bottom: 3pt double #000; 
+            padding-bottom: 10px; 
+            margin-bottom: 40px; 
+            text-align: center; 
+            position: relative; 
+            width: 100%;
+        }
+        .logo { 
+            position: absolute; 
+            left: -10px; 
+            top: -20px; 
+            width: 100px; 
+        }
+        .header-text {
+            margin-left: 90px;
+        }
+        .inst-name { 
+            font-size: 14pt; 
+            font-weight: bold; 
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .lppm-name { 
+            font-size: 13pt; 
+            font-weight: bold; 
+            margin-top: 5px; 
+            text-transform: uppercase;
+        }
+        .inst-address { 
+            font-size: 9pt; 
+            color: #000; 
+            margin-top: 8px; 
+            line-height: 1.3;
+        }
         
-        .title { text-align: center; font-weight: bold; text-decoration: underline; font-size: 12pt; margin-bottom: 20px; text-transform: uppercase; }
+        .title { 
+            text-align: center; 
+            font-weight: bold; 
+            text-decoration: underline; 
+            font-size: 12pt; 
+            margin-bottom: 50px; 
+            text-transform: uppercase; 
+            line-height: 1.6;
+        }
         
-        .content-section { margin-bottom: 15px; }
-        .label { width: 180px; display: inline-block; vertical-align: top; font-weight: bold; }
-        .value { display: inline-block; width: 450px; vertical-align: top; }
+        .content-section { margin-bottom: 30px; }
         
-        table.borang-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; }
-        table.borang-table th, table.borang-table td { border: 1pt solid #000; padding: 8px; vertical-align: top; }
-        table.borang-table th { background-color: #f2f2f2; text-align: center; }
+        .proposal-info td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
         
-        .signature-section { margin-top: 40px; width: 100%; }
+        table.borang-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 25px; 
+            margin-bottom: 25px; 
+        }
+        table.borang-table th, table.borang-table td { 
+            border: 1pt solid #000; 
+            padding: 15px 12px; 
+            vertical-align: top; 
+        }
+        table.borang-table th { 
+            background-color: #f2f2f2; 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 11pt;
+            text-transform: uppercase;
+        }
+        
+        .signature-section { 
+            margin-top: 80px; 
+            width: 100%; 
+            page-break-inside: avoid; 
+        }
         .signature-table { width: 100%; border: none; }
-        .signature-table td { width: 50%; border: none; text-align: center; vertical-align: top; }
-        .sign-space { height: 80px; }
-        .sign-name { font-weight: bold; text-decoration: underline; }
+        .signature-table td { width: 50%; border: none; text-align: center; vertical-align: top; padding: 20px 5px; }
+        .sign-space { min-height: 120px; }
+        .sign-qr { width: 90px; height: 90px; margin: 15px auto; }
+        .sign-name { font-weight: bold; text-decoration: underline; margin-top: 15px; display: block; }
+        
+        .footer-info {
+            position: fixed;
+            bottom: -2cm;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 8.5pt;
+            color: #555;
+            font-style: italic;
+            border-top: 1pt solid #ddd;
+            padding-top: 8px;
+        }
+        
+        strong { font-weight: bold; }
+
     </style>
 </head>
 <body>
     <div class="kop-surat">
         <img src="{{ public_path('logo.png') }}" class="logo">
-        <div class="inst-name">INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN</div>
-        <div class="lppm-name">LEMBAGA PENELITIAN DAN PENGABDIAN KEPADA MASYARAKAT</div>
-        <div class="inst-address">Jl. Karangdowo No. 9, Kedungwuni, Kab. Pekalongan 51173</div>
+        <div class="header-text">
+            <div class="inst-name">INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN</div>
+            <div class="lppm-name">LEMBAGA PENELITIAN DAN PENGABDIAN KEPADA MASYARAKAT</div>
+            <div class="inst-address">Jl. Karangdowo No. 9, Kedungwuni, Kab. Pekalongan 51173</div>
+        </div>
     </div>
 
     <div class="title">
@@ -47,11 +140,11 @@
     </div>
 
     <div class="content-section">
-        <p>Pada hari ini, <strong>{{ $review->reviewed_at?->translatedFormat('l') ?? '..........' }}</strong>, tanggal <strong>{{ $review->reviewed_at?->translatedFormat('d F Y') ?? '..........' }}</strong>, telah dilaksanakan Monitoring dan Evaluasi Internal untuk proposal berikut:</p>
+        <p>Pada hari ini, <strong>{{ $review->reviewed_at?->translatedFormat('l') ?? '..........' }}</strong>, tanggal <strong>{{ $review->reviewed_at?->translatedFormat('d F Y') ?? '..........' }}</strong>, bertempat di ITSNU Pekalongan, telah dilaksanakan Monitoring dan Evaluasi Internal untuk kemajuan pelaksanaan program sebagai berikut:</p>
     </div>
 
     <div class="content-section">
-        <table style="width: 100%; border: none;">
+        <table class="proposal-info" style="width: 100%; border: none; border-collapse: collapse;">
             <tr>
                 <td style="width: 180px; font-weight: bold;">Judul {{ $review->proposal->detailable_type === \App\Models\Research::class ? 'Penelitian' : 'Kegiatan' }}</td>
                 <td>: <strong>{{ $review->proposal->title }}</strong></td>
@@ -84,44 +177,95 @@
         </table>
     </div>
 
-    <h4 style="margin-bottom: 5px;">HASIL EVALUASI CAPAIAN:</h4>
+    <div class="content-section" style="margin-top: 20px;">
+        <h4 style="margin-bottom: 5px; font-size: 11pt; border-bottom: 0.5pt solid #000; padding-bottom: 2px;">I. RINGKASAN KEMAJUAN PELAKSANAAN</h4>
+        @if($activeReport)
+            <div style="text-align: justify; margin-bottom: 15px;">
+                {{ $activeReport->summary_update }}
+            </div>
+            
+            <h5 style="margin-bottom: 5px; font-size: 10pt;">Capaian Luaran (Wajib & Tambahan):</h5>
+            <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th style="border: 0.5pt solid #000; padding: 5px; width: 30%;">Jenis Luaran</th>
+                        <th style="border: 0.5pt solid #000; padding: 5px; width: 50%;">Judul / Nama Produk / Detail</th>
+                        <th style="border: 0.5pt solid #000; padding: 5px; width: 20%;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($activeReport->mandatoryOutputs as $output)
+                        <tr>
+                            <td style="border: 0.5pt solid #000; padding: 5px;">{{ $output->proposalOutput?->type ?: 'Luaran Wajib' }}</td>
+                            <td style="border: 0.5pt solid #000; padding: 5px;">{{ $output->article_title ?: ($output->product_name ?: ($output->book_title ?: '-')) }}</td>
+                            <td style="border: 0.5pt solid #000; padding: 5px; text-align: center;">{{ ucfirst($output->status_type) }}</td>
+                        </tr>
+                    @empty
+                        {{-- No mandatory outputs recorded --}}
+                    @endforelse
+                    
+                    @foreach($activeReport->additionalOutputs as $output)
+                        <tr>
+                            <td style="border: 0.5pt solid #000; padding: 5px;">{{ $output->proposalOutput?->type ?: 'Luaran Tambahan' }}</td>
+                            <td style="border: 0.5pt solid #000; padding: 5px;">{{ $output->article_title ?: ($output->product_name ?: ($output->book_title ?: '-')) }}</td>
+                            <td style="border: 0.5pt solid #000; padding: 5px; text-align: center;">{{ ucfirst($output->status) }}</td>
+                        </tr>
+                    @endforeach
+                    
+                    @if($activeReport->mandatoryOutputs->isEmpty() && $activeReport->additionalOutputs->isEmpty())
+                        <tr>
+                            <td colspan="3" style="border: 0.5pt solid #000; padding: 10px; text-align: center; font-style: italic;">Belum ada luaran yang dilaporkan.</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        @else
+            <div style="border: 0.5pt dashed #999; padding: 10px; text-align: center; color: #666; font-style: italic;">
+                Laporan kemajuan belum diunggah oleh peneliti/pelaksana untuk periode ini.
+            </div>
+        @endif
+    </div>
+
+    <h4 style="margin-bottom: 10px; margin-top: 25px; font-size: 11pt; border-bottom: 0.5pt solid #000; padding-bottom: 2px;">II. HASIL EVALUASI KOMPONEN</h4>
     <table class="borang-table">
         <thead>
             <tr>
                 <th style="width: 5%;">No</th>
-                <th style="width: 45%;">Komponen Penilaian</th>
-                <th>Komentar Reviewer / Pilihan Opsi</th>
+                <th style="width: 45%;">Kriteria Penilaian</th>
+                <th style="width: 10%;">Bobot</th>
+                <th style="width: 10%;">Skor</th>
+                <th style="width: 30%;">Catatan / Justifikasi</th>
             </tr>
         </thead>
         <tbody>
             @foreach($criteria as $item)
+                @php 
+                    $fieldKey = \Illuminate\Support\Str::snake($item->criteria);
+                    $scoreVal = $review->borang_data[$fieldKey . '_score'] ?? 0;
+                    $notesVal = $review->borang_data[$fieldKey . '_notes'] ?? '-';
+                @endphp
                 <tr>
                     <td style="text-align: center;">{{ $loop->iteration }}</td>
-                    <td>{{ $item->criteria }}</td>
-                    <td>
-                        @php 
-                            $fieldKey = \Illuminate\Support\Str::snake($item->criteria);
-                            $val = $review->borang_data[$fieldKey] ?? '-';
-                        @endphp
-                        {{ $val }}
-                    </td>
+                    <td style="text-align: justify;">{{ $item->criteria }}</td>
+                    <td style="text-align: center;">{{ $item->weight }}%</td>
+                    <td style="text-align: center;">{{ $scoreVal }}</td>
+                    <td style="text-align: justify; font-size: 10pt;">{{ $notesVal }}</td>
                 </tr>
             @endforeach
-            <tr>
-                <td colspan="2" style="text-align: right; background-color: #f9f9f9;"><strong>SKOR TOTAL (0-100)</strong></td>
-                <td style="font-weight: bold; background-color: #f9f9f9;">{{ $review->score }}</td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align: right; background-color: #f9f9f9;"><strong>REKOMENDASI STATUS</strong></td>
-                <td style="font-weight: bold; text-transform: uppercase;">{{ str_replace('_', ' ', $review->status) }}</td>
+            <tr style="background-color: #f9f9f9; font-weight: bold;">
+                <td colspan="3" style="text-align: right;">SKOR TOTAL KESELURUHAN</td>
+                <td style="text-align: center;">{{ $review->score }}</td>
+                <td style="background-color: #fff;"></td>
             </tr>
         </tbody>
     </table>
 
     <div class="content-section">
-        <strong>Catatan Reviewer:</strong><br>
-        <div style="border: 1pt solid #ccc; padding: 10px; min-height: 80px; text-align: justify;">
-            {{ $review->notes ?? 'Tidak ada catatan tambahan.' }}
+        <h4 style="margin-bottom: 8px; font-size: 11pt;">II. REKOMENDASI DAN CATATAN:</h4>
+        <div style="border: 0.5pt solid #000; padding: 10px; min-height: 60px; text-align: justify;">
+            <strong>Rekomendasi:</strong> {{ strtoupper(str_replace('_', ' ', $review->status)) }}<br><br>
+            <strong>Catatan Tambahan:</strong><br>
+            {{ $review->notes ?? 'Reviewer tidak memberikan catatan tambahan.' }}
         </div>
     </div>
 
@@ -132,11 +276,15 @@
                     <p style="margin-bottom: 5px;">Monev Reviewer,</p>
                     <div class="sign-space">
                         @if($review->reviewed_at)
-                            <div style="border: 1.5pt solid #1a56db; display: inline-block; padding: 8px; color: #1a56db; font-size: 8pt; border-radius: 4px; font-weight: bold; background-color: #f0f7ff;">
-                                <div style="font-size: 10pt; border-bottom: 1pt solid #1a56db; margin-bottom: 3px;">DIGITALLY VERIFIED</div>
-                                REVIEWER CODE: {{ substr(md5($review->reviewer_id), 0, 8) }}<br>
-                                DATE: {{ $review->reviewed_at->format('d/m/Y H:i') }}
+                            @if($qrReviewerUrl ?? null)
+                                <img src="{{ generate_qr_code_data_uri($qrReviewerUrl, 160) }}" class="sign-qr">
+                            @endif
+                            <div style="font-size: 8pt; color: #333; margin-top: 2px;">
+                                Terverifikasi sistem (QR)<br>
+                                {{ $review->reviewed_at->format('d/m/Y H:i') }}
                             </div>
+                        @else
+                            <div style="height: 100px;"></div>
                         @endif
                     </div>
                     <div class="sign-name">{{ $review->reviewer->name }}</div>
@@ -146,30 +294,37 @@
                     <p style="margin-bottom: 5px;">Mengetahui,<br>Admin LPPM ITSNU Pekalongan</p>
                     <div class="sign-space">
                         @if($review->finalized_by_lppm_at)
-                            <div style="border: 1.5pt solid #059669; display: inline-block; padding: 8px; color: #059669; font-size: 8pt; border-radius: 4px; font-weight: bold; background-color: #ecfdf5;">
-                                <div style="font-size: 10pt; border-bottom: 1pt solid #059669; margin-bottom: 3px;">FINALIZED & VALIDATED</div>
-                                ADMIN AUTH: {{ substr(uuid_create(), 0, 8) }}<br>
-                                DATE: {{ $review->finalized_by_lppm_at->format('d/m/Y H:i') }}
+                            @if($qrAdminUrl ?? null)
+                                <img src="{{ generate_qr_code_data_uri($qrAdminUrl, 160) }}" class="sign-qr">
+                            @endif
+                            <div style="font-size: 8pt; color: #333; margin-top: 2px;">
+                                Terverifikasi sistem (QR)<br>
+                                {{ $review->finalized_by_lppm_at->format('d/m/Y H:i') }}
                             </div>
+                        @else
+                            <div style="height: 100px;"></div>
                         @endif
                     </div>
-                    <div class="sign-name">...........................................</div>
+                    <br>
                 </td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center; padding-top: 30px;">
                     <p style="margin-bottom: 5px;">Mengesahkan,<br>Kepala LPPM ITSNU Pekalongan</p>
-                    <div class="sign-space" style="height: 100px;">
+                    <div class="sign-space">
                         @if($review->approved_by_kepala_at)
-                            <div style="border: 2pt solid #dc2626; display: inline-block; padding: 10px; color: #dc2626; font-size: 9pt; border-radius: 6px; font-weight: bold; background-color: #fef2f2; position: relative;">
-                                <div style="font-size: 11pt; border-bottom: 1.5pt solid #dc2626; margin-bottom: 5px; letter-spacing: 1px;">APPROVED BY HEAD OF LPPM</div>
-                                SIGNATURE VERIFIED: SIM-LPPM/{{ $review->id }}<br>
-                                TIMESTAMP: {{ $review->approved_by_kepala_at->format('d/m/Y H:i:s') }}
+                            @if($qrKepalaUrl ?? null)
+                                <img src="{{ generate_qr_code_data_uri($qrKepalaUrl, 180) }}" class="sign-qr" style="width: 90px; height: 90px;">
+                            @endif
+                            <div style="font-size: 8pt; color: #333; margin-top: 2px;">
+                                Terverifikasi sistem (QR)<br>
+                                {{ $review->approved_by_kepala_at->format('d/m/Y H:i') }}
                             </div>
                         @else
-                             <div class="sign-space"></div>
+                             <div style="height: 110px;"></div>
                         @endif
                     </div>
+
                     @php $kepala = \App\Models\User::role('kepala lppm')->first(); @endphp
                     <div class="sign-name">{{ $kepala->name ?? '...........................................' }}</div>
                     <div style="font-size: 9pt;">NIDN: {{ $kepala->identity?->identity_id ?? '-' }}</div>
@@ -178,8 +333,8 @@
         </table>
     </div>
 
-    <div style="position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 8pt; color: #888; border-top: 0.5pt solid #eee; padding-top: 5px;">
-        Dokumen ini dihasilkan secara otomatis oleh SIM-LPPM ITSNU Pekalongan pada {{ now()->format('d/m/Y H:i') }}
+    <div class="footer-info">
+        Dokumen ini dihasilkan secara otomatis oleh SIM-LPPM ITSNU Pekalongan pada {{ ($generatedAt ?? now())->format('d/m/Y H:i') }}
     </div>
 </body>
 </html>

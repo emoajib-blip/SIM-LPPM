@@ -167,6 +167,9 @@
 
                                     @php
                                         $pdfRoute = match ($report->type) {
+                                            'research' => 'reports.research.pdf',
+                                            'pkm' => 'reports.pkm.pdf',
+                                            'output' => 'reports.output.pdf',
                                             'partner' => 'reports.partner.pdf',
                                             'iku' => 'admin.iku.export-pdf',
                                             'monev' => 'reports.monev.pdf',

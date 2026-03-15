@@ -19,7 +19,7 @@ class MonevDashboard extends Component
 
     public function mount()
     {
-        if (! Auth::user()->hasRole('rektor')) {
+        if (! Auth::user()->hasAnyRole(['rektor', 'kepala lppm'])) {
             abort(403);
         }
         $this->academicYear = $this->academicYear ?: date('Y');

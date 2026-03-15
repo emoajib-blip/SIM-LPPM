@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('proposal_reviewer', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('proposal_id')->constrained('proposals')->onDelete('cascade')->comment('Proposal');
-            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade')->comment('Reviewer');
+            $table->foreignUuid('proposal_id')->comment('Proposal')->constrained('proposals')->onDelete('cascade');
+            $table->foreignUuid('user_id')->comment('Reviewer')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'in_progress', 'completed', 're_review_requested'])->default('pending')->comment('Status Review');
             $table->text('review_notes')->nullable()->comment('Catatan Review');
             $table->enum('recommendation', ['approved', 'rejected', 'revision_needed'])->nullable()->comment('Rekomendasi Reviewer');

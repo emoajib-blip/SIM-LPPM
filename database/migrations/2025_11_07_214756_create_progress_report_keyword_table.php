@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('progress_report_keyword', function (Blueprint $table) {
-            $table->foreignUuid('progress_report_id')->constrained()->onDelete('cascade')->comment('Progress Report');
-            $table->foreignId('keyword_id')->constrained()->onDelete('cascade')->comment('Keyword');
+            $table->foreignUuid('progress_report_id')->comment('Progress Report')->constrained()->onDelete('cascade');
+            $table->foreignId('keyword_id')->comment('Keyword')->constrained()->onDelete('cascade');
             $table->timestamps();
 
             $table->primary(['progress_report_id', 'keyword_id']);

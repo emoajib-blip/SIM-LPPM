@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('additional_outputs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('progress_report_id')->constrained()->onDelete('cascade')->comment('Progress Report');
-            $table->foreignId('proposal_output_id')->constrained('proposal_outputs')->onDelete('cascade')->comment('Link to planned output');
+            $table->foreignUuid('progress_report_id')->comment('Progress Report')->constrained()->onDelete('cascade');
+            $table->foreignId('proposal_output_id')->comment('Link to planned output')->constrained('proposal_outputs')->onDelete('cascade');
 
             // Status & Book Information
             $table->enum('status', ['review', 'editing', 'published'])->comment('Status buku');

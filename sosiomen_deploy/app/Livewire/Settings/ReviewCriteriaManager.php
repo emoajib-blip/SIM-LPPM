@@ -14,6 +14,8 @@ class ReviewCriteriaManager extends Component
 
     public array $editing = [];
 
+    public array $creating = [];
+
     public function mount(): void
     {
         if (! Auth::user()->hasRole('admin lppm')) {
@@ -60,6 +62,13 @@ class ReviewCriteriaManager extends Component
         $this->editing = [];
     }
 
+    public function delete(int $id): void
+    {
+        $criteria = ReviewCriteria::findOrFail($id);
+        $criteria->delete();
+        $this->toastSuccess('Kriteria berhasil dihapus.');
+    }
+
     public function save(): void
     {
         $this->validate([
@@ -81,6 +90,50 @@ class ReviewCriteriaManager extends Component
 
         $this->editing = [];
         $this->toastSuccess('Kriteria berhasil diperbarui.');
+    }
+
+    public function openCreate(string $type = 'research'): void
+    {
+        $this->creating = [
+            'type' => $type,
+            'criteria' => '',
+            'description' => '',
+            'weight' => 0,
+        ];
+    }
+
+    public function cancelCreate(): void
+    {
+        $this->creating = [];
+    }
+
+    public function createCriteria(): void
+    {
+        $this->validate([
+            'creating.criteria' => 'required|string|max:255',
+            'creating.description' => 'required|string',
+            'creating.weight' => 'required|numeric|min:0|max:100',
+            'creating.type' => 'required|in:research,community_service,monev_research,monev_community_service',
+        ], [], [
+            'creating.criteria' => 'Nama Kriteria',
+            'creating.description' => 'Deskripsi/Acuan',
+            'creating.weight' => 'Bobot',
+            'creating.type' => 'Jenis Kriteria',
+        ]);
+
+        $order = ReviewCriteria::where('type', $this->creating['type'])->max('order') ?? 0;
+
+        ReviewCriteria::create([
+            'type' => $this->creating['type'],
+            'criteria' => $this->creating['criteria'],
+            'description' => $this->creating['description'],
+            'weight' => $this->creating['weight'],
+            'order' => $order + 1,
+            'is_active' => true,
+        ]);
+
+        $this->creating = [];
+        $this->toastSuccess('Kriteria baru berhasil ditambahkan.');
     }
 
     public function render()

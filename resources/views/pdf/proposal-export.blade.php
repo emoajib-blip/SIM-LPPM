@@ -4,14 +4,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Proposal Export - {{ $proposal->id }}</title>
     <style>
-        @page { margin: 3cm 3cm 3cm 4cm; }
-        body { 
-            font-family: "Times New Roman", Times, serif; 
-            font-size: 12pt; 
-            line-height: 1.5; 
-            color: #000;
-            text-align: justify;
-        }
+    @page { 
+        size: a4 portrait;
+        margin: 3cm 3cm 3cm 4cm; 
+    }
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100%;
+    }
+    body { 
+        font-family: "Times New Roman", Times, serif; 
+        font-size: 12pt; 
+        line-height: 1.5; 
+        color: #000;
+        text-align: justify;
+    }
         .header-table {
             width: 100%;
             border-bottom: 2px solid #000;
@@ -113,13 +121,11 @@
         /* Improved Cover Page Styles (DomPDF Compatible) */
         .cover-page {
             box-sizing: border-box;
-            height: 24.5cm;
-            text-align: center;
-            padding: 0.5cm 0;
-            margin: 0;
             width: 100%;
+            text-align: center;
+            padding-top: 1cm;
+            margin: 0;
             page-break-after: always;
-            overflow: hidden;
             position: relative;
         }
         .cover-header {
@@ -167,9 +173,22 @@
             bottom: 0.5cm;
             width: 100%;
         }
+        .cover-table {
+            width: 100%;
+            height: 18cm;
+            border-collapse: collapse;
+            border: none !important;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .cover-table td {
+            border: none !important;
+            padding: 0;
+            vertical-align: top;
+            text-align: center;
+        }
     </style>
-</head>
-<body>
     @php
         $submitterFullName = format_name(
             $proposal->submitter->identity?->title_prefix ?? '',
@@ -180,57 +199,61 @@
         $facultyName = $proposal->submitter->identity?->faculty?->name ?? '.......................';
         $prodiName = $proposal->submitter->identity?->studyProgram?->name ?? '.......................';
     @endphp
+</head><body><table class="cover-table">
+        <tr>
+            <td>
+                <div class="cover-header">
+                    PROPOSAL {{ $proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN' }} INTERNAL
+                </div>
 
-    {{-- COVER PAGE --}}
-    <div class="cover-page">
-        <div class="cover-header">
-            PROPOSAL {{ $proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN' }} INTERNAL
-        </div>
+                <div class="cover-logo">
+                    @if(file_exists(public_path('logo.png')))
+                        <img src="{{ public_path('logo.png') }}" alt="Logo">
+                    @else
+                        <div style="height: 150px; border: 1px dashed #ccc; padding: 50px; margin: 0 auto; width: 200px;">LOGO UNIVERSITAS</div>
+                    @endif
+                </div>
 
-        <div class="cover-logo">
-            @if(file_exists(public_path('logo.png')))
-                <img src="{{ public_path('logo.png') }}" alt="Logo">
-            @else
-                <div style="height: 150px; border: 1px dashed #ccc; padding: 50px;">LOGO UNIVERSITAS</div>
-            @endif
-        </div>
+                <div class="cover-title">
+                    {{ $proposal->title }}
+                </div>
 
-        <div class="cover-title">
-            {{ $proposal->title }}
-        </div>
+                <div class="cover-authors-container">
+                    <table class="cover-authors-table">
+                        <tr>
+                            <td colspan="4" class="text-center" style="background-color: #f9f9f9; font-weight: bold;">Oleh:</td>
+                        </tr>
+                        <tr>
+                            <td width="20%">Ketua</td>
+                            <td width="5%" class="text-center">:</td>
+                            <td width="45%">{{ $submitterFullName }}</td>
+                            <td width="30%">NIDN: {{ $proposal->submitter->identity?->identity_id ?? '-' }}</td>
+                        </tr>
+                        @php
+                            $lecturerMembers = $proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id && ($m->identity?->type === 'dosen' || $m->pivot->role === 'anggota' || $m->pivot->role === 'dosen'));
+                        @endphp
+                        @foreach($lecturerMembers as $index => $member)
+                        <tr>
+                            <td width="20%">Anggota {{ $index + 1 }}</td>
+                            <td width="5%" class="text-center">:</td>
+                            <td width="45%">{{ format_name($member->identity?->title_prefix ?? '', $member->name, $member->identity?->title_suffix ?? '') }}</td>
+                            <td width="30%">NIDN: {{ $member->identity?->identity_id ?? '-' }}</td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
 
-        <div class="cover-authors-container">
-            <table class="cover-authors-table">
-                <tr>
-                    <td colspan="4" class="text-center" style="background-color: #f9f9f9; font-weight: bold;">Oleh:</td>
-                </tr>
-                <tr>
-                    <td width="20%">Ketua</td>
-                    <td width="5%" class="text-center">:</td>
-                    <td width="45%">{{ $submitterFullName }}</td>
-                    <td width="30%">NIDN: {{ $proposal->submitter->identity?->identity_id ?? '-' }}</td>
-                </tr>
-                @php
-                    $lecturerMembers = $proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id && ($m->identity?->type === 'dosen' || $m->pivot->role === 'anggota' || $m->pivot->role === 'dosen'));
-                @endphp
-                @foreach($lecturerMembers as $index => $member)
-                <tr>
-                    <td width="20%">Anggota {{ $index + 1 }}</td>
-                    <td width="5%" class="text-center">:</td>
-                    <td width="45%">{{ format_name($member->identity?->title_prefix ?? '', $member->name, $member->identity?->title_suffix ?? '') }}</td>
-                    <td width="30%">NIDN: {{ $member->identity?->identity_id ?? '-' }}</td>
-                </tr>
-                @endforeach
-            </table>
-        </div>
+                <div class="cover-footer">
+                    PROGRAM STUDI {{ strtoupper($prodiName) }}<br>
+                    FAKULTAS {{ strtoupper($facultyName) }}<br>
+                    INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN<br>
+                    TAHUN {{ $academicYear }}
+                </div>
+            </td>
+        </tr>
+    </table>
 
-        <div class="cover-footer">
-            PROGRAM STUDI {{ strtoupper($prodiName) }}<br>
-            FAKULTAS {{ strtoupper($facultyName) }}<br>
-            INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN<br>
-            TAHUN {{ $academicYear }}
-        </div>
-    </div>
+    <div style="page-break-after: always;"></div>
 
     <table class="header-table no-border">
         <tr>
@@ -814,11 +837,14 @@
 
             <tr>
                 <td class="text-center" style="height: 100px; vertical-align: bottom;">
-                    @if(isset($lppm_signed_at) && $lppm_signed_at)
+                    @php
+                        $lppmSig = $proposal->signatures->where('signed_role', 'kepala_lppm')->where('action', 'finalized')->first();
+                    @endphp
+                    @if($lppmSig)
                         <div style="margin-bottom: 5px;">
-                            <img src="{{ generate_qr_code_data_uri('Diketahui secara digital oleh: ' . $lppm_head_name . ' (Kepala LPPM) pada ' . \Carbon\Carbon::parse($lppm_signed_at)->format('d-m-Y H:i')) }}" width="70">
+                            <img src="{{ generate_qr_code_data_uri(\Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $lppmSig->id])) }}" width="70">
                         </div>
-                        <div style="font-size: 7pt; margin-bottom: 5px;">Disetujui pada:<br>{{ \Carbon\Carbon::parse($lppm_signed_at)->format('d-m-Y H:i') }}</div>
+                        <div style="font-size: 7pt; margin-bottom: 5px;">Disetujui secara digital oleh:<br>{{ $lppm_head_name }}<br>pada {{ $lppmSig->signed_at->format('d-m-Y H:i') }}</div>
                     @else
                         <div style="height: 70px;"></div>
                     @endif
@@ -826,11 +852,14 @@
                     NIDN. {{ $lppm_head_id }}
                 </td>
                 <td class="text-center" style="height: 100px; vertical-align: bottom;">
-                    @if(isset($dean_signed_at) && $dean_signed_at)
+                    @php
+                        $dekanSig = $proposal->signatures->where('signed_role', 'dekan')->where('action', 'approved')->first();
+                    @endphp
+                    @if($dekanSig)
                         <div style="margin-bottom: 5px;">
-                            <img src="{{ generate_qr_code_data_uri('Disetujui secara digital oleh: ' . $dean_name . ' (Dekan) pada ' . \Carbon\Carbon::parse($dean_signed_at)->format('d-m-Y H:i')) }}" width="70">
+                            <img src="{{ generate_qr_code_data_uri(\Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $dekanSig->id])) }}" width="70">
                         </div>
-                        <div style="font-size: 7pt; margin-bottom: 5px;">Disetujui pada:<br>{{ \Carbon\Carbon::parse($dean_signed_at)->format('d-m-Y H:i') }}</div>
+                        <div style="font-size: 7pt; margin-bottom: 5px;">Disetujui secara digital oleh:<br>{{ $dean_name }}<br>pada {{ $dekanSig->signed_at->format('d-m-Y H:i') }}</div>
                     @else
                         <div style="height: 70px;"></div>
                     @endif
@@ -838,10 +867,17 @@
                     NIDN. {{ $dean_id }}
                 </td>
                 <td class="text-center" style="height: 100px; vertical-align: bottom;">
-                    <div style="margin-bottom: 5px;">
-                        <img src="{{ generate_qr_code_data_uri('Diajukan secara digital oleh: ' . $submitterFullName . ' (Ketua Pengusul) pada ' . \Carbon\Carbon::parse($lecturer_signed_at)->format('d-m-Y H:i')) }}" width="70">
-                    </div>
-                    <div style="font-size: 7pt; margin-bottom: 5px;">Diajukan pada:<br>{{ \Carbon\Carbon::parse($lecturer_signed_at)->format('d-m-Y H:i') }}</div>
+                    @php
+                        $lecturerSig = $proposal->signatures->where('signed_role', 'lecturer')->where('action', 'submitted')->first();
+                    @endphp
+                    @if($lecturerSig)
+                        <div style="margin-bottom: 5px;">
+                            <img src="{{ generate_qr_code_data_uri(\Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $lecturerSig->id])) }}" width="70">
+                        </div>
+                        <div style="font-size: 7pt; margin-bottom: 5px;">Diajukan secara digital oleh:<br>{{ $submitterFullName }}<br>pada {{ $lecturerSig->signed_at->format('d-m-Y H:i') }}</div>
+                    @else
+                        <div style="height: 70px;"></div>
+                    @endif
                     <strong><u>{{ $submitterFullName }}</u></strong><br>
                     NIDN. {{ $proposal->submitter->identity?->identity_id ?? '-' }}
                 </td>

@@ -15,17 +15,17 @@ return new class extends Migration
         Schema::create('proposals', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title')->comment('Judul Proposal');
-            $table->foreignUuid('submitter_id')->constrained('users')->onDelete('cascade')->comment('Pengaju');
+            $table->foreignUuid('submitter_id')->comment('Pengaju')->constrained('users')->onDelete('cascade');
             $table->uuid('detailable_id')->nullable();
             $table->string('detailable_type')->nullable();
-            $table->foreignId('research_scheme_id')->nullable()->constrained('research_schemes')->onDelete('set null')->comment('Skema Penelitian');
-            $table->foreignId('focus_area_id')->nullable()->constrained('focus_areas')->onDelete('set null')->comment('Bidang Fokus');
-            $table->foreignId('theme_id')->nullable()->constrained('themes')->onDelete('set null')->comment('Tema');
-            $table->foreignId('topic_id')->nullable()->constrained('topics')->onDelete('set null')->comment('Topik');
-            $table->foreignId('national_priority_id')->nullable()->constrained('national_priorities')->onDelete('set null')->comment('Prioritas Riset Nasional');
-            $table->foreignId('cluster_level1_id')->nullable()->constrained('science_clusters')->onDelete('set null')->comment('Rumpun Ilmu Level 1');
-            $table->foreignId('cluster_level2_id')->nullable()->constrained('science_clusters')->onDelete('set null')->comment('Rumpun Ilmu Level 2');
-            $table->foreignId('cluster_level3_id')->nullable()->constrained('science_clusters')->onDelete('set null')->comment('Rumpun Ilmu Level 3');
+            $table->foreignId('research_scheme_id')->nullable()->comment('Skema Penelitian')->constrained('research_schemes')->onDelete('set null');
+            $table->foreignId('focus_area_id')->nullable()->comment('Bidang Fokus')->constrained('focus_areas')->onDelete('set null');
+            $table->foreignId('theme_id')->nullable()->comment('Tema')->constrained('themes')->onDelete('set null');
+            $table->foreignId('topic_id')->nullable()->comment('Topik')->constrained('topics')->onDelete('set null');
+            $table->foreignId('national_priority_id')->nullable()->comment('Prioritas Riset Nasional')->constrained('national_priorities')->onDelete('set null');
+            $table->foreignId('cluster_level1_id')->nullable()->comment('Rumpun Ilmu Level 1')->constrained('science_clusters')->onDelete('set null');
+            $table->foreignId('cluster_level2_id')->nullable()->comment('Rumpun Ilmu Level 2')->constrained('science_clusters')->onDelete('set null');
+            $table->foreignId('cluster_level3_id')->nullable()->comment('Rumpun Ilmu Level 3')->constrained('science_clusters')->onDelete('set null');
             $table->decimal('sbk_value', 15, 2)->nullable()->comment('Nilai SBK');
             $table->integer('duration_in_years')->default(1)->comment('Lama Kegiatan (tahun)');
             $table->text('summary')->nullable()->comment('Ringkasan');

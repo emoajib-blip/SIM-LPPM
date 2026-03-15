@@ -12,12 +12,45 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers',
          'uses' => 
         array (
+          'documentsignature' => 'App\\Models\\DocumentSignature',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'url' => 'Illuminate\\Support\\Facades\\URL',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Http\\Controllers\\DailyNoteExportController',
          'functionName' => NULL,
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      'b91109d7cde65c5c234602bd0870e972' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'url' => 'Illuminate\\Support\\Facades\\URL',
+          'str' => 'Illuminate\\Support\\Str',
+        ),
+         'className' => 'App\\Http\\Controllers\\DailyNoteExportController',
+         'functionName' => '__construct',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -37,9 +70,13 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers',
          'uses' => 
         array (
+          'documentsignature' => 'App\\Models\\DocumentSignature',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'url' => 'Illuminate\\Support\\Facades\\URL',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Http\\Controllers\\DailyNoteExportController',
          'functionName' => 'download',
@@ -57,10 +94,39 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      '1e690e5e4392d0057364a5cbd7136103' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'url' => 'Illuminate\\Support\\Facades\\URL',
+          'str' => 'Illuminate\\Support\\Str',
+        ),
+         'className' => 'App\\Http\\Controllers\\DailyNoteExportController',
+         'functionName' => 'upsertLogbookSignature',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/DailyNoteExportController.php' => '40a54a7954cf7ef2b3ebacd13e8595a90482d3e93160fb7562436edc18892d8d',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/DailyNoteExportController.php' => 'ba4f26e4f1acd01f6c20279b5acba98e991ef6d61c457b5675be22482a1e8f10',
     ),
   ),
 ));

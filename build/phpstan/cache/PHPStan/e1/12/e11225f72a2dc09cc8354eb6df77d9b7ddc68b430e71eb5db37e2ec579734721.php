@@ -12,9 +12,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers',
          'uses' => 
         array (
+          'progressreport' => 'App\\Models\\ProgressReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'proposalpdfservice' => 'App\\Services\\ProposalPdfService',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Http\\Controllers\\ProposalExportController',
          'functionName' => NULL,
@@ -37,9 +40,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers',
          'uses' => 
         array (
+          'progressreport' => 'App\\Models\\ProgressReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'proposalpdfservice' => 'App\\Services\\ProposalPdfService',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Http\\Controllers\\ProposalExportController',
          'functionName' => '__construct',
@@ -62,9 +68,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers',
          'uses' => 
         array (
+          'progressreport' => 'App\\Models\\ProgressReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'proposalpdfservice' => 'App\\Services\\ProposalPdfService',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Http\\Controllers\\ProposalExportController',
          'functionName' => 'download',
@@ -87,9 +96,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers',
          'uses' => 
         array (
+          'progressreport' => 'App\\Models\\ProgressReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'proposalpdfservice' => 'App\\Services\\ProposalPdfService',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Http\\Controllers\\ProposalExportController',
          'functionName' => 'preview',
@@ -112,9 +124,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers',
          'uses' => 
         array (
+          'progressreport' => 'App\\Models\\ProgressReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'proposalpdfservice' => 'App\\Services\\ProposalPdfService',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Http\\Controllers\\ProposalExportController',
          'functionName' => 'downloadReport',
@@ -132,10 +147,66 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      'a2e048d1bcf81fc13e03b097787dc0c1' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'progressreport' => 'App\\Models\\ProgressReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'proposalpdfservice' => 'App\\Services\\ProposalPdfService',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
+        ),
+         'className' => 'App\\Http\\Controllers\\ProposalExportController',
+         'functionName' => 'upsertReportSignatures',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '781ff70dbe3f13c32bee8cba5ad189f5' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'progressreport' => 'App\\Models\\ProgressReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'proposalpdfservice' => 'App\\Services\\ProposalPdfService',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
+        ),
+         'className' => 'App\\Http\\Controllers\\ProposalExportController',
+         'functionName' => 'upsertProposalSignatures',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ProposalExportController.php' => '2d3271910bc8277599ffbaaa76b63bbdc9f5b16f07de08e9e33cbb45c7bed1ad',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ProposalExportController.php' => 'fd2d305561c19306dfbcf691bc4814c7ff8b13955277520824325683d6105f62',
     ),
   ),
 ));

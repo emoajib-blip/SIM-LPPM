@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('proposal_outputs', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('proposal_id')->constrained('proposals')->onDelete('cascade')->comment('Proposal');
+            $table->foreignUuid('proposal_id')->comment('Proposal')->constrained('proposals')->onDelete('cascade');
             $table->integer('output_year')->comment('Tahun Luaran');
             $table->string('category')->comment('Kategori Luaran (Wajib/Tambahan)');
             $table->string('group')->nullable()->comment('Group output, e.g., buku, artikel, dll.');

@@ -1,45 +1,50 @@
 <div>
-    @if ($this->canSubmit)
-        <button type="button" class="mb-3 w-full btn btn-success" wire:click="confirmSubmit">
-            <x-lucide-send class="icon" />
-            Submit Proposal
-        </button>
+    <button type="button" class="mb-3 w-full btn btn-success @if(!$this->canSubmit) disabled @endif"
+        @if($this->canSubmit) wire:click="confirmSubmit" @endif>
+        <x-lucide-send class="icon" />
+        Submit Proposal
+    </button>
 
-        @teleport('body')
-            <x-tabler.modal id="confirmSubmitModal" title="Konfirmasi Pengajuan Proposal" component-id="{{ $this->getId() }}">
-                <x-slot:body>
-                    <div class="py-4 text-center">
-                        <x-lucide-send class="mb-2 text-success icon" style="width: 3rem; height: 3rem;" />
-                        <h3>Konfirmasi Pengajuan Proposal</h3>
-                        <div class="text-secondary">
-                            Apakah Anda yakin ingin mengajukan proposal ini? Setelah diajukan, proposal tidak dapat
-                            diubah.
+    @teleport('body')
+        <x-tabler.modal id="confirmSubmitModal" title="Konfirmasi Pengajuan Proposal" component-id="{{ $this->getId() }}">
+            <x-slot:body>
+                <div class="py-4 text-center">
+                    <x-lucide-send class="mb-2 text-success icon" style="width: 3rem; height: 3rem;" />
+                    <h3>Konfirmasi Pengajuan Proposal</h3>
+                    <div class="text-secondary">
+                        Apakah Anda yakin ingin mengajukan proposal ini? Setelah diajukan, proposal tidak dapat
+                        diubah.
+                    </div>
+                </div>
+            </x-slot:body>
+
+            <x-slot:footer>
+                <div class="w-100">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="w-100 btn btn-light" data-bs-dismiss="modal">
+                                Batalkan
+                            </button>
+                        </div>
+                        <div class="col">
+                            <button type="button" wire:click="submit" class="w-100 btn btn-success"
+                                data-bs-dismiss="modal">
+                                Ya, Ajukan Proposal
+                            </button>
                         </div>
                     </div>
-                </x-slot:body>
+                </div>
+            </x-slot:footer>
+        </x-tabler.modal>
+    @endteleport
 
-                <x-slot:footer>
-                    <div class="w-100">
-                        <div class="row">
-                            <div class="col">
-                                <button type="button" class="w-100 btn btn-light" data-bs-dismiss="modal">
-                                    Batalkan
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button type="button" wire:click="submit" class="w-100 btn btn-success"
-                                    data-bs-dismiss="modal">
-                                    Ya, Ajukan Proposal
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </x-slot:footer>
-            </x-tabler.modal>
-        @endteleport
-    @elseif ($this->pendingMembers->count() > 0)
+    @if ($this->pendingMembers->count() > 0)
         <div class="d-inline-block alert alert-warning" role="alert">
             <strong>Menunggu Persetujuan:</strong> {{ $this->pendingMembers->count() }} anggota belum menerima undangan
+        </div>
+    @elseif (!$this->eligibility['eligible'])
+        <div class="d-inline-block alert alert-warning" role="alert">
+            <strong>Tidak Memenuhi Syarat:</strong> {{ implode(', ', $this->eligibility['reasons']) }}
         </div>
     @elseif ($this->rejectedMembers->count() > 0)
         <div class="d-inline-block alert alert-danger" role="alert">

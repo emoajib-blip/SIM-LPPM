@@ -20,6 +20,28 @@
                             <option value="ganjil">Ganjil</option>
                             <option value="genap">Genap</option>
                         </select>
+                        <a href="{{ route('export.monev.recap', ['academic_year' => $academicYear, 'semester' => $semester]) }}"
+                            class="btn btn-success" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                <path d="M7 11l5 5l5 -5" />
+                                <path d="M12 4l0 12" />
+                            </svg>
+                            Ekspor Excel
+                        </a>
+                        <a href="{{ route('reports.monev.pdf', ['academic_year' => $academicYear, 'semester' => $semester, 'preview' => 1]) }}"
+                            class="btn btn-outline-info" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                            Tinjau PDF
+                        </a>
+                        <a href="{{ route('reports.monev.pdf', ['academic_year' => $academicYear, 'semester' => $semester]) }}"
+                            class="btn btn-info" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M12 11v6" /><path d="M9 14l3 3l3 -3" /></svg>
+                            Unduh PDF
+                        </a>
                         <button class="btn btn-primary" onclick="window.print()">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -151,6 +173,7 @@
                                 <th>Skor</th>
                                 <th>Status</th>
                                 <th>Tanggal Lapor</th>
+                                <th>Berita Acara</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -166,19 +189,24 @@
                                         <div class="badge bg-primary-lt">{{ $report->score }}</div>
                                     </td>
                                     <td>
-                                        @if($report->status === 'Sangat Baik')
-                                            <span class="text-success">{{ $report->status }}</span>
-                                        @elseif($report->status === 'Baik')
-                                            <span class="text-info">{{ $report->status }}</span>
+                                        @if($report->status === 'sangat_baik')
+                                            <span class="text-success fw-bold">Sangat Baik</span>
+                                        @elseif($report->status === 'baik')
+                                            <span class="text-primary fw-bold">Baik</span>
                                         @else
-                                            <span class="text-warning">{{ $report->status }}</span>
+                                            <span class="text-warning fw-bold text-capitalize">{{ str_replace('_', ' ', $report->status) }}</span>
                                         @endif
                                     </td>
-                                    <td>{{ $report->reported_at->format('d M Y') }}</td>
+                                    <td>{{ $report->reported_to_rektor_at->format('d/m/Y') }}</td>
+                                    <td>
+                                        <a href="{{ route('export.monev.ba', $report->id) }}" class="btn btn-sm btn-outline-info" target="_blank">
+                                            Unduh BA
+                                        </a>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted py-4">Belum ada laporan monev yang masuk
+                                    <td colspan="6" class="text-center text-muted py-4">Belum ada laporan monev yang masuk
                                         untuk periode ini.</td>
                                 </tr>
                             @endforelse

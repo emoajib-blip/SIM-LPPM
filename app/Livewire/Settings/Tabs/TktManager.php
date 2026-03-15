@@ -108,8 +108,9 @@ class TktManager extends Component
     {
         // Auto-expand and select first type if none selected
         if ($this->selectedType === null) {
-            $firstType = TktLevel::select('type')->distinct()->orderBy('type')->first()->type;
-            if ($firstType) {
+            $firstTypeRecord = TktLevel::select('type')->distinct()->orderBy('type')->first();
+            if ($firstTypeRecord) {
+                $firstType = $firstTypeRecord->type;
                 $this->selectedType = $firstType;
                 $this->expandedTypes = [$firstType];
 

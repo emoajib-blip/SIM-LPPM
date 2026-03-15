@@ -5,6 +5,7 @@ namespace App\Livewire\Actions;
 use App\Enums\ProposalStatus;
 use App\Models\Proposal;
 use App\Models\User;
+use App\Services\LecturerEligibilityService;
 use App\Services\NotificationService;
 
 class SubmitProposalAction
@@ -44,6 +45,19 @@ class SubmitProposalAction
                 'success' => false,
                 'message' => 'Proposal tidak dapat diajukan dari status saat ini.',
             ];
+        }
+
+        // Check lecturer eligibility
+        if ($proposal->submitter->activeHasRole('dosen')) {
+            $eligibilityService = app(LecturerEligibilityService::class);
+            $eligibility = $eligibilityService->checkEligibility($proposal->submitter);
+
+            if (! $eligibility['eligible']) {
+                return [
+                    'success' => false,
+                    'message' => 'Anda tidak memenuhi syarat untuk mengajukan proposal baru. '.implode(', ', $eligibility['reasons']),
+                ];
+            }
         }
 
         // Track if this is a resubmission after revision

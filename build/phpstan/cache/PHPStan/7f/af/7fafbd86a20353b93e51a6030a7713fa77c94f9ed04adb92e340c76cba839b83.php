@@ -390,6 +390,33 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      '64e8ee627427a42f27dca7b7612a0132' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Settings',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'reviewcriteria' => 'App\\Models\\ReviewCriteria',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+        ),
+         'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+         'functionName' => 'cleanupDuplicates',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
       '28a15f3beaca7bbb24954d3ad84c4b4f' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Livewire\\Settings',
@@ -430,6 +457,60 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
          'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
          'functionName' => 'pkmCriterias',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '4f0571a8a38684dff567b61e767b54be' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Settings',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'reviewcriteria' => 'App\\Models\\ReviewCriteria',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+        ),
+         'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+         'functionName' => 'monevResearchCriterias',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '4c58511e09ed6916fc10c87366363ee1' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Settings',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'reviewcriteria' => 'App\\Models\\ReviewCriteria',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+        ),
+         'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+         'functionName' => 'monevPkmCriterias',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -525,6 +606,33 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      'eaa357204b24e8258e4fdb2dce39c11a' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Settings',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'reviewcriteria' => 'App\\Models\\ReviewCriteria',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+        ),
+         'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+         'functionName' => 'delete',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
       '424bfe30a179bd1667a54ecac9f88a48' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Livewire\\Settings',
@@ -538,6 +646,87 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
          'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
          'functionName' => 'save',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '6cc1de14d4780e3b30f01e4297eafe2d' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Settings',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'reviewcriteria' => 'App\\Models\\ReviewCriteria',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+        ),
+         'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+         'functionName' => 'openCreate',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '0b52a875d9f2e87d4ca7eeeb19a4bc4b' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Settings',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'reviewcriteria' => 'App\\Models\\ReviewCriteria',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+        ),
+         'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+         'functionName' => 'cancelCreate',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '05d49b73a7726a5140385bc670a9bc7c' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Settings',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'reviewcriteria' => 'App\\Models\\ReviewCriteria',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+        ),
+         'className' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+         'functionName' => 'createCriteria',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -582,7 +771,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/ReviewCriteriaManager.php' => 'c85b9eac09a6d6d722be80cf412e658c66662f5dcd2c094e5777c3ddfb1ea3b3',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/ReviewCriteriaManager.php' => '61b43b6bc459f5c7c3d283a409c3fc15465cf209d71ddb42c0854058f1739e84',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Concerns/HasToast.php' => '005cf1d6a13c6d7555286d4daf3ba7619e1368f86ba94c0fe7482da0c7b9474f',
     ),
   ),

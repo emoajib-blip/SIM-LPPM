@@ -16,6 +16,12 @@ class ProposalFactory extends Factory
      */
     public function definition(): array
     {
+        $researchSchemeId = \App\Models\ResearchScheme::query()->inRandomOrder()->value('id');
+        $focusAreaId = \App\Models\FocusArea::query()->inRandomOrder()->value('id');
+        $themeId = \App\Models\Theme::query()->inRandomOrder()->value('id');
+        $topicId = \App\Models\Topic::query()->inRandomOrder()->value('id');
+        $nationalPriorityId = \App\Models\NationalPriority::query()->inRandomOrder()->value('id');
+
         return [
             'title' => fake()->sentence(8),
             'submitter_id' => \App\Models\User::factory(),
@@ -24,11 +30,11 @@ class ProposalFactory extends Factory
                 \App\Models\CommunityService::class,
             ]),
             'detailable_id' => null, // Will be set by morph relationship
-            'research_scheme_id' => \App\Models\ResearchScheme::inRandomOrder()->first()?->id ?? \App\Models\ResearchScheme::factory(),
-            'focus_area_id' => \App\Models\FocusArea::inRandomOrder()->first()?->id ?? \App\Models\FocusArea::factory(),
-            'theme_id' => \App\Models\Theme::inRandomOrder()->first()?->id ?? \App\Models\Theme::factory(),
-            'topic_id' => \App\Models\Topic::inRandomOrder()->first()?->id ?? \App\Models\Topic::factory(),
-            'national_priority_id' => \App\Models\NationalPriority::inRandomOrder()->first()?->id ?? \App\Models\NationalPriority::factory(),
+            'research_scheme_id' => $researchSchemeId ?? \App\Models\ResearchScheme::factory(),
+            'focus_area_id' => $focusAreaId ?? \App\Models\FocusArea::factory(),
+            'theme_id' => $themeId ?? \App\Models\Theme::factory(),
+            'topic_id' => $topicId ?? \App\Models\Topic::factory(),
+            'national_priority_id' => $nationalPriorityId ?? \App\Models\NationalPriority::factory(),
             'cluster_level1_id' => null,
             'cluster_level2_id' => null,
             'cluster_level3_id' => null,
@@ -59,7 +65,9 @@ class ProposalFactory extends Factory
                 } else {
                     // Fallback to level 1 if no level 3 found
                     $cluster1 = \App\Models\ScienceCluster::where('level', 1)->inRandomOrder()->first();
-                    $proposal->cluster_level1_id = $cluster1?->id;
+                    if ($cluster1) {
+                        $proposal->cluster_level1_id = $cluster1->id;
+                    }
                 }
             }
         });

@@ -7,6 +7,7 @@ use App\Livewire\Forms\ProposalForm;
 use App\Livewire\Traits\WithProposalWizard;
 use App\Livewire\Traits\WithStepWizard;
 use App\Services\BudgetValidationService;
+use App\Services\LecturerEligibilityService;
 use App\Services\MasterDataService;
 use App\Services\ProposalService;
 use Illuminate\Support\Facades\Auth;
@@ -83,6 +84,15 @@ abstract class ProposalCreate extends Component
 
             $this->form->setProposal($proposalToLoad);
         } else {
+            // Check eligibility for new proposals
+            if ($user instanceof \App\Models\User && $user->activeHasRole('dosen')) {
+                $eligibilityService = app(LecturerEligibilityService::class);
+                $eligibility = $eligibilityService->checkEligibility($user);
+                if (! $eligibility['eligible']) {
+                    abort(403, 'Anda tidak memenuhi syarat untuk membuat proposal baru. '.implode(', ', $eligibility['reasons']));
+                }
+            }
+
             // Initial values for new proposals
             $this->form->start_year = date('Y');
 

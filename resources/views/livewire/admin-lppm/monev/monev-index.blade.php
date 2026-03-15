@@ -31,7 +31,19 @@
         <div class="card-header">
             <h3 class="card-title">Daftar Monitoring Laporan akhir penelitian dan pengabdian</h3>
             <div class="card-actions">
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 align-items-center">
+                    @if($this->pendingRektorCount > 0)
+                        <div class="badge bg-warning-lt py-2 px-3 me-2 border border-warning shadow-sm d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
+                            <span>{{ $this->pendingRektorCount }} Laporan belum dikirim ke Rektor</span>
+                            <button class="btn btn-xs btn-warning border-0 ms-3 fw-bold" 
+                                wire:click="sendReminderToKepala" 
+                                wire:loading.attr="disabled">
+                                <span wire:loading.remove wire:target="sendReminderToKepala">Kirim Pengingat</span>
+                                <span wire:loading wire:target="sendReminderToKepala">Mengirim...</span>
+                            </button>
+                        </div>
+                    @endif
                     <select class="form-select form-select-sm w-auto" wire:model.live="academicYear">
                         @foreach($this->academicYears as $year)
                             <option value="{{ $year }}">{{ $year }} / {{ $year + 1 }}</option>
@@ -104,7 +116,7 @@
                                 <div class="d-flex align-items-center mb-1">
                                     <div class="text-muted small me-2">{{ $progress }}%</div>
                                     <div class="progress progress-xs flex-grow-1">
-                                        <div class="progress-bar bg-primary" style="width: {{ $progress }}%"></div>
+                                        <div class="progress-bar bg-primary" @style(['width' => $progress . '%'])></div>
                                     </div>
                                 </div>
                             </td>
@@ -126,26 +138,53 @@
                                 @endif
                             </td>
                             <td>
-                                @php $review = $proposal->monevReviews->first(); @endphp
+                                    @php $review = $proposal->monevReviews->first(); @endphp
                                 @if($review && $review->reviewed_at)
                                     <div class="d-flex align-items-center">
                                         <div class="font-weight-bold text-blue me-2">{{ $review->score }}</div>
                                         @if($review->finalized_by_lppm_at)
-                                            <span class="badge bg-success-lt p-1" title="Final & Terverifikasi">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
-                                            </span>
+                                            @if($review->reported_to_rektor_at)
+                                                <span class="badge bg-purple-lt p-1" title="Laporan sudah terkirim ke Rektor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                                </span>
+                                            @elseif($review->approved_by_kepala_at)
+                                                <span class="badge bg-success-lt p-1" title="Disahkan Kepala, Belum Lapor Rektor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                                </span>
+                                            @else
+                                                <span class="badge bg-azure-lt p-1" title="Terverifikasi Admin">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                                </span>
+                                            @endif
                                         @endif
                                     </div>
-                                    <div class="text-muted extra-small text-capitalize">{{ str_replace('_', ' ', $review->status) }}</div>
+                                    <div class="text-muted extra-small text-capitalize">
+                                        @if($review->reported_to_rektor_at)
+                                            Dilaporkan Rektor
+                                        @elseif($review->approved_by_kepala_at)
+                                            Disahkan Kepala
+                                        @else
+                                            {{ str_replace('_', ' ', $review->status) }}
+                                        @endif
+                                    </div>
                                 @else
                                     <span class="text-muted small">- Belum direview -</span>
                                 @endif
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary"
-                                    wire:click="selectProposal('{{ $proposal->id }}')">
-                                    Detail & Monev
-                                </button>
+                                <div class="btn-list flex-nowrap">
+                                    @if($review && $review->reviewed_at && !$review->finalized_by_lppm_at)
+                                        <button class="btn btn-sm btn-primary font-weight-bold" 
+                                            wire:confirm="Verifikasi hasil Monev ini? QR Code TTD Anda akan digenerate." 
+                                            wire:click="finalizeReview('{{ $review->id }}')">
+                                            Verifikasi
+                                        </button>
+                                    @endif
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        wire:click="selectProposal('{{ $proposal->id }}')">
+                                        Detail & Monev
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -176,24 +215,26 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label font-weight-bold">Tugaskan Reviewer Monev</label>
-                                    <div class="input-group">
-                                        <select class="form-select" wire:model="reviewer_id">
-                                            <option value="">Pilih Reviewer...</option>
-                                            @foreach($this->reviewers as $reviewer)
-                                                <option value="{{ $reviewer->id }}">{{ $reviewer->name }}
-                                                    {{ $reviewer->identity?->is_external ? '(Eksternal)' : '(Internal)' }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <button class="btn btn-primary" wire:click="assignReviewer"
-                                            wire:loading.attr="disabled">
-                                            Simpan
-                                        </button>
+                                @if($selectedProposal->monevReviews->isEmpty())
+                                    <div class="mb-3">
+                                        <label class="form-label font-weight-bold">Tugaskan Reviewer Monev</label>
+                                        <div class="input-group">
+                                            <select class="form-select" wire:model="reviewer_id">
+                                                <option value="">Pilih Reviewer...</option>
+                                                @foreach($this->reviewers as $reviewer)
+                                                    <option value="{{ $reviewer->id }}">{{ $reviewer->name }}
+                                                        {{ $reviewer->identity?->is_external ? '(Eksternal)' : '(Internal)' }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <button class="btn btn-primary" wire:click="assignReviewer"
+                                                wire:loading.attr="disabled">
+                                                Simpan
+                                            </button>
+                                        </div>
+                                        @error('reviewer_id') <span class="text-danger small">{{ $message }}</span> @enderror
                                     </div>
-                                    @error('reviewer_id') <span class="text-danger small">{{ $message }}</span> @enderror
-                                </div>
+                                @endif
                                 
                                 {{-- Section Hasil Reviewer --}}
                                 @if($selectedProposal->monevReviews->isNotEmpty())
@@ -206,13 +247,30 @@
                                                     @if($activeMonevReview->reviewed_at)
                                                         @if($activeMonevReview->finalized_by_lppm_at)
                                                             <div class="btn-list">
-                                                                <span class="badge bg-success-lt">Final Terverifikasi</span>
-                                                                <a href="{{ route('export.monev.ba', $activeMonevReview->id) }}" class="btn btn-xs btn-outline-info" target="_blank">
+                                                                <button class="btn btn-sm btn-danger font-weight-bold" wire:confirm="Batalkan verifikasi? BA akan ditarik kembali." wire:click="unfinalizeReview('{{ $activeMonevReview->id }}')">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" /></svg>
+                                                                    Batalkan Verifikasi
+                                                                </button>
+                                                                <span class="badge bg-success-lt font-weight-bold p-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                                                    Sudah Diverifikasi
+                                                                </span>
+                                                                <a href="{{ route('export.monev.ba', $activeMonevReview->id) }}" class="btn btn-sm btn-outline-info" target="_blank">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
                                                                     Unduh BA
                                                                 </a>
                                                             </div>
                                                         @else
-                                                            <button class="btn btn-xs btn-outline-primary" wire:click="finalizeReview('{{ $activeMonevReview->id }}')">Finalisasi</button>
+                                                            <div class="btn-list">
+                                                                <button class="btn btn-sm btn-danger font-weight-bold" wire:confirm="Kembalikan hasil ini ke Reviewer? Status 'Selesai Review' akan dibatalkan." wire:click="unfinalizeReview('{{ $activeMonevReview->id }}')">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" /></svg>
+                                                                    Kembalikan ke Reviewer
+                                                                </button>
+                                                                <button class="btn btn-sm btn-primary font-weight-bold" wire:confirm="Anda yakin memverifikasi hasil Monev ini? QR Code Tanda Tangan Anda akan digenerate otomatis ke dalam BA." wire:click="finalizeReview('{{ $activeMonevReview->id }}')">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                                                                    Verifikasi (TTD)
+                                                                </button>
+                                                            </div>
                                                         @endif
                                                     @endif
                                                 </div>
@@ -319,12 +377,12 @@
                                                 <div class="d-flex align-items-center">
                                                     <div class="progress progress-xs w-100 me-2">
                                                         <div class="progress-bar bg-primary"
-                                                            style="width: {{ $monev->progress_percentage }}%"></div>
+                                                            @style(['width' => $monev->progress_percentage . '%'])></div>
                                                     </div>
                                                     <div class="small">{{ $monev->progress_percentage }}%</div>
                                                 </div>
                                             </td>
-                                            <td>{{ $monev->reviewer->name }}</td>
+                                            <td>{{ $monev->reviewer?->name ?? '-' }}</td>
                                             <td>
                                                 <div class="btn-group">
                                                     @if($monev->hasMedia('berita_acara'))
@@ -435,15 +493,25 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Catatan (Opsional)</label>
-                        <textarea class="form-control" wire:model="notes" rows="2"></textarea>
+                        <textarea class="form-control" wire:model="notes" rows="2" placeholder="Catatan kunjungan lapangan atau progres spesifik..."></textarea>
                     </div>
-                    <hr>
+                    
+                    <div class="alert alert-info py-2 shadow-sm mb-3">
+                        <div class="d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9h.01" /><path d="M11 12h1v4h1" /><path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" /></svg>
+                            <div class="small">
+                                <strong>Catatan:</strong> Dokumen formal (BA ber-TTD) akan digenerate **otomatis** oleh sistem setelah verifikasi. Unggahan di bawah bersifat **opsional** jika Anda memiliki dokumen fisik tambahan.
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
                     <!-- Berita Acara -->
                     <div class="mb-3" x-data="{ uploading: false, progress: 0 }"
                         x-on:livewire-upload-start="uploading = true" x-on:livewire-upload-finish="uploading = false"
                         x-on:livewire-upload-error="uploading = false"
                         x-on:livewire-upload-progress="progress = $event.detail.progress">
-                        <label class="form-label required">Berita Acara (PDF/DOC)</label>
+                        <label class="form-label">Lampiran Berita Acara (Opsional)</label>
                         <input type="file" class="form-control" wire:model="berita_acara" wire:loading.attr="disabled"
                             wire:target="saveMonev, berita_acara, borang, rekap_penilaian">
                         <div class="progress progress-xs mt-2" x-show="uploading" style="display: none;">
@@ -463,7 +531,7 @@
                         x-on:livewire-upload-start="uploading = true" x-on:livewire-upload-finish="uploading = false"
                         x-on:livewire-upload-error="uploading = false"
                         x-on:livewire-upload-progress="progress = $event.detail.progress">
-                        <label class="form-label required">Borang Monev (PDF/DOC)</label>
+                        <label class="form-label">Lampiran Borang Monev (Opsional)</label>
                         <input type="file" class="form-control" wire:model="borang" wire:loading.attr="disabled"
                             wire:target="saveMonev, berita_acara, borang, rekap_penilaian">
                         <div class="progress progress-xs mt-2" x-show="uploading" style="display: none;">
@@ -483,7 +551,7 @@
                         x-on:livewire-upload-start="uploading = true" x-on:livewire-upload-finish="uploading = false"
                         x-on:livewire-upload-error="uploading = false"
                         x-on:livewire-upload-progress="progress = $event.detail.progress">
-                        <label class="form-label required">Rekap Penilaian (PDF/DOC)</label>
+                        <label class="form-label">Lampiran Rekap Penilaian (Opsional)</label>
                         <input type="file" class="form-control" wire:model="rekap_penilaian"
                             wire:loading.attr="disabled" wire:target="saveMonev, berita_acara, borang, rekap_penilaian">
                         <div class="progress progress-xs mt-2" x-show="uploading" style="display: none;">

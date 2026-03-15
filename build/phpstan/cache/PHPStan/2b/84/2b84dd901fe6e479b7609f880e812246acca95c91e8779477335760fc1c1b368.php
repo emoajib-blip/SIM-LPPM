@@ -2,7 +2,7 @@
 
 // osfsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/database/factories/ProposalFactory.php-PHPStan\BetterReflection\Reflection\ReflectionClass-Database\Factories\ProposalFactory
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-2ab97d09efcd73b0a22921a50bad117ffdc7423998575e3cecb971e354ec2965-8.4.1-6.65.0.9',
+   'variableKey' => 'v2-ffabe076ea93b4da45e5ca61d785cc30d746b391d56bad03e2bf988ebfdd8b28-8.4.1-6.65.0.9',
    'data' => 
   array (
     'locatedSource' => 
@@ -29,7 +29,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 10,
-    'endLine' => 67,
+    'endLine' => 75,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Factories\\Factory',
@@ -72,7 +72,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * @return array<string, mixed>
  */',
         'startLine' => 17,
-        'endLine' => 41,
+        'endLine' => 47,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -108,8 +108,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Configure the model factory.
  */',
-        'startLine' => 46,
-        'endLine' => 66,
+        'startLine' => 52,
+        'endLine' => 74,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

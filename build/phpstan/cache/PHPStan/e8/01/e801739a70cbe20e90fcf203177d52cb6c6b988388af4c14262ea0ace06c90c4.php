@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/MonevReview.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Models\MonevReview
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-9f9fb21a86613d033d532774f4ad9fe05701f3d32f9f3084f0f55270f0e68ccf',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-93d5a882718bd62c2d5b6c6ba9b0c781994ad74222bdd8eabe91d42e64cbdcd3',
    'data' => 
   array (
     'locatedSource' => 
@@ -34,25 +34,31 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * @property string $semester
  * @property \\Illuminate\\Support\\Carbon|null $reviewed_at
  * @property \\Illuminate\\Support\\Carbon|null $finalized_by_lppm_at
+ * @property string|null $finalized_by_lppm_by
+ * @property \\Illuminate\\Support\\Carbon|null $approved_by_kepala_at
+ * @property string|null $approved_by_kepala_by
  * @property \\Illuminate\\Support\\Carbon|null $reported_to_rektor_at
  * @property-read \\App\\Models\\Proposal $proposal
  * @property-read \\App\\Models\\User $reviewer
+ * @property-read \\Illuminate\\Database\\Eloquent\\Collection|\\App\\Models\\DocumentSignature[] $signatures
  */',
     'attributes' => 
     array (
     ),
-    'startLine' => 26,
-    'endLine' => 73,
+    'startLine' => 33,
+    'endLine' => 92,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Model',
     'implementsClassNames' => 
     array (
+      0 => 'Spatie\\MediaLibrary\\HasMedia',
     ),
     'traitClassNames' => 
     array (
       0 => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
       1 => 'Illuminate\\Database\\Eloquent\\Concerns\\HasUuids',
+      2 => 'Spatie\\MediaLibrary\\InteractsWithMedia',
     ),
     'immediateConstants' => 
     array (
@@ -68,23 +74,23 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'type' => NULL,
         'default' => 
         array (
-          'code' => '[\'proposal_id\', \'reviewer_id\', \'score\', \'status\', \'notes\', \'borang_data\', \'academic_year\', \'semester\', \'reviewed_at\', \'finalized_by_lppm_at\', \'reported_to_rektor_at\']',
+          'code' => '[\'proposal_id\', \'reviewer_id\', \'score\', \'status\', \'notes\', \'borang_data\', \'academic_year\', \'semester\', \'reviewed_at\', \'finalized_by_lppm_at\', \'finalized_by_lppm_by\', \'approved_by_kepala_at\', \'approved_by_kepala_by\', \'reported_to_rektor_at\']',
           'attributes' => 
           array (
-            'startLine' => 30,
-            'endLine' => 42,
-            'startTokenPos' => 53,
-            'startFilePos' => 901,
-            'endTokenPos' => 88,
-            'endFilePos' => 1161,
+            'startLine' => 37,
+            'endLine' => 52,
+            'startTokenPos' => 75,
+            'startFilePos' => 1339,
+            'endTokenPos' => 119,
+            'endFilePos' => 1697,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 30,
-        'endLine' => 42,
+        'startLine' => 37,
+        'endLine' => 52,
         'startColumn' => 5,
         'endColumn' => 6,
         'isPromoted' => false,
@@ -119,8 +125,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the attributes that should be cast.
  */',
-        'startLine' => 47,
-        'endLine' => 56,
+        'startLine' => 57,
+        'endLine' => 67,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -156,8 +162,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the proposal being reviewed.
  */',
-        'startLine' => 61,
-        'endLine' => 64,
+        'startLine' => 72,
+        'endLine' => 75,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -193,8 +199,45 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the reviewer user.
  */',
-        'startLine' => 69,
-        'endLine' => 72,
+        'startLine' => 80,
+        'endLine' => 83,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Models',
+        'declaringClassName' => 'App\\Models\\MonevReview',
+        'implementingClassName' => 'App\\Models\\MonevReview',
+        'currentClassName' => 'App\\Models\\MonevReview',
+        'aliasName' => NULL,
+      ),
+      'signatures' => 
+      array (
+        'name' => 'signatures',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'Illuminate\\Database\\Eloquent\\Relations\\MorphMany',
+            'isIdentifier' => false,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => '/**
+ * Get all digital signatures for the monev review.
+ */',
+        'startLine' => 88,
+        'endLine' => 91,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

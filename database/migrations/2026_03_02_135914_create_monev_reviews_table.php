@@ -28,6 +28,7 @@ return new class extends Migration
 
             // Reporting chain
             $table->timestamp('finalized_by_lppm_at')->nullable();
+            $table->timestamp('approved_by_kepala_at')->nullable();
             $table->timestamp('reported_to_rektor_at')->nullable();
 
             $table->timestamps();

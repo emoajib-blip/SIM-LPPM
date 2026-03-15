@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -103,6 +104,14 @@ class ProgressReport extends Model implements HasMedia
     public function additionalOutputs(): HasMany
     {
         return $this->hasMany(AdditionalOutput::class);
+    }
+
+    /**
+     * Get all digital signatures for the report.
+     */
+    public function signatures(): MorphMany
+    {
+        return $this->morphMany(DocumentSignature::class, 'document', 'document_type', 'document_id');
     }
 
     /**

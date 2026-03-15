@@ -129,6 +129,7 @@
         .page-break {
             page-break-after: always;
         }
+
     </style>
 </head>
 
@@ -246,9 +247,18 @@
 
     <div class="footer">
         <div class="signature-box">
-            <p>Pekalongan, {{ now()->translatedFormat('d F Y') }}</p>
+            <p>Pekalongan, {{ $assignment->completed_at?->translatedFormat('d F Y') ?? now()->translatedFormat('d F Y') }}</p>
             <p>Reviewer,</p>
             <div class="signature-space"></div>
+            @if($qrUrl ?? null)
+                <div style="margin: 6px 0;">
+                    <img src="{{ generate_qr_code_data_uri($qrUrl, 160) }}" alt="QR Verifikasi" style="width: 70px; height: 70px;">
+                </div>
+                <div style="font-size: 8pt; color: #333; margin-top: 2px;">
+                    Terverifikasi sistem (QR)<br>
+                    Ditandatangani: {{ $assignment->completed_at?->format('d/m/Y H:i') ?? '-' }}
+                </div>
+            @endif
             <p><strong>({{ $assignment->user->name }})</strong></p>
             <p>NIDN. {{ $assignment->user->identity?->identity_id ?? '..........................' }}</p>
         </div>

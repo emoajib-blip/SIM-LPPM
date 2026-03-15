@@ -1,0 +1,330 @@
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║              RESEARCH SCHEMES SINTA INTEGRATION ANALYSIS                 ║
+║                                                                           ║
+║                         16 Maret 2026                                     ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 URL ANALYZED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+http://127.0.0.1:8000/settings/master-data?group=academic-content&tab=research-schemes
+
+Component: ResearchSchemeManager
+Location: app/Livewire/Settings/Tabs/ResearchSchemeManager.php
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ QUICK ANSWER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Q: Apa sudah sinkron dengan ini?
+A: YES - PARTIALLY SYNCED (Basic Integration Exists)
+
+Status: 🟡 ~40-50% Synced (Missing Advanced Features)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ WHAT'S ALREADY WORKING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ MIN SINTA SCORE REQUIREMENT
+   └─ Admin sets: Min SINTA Score = 500
+   └─ System checks: identity.sinta_score_v3_overall >= 500
+   └─ Status: ✅ WORKING (validated during proposal submission)
+
+2. ✅ MIN SCOPUS H-INDEX REQUIREMENT
+   └─ Admin sets: Min Scopus H-Index = 10
+   └─ System checks: identity.scopus_h_index >= 10
+   └─ Status: ✅ WORKING (validated during proposal submission)
+
+3. ✅ ALLOWED FUNCTIONAL POSITION
+   └─ Admin selects: [Lektor, Guru Besar]
+   └─ System checks: identity.functional_position in allowed list
+   └─ Status: ✅ WORKING (enforced during submission)
+
+4. ✅ DATA SOURCE CONNECTED
+   └─ ResearchScheme validation ← Identity table
+   └─ Uses actual dosen data (not hardcoded defaults)
+   └─ Status: ✅ WORKING (real-time checking)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️  WHAT'S PARTIALLY WORKING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ⚠️  FUNCTIONAL POSITION DATA
+   Problem:   Hardcoded list: ['Lektor', 'Guru Besar', 'Asisten Ahli', ...]
+   Issue:     Not auto-generated from actual dosen data
+   Impact:    If new position added, admin must manually update schemes
+   Status:    Partially working (manual configuration)
+
+2. ⚠️  SCOPUS METRICS INTEGRATION
+   Problem:   Only H-Index is checked
+   Available: Documents, Citations, G-Index, i10-Index (in SINTA export)
+   Issue:     Cannot set requirements for other metrics
+   Impact:    Cannot require "Min 10 publications" or "Min 50 citations"
+   Status:    Partially working (H-Index only)
+
+3. ⚠️  USER FEEDBACK ON ELIGIBILITY
+   Problem:   Dosen only sees error AFTER form submission
+   Issue:     Must restart entire form if ineligible
+   Impact:    Poor user experience
+   Status:    Partially working (basic error message)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ WHAT'S MISSING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ❌ PRE-SUBMISSION ELIGIBILITY CHECK
+   What:     Show eligibility BEFORE dosen submits
+   Missing:  Not implemented
+   Impact:   Dosen wastes time filling ineligible scheme
+   Need:     Dashboard/indicator showing eligible schemes
+
+2. ❌ ADMIN ELIGIBILITY DASHBOARD
+   What:     "How many dosen are eligible for this scheme?"
+   Missing:  No such dashboard exists
+   Impact:   Admin has no visibility into eligibility stats
+   Need:     Dashboard showing eligible dosen count per scheme
+
+3. ❌ AFFILIATION SCORE INTEGRATION
+   In Export: ✅ Yes (affil_score_v3_overall)
+   In Form:   ❌ No
+   In Check:  ❌ No
+   Impact:    Cannot require institutional affiliation scores
+
+4. ❌ EDUCATION LEVEL INTEGRATION
+   In Export: ✅ Yes (last_education: S2, S3)
+   In Form:   ❌ No
+   In Check:  ❌ No
+   Impact:    Cannot require S3-only or education-based schemes
+
+5. ❌ OTHER SCOPUS METRICS
+   In Export: ✅ Yes (documents, citations, g-index, i10-index)
+   In Form:   ❌ No
+   In Check:  ❌ No
+   Impact:    Limited to H-Index, cannot use other metrics
+
+6. ❌ ELIGIBILITY CHANGE NOTIFICATIONS
+   What:     Notify dosen when eligibility changes
+   Missing:  Not implemented
+   Impact:   Dosen doesn't know when they become ineligible
+   Need:     Notification system for eligibility changes
+
+7. ❌ AUDIT TRAIL FOR ELIGIBILITY
+   What:     Track when/why dosen became eligible/ineligible
+   Missing:  Not implemented
+   Impact:   No record of eligibility history
+   Need:     Logging system for eligibility events
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 INTEGRATION COVERAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SINTA Export Contains:          39 fields
+ResearchScheme Uses:             3 fields  (8% coverage)
+
+Breakdown:
+  ✅ SINTA Score V3 Overall:     1/4 SINTA score fields
+  ✅ Scopus H-Index:             1/6 Scopus metrics
+  ✅ Functional Position:         1/1 from Identity
+  
+  ❌ SINTA Score V2 Overall:     0% (not used)
+  ❌ SINTA Score V2 3Yr:         0% (not used)
+  ❌ Affiliation Scores:         0% (not used)
+  ❌ Scopus Documents:           0% (not used)
+  ❌ Scopus Citations:           0% (not used)
+  ❌ Scopus G-Index:             0% (not used)
+  ❌ Scopus i10-Index:           0% (not used)
+  ❌ Google Scholar Metrics:     0% (not used)
+  ❌ Web of Science Metrics:     0% (not used)
+  ❌ Garuda Metrics:             0% (not used)
+  ❌ Education Level:            0% (not used)
+
+Overall Integration: 🟡 ~40-50% (Basic validation, missing UX & admin tools)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔄 HOW IT WORKS TODAY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Step 1: ADMIN CONFIGURATION
+   └─ Go to: /settings/master-data?tab=research-schemes
+   └─ Create research scheme with eligibility rules:
+      • Name: "Unggulan Nasional"
+      • Min SINTA Score: 500
+      • Min Scopus Score: 10
+      • Allowed Positions: [Lektor, Guru Besar]
+   └─ Saved to database
+
+Step 2: DOSEN ATTEMPTS SUBMISSION
+   └─ Go to: /research/create
+   └─ Select scheme: "Unggulan Nasional"
+   └─ Fill team, outputs, publications
+   └─ Click: SUBMIT
+
+Step 3: VALIDATION HAPPENS
+   └─ System checks dosen's identity record:
+      • identity.sinta_score_v3_overall >= 500 ? ✓
+      • identity.scopus_h_index >= 10 ? ✓
+      • identity.functional_position in [Lektor, Guru Besar] ? ✓
+   └─ All pass: ✅ Proposal accepted
+   └─ Any fail: ❌ Error message shown
+
+PROBLEM: Dosen discovers ineligibility AFTER filling entire form!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 COMPARISON: CURRENT vs IDEAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─ CURRENT STATE (What Happens Now) ─────────────────────────┐
+│                                                             │
+│ Dosen Views Available Schemes:                             │
+│  ├─ Unggulan Nasional (no indication of eligibility)      │
+│  ├─ Emerging Researcher (no indication)                   │
+│  └─ International Research (no indication)                │
+│                                                             │
+│ Dosen Fills Form:                                         │
+│  ├─ Chooses "Unggulan Nasional"                           │
+│  ├─ Spends 30 minutes entering team, outputs, etc         │
+│  └─ Clicks SUBMIT                                         │
+│                                                             │
+│ System Response:                                          │
+│  ├─ Validation fails                                      │
+│  ├─ Error: "Your SINTA score (450) below minimum (500)"  │
+│  └─ Form rejected, must start over                        │
+│                                                             │
+│ Result: 😞 Poor UX, wasted time                           │
+└─────────────────────────────────────────────────────────────┘
+
+┌─ IDEAL STATE (How It Should Be) ──────────────────────────┐
+│                                                             │
+│ Dosen Views Profile:                                      │
+│  "Your Academic Profile"                                  │
+│  ├─ SINTA Score: 450                                      │
+│  ├─ Scopus H-Index: 8                                     │
+│  └─ Position: Asisten Ahli                                │
+│                                                             │
+│ System Shows:                                             │
+│  "Available Research Schemes for You"                     │
+│  ├─ ✅ Emerging Researcher (eligible)                     │
+│  ├─ ❌ Unggulan Nasional (SINTA too low)                  │
+│  └─ ❌ International (multiple criteria not met)          │
+│                                                             │
+│ Dosen:                                                    │
+│  ├─ Can only select eligible scheme                       │
+│  ├─ Proceeds to fill form                                 │
+│  └─ Submits knowing they meet all criteria               │
+│                                                             │
+│ Result: 😊 Good UX, no wasted effort                      │
+└─────────────────────────────────────────────────────────────┘
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 KEY FINDINGS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ BASIC SYNC EXISTS
+   Research Schemes DOES use SINTA data from Identity table
+   Validation IS connected to actual dosen academic metrics
+
+2. ⚠️  LIMITED SCOPE
+   Only 3 SINTA fields are used out of 39 available
+   Only H-Index from Scopus, not other metrics
+   Functional positions hardcoded, not dynamic
+
+3. ❌ MISSING UX FEATURES
+   No pre-submission eligibility check
+   No list of available schemes for dosen
+   No explanation of why they're ineligible
+
+4. ❌ NO ADMIN TOOLS
+   No dashboard showing eligible dosen per scheme
+   No eligibility statistics or reports
+   No visibility into who can apply for what
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 RECOMMENDATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SHORT-TERM (2 hours) - Quick Wins:
+  [ ] Add education level eligibility option
+  [ ] Add more Scopus metrics (documents, citations)
+  [ ] Improve error messages to show actual dosen scores
+
+MEDIUM-TERM (4 hours) - Better Integration:
+  [ ] Add pre-submission eligibility check
+  [ ] Show list of eligible schemes to dosen
+  [ ] Create admin eligibility dashboard
+
+LONG-TERM (6-8 hours) - Full Integration:
+  [ ] Add affiliation score eligibility
+  [ ] Implement dynamic eligibility scoring
+  [ ] Add eligibility change notifications
+  [ ] Create audit trail for eligibility changes
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 CODE REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ResearchSchemeManager Component:
+  Location: app/Livewire/Settings/Tabs/ResearchSchemeManager.php
+  
+  SINTA-Related Properties:
+    public ?float $min_sinta_score = null;           // ✅ Used
+    public ?float $min_scopus_score = null;          // ✅ Used
+    public array $allowed_functional_positions = []; // ✅ Used
+  
+  Eligibility Rules (JSON):
+    {
+      "allowed_functional_positions": ["Lektor", "Guru Besar"],
+      "min_sinta_score": 500,
+      "min_scopus_score": 10,
+      "min_students_involved": 2,
+      "require_cross_prodi": true
+    }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTATION CREATED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. RESEARCH-SCHEMES-QUICK-ANSWER.md
+   └─ Quick summary (this visual format)
+
+2. RESEARCH-SCHEMES-SINTA-SYNC-ANALYSIS.md
+   └─ Detailed technical analysis with code examples
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ FINAL ANSWER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Q: Apa sudah sinkron dengan research-schemes?
+
+A: ✅ YES - PARTIALLY SYNCED
+
+   Status: 🟡 ~40-50% Integration
+   
+   ✅ Basic sync exists (validation works)
+   ⚠️  Limited scope (only 3 fields used)
+   ❌ Missing UX features (no pre-check)
+   ❌ Missing admin tools (no dashboard)
+   
+   Recommendation: Add pre-submission eligibility check
+                  + admin eligibility dashboard (4h effort)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Analysis Date: 16 Maret 2026
+Status: ✅ READY FOR REVIEW

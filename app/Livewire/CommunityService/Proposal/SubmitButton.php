@@ -6,6 +6,7 @@ use App\Enums\ProposalStatus;
 use App\Livewire\Actions\SubmitProposalAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Services\LecturerEligibilityService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -45,9 +46,18 @@ class SubmitButton extends Component
             ProposalStatus::REVISION_NEEDED,
         ];
 
+        $user = Auth::user();
+        $isEligible = true;
+        if ($user && $user->activeHasRole('dosen')) {
+            $eligibilityService = app(LecturerEligibilityService::class);
+            $eligibility = $eligibilityService->checkEligibility($user);
+            $isEligible = $eligibility['eligible'];
+        }
+
         return in_array($proposal->status, $allowedStatuses)
             && $proposal->allTeamMembersAccepted()
-            && Auth::id() === $proposal->submitter_id;
+            && Auth::id() === $proposal->submitter_id
+            && $isEligible;
     }
 
     #[Computed]
@@ -62,6 +72,19 @@ class SubmitButton extends Component
         return $this->proposal->teamMembers()
             ->wherePivot('status', 'rejected')
             ->get();
+    }
+
+    #[Computed]
+    public function eligibility()
+    {
+        $user = Auth::user();
+        if ($user && $user->activeHasRole('dosen')) {
+            $eligibilityService = app(LecturerEligibilityService::class);
+
+            return $eligibilityService->checkEligibility($user);
+        }
+
+        return ['eligible' => true, 'reasons' => []];
     }
 
     public function confirmSubmit(): void

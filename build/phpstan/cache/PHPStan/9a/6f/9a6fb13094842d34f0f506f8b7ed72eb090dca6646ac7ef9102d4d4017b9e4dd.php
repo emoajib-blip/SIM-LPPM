@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProgressReport.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Models\ProgressReport
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-bc599e42bb2e80c413c52421f907213d0f0bc078f7b44f3d3519ef84cc7ec7c1',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-31ad15f0ebe325e93d3cbb2011611a03eadf639427f6f2504d1ea34e731756c6',
    'data' => 
   array (
     'locatedSource' => 
@@ -40,8 +40,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 29,
-    'endLine' => 157,
+    'startLine' => 30,
+    'endLine' => 166,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Model',
@@ -72,12 +72,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'string\'',
           'attributes' => 
           array (
-            'startLine' => 37,
-            'endLine' => 37,
-            'startTokenPos' => 84,
-            'startFilePos' => 1423,
-            'endTokenPos' => 84,
-            'endFilePos' => 1430,
+            'startLine' => 38,
+            'endLine' => 38,
+            'startTokenPos' => 89,
+            'startFilePos' => 1477,
+            'endTokenPos' => 89,
+            'endFilePos' => 1484,
           ),
         ),
         'docComment' => '/**
@@ -86,8 +86,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 37,
-        'endLine' => 37,
+        'startLine' => 38,
+        'endLine' => 38,
         'startColumn' => 5,
         'endColumn' => 34,
         'isPromoted' => false,
@@ -109,12 +109,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => 'false',
           'attributes' => 
           array (
-            'startLine' => 42,
-            'endLine' => 42,
-            'startTokenPos' => 95,
-            'startFilePos' => 1526,
-            'endTokenPos' => 95,
-            'endFilePos' => 1530,
+            'startLine' => 43,
+            'endLine' => 43,
+            'startTokenPos' => 100,
+            'startFilePos' => 1580,
+            'endTokenPos' => 100,
+            'endFilePos' => 1584,
           ),
         ),
         'docComment' => '/**
@@ -123,8 +123,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 42,
-        'endLine' => 42,
+        'startLine' => 43,
+        'endLine' => 43,
         'startColumn' => 5,
         'endColumn' => 33,
         'isPromoted' => false,
@@ -146,20 +146,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '[\'proposal_id\', \'summary_update\', \'reporting_year\', \'reporting_period\', \'status\', \'submitted_by\', \'submitted_at\']',
           'attributes' => 
           array (
-            'startLine' => 44,
-            'endLine' => 52,
-            'startTokenPos' => 104,
-            'startFilePos' => 1560,
-            'endTokenPos' => 127,
-            'endFilePos' => 1735,
+            'startLine' => 45,
+            'endLine' => 53,
+            'startTokenPos' => 109,
+            'startFilePos' => 1614,
+            'endTokenPos' => 132,
+            'endFilePos' => 1789,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 44,
-        'endLine' => 52,
+        'startLine' => 45,
+        'endLine' => 53,
         'startColumn' => 5,
         'endColumn' => 6,
         'isPromoted' => false,
@@ -196,8 +196,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  *
  * @return array<string, string>
  */',
-        'startLine' => 59,
-        'endLine' => 65,
+        'startLine' => 60,
+        'endLine' => 66,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -233,8 +233,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the proposal that owns the progress report.
  */',
-        'startLine' => 70,
-        'endLine' => 73,
+        'startLine' => 71,
+        'endLine' => 74,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -270,8 +270,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the user who submitted the report.
  */',
-        'startLine' => 78,
-        'endLine' => 81,
+        'startLine' => 79,
+        'endLine' => 82,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -307,8 +307,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all keywords for the progress report.
  */',
-        'startLine' => 86,
-        'endLine' => 90,
+        'startLine' => 87,
+        'endLine' => 91,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -344,8 +344,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all mandatory outputs for the progress report.
  */',
-        'startLine' => 95,
-        'endLine' => 98,
+        'startLine' => 96,
+        'endLine' => 99,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -381,8 +381,45 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all additional outputs for the progress report.
  */',
-        'startLine' => 103,
-        'endLine' => 106,
+        'startLine' => 104,
+        'endLine' => 107,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Models',
+        'declaringClassName' => 'App\\Models\\ProgressReport',
+        'implementingClassName' => 'App\\Models\\ProgressReport',
+        'currentClassName' => 'App\\Models\\ProgressReport',
+        'aliasName' => NULL,
+      ),
+      'signatures' => 
+      array (
+        'name' => 'signatures',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'Illuminate\\Database\\Eloquent\\Relations\\MorphMany',
+            'isIdentifier' => false,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => '/**
+ * Get all digital signatures for the report.
+ */',
+        'startLine' => 112,
+        'endLine' => 115,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -418,8 +455,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Check if this is a final report.
  */',
-        'startLine' => 111,
-        'endLine' => 114,
+        'startLine' => 120,
+        'endLine' => 123,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -449,8 +486,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 119,
-            'endLine' => 119,
+            'startLine' => 128,
+            'endLine' => 128,
             'startColumn' => 39,
             'endColumn' => 44,
             'parameterIndex' => 0,
@@ -465,8 +502,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Scope a query to only include final reports.
  */',
-        'startLine' => 119,
-        'endLine' => 122,
+        'startLine' => 128,
+        'endLine' => 131,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -496,8 +533,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 127,
-            'endLine' => 127,
+            'startLine' => 136,
+            'endLine' => 136,
             'startColumn' => 42,
             'endColumn' => 47,
             'parameterIndex' => 0,
@@ -512,8 +549,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Scope a query to only include progress reports (exclude final).
  */',
-        'startLine' => 127,
-        'endLine' => 130,
+        'startLine' => 136,
+        'endLine' => 139,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -549,8 +586,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Register media collections for this model.
  */',
-        'startLine' => 135,
-        'endLine' => 156,
+        'startLine' => 144,
+        'endLine' => 165,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('themes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('focus_area_id')->constrained('focus_areas')->onDelete('cascade')->comment('Bidang Fokus');
+            $table->foreignId('focus_area_id')->comment('Bidang Fokus')->constrained('focus_areas')->onDelete('cascade');
             $table->string('name')->comment('Tema');
             $table->timestamps();
         });

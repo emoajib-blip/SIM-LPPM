@@ -25,6 +25,7 @@ class ResearchSchemeFactory extends Factory
                 'Penelitian Kompetitif Nasional',
             ]),
             'strata' => fake()->randomElement(['Dasar', 'Terapan', 'Pengembangan']),
+            'description' => fake()->sentence(),
         ];
     }
 }

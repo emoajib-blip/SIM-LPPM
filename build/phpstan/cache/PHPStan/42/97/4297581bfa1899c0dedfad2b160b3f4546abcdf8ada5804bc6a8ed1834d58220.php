@@ -15,6 +15,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'proposal' => 'App\\Models\\Proposal',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'str' => 'Illuminate\\Support\\Str',
           'fpdi' => 'setasign\\Fpdi\\Fpdi',
         ),
          'className' => 'App\\Services\\ProposalPdfService',
@@ -41,6 +42,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'proposal' => 'App\\Models\\Proposal',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'str' => 'Illuminate\\Support\\Str',
           'fpdi' => 'setasign\\Fpdi\\Fpdi',
         ),
          'className' => 'App\\Services\\ProposalPdfService',
@@ -67,6 +69,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'proposal' => 'App\\Models\\Proposal',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'str' => 'Illuminate\\Support\\Str',
           'fpdi' => 'setasign\\Fpdi\\Fpdi',
         ),
          'className' => 'App\\Services\\ProposalPdfService',
@@ -88,7 +91,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/ProposalPdfService.php' => '88fd8bd5e87733498297e902b0cc1003f45711e35ea215c8ac6b9e9bb10ae8cd',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/ProposalPdfService.php' => '5b70476a531bc427fe95c89e3eff29a56c9dd2235bbad41914ab8bf2ad941dc5',
     ),
   ),
 ));

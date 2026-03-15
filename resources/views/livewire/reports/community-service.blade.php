@@ -3,11 +3,11 @@
         @php
             $exportParams = ['period' => $period, 'search' => $search, 'scheme' => $selectedScheme, 'faculty' => $selectedFaculty];
         @endphp
-        <button wire:click="previewPdf" wire:loading.attr="disabled" class="btn btn-outline-primary shadow-sm" title="Tinjau PDF">
+        <a href="{{ route('reports.pkm.pdf', array_merge($exportParams, ['preview' => 1])) }}"
+            class="btn btn-outline-info shadow-sm" target="_blank" title="Tinjau PDF">
             <i class="ti ti-eye me-2"></i>
-            <span wire:loading.remove wire:target="previewPdf">{{ __('Tinjau PDF') }}</span>
-            <span wire:loading wire:target="previewPdf">{{ __('Memproses...') }}</span>
-        </button>
+            <span>{{ __('Tinjau PDF') }}</span>
+        </a>
         <a href="{{ route('reports.pkm.excel', $exportParams) }}" class="btn btn-outline-success shadow-sm"
             data-navigate-ignore="true" title="Unduh Excel">
             <i class="ti ti-table me-2"></i>

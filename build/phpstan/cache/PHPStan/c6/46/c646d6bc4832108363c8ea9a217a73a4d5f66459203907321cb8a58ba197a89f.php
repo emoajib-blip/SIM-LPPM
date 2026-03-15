@@ -15,6 +15,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
           'computed' => 'Livewire\\Attributes\\Computed',
           'component' => 'Livewire\\Component',
           'withfileuploads' => 'Livewire\\WithFileUploads',
@@ -879,6 +880,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
           'computed' => 'Livewire\\Attributes\\Computed',
           'component' => 'Livewire\\Component',
           'withfileuploads' => 'Livewire\\WithFileUploads',
@@ -908,6 +910,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
           'computed' => 'Livewire\\Attributes\\Computed',
           'component' => 'Livewire\\Component',
           'withfileuploads' => 'Livewire\\WithFileUploads',
@@ -937,6 +940,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
           'computed' => 'Livewire\\Attributes\\Computed',
           'component' => 'Livewire\\Component',
           'withfileuploads' => 'Livewire\\WithFileUploads',
@@ -944,6 +948,126 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
          'className' => 'App\\Livewire\\Reviewer\\Monev\\Index',
          'functionName' => 'saveReview',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '1b84bd705fc427a6489400f9b5e21f00' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'monevreview' => 'App\\Models\\MonevReview',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+          'withfileuploads' => 'Livewire\\WithFileUploads',
+          'withpagination' => 'Livewire\\WithPagination',
+        ),
+         'className' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+         'functionName' => 'submitReview',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '9f197480ea9406f1b6fb6886a7d5c610' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'monevreview' => 'App\\Models\\MonevReview',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+          'withfileuploads' => 'Livewire\\WithFileUploads',
+          'withpagination' => 'Livewire\\WithPagination',
+        ),
+         'className' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+         'functionName' => 'updatedBorangData',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '9adf4a547f665050e26a5dd97ec5f3c3' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'monevreview' => 'App\\Models\\MonevReview',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+          'withfileuploads' => 'Livewire\\WithFileUploads',
+          'withpagination' => 'Livewire\\WithPagination',
+        ),
+         'className' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+         'functionName' => 'calculateTotalScore',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      'd6468572c8755f3b24b040ee193d0467' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'monevreview' => 'App\\Models\\MonevReview',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+          'withfileuploads' => 'Livewire\\WithFileUploads',
+          'withpagination' => 'Livewire\\WithPagination',
+        ),
+         'className' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+         'functionName' => 'totalScore',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -966,6 +1090,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
           'computed' => 'Livewire\\Attributes\\Computed',
           'component' => 'Livewire\\Component',
           'withfileuploads' => 'Livewire\\WithFileUploads',
@@ -973,6 +1098,66 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
          'className' => 'App\\Livewire\\Reviewer\\Monev\\Index',
          'functionName' => 'assignments',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      'b6183a61899a626ba8c1c266ad2a74d0' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'monevreview' => 'App\\Models\\MonevReview',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+          'withfileuploads' => 'Livewire\\WithFileUploads',
+          'withpagination' => 'Livewire\\WithPagination',
+        ),
+         'className' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+         'functionName' => 'activeReport',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '2e8469a53b6642fcc72f89ba8fb7a140' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'monevreview' => 'App\\Models\\MonevReview',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'component' => 'Livewire\\Component',
+          'withfileuploads' => 'Livewire\\WithFileUploads',
+          'withpagination' => 'Livewire\\WithPagination',
+        ),
+         'className' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+         'functionName' => 'activeCriteria',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -995,6 +1180,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'str' => 'Illuminate\\Support\\Str',
           'computed' => 'Livewire\\Attributes\\Computed',
           'component' => 'Livewire\\Component',
           'withfileuploads' => 'Livewire\\WithFileUploads',
@@ -1019,7 +1205,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reviewer/Monev/Index.php' => '7b6026f8841a18e589d20df29ab3a69ac9a4ae409ce2053b603f6268a4ebec38',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reviewer/Monev/Index.php' => '0c9afb431bef56185b78ebf3302e599c0f60fe0e41e140650d8a60cf3185ed09',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Concerns/HasToast.php' => '005cf1d6a13c6d7555286d4daf3ba7619e1368f86ba94c0fe7482da0c7b9474f',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/vendor/composer/../livewire/livewire/src/WithFileUploads.php' => 'd0dfb990e95ccd774c27719889835f46734cd1c9514903def29b8eba8572a8fe',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/vendor/composer/../livewire/livewire/src/Features/SupportFileUploads/WithFileUploads.php' => 'ac166713d47e8cee6b86d906d8a163b73d825599c9450b50600f8ad5e767ec3e',

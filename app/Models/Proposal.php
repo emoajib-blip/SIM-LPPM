@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -61,6 +62,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalStatusLog[] $statusLogs
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewLog[] $reviewLogs
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalActivity[] $activities
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentSignature[] $signatures
  * @property-read \App\Models\User $user
  */
 class Proposal extends Model
@@ -350,6 +352,14 @@ class Proposal extends Model
     }
 
     /**
+     * Get all digital signatures for the proposal.
+     */
+    public function signatures(): MorphMany
+    {
+        return $this->morphMany(DocumentSignature::class, 'document', 'document_type', 'document_id');
+    }
+
+    /**
      * Check if all team members have accepted the invitation.
      */
     public function allTeamMembersAccepted(): bool
@@ -371,16 +381,19 @@ class Proposal extends Model
      */
     public function allReviewsCompleted(): bool
     {
-        $totalReviewers = $this->reviewers()->count();
-        if ($totalReviewers === 0) {
+        $stats = $this->reviewers()
+            ->selectRaw('COUNT(*) as total, SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed',
+                [\App\Enums\ReviewStatus::COMPLETED])
+            ->first();
+
+        if (! $stats) {
             return false;
         }
 
-        $completedReviews = $this->reviewers()
-            ->where('status', \App\Enums\ReviewStatus::COMPLETED)
-            ->count();
+        $total = (int) ($stats->total ?? 0);
+        $completed = (int) ($stats->completed ?? 0);
 
-        return $totalReviewers === $completedReviews;
+        return $total > 0 && $total === $completed;
     }
 
     /**
@@ -425,24 +438,11 @@ class Proposal extends Model
     }
 
     /**
-     * Check if all reviewers have completed their reviews.
-     */
-    public function allReviewersCompleted(): bool
-    {
-        $totalReviewers = $this->reviewers()->count();
-        $completedReviewers = $this->reviewers()
-            ->where('status', \App\Enums\ReviewStatus::COMPLETED)
-            ->count();
-
-        return $totalReviewers > 0 && $totalReviewers === $completedReviewers;
-    }
-
-    /**
      * Check if proposal can be approved (all reviewers completed).
      */
     public function canBeApproved(): bool
     {
-        return $this->allReviewersCompleted();
+        return $this->allReviewsCompleted();
     }
 
     /**

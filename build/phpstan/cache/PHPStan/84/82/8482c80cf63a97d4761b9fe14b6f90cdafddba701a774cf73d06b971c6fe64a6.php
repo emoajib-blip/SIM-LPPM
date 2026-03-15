@@ -15,6 +15,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'proposal' => 'App\\Models\\Proposal',
+          'user' => 'App\\Models\\User',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'computed' => 'Livewire\\Attributes\\Computed',
           'url' => 'Livewire\\Attributes\\Url',
@@ -36,6 +37,166 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
+      )),
+      '191a9c3e0ca525bbb02e4500d7c16194' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'institutionalreportstatus' => 'App\\Enums\\InstitutionalReportStatus',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'db' => 'Illuminate\\Support\\Facades\\DB',
+        ),
+         'className' => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+         'functionName' => NULL,
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php',
+          1 => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+          2 => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'ddb13a4e300c540147097824b123eb67' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'institutionalreportstatus' => 'App\\Enums\\InstitutionalReportStatus',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'db' => 'Illuminate\\Support\\Facades\\DB',
+        ),
+         'className' => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+         'functionName' => 'submitInstitutionalReport',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php',
+          1 => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+          2 => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'a63b2ee034ae5908228da2785064a934' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'institutionalreportstatus' => 'App\\Enums\\InstitutionalReportStatus',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'db' => 'Illuminate\\Support\\Facades\\DB',
+        ),
+         'className' => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+         'functionName' => 'approveInstitutionalReport',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php',
+          1 => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+          2 => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '1f5140aec4109a21c42c1abca36b0856' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'institutionalreportstatus' => 'App\\Enums\\InstitutionalReportStatus',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'db' => 'Illuminate\\Support\\Facades\\DB',
+        ),
+         'className' => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+         'functionName' => 'rejectInstitutionalReport',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php',
+          1 => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+          2 => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'a583a4272d63339bc0b2f0896acbbc71' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\Traits',
+         'uses' => 
+        array (
+          'institutionalreportstatus' => 'App\\Enums\\InstitutionalReportStatus',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'db' => 'Illuminate\\Support\\Facades\\DB',
+        ),
+         'className' => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+         'functionName' => 'getInstitutionalReport',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+         'traitData' => 
+        array (
+          0 => '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php',
+          1 => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+          2 => 'App\\Livewire\\Traits\\WithInstitutionalApproval',
+          3 => NULL,
+          4 => NULL,
+        ),
       )),
       '97f531b781c04bbbcf762944bd16c104' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
@@ -652,6 +813,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'proposal' => 'App\\Models\\Proposal',
+          'user' => 'App\\Models\\User',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'computed' => 'Livewire\\Attributes\\Computed',
           'url' => 'Livewire\\Attributes\\Url',
@@ -682,6 +844,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'proposal' => 'App\\Models\\Proposal',
+          'user' => 'App\\Models\\User',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'computed' => 'Livewire\\Attributes\\Computed',
           'url' => 'Livewire\\Attributes\\Url',
@@ -704,6 +867,68 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      '447454177d68ef9510090ef51f7b741e' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\KepalaLppm\\Monev',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'monevreview' => 'App\\Models\\MonevReview',
+          'proposal' => 'App\\Models\\Proposal',
+          'user' => 'App\\Models\\User',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'url' => 'Livewire\\Attributes\\Url',
+          'component' => 'Livewire\\Component',
+          'withpagination' => 'Livewire\\WithPagination',
+        ),
+         'className' => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+         'functionName' => 'approveReview',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '90f71605547084e86e0d51ff2750a6e9' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Livewire\\KepalaLppm\\Monev',
+         'uses' => 
+        array (
+          'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
+          'monevreview' => 'App\\Models\\MonevReview',
+          'proposal' => 'App\\Models\\Proposal',
+          'user' => 'App\\Models\\User',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'computed' => 'Livewire\\Attributes\\Computed',
+          'url' => 'Livewire\\Attributes\\Url',
+          'component' => 'Livewire\\Component',
+          'withpagination' => 'Livewire\\WithPagination',
+        ),
+         'className' => 'App\\Livewire\\KepalaLppm\\Monev\\MonevRecap',
+         'functionName' => 'approveAll',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
       'fbaea82ab54a6304ec7b7c9f2fd07ab9' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Livewire\\KepalaLppm\\Monev',
@@ -712,6 +937,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'proposal' => 'App\\Models\\Proposal',
+          'user' => 'App\\Models\\User',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'computed' => 'Livewire\\Attributes\\Computed',
           'url' => 'Livewire\\Attributes\\Url',
@@ -742,6 +968,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'proposal' => 'App\\Models\\Proposal',
+          'user' => 'App\\Models\\User',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'computed' => 'Livewire\\Attributes\\Computed',
           'url' => 'Livewire\\Attributes\\Url',
@@ -772,6 +999,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hastoast' => 'App\\Livewire\\Concerns\\HasToast',
           'monevreview' => 'App\\Models\\MonevReview',
           'proposal' => 'App\\Models\\Proposal',
+          'user' => 'App\\Models\\User',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'computed' => 'Livewire\\Attributes\\Computed',
           'url' => 'Livewire\\Attributes\\Url',
@@ -797,7 +1025,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php' => '562870cdd4fa9b6564feb4fa157491eff685ead572cab6d074f0c9a8adf8ff03',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php' => 'a75048b064b9c417a9fcd5f4b1dde3bd6cdc73dd970b660203ac67d317257c4e',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithInstitutionalApproval.php' => '1b1d6fec47dc105d9024e917c84145b3251f02359ab4c90b5bb34a09393357f7',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Concerns/HasToast.php' => '005cf1d6a13c6d7555286d4daf3ba7619e1368f86ba94c0fe7482da0c7b9474f',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/vendor/composer/../livewire/livewire/src/WithPagination.php' => 'c8c850c3c8cf6cb7ad7db178e4fdaa80684fb8f39f469ab0214850f38ca81685',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/vendor/composer/../livewire/livewire/src/Features/SupportPagination/HandlesPagination.php' => 'c8d57a18f39c033305ac92cea61d42ebb9a377e28abe3ed243185a51e4f4cfb3',

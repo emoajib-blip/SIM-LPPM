@@ -57,10 +57,10 @@ class AdminUserSeeder extends Seeder
 
         // Create Superadmin (default)
         $superadmin = User::firstOrCreate(
-            ['email' => env('SUPERADMIN_EMAIL', 'superadmin@email.com')],
+            ['email' => (string) config('admin.superadmin.email')],
             [
-                'name' => env('SUPERADMIN_NAME', 'Super Administrator'),
-                'password' => Hash::make(env('INITIAL_ADMIN_PASSWORD', 'password')),
+                'name' => (string) config('admin.superadmin.name'),
+                'password' => Hash::make((string) config('admin.initial_password')),
                 'email_verified_at' => now(),
             ]
         );
@@ -80,10 +80,10 @@ class AdminUserSeeder extends Seeder
 
         // Create Admin LPPM
         $adminLppm = User::firstOrCreate(
-            ['email' => env('ADMIN_LPPM_EMAIL', 'admin-lppm@email.com')],
+            ['email' => (string) config('admin.admin_lppm.email')],
             [
-                'name' => env('ADMIN_LPPM_NAME', 'Admin LPPM'),
-                'password' => Hash::make(env('INITIAL_ADMIN_PASSWORD', 'password')),
+                'name' => (string) config('admin.admin_lppm.name'),
+                'password' => Hash::make((string) config('admin.initial_password')),
                 'email_verified_at' => now(),
             ]
         );
@@ -103,10 +103,10 @@ class AdminUserSeeder extends Seeder
 
         // Create Rektor
         $rektor = User::updateOrCreate(
-            ['email' => env('REKTOR_EMAIL', 'rektor@email.com')],
+            ['email' => (string) config('admin.rektor.email')],
             [
-                'name' => env('REKTOR_NAME', 'Ali Imron'),
-                'password' => Hash::make(env('INITIAL_ADMIN_PASSWORD', 'password')),
+                'name' => (string) config('admin.rektor.name'),
+                'password' => Hash::make((string) config('admin.initial_password')),
                 'email_verified_at' => now(),
             ]
         );
@@ -128,7 +128,7 @@ class AdminUserSeeder extends Seeder
             ]);
 
             // Update existing identity if needed
-            $rektor->identity?->update([
+            $rektor->identity->update([
                 'title_prefix' => 'Dr.',
                 'title_suffix' => 'S.E., M.Si.',
             ]);

@@ -14,17 +14,17 @@ return new class extends Migration
         Schema::create('review_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('proposal_reviewer_id')
+                ->comment('Reference to the reviewer assignment')
                 ->constrained('proposal_reviewer')
-                ->onDelete('cascade')
-                ->comment('Reference to the reviewer assignment');
+                ->onDelete('cascade');
             $table->foreignUuid('proposal_id')
+                ->comment('Proposal being reviewed')
                 ->constrained('proposals')
-                ->onDelete('cascade')
-                ->comment('Proposal being reviewed');
+                ->onDelete('cascade');
             $table->foreignUuid('user_id')
+                ->comment('Reviewer user')
                 ->constrained('users')
-                ->onDelete('cascade')
-                ->comment('Reviewer user');
+                ->onDelete('cascade');
             $table->unsignedInteger('round')
                 ->default(1)
                 ->comment('Review round/cycle number');

@@ -3,17 +3,157 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Reports\GetPartnerReportQuery;
+use App\Models\DocumentSignature;
+use App\Models\InstitutionalReport;
 use App\Models\Proposal;
+use App\Services\DocumentSignatureService;
 use App\Traits\HasIkuCalculations;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportExportController extends Controller
 {
     use HasIkuCalculations;
+
+    protected function institutionalVariant(?InstitutionalReport $report): ?string
+    {
+        if (! $report || ! $report->status) {
+            return null;
+        }
+
+        return (string) $report->status->value === 'approved' ? 'approved' : ((string) $report->status->value === 'submitted' ? 'submitted' : null);
+    }
+
+    protected function institutionalPdfCachePath(InstitutionalReport $report, string $variant): string
+    {
+        return 'institutional-reports/'.$report->id.'/'.$variant.'.pdf';
+    }
+
+    protected function upsertInstitutionalSignatures(InstitutionalReport $report, string $variant, string $documentHash): void
+    {
+        $service = app(DocumentSignatureService::class);
+        $kid = $service->currentKid();
+
+        if ($report->submitted_at && $report->submitted_by) {
+            $submitted = DocumentSignature::query()
+                ->where('document_type', $report->getMorphClass())
+                ->where('document_id', $report->id)
+                ->where('variant', $variant)
+                ->where('action', 'submitted')
+                ->where('signed_role', 'kepala_lppm')
+                ->first();
+
+            $submittedNonce = (string) (($submitted?->payload['nonce'] ?? null) ?: Str::random(32));
+            $submittedPayload = [
+                'ver' => 1,
+                'doc_type' => 'institutional_report',
+                'doc_id' => (string) $report->id,
+                'doc_year' => (int) $report->year,
+                'doc_category' => (string) $report->type,
+                'variant' => $variant,
+                'action' => 'submitted',
+                'signed_role' => 'kepala_lppm',
+                'signed_by' => (string) $report->submitted_by,
+                'signed_at' => $report->submitted_at->copy()->utc()->toIso8601ZuluString(),
+                'pdf_hash_alg' => 'SHA-256',
+                'pdf_hash' => $documentHash,
+                'kid' => $kid,
+                'nonce' => $submittedNonce,
+            ];
+
+            $submittedSig = $service->signPayload($submittedPayload, $kid);
+
+            DocumentSignature::updateOrCreate(
+                [
+                    'document_type' => $report->getMorphClass(),
+                    'document_id' => (string) $report->id,
+                    'variant' => $variant,
+                    'action' => 'submitted',
+                    'signed_role' => 'kepala_lppm',
+                ],
+                [
+                    'signed_by' => (string) $report->submitted_by,
+                    'signed_at' => $report->submitted_at,
+                    'hash_alg' => 'sha256',
+                    'document_hash' => $documentHash,
+                    'kid' => $kid,
+                    'signature' => $submittedSig,
+                    'payload' => $submittedPayload,
+                ]
+            );
+        }
+
+        if ($variant === 'approved' && $report->approved_at && $report->approved_by) {
+            $approved = DocumentSignature::query()
+                ->where('document_type', $report->getMorphClass())
+                ->where('document_id', $report->id)
+                ->where('variant', $variant)
+                ->where('action', 'approved')
+                ->where('signed_role', 'rektor')
+                ->first();
+
+            $approvedNonce = (string) (($approved?->payload['nonce'] ?? null) ?: Str::random(32));
+            $approvedPayload = [
+                'ver' => 1,
+                'doc_type' => 'institutional_report',
+                'doc_id' => (string) $report->id,
+                'doc_year' => (int) $report->year,
+                'doc_category' => (string) $report->type,
+                'variant' => $variant,
+                'action' => 'approved',
+                'signed_role' => 'rektor',
+                'signed_by' => (string) $report->approved_by,
+                'signed_at' => $report->approved_at->copy()->utc()->toIso8601ZuluString(),
+                'pdf_hash_alg' => 'SHA-256',
+                'pdf_hash' => $documentHash,
+                'kid' => $kid,
+                'nonce' => $approvedNonce,
+            ];
+
+            $approvedSig = $service->signPayload($approvedPayload, $kid);
+
+            DocumentSignature::updateOrCreate(
+                [
+                    'document_type' => $report->getMorphClass(),
+                    'document_id' => (string) $report->id,
+                    'variant' => $variant,
+                    'action' => 'approved',
+                    'signed_role' => 'rektor',
+                ],
+                [
+                    'signed_by' => (string) $report->approved_by,
+                    'signed_at' => $report->approved_at,
+                    'hash_alg' => 'sha256',
+                    'document_hash' => $documentHash,
+                    'kid' => $kid,
+                    'signature' => $approvedSig,
+                    'payload' => $approvedPayload,
+                ]
+            );
+        }
+    }
+
+    protected function pdfDownloadResponse(string $pdfBinary, string $filename): Response
+    {
+        return response($pdfBinary, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
+    }
+
+    protected function pdfInlineResponse(string $pdfBinary, string $filename): Response
+    {
+        return response($pdfBinary, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$filename.'"',
+        ]);
+    }
 
     public function ikuPdf(Request $request)
     {
@@ -30,6 +170,7 @@ class ReportExportController extends Controller
                 ->where('year', $period)
                 ->first();
 
+            $isPreview = $request->boolean('preview');
             $pdf = Pdf::loadView('reports.iku-report-pdf', [
                 'ikuMetrics' => $ikuMetrics,
                 'period' => $period,
@@ -37,15 +178,33 @@ class ReportExportController extends Controller
                 'rektor' => $rektor,
                 'lppmHead' => $lppmHead,
                 'institutionalReport' => $institutionalReport,
+                'isPreview' => $isPreview,
             ])->setPaper('a4', 'portrait');
 
-            $filename = 'laporan-rekap-iku-'.$period.'-'.now()->format('YmdHis').'.pdf';
+            $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-rekap-iku-'.$period.'-'.now()->format('YmdHis').'.pdf';
 
-            if ($request->boolean('preview')) {
-                return $pdf->stream($filename);
+            if ($isPreview) {
+                return $this->pdfInlineResponse($pdf->output(), $filename);
             }
 
-            return $pdf->download($filename);
+            $variant = $this->institutionalVariant($institutionalReport);
+            if (! $institutionalReport || ! $variant) {
+                return $this->pdfDownloadResponse($pdf->output(), $filename);
+            }
+
+            $cachePath = $this->institutionalPdfCachePath($institutionalReport, $variant);
+            $pdfBinary = Storage::disk('local')->exists($cachePath)
+                ? Storage::disk('local')->get($cachePath)
+                : $pdf->output();
+
+            if (! Storage::disk('local')->exists($cachePath)) {
+                Storage::disk('local')->put($cachePath, $pdfBinary);
+            }
+
+            $hash = hash('sha256', $pdfBinary);
+            $this->upsertInstitutionalSignatures($institutionalReport, $variant, $hash);
+
+            return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
 
             \Illuminate\Support\Facades\Log::error('IKU PDF Export Error: '.$e->getMessage());
@@ -123,10 +282,27 @@ class ReportExportController extends Controller
             $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-penelitian-'.$period.'-'.now()->format('YmdHis').'.pdf';
 
             if ($isPreview) {
-                return $pdf->stream($filename);
+                return $this->pdfInlineResponse($pdf->output(), $filename);
             }
 
-            return $pdf->download($filename);
+            $variant = $this->institutionalVariant($institutionalReport);
+            if (! $institutionalReport || ! $variant) {
+                return $this->pdfDownloadResponse($pdf->output(), $filename);
+            }
+
+            $cachePath = $this->institutionalPdfCachePath($institutionalReport, $variant);
+            $pdfBinary = Storage::disk('local')->exists($cachePath)
+                ? Storage::disk('local')->get($cachePath)
+                : $pdf->output();
+
+            if (! Storage::disk('local')->exists($cachePath)) {
+                Storage::disk('local')->put($cachePath, $pdfBinary);
+            }
+
+            $hash = hash('sha256', $pdfBinary);
+            $this->upsertInstitutionalSignatures($institutionalReport, $variant, $hash);
+
+            return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
 
             Log::error('Research PDF Export Error: '.$e->getMessage());
@@ -207,10 +383,27 @@ class ReportExportController extends Controller
             $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-pkm-'.$period.'-'.now()->format('YmdHis').'.pdf';
 
             if ($isPreview) {
-                return $pdf->stream($filename);
+                return $this->pdfInlineResponse($pdf->output(), $filename);
             }
 
-            return $pdf->download($filename);
+            $variant = $this->institutionalVariant($institutionalReport);
+            if (! $institutionalReport || ! $variant) {
+                return $this->pdfDownloadResponse($pdf->output(), $filename);
+            }
+
+            $cachePath = $this->institutionalPdfCachePath($institutionalReport, $variant);
+            $pdfBinary = Storage::disk('local')->exists($cachePath)
+                ? Storage::disk('local')->get($cachePath)
+                : $pdf->output();
+
+            if (! Storage::disk('local')->exists($cachePath)) {
+                Storage::disk('local')->put($cachePath, $pdfBinary);
+            }
+
+            $hash = hash('sha256', $pdfBinary);
+            $this->upsertInstitutionalSignatures($institutionalReport, $variant, $hash);
+
+            return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
 
             Log::error('PKM PDF Export Error: '.$e->getMessage());
@@ -280,10 +473,27 @@ class ReportExportController extends Controller
             $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-luaran-'.$activeTab.'-'.now()->format('YmdHis').'.pdf';
 
             if ($isPreview) {
-                return $pdf->stream($filename);
+                return $this->pdfInlineResponse($pdf->output(), $filename);
             }
 
-            return $pdf->download($filename);
+            $variant = $this->institutionalVariant($institutionalReport);
+            if (! $institutionalReport || ! $variant) {
+                return $this->pdfDownloadResponse($pdf->output(), $filename);
+            }
+
+            $cachePath = $this->institutionalPdfCachePath($institutionalReport, $variant);
+            $pdfBinary = Storage::disk('local')->exists($cachePath)
+                ? Storage::disk('local')->get($cachePath)
+                : $pdf->output();
+
+            if (! Storage::disk('local')->exists($cachePath)) {
+                Storage::disk('local')->put($cachePath, $pdfBinary);
+            }
+
+            $hash = hash('sha256', $pdfBinary);
+            $this->upsertInstitutionalSignatures($institutionalReport, $variant, $hash);
+
+            return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
 
             Log::error('Output PDF Export Error: '.$e->getMessage());
@@ -377,6 +587,7 @@ class ReportExportController extends Controller
             $rektor = \App\Models\User::role('rektor')->with('identity')->first();
             $lppmHead = \App\Models\User::role('kepala lppm')->with('identity')->first();
 
+            $isPreview = $request->boolean('preview');
             $pdf = Pdf::loadView('reports.partner-collaboration-pdf', [
                 'partners' => $partners,
                 'periodFilter' => $periodFilter,
@@ -385,16 +596,33 @@ class ReportExportController extends Controller
                 'rektor' => $rektor,
                 'lppmHead' => $lppmHead,
                 'institutionalReport' => $institutionalReport,
+                'isPreview' => $isPreview,
             ])->setPaper('a4', 'landscape');
 
-            $isPreview = $request->boolean('preview');
             $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-mitra-'.now()->format('Y-m-d').'.pdf';
 
             if ($isPreview) {
-                return $pdf->stream($filename);
+                return $this->pdfInlineResponse($pdf->output(), $filename);
             }
 
-            return $pdf->download($filename);
+            $variant = $this->institutionalVariant($institutionalReport);
+            if (! $institutionalReport || ! $variant) {
+                return $this->pdfDownloadResponse($pdf->output(), $filename);
+            }
+
+            $cachePath = $this->institutionalPdfCachePath($institutionalReport, $variant);
+            $pdfBinary = Storage::disk('local')->exists($cachePath)
+                ? Storage::disk('local')->get($cachePath)
+                : $pdf->output();
+
+            if (! Storage::disk('local')->exists($cachePath)) {
+                Storage::disk('local')->put($cachePath, $pdfBinary);
+            }
+
+            $hash = hash('sha256', $pdfBinary);
+            $this->upsertInstitutionalSignatures($institutionalReport, $variant, $hash);
+
+            return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
 
             \Illuminate\Support\Facades\Log::error('Partner PDF Export Error: '.$e->getMessage());
@@ -509,19 +737,38 @@ class ReportExportController extends Controller
     /**
      * Export Digital Monev Berita Acara (BA) to PDF.
      */
-    public function monevBaPdf(Request $request, $id)
+    public function monevBaPdf(Request $request, string $id)
     {
         try {
-            $review = \App\Models\MonevReview::with([
-                'proposal.submitter.identity', 
-                'proposal.researchScheme', 
-                'proposal.communityServiceScheme', 
+            $review = \App\Models\MonevReview::query()->with([
+                'proposal.submitter.identity.faculty',
+                'proposal.submitter.identity.studyProgram',
+                'proposal.researchScheme',
+                'proposal.communityServiceScheme',
                 'proposal.focusArea',
-                'reviewer.identity'
-            ])->findOrFail($id);
+                'proposal.progressReports.mandatoryOutputs.proposalOutput',
+                'proposal.progressReports.additionalOutputs.proposalOutput',
+                'proposal.progressReports.media',
+                'reviewer.identity',
+            ])->whereKey($id)->firstOrFail();
+
+            // Determine active report based on period
+            $activeReport = $review->proposal->progressReports
+                ->filter(function ($report) use ($review) {
+                    $period = strtolower((string) $review->semester) === 'ganjil' ? 'semester_1' : 'semester_2';
+
+                    return (string) $report->reporting_year === (string) $review->academic_year
+                        && (string) $report->reporting_period === $period;
+                })
+                ->first() ?? $review->proposal->progressReports->where('reporting_period', 'final')->first();
 
             // Access check: only Admin LPPM or the Assignee Reviewer can download
-            if (! auth()->user()->hasRole(['admin lppm', 'kepala lppm', 'superadmin']) && auth()->id() !== $review->reviewer_id) {
+            $user = \Illuminate\Support\Facades\Auth::user();
+            if (! $user instanceof \App\Models\User) {
+                abort(403);
+            }
+
+            if (! $user->hasRole(['admin lppm', 'kepala lppm', 'superadmin']) && $user->id !== $review->reviewer_id) {
                 abort(403);
             }
 
@@ -534,20 +781,211 @@ class ReportExportController extends Controller
                 ->orderBy('order')
                 ->get();
 
-            $pdf = Pdf::loadView('reports.monev-ba-pdf', [
-                'review' => $review,
-                'criteria' => $criteria,
-            ])->setPaper('a4', 'portrait');
+            $isPreview = $request->boolean('preview');
+            $variant = 'final';
+            $cachePath = 'monev-ba/'.$review->id.'/'.$variant.'.pdf';
+
+            $needsReviewer = (bool) $review->reviewed_at;
+            $needsAdmin = (bool) $review->finalized_by_lppm_at;
+            $needsKepala = (bool) $review->approved_by_kepala_at;
+
+            $existing = DocumentSignature::query()
+                ->where('document_type', $review->getMorphClass())
+                ->where('document_id', (string) $review->id)
+                ->where('variant', $variant)
+                ->get()
+                ->keyBy(fn (DocumentSignature $s) => $s->action.'|'.$s->signed_role);
+
+            $hasReviewerSig = ! $needsReviewer || $existing->has('reviewed|reviewer');
+            $hasAdminSig = ! $needsAdmin || $existing->has('finalized|admin_lppm');
+            $hasKepalaSig = ! $needsKepala || $existing->has('approved|kepala_lppm');
+
+            $shouldUseCache = ! $isPreview
+                && Storage::disk('local')->exists($cachePath)
+                && $hasReviewerSig
+                && $hasAdminSig
+                && $hasKepalaSig;
+
+            $signatureService = app(DocumentSignatureService::class);
+            $kid = $signatureService->currentKid();
+
+            $reviewerSig = $needsReviewer
+                ? ($existing->get('reviewed|reviewer') ?? DocumentSignature::create([
+                    'id' => (string) Str::uuid(),
+                    'document_type' => $review->getMorphClass(),
+                    'document_id' => (string) $review->id,
+                    'variant' => $variant,
+                    'action' => 'reviewed',
+                    'signed_role' => 'reviewer',
+                    'signed_by' => (string) $review->reviewer_id,
+                    'signed_at' => $review->reviewed_at,
+                    'kid' => $kid,
+                    'signature' => Str::random(64),
+                    'payload' => ['ver' => 1, 'nonce' => Str::random(32)],
+                ]))
+                : null;
+
+            $adminSig = $needsAdmin
+                ? ($existing->get('finalized|admin_lppm') ?? DocumentSignature::create([
+                    'id' => (string) Str::uuid(),
+                    'document_type' => $review->getMorphClass(),
+                    'document_id' => (string) $review->id,
+                    'variant' => $variant,
+                    'action' => 'finalized',
+                    'signed_role' => 'admin_lppm',
+                    'signed_by' => $review->finalized_by_lppm_by,
+                    'signed_at' => $review->finalized_by_lppm_at,
+                    'kid' => $kid,
+                    'signature' => Str::random(64),
+                    'payload' => ['ver' => 1, 'nonce' => Str::random(32)],
+                ]))
+                : null;
+
+            $kepalaSig = $needsKepala
+                ? ($existing->get('approved|kepala_lppm') ?? DocumentSignature::create([
+                    'id' => (string) Str::uuid(),
+                    'document_type' => $review->getMorphClass(),
+                    'document_id' => (string) $review->id,
+                    'variant' => $variant,
+                    'action' => 'approved',
+                    'signed_role' => 'kepala_lppm',
+                    'signed_by' => $review->approved_by_kepala_by,
+                    'signed_at' => $review->approved_by_kepala_at,
+                    'kid' => $kid,
+                    'signature' => Str::random(64),
+                    'payload' => ['ver' => 1, 'nonce' => Str::random(32)],
+                ]))
+                : null;
+
+            $qrReviewerUrl = $reviewerSig
+                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $reviewerSig->id])
+                : null;
+            $qrAdminUrl = $adminSig
+                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $adminSig->id])
+                : null;
+            $qrKepalaUrl = $kepalaSig
+                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $kepalaSig->id])
+                : null;
 
             $filename = 'Berita_Acara_Monev_'.str_replace(' ', '_', $review->proposal->title).'_'.now()->format('YmdHi').'.pdf';
 
-            return $pdf->stream($filename);
+            if ($shouldUseCache) {
+                $pdfBinary = Storage::disk('local')->get($cachePath);
+
+                return $this->pdfInlineResponse($pdfBinary, $filename);
+            }
+
+            $pdf = Pdf::loadView('reports.monev-ba-pdf', [
+                'review' => $review,
+                'criteria' => $criteria,
+                'activeReport' => $activeReport,
+                'institution' => \App\Models\Institution::first(),
+                'isPreview' => $isPreview,
+                'qrReviewerUrl' => $qrReviewerUrl,
+                'qrAdminUrl' => $qrAdminUrl,
+                'qrKepalaUrl' => $qrKepalaUrl,
+                'generatedAt' => now(),
+            ])->setPaper('a4', 'portrait');
+
+            $pdfBinary = $pdf->output();
+
+            if ($isPreview) {
+                return $this->pdfInlineResponse($pdfBinary, $filename);
+            }
+
+            Storage::disk('local')->put($cachePath, $pdfBinary);
+
+            $hash = hash('sha256', $pdfBinary);
+
+            if ($reviewerSig && $review->reviewed_at) {
+                $payload = [
+                    'ver' => 1,
+                    'doc_type' => 'monev_ba',
+                    'doc_id' => (string) $review->id,
+                    'variant' => $variant,
+                    'action' => 'reviewed',
+                    'signed_role' => 'reviewer',
+                    'signed_by' => (string) $review->reviewer_id,
+                    'signed_at' => $review->reviewed_at->copy()->utc()->toIso8601ZuluString(),
+                    'pdf_hash_alg' => 'SHA-256',
+                    'pdf_hash' => $hash,
+                    'kid' => $kid,
+                    'nonce' => (string) ($reviewerSig->payload['nonce'] ?? Str::random(32)),
+                ];
+
+                $reviewerSig->update([
+                    'signed_by' => (string) $review->reviewer_id,
+                    'signed_at' => $review->reviewed_at,
+                    'hash_alg' => 'sha256',
+                    'document_hash' => $hash,
+                    'kid' => $kid,
+                    'payload' => $payload,
+                    'signature' => $signatureService->signPayload($payload, $kid),
+                ]);
+            }
+
+            if ($adminSig && $review->finalized_by_lppm_at) {
+                $payload = [
+                    'ver' => 1,
+                    'doc_type' => 'monev_ba',
+                    'doc_id' => (string) $review->id,
+                    'variant' => $variant,
+                    'action' => 'finalized',
+                    'signed_role' => 'admin_lppm',
+                    'signed_by' => (string) ($review->finalized_by_lppm_by ?? ''),
+                    'signed_at' => $review->finalized_by_lppm_at->copy()->utc()->toIso8601ZuluString(),
+                    'pdf_hash_alg' => 'SHA-256',
+                    'pdf_hash' => $hash,
+                    'kid' => $kid,
+                    'nonce' => (string) ($adminSig->payload['nonce'] ?? Str::random(32)),
+                ];
+
+                $adminSig->update([
+                    'signed_by' => $review->finalized_by_lppm_by,
+                    'signed_at' => $review->finalized_by_lppm_at,
+                    'hash_alg' => 'sha256',
+                    'document_hash' => $hash,
+                    'kid' => $kid,
+                    'payload' => $payload,
+                    'signature' => $signatureService->signPayload($payload, $kid),
+                ]);
+            }
+
+            if ($kepalaSig && $review->approved_by_kepala_at) {
+                $payload = [
+                    'ver' => 1,
+                    'doc_type' => 'monev_ba',
+                    'doc_id' => (string) $review->id,
+                    'variant' => $variant,
+                    'action' => 'approved',
+                    'signed_role' => 'kepala_lppm',
+                    'signed_by' => (string) ($review->approved_by_kepala_by ?? ''),
+                    'signed_at' => $review->approved_by_kepala_at->copy()->utc()->toIso8601ZuluString(),
+                    'pdf_hash_alg' => 'SHA-256',
+                    'pdf_hash' => $hash,
+                    'kid' => $kid,
+                    'nonce' => (string) ($kepalaSig->payload['nonce'] ?? Str::random(32)),
+                ];
+
+                $kepalaSig->update([
+                    'signed_by' => $review->approved_by_kepala_by,
+                    'signed_at' => $review->approved_by_kepala_at,
+                    'hash_alg' => 'sha256',
+                    'document_hash' => $hash,
+                    'kid' => $kid,
+                    'payload' => $payload,
+                    'signature' => $signatureService->signPayload($payload, $kid),
+                ]);
+            }
+
+            return $this->pdfInlineResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
             Log::error('Monev BA PDF Export Error: '.$e->getMessage());
 
             return back()->with('error', 'Gagal menghasilkan Berita Acara: '.$e->getMessage());
         }
     }
+
     /**
      * Export Collective Monev Report to PDF for Institutional Monitoring.
      */
@@ -564,13 +1002,12 @@ class ReportExportController extends Controller
                 ->when($semester !== 'all', function ($query) use ($semester) {
                     $query->where('semester', $semester);
                 })
-                ->whereNotNull('reported_to_rektor_at')
                 ->latest()
                 ->get();
 
             $institutionalReport = \App\Models\InstitutionalReport::where('type', 'monev')
                 ->where('year', $period)
-                ->when($semester !== 'all', function($q) use ($semester) {
+                ->when($semester !== 'all', function ($q) use ($semester) {
                     $q->where('metadata->semester', $semester);
                 })
                 ->first();
@@ -593,10 +1030,27 @@ class ReportExportController extends Controller
             $filename = ($isPreview ? 'PREVIEW-' : '').'laporan-rekap-monev-'.$period.'-'.now()->format('YmdHis').'.pdf';
 
             if ($isPreview) {
-                return $pdf->stream($filename);
+                return $this->pdfInlineResponse($pdf->output(), $filename);
             }
 
-            return $pdf->download($filename);
+            $variant = $this->institutionalVariant($institutionalReport);
+            if (! $institutionalReport || ! $variant) {
+                return $this->pdfDownloadResponse($pdf->output(), $filename);
+            }
+
+            $cachePath = $this->institutionalPdfCachePath($institutionalReport, $variant);
+            $pdfBinary = Storage::disk('local')->exists($cachePath)
+                ? Storage::disk('local')->get($cachePath)
+                : $pdf->output();
+
+            if (! Storage::disk('local')->exists($cachePath)) {
+                Storage::disk('local')->put($cachePath, $pdfBinary);
+            }
+
+            $hash = hash('sha256', $pdfBinary);
+            $this->upsertInstitutionalSignatures($institutionalReport, $variant, $hash);
+
+            return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Monev PDF Export Error: '.$e->getMessage());
 

@@ -15,4 +15,8 @@ parameters:
     excludePaths:
         - ./*/*/FileToBeExcluded.php
 
+    # Disable parallel processing to avoid EPERM on TCP server
+    parallel:
+        maximumNumberOfProcesses: 1
+
     # checkMissingIterableValueType: false

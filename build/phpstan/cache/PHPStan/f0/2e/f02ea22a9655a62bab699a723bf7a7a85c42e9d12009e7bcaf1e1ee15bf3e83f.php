@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/SubmitButton.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\CommunityService\Proposal\SubmitButton
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-69250719c2341917db7720a25302107d020d61e1eb041ff66fd4a98ad226cced',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-d5a5db0af054d6b850ce98a015199f4a9b9187c9eab8fcd21df5c17af3a3c66d',
    'data' => 
   array (
     'locatedSource' => 
@@ -31,8 +31,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 21,
-    'endLine' => 95,
+    'startLine' => 22,
+    'endLine' => 118,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Livewire\\Component',
@@ -68,20 +68,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'\'',
           'attributes' => 
           array (
-            'startLine' => 25,
-            'endLine' => 25,
-            'startTokenPos' => 74,
-            'startFilePos' => 741,
-            'endTokenPos' => 74,
-            'endFilePos' => 742,
+            'startLine' => 26,
+            'endLine' => 26,
+            'startTokenPos' => 79,
+            'startFilePos' => 786,
+            'endTokenPos' => 79,
+            'endFilePos' => 787,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 25,
-        'endLine' => 25,
+        'startLine' => 26,
+        'endLine' => 26,
         'startColumn' => 5,
         'endColumn' => 35,
         'isPromoted' => false,
@@ -118,8 +118,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 27,
-            'endLine' => 27,
+            'startLine' => 28,
+            'endLine' => 28,
             'startColumn' => 27,
             'endColumn' => 44,
             'parameterIndex' => 0,
@@ -140,8 +140,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 27,
-        'endLine' => 30,
+        'startLine' => 28,
+        'endLine' => 31,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -175,8 +175,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 32,
-        'endLine' => 36,
+        'startLine' => 33,
+        'endLine' => 37,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -218,8 +218,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 38,
-        'endLine' => 51,
+        'startLine' => 39,
+        'endLine' => 61,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -253,8 +253,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 53,
-        'endLine' => 57,
+        'startLine' => 63,
+        'endLine' => 67,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -288,8 +288,43 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 59,
-        'endLine' => 65,
+        'startLine' => 69,
+        'endLine' => 75,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\CommunityService\\Proposal',
+        'declaringClassName' => 'App\\Livewire\\CommunityService\\Proposal\\SubmitButton',
+        'implementingClassName' => 'App\\Livewire\\CommunityService\\Proposal\\SubmitButton',
+        'currentClassName' => 'App\\Livewire\\CommunityService\\Proposal\\SubmitButton',
+        'aliasName' => NULL,
+      ),
+      'eligibility' => 
+      array (
+        'name' => 'eligibility',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+          0 => 
+          array (
+            'name' => 'Livewire\\Attributes\\Computed',
+            'isRepeated' => false,
+            'arguments' => 
+            array (
+            ),
+          ),
+        ),
+        'docComment' => NULL,
+        'startLine' => 77,
+        'endLine' => 88,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -323,8 +358,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 67,
-        'endLine' => 70,
+        'startLine' => 90,
+        'endLine' => 93,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -358,8 +393,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 72,
-        'endLine' => 89,
+        'startLine' => 95,
+        'endLine' => 112,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -393,8 +428,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 91,
-        'endLine' => 94,
+        'startLine' => 114,
+        'endLine' => 117,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('research_stages', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('proposal_id')->constrained('proposals')->onDelete('cascade')->comment('Proposal');
+            $table->foreignUuid('proposal_id')->comment('Proposal')->constrained('proposals')->onDelete('cascade');
             $table->integer('stage_number')->comment('Nomor Tahap');
             $table->string('process_name')->comment('Nama Proses');
             $table->string('outputs')->comment('Output');
             $table->string('indicator')->comment('Indikator');
-            $table->foreignUuid('person_in_charge_id')->nullable()->constrained('users')->onDelete('set null')->comment('Penanggung Jawab');
+            $table->foreignUuid('person_in_charge_id')->nullable()->comment('Penanggung Jawab')->constrained('users')->onDelete('set null');
             $table->timestamps();
         });
     }

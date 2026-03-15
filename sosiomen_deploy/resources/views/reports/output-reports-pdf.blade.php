@@ -49,23 +49,11 @@
             font-weight: bold;
         }
 
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 80pt;
-            color: rgba(220, 220, 220, 0.4);
-            z-index: -1000;
-            white-space: nowrap;
-            font-weight: bold;
-        }
+
     </style>
 </head>
 <body>
     @if($isPreview ?? false)
-        <div class="watermark">DRAFT PREVIEW</div>
-    @endif
     <div class="header">
         <div class="institution">INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN</div>
         <div class="lppm">LEMBAGA PENELITIAN DAN PENGABDIAN KEPADA MASYARAKAT (LPPM)</div>

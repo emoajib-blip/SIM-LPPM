@@ -2,7 +2,7 @@
 
 // osfsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/database/factories/UserFactory.php-PHPStan\BetterReflection\Reflection\ReflectionClass-Database\Factories\UserFactory
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-2b5f09195d7a4be6d329c2784128617c54e1e6068add10c884cd8efbaf88b93a-8.4.1-6.65.0.9',
+   'variableKey' => 'v2-a2cdb681bf02e95cbbe32218a45a4de549d9088fd8dd6dd2cc8bed3c2acdd328-8.4.1-6.65.0.9',
    'data' => 
   array (
     'locatedSource' => 
@@ -29,7 +29,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 12,
-    'endLine' => 60,
+    'endLine' => 59,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Factories\\Factory',
@@ -124,7 +124,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * @return array<string, mixed>
  */',
         'startLine' => 24,
-        'endLine' => 37,
+        'endLine' => 36,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -160,8 +160,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Indicate that the model\'s email address should be unverified.
  */',
-        'startLine' => 42,
-        'endLine' => 47,
+        'startLine' => 41,
+        'endLine' => 46,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -197,8 +197,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Indicate that the model does not have two-factor authentication configured.
  */',
-        'startLine' => 52,
-        'endLine' => 59,
+        'startLine' => 51,
+        'endLine' => 58,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

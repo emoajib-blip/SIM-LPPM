@@ -5,8 +5,7 @@ namespace App\Livewire\KepalaLppm\Monev;
 use App\Livewire\Concerns\HasToast;
 use App\Models\MonevReview;
 use App\Models\Proposal;
-use App\Models\InstitutionalReport;
-use App\Enums\InstitutionalReportStatus;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -15,7 +14,7 @@ use Livewire\WithPagination;
 
 class MonevRecap extends Component
 {
-    use HasToast, WithPagination;
+    use \App\Livewire\Traits\WithInstitutionalApproval, HasToast, WithPagination;
 
     #[Url]
     public $academicYear = '';
@@ -27,7 +26,9 @@ class MonevRecap extends Component
 
     public function mount()
     {
-        if (! Auth::user()->hasRole(['kepala lppm', 'rektor'])) {
+        $userId = Auth::id();
+        $user = $userId ? User::find($userId) : null;
+        if (! $user || ! $user->hasRole(['kepala lppm', 'rektor'])) {
             abort(403);
         }
         $this->academicYear = $this->academicYear ?: date('Y');
@@ -46,43 +47,34 @@ class MonevRecap extends Component
             ->whereNull('reported_to_rektor_at')
             ->get();
 
-        if ($reviews->isEmpty()) {
+        if ($reviews->isEmpty() && ! $this->getInstitutionalReport('monev', (int) $this->academicYear)) {
             $this->toastWarning('Tidak ada data baru untuk dilaporkan.');
 
             return;
         }
 
-        $reviews->each(function (MonevReview $review) {
-            $review->update(['reported_to_rektor_at' => now()]);
-        });
+        // Call standard trait method
+        $this->submitInstitutionalReport('monev', (int) $this->academicYear, [
+            'count' => $reviews->count(),
+            'semester' => $this->semester,
+        ]);
 
-        // Sync with InstitutionalReport
-        InstitutionalReport::updateOrCreate(
-            [
-                'type' => 'monev',
-                'year' => $this->academicYear,
-                'metadata->semester' => $this->semester, // Optionally track semester in metadata
-            ],
-            [
-                'status' => InstitutionalReportStatus::SUBMITTED,
-                'submitted_at' => now(),
-                'submitted_by' => Auth::id(),
-                'notes' => "Laporan Monev Periode {$this->academicYear} " . ($this->semester !== 'all' ? ucfirst($this->semester) : 'Semua Semester'),
-                'metadata' => [
-                    'count' => $reviews->count(),
-                    'semester' => $this->semester,
-                ]
-            ]
-        );
-
-        $this->toastSuccess($reviews->count().' hasil monev telah dilaporkan ke Rektor.');
+        // Update individual reviews
+        if ($reviews->isNotEmpty()) {
+            $reviews->each(function (MonevReview $review) {
+                $review->update(['reported_to_rektor_at' => now()]);
+            });
+        }
     }
 
     public function approveReview($id)
     {
         $review = MonevReview::findOrFail($id);
-        $review->update(['approved_by_kepala_at' => now()]);
-        
+        $review->update([
+            'approved_by_kepala_at' => now(),
+            'approved_by_kepala_by' => Auth::id(),
+        ]);
+
         $this->toastSuccess('Monev berhasil disetujui.');
     }
 
@@ -99,6 +91,7 @@ class MonevRecap extends Component
 
         if ($count === 0) {
             $this->toastWarning('Tidak ada data untuk disetujui.');
+
             return;
         }
 
@@ -109,9 +102,12 @@ class MonevRecap extends Component
             })
             ->whereNotNull('finalized_by_lppm_at')
             ->whereNull('approved_by_kepala_at')
-            ->update(['approved_by_kepala_at' => now()]);
+            ->update([
+                'approved_by_kepala_at' => now(),
+                'approved_by_kepala_by' => Auth::id(),
+            ]);
 
-        $this->toastSuccess($count . ' hasil monev telah disetujui.');
+        $this->toastSuccess($count.' hasil monev telah disetujui.');
     }
 
     #[Computed]
@@ -146,6 +142,8 @@ class MonevRecap extends Component
 
     public function render()
     {
-        return view('livewire.kepala-lppm.monev.monev-recap');
+        return view('livewire.kepala-lppm.monev.monev-recap', [
+            'institutionalReport' => $this->getInstitutionalReport('monev', (int) $this->academicYear),
+        ]);
     }
 }

@@ -7,6 +7,7 @@ use App\Livewire\Traits\WithInstitutionalApproval;
 use App\Traits\HasIkuCalculations;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 #[Layout('components.layouts.app', ['title' => 'Laporan Capaian IKU', 'pageTitle' => 'Laporan Capaian IKU'])]
@@ -63,9 +64,11 @@ class IkuReport extends Component
         }
     }
 
+    #[On('preview-pdf')]
     public function previewPdf(): void
     {
-        $this->dispatch('open-new-tab', url: route('admin.iku.export-pdf', [
+        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+        $this->dispatch('preview-pdf', url: route('admin.iku.export-pdf', [
             'period' => $this->period,
             'search' => $this->search,
             'preview' => 1,

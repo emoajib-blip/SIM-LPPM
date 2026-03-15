@@ -30,7 +30,7 @@ class Index extends Component
 
     public $berita_acara;
 
-    public $borang_data = []; // Structured criteria
+    public $borang_data = []; // Structured criteria: [ 'criteria_key_score' => 80, 'criteria_key_notes' => '...' ]
 
     public function mount()
     {
@@ -56,32 +56,38 @@ class Index extends Component
                 ");
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Reviewer Monev Self-Healing Failed: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Reviewer Monev Self-Healing Failed: '.$e->getMessage());
         }
     }
 
     public function selectReview($id)
     {
         $this->selectedReview = MonevReview::with([
-            'proposal.submitter.identity', 
-            'proposal.progressReports' => fn($q) => $q->where('reporting_period', 'final'),
+            'proposal.submitter.identity',
+            'proposal.progressReports.mandatoryOutputs.proposalOutput',
+            'proposal.progressReports.additionalOutputs.proposalOutput',
+            'proposal.progressReports.media',
             'proposal.detailable',
-            'proposal.teamMembers.identity'
+            'proposal.teamMembers.identity',
+            'proposal.outputs',
+            'proposal.partners',
+            'proposal.dailyNotes.media',
         ])->findOrFail($id);
         $this->score = $this->selectedReview->score;
         $this->notes = $this->selectedReview->notes;
         $this->status = $this->selectedReview->status ?? 'baik';
-        
+
         if ($this->selectedReview->borang_data) {
             $this->borang_data = $this->selectedReview->borang_data;
         } else {
             $this->borang_data = [];
-            foreach ($this->activeCriteria as $criteria) {
-                // Use snake case of the criteria name as key
-                $this->borang_data[Str::snake($criteria->criteria)] = '';
+            foreach ($this->activeCriteria() as $criteria) {
+                $key = Str::snake($criteria->criteria);
+                $this->borang_data[$key.'_score'] = 0;
+                $this->borang_data[$key.'_notes'] = '';
             }
         }
-        
+
         $this->showReviewModal = true;
     }
 
@@ -90,13 +96,7 @@ class Index extends Component
         $this->validate([
             'score' => 'required|numeric|min:0|max:100',
             'status' => 'required|in:sangat_baik,baik,cukup',
-            'notes' => 'required|string',
-            'berita_acara' => [
-                ! $this->selectedReview?->hasMedia('berita_acara') ? 'required' : 'nullable',
-                'file',
-                'mimes:pdf,doc,docx',
-                'max:10240',
-            ],
+            'notes' => 'nullable|string',
         ]);
 
         $this->selectedReview->update([
@@ -104,19 +104,62 @@ class Index extends Component
             'status' => $this->status,
             'notes' => $this->notes,
             'borang_data' => $this->borang_data,
-            'reviewed_at' => now(),
         ]);
 
-        if ($this->berita_acara) {
-            $this->selectedReview->clearMediaCollection('berita_acara');
-            $this->selectedReview->addMedia($this->berita_acara->getRealPath())
-                ->usingFileName($this->berita_acara->getClientOriginalName())
-                ->toMediaCollection('berita_acara');
+        $this->toastSuccess('Draft evaluasi berhasil disimpan.');
+    }
+
+    public function submitReview()
+    {
+        $this->validate([
+            'score' => 'required|numeric|min:0|max:100',
+            'status' => 'required|in:sangat_baik,baik,cukup',
+            'notes' => 'required|string|min:10',
+        ], [
+            'notes.required' => 'Catatan reviewer wajib diisi sebelum mengajukan.',
+            'notes.min' => 'Catatan reviewer minimal 10 karakter.',
+        ]);
+
+        // Final recalculation check
+        $this->calculateTotalScore();
+
+        $this->selectedReview->update([
+            'score' => $this->score,
+            'status' => $this->status,
+            'notes' => $this->notes,
+            'borang_data' => $this->borang_data,
+            'reviewed_at' => now(), // Stempel Digital
+        ]);
+
+        $this->toastSuccess('Evaluasi Monev berhasil diajukan secara digital.');
+        $this->showReviewModal = false;
+    }
+
+    public function updatedBorangData($value, $key)
+    {
+        if (str_ends_with($key, '_score')) {
+            $this->calculateTotalScore();
+        }
+    }
+
+    protected function calculateTotalScore()
+    {
+        $this->score = $this->totalScore();
+    }
+
+    #[Computed]
+    public function totalScore()
+    {
+        $total = 0;
+        foreach ($this->activeCriteria() as $criteria) {
+            $key = Str::snake($criteria->criteria).'_score';
+            $val = $this->borang_data[$key] ?? 0;
+            if (is_numeric($val) && $val > 0) {
+                $total += ($val * $criteria->weight / 100);
+            }
         }
 
-        $this->toastSuccess('Evaluasi Monev berhasil disimpan.');
-        $this->showReviewModal = false;
-        $this->reset(['berita_acara']);
+        return round($total, 2);
     }
 
     #[Computed]
@@ -125,9 +168,9 @@ class Index extends Component
         return MonevReview::query()
             ->where('reviewer_id', Auth::id())
             ->with([
-                'proposal.submitter', 
+                'proposal.submitter',
                 'proposal.detailable',
-                'proposal.progressReports' => fn($q) => $q->where('reporting_period', 'final')
+                'proposal.progressReports',
             ])
             ->when($this->search, function ($query) {
                 $query->whereHas('proposal', function ($q) {
@@ -139,6 +182,23 @@ class Index extends Component
             })
             ->latest()
             ->paginate(10);
+    }
+
+    #[Computed]
+    public function activeReport()
+    {
+        if (! $this->selectedReview) {
+            return null;
+        }
+
+        $period = $this->selectedReview->semester === 'ganjil' ? 'semester_1' : 'semester_2';
+        $year = $this->selectedReview->academic_year;
+
+        // Try to find matching progress report, fallback to final if available
+        return $this->selectedReview->proposal->progressReports
+            ->where('reporting_year', $year)
+            ->where('reporting_period', $period)
+            ->first() ?? $this->selectedReview->proposal->progressReports->where('reporting_period', 'final')->first();
     }
 
     #[Computed]

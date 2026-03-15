@@ -25,13 +25,11 @@
 
         .cover-page {
             box-sizing: border-box;
-            height: 24.5cm;
-            text-align: center;
-            padding: 1cm 0;
-            margin: 0;
             width: 100%;
+            text-align: center;
+            padding-top: 1cm;
+            margin: 0;
             page-break-after: always;
-            overflow: hidden;
             position: relative;
         }
 
@@ -205,79 +203,93 @@
         .signature-space {
             min-height: 80px;
         }
+        .cover-table {
+            width: 100%;
+            height: 18cm;
+            border-collapse: collapse;
+            border: none !important;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .cover-table td {
+            border: none !important;
+            padding: 0;
+            vertical-align: top;
+            text-align: center;
+        }
     </style>
-</head>
-
-<body>
-    @php
+</head><body>@php
         $isResearch = $proposal->detailable_type === \App\Models\Research::class;
         $docType = ($isResearch ? 'PENELITIAN' : 'PENGABDIAN');
         $docFullType = ($isResearch ? 'PENELITIAN' : 'PENGABDIAN MASYARAKAT');
         $docTitle = "CATATAN HARIAN $docType DAN LAPORAN KEUANGAN $docFullType";
         $period = $proposal->dailyNotes->min('activity_date')?->format('d/m/Y') . ' s/d ' . $proposal->dailyNotes->max('activity_date')?->format('d/m/Y');
-    @endphp
+    @endphp<table class="cover-table">
+        <tr>
+            <td>
+                <div class="cover-header">
+                    {{ $docTitle }}
+                </div>
 
-    {{-- Cover Page --}}
-    <div class="cover-page">
-        <div class="cover-header">
-            {{ $docTitle }}
-        </div>
+                @if (file_exists(public_path('logo.png')))
+                    <img src="{{ public_path('logo.png') }}" alt="Logo" class="cover-logo">
+                @else
+                    <div style="height: 150px; border: 1px dashed #ccc; padding: 50px; margin: 0 auto; width: 200px;">LOGO UNIVERSITAS</div>
+                @endif
 
-        @if (file_exists(public_path('logo.png')))
-            <img src="{{ public_path('logo.png') }}" alt="Logo" class="cover-logo">
-        @else
-            <div style="height: 120px;"></div>
-        @endif
+                <div class="cover-title">
+                    @php
+                        $cleanTitle = $proposal->title;
+                        // Strip common prefixes if they exist (case-insensitive)
+                        $cleanTitle = preg_replace('/^(PENELITIAN|PENGABDIAN MASYARAKAT|PENGABDIAN):?\s*/i', '', $cleanTitle);
+                    @endphp
+                    {{ strtoupper($cleanTitle) }}
+                </div>
 
-        <div class="cover-title">
-            @php
-                $cleanTitle = $proposal->title;
-                // Strip common prefixes if they exist (case-insensitive)
-                $cleanTitle = preg_replace('/^(PENELITIAN|PENGABDIAN MASYARAKAT|PENGABDIAN):?\s*/i', '', $cleanTitle);
-            @endphp
-            {{ strtoupper($cleanTitle) }}
-        </div>
+                <div class="cover-authors">
+                    <div style="margin-bottom: 15px; font-weight: bold;">OLEH:</div>
+                    <table class="cover-authors-table">
+                        <tr>
+                            <td width="30%">Ketua Pengusul</td>
+                            <td width="5%">:</td>
+                            <td>{{ $proposal->submitter->name }} (NIDN:
+                                {{ $proposal->submitter->identity?->identity_id ?? '-' }})
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Anggota</td>
+                            <td>:</td>
+                            <td>
+                                @forelse($proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id) as $member)
+                                    <div>- {{ $member->name }} (NIDN: {{ $member->identity?->identity_id ?? '-' }})</div>
+                                @empty
+                                    -
+                                @endforelse
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Program Studi</td>
+                            <td>:</td>
+                            <td>{{ $proposal->submitter->identity?->studyProgram?->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Fakultas</td>
+                            <td>:</td>
+                            <td>{{ $proposal->submitter->identity?->studyProgram?->faculty?->name ?? '-' }}</td>
+                        </tr>
+                    </table>
+                </div>
 
-        <div class="cover-authors">
-            <div style="margin-bottom: 15px; font-weight: bold;">OLEH:</div>
-            <table class="cover-authors-table">
-                <tr>
-                    <td width="30%">Ketua Pengusul</td>
-                    <td width="5%">:</td>
-                    <td>{{ $proposal->submitter->name }} (NIDN:
-                        {{ $proposal->submitter->identity?->identity_id ?? '-' }})
-                    </td>
-                </tr>
-                <tr>
-                    <td>Anggota</td>
-                    <td>:</td>
-                    <td>
-                        @forelse($proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id) as $member)
-                            <div>- {{ $member->name }} (NIDN: {{ $member->identity?->identity_id ?? '-' }})</div>
-                        @empty
-                            -
-                        @endforelse
-                    </td>
-                </tr>
-                <tr>
-                    <td>Program Studi</td>
-                    <td>:</td>
-                    <td>{{ $proposal->submitter->identity?->studyProgram?->name ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td>Fakultas</td>
-                    <td>:</td>
-                    <td>{{ $proposal->submitter->identity?->studyProgram?->faculty?->name ?? '-' }}</td>
-                </tr>
-            </table>
-        </div>
+                <div class="cover-footer">
+                    INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN<br>
+                    TAHUN {{ $proposal->start_year }}
+                </div>
+            </td>
+        </tr>
+    </table>
 
-
-        <div class="cover-footer">
-            INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN<br>
-            TAHUN {{ $proposal->start_year }}
-        </div>
-    </div>
+    <div style="page-break-after: always;"></div>
 
     {{-- Halaman Pengesahan --}}
     <div style="page-break-inside: avoid;">
@@ -355,12 +367,12 @@
                         <p style="margin: 0;">Yang Melaporkan,<br>Ketua Pengusul</p>
                         <div class="signature-space"
                             style="height: 60px; display: flex; justify-content: center; align-items: center; margin: 5px 0;">
-                            @if ($isSigned)
-                                @php
-                                    $qrTextSubmitter = 'Catatan harian & laporan keuangan ini dilaporkan secara digital oleh: ' . strtoupper($proposal->submitter->name) . ' pada ' . ($proposal->logbook_signed_at?->format('d/m/Y H:i') ?? date('d/m/Y H:i'));
-                                @endphp
-                                <img src="{{ generate_qr_code_data_uri($qrTextSubmitter) }}" width="60" alt="QR Code"
-                                    style="margin: 0 auto; display: block;">
+                            @if ($qrUrlSubmitter)
+                                <div style="border: 1pt solid #1a56db; padding: 4px; display: inline-block; border-radius: 4px; background-color: #f0f4ff;">
+                                    <img src="{{ generate_qr_code_data_uri($qrUrlSubmitter) }}" width="60" alt="QR Code"
+                                        style="margin: 0 auto; display: block;">
+                                    <span style="display: block; font-size: 6pt; color: #1a56db; font-weight: bold; margin-top: 2px;">DIGITALLY SIGNED</span>
+                                </div>
                             @else
                                 <div
                                     style="color: #999; border: 1px dashed #ccc; padding: 10px; text-align: center; font-size: 8pt; width: 80%; margin: 0 auto;">
@@ -368,20 +380,23 @@
                                 </div>
                             @endif
                         </div>
-                        <p style="margin: 0;"><strong>{{ strtoupper($proposal->submitter->name) }}</strong></p>
+                        <p style="margin: 0;"><strong><u>{{ strtoupper($proposal->submitter->name) }}</u></strong></p>
+                        <p style="margin: 0; font-size: 9pt;">NIDN. {{ $proposal->submitter->identity?->identity_id ?? '-' }}</p>
                     </td>
                     <td style="width: 50%; text-align: center;">
                         <p style="margin: 0;">&nbsp;</p>
                         <p style="margin: 0;">Menyetujui,<br>Kepala LPPM</p>
                         <div class="signature-space"
                             style="height: 60px; display: flex; justify-content: center; align-items: center; margin: 5px 0;">
-                            @if ($isApproved)
-                                @php
-                                    $headOfLppm = \App\Models\User::role('kepala lppm')->first();
-                                    $qrTextLppm = "Logbook & Laporan Keuangan ini telah disetujui secara digital oleh Kepala LPPM:\nNama: " . ($headOfLppm->name ?? 'Kepala LPPM') . "\nTanggal: " . $proposal->logbook_approved_at?->format('d/m/Y H:i');
-                                @endphp
-                                <img src="{{ generate_qr_code_data_uri($qrTextLppm) }}" width="60" alt="QR Code"
-                                    style="margin: 0 auto; display: block;">
+                            @if ($qrUrlLppm)
+                                <div style="border: 1pt solid #059669; padding: 4px; display: inline-block; border-radius: 4px; background-color: #f0fdf4;">
+                                    <img src="{{ generate_qr_code_data_uri($qrUrlLppm) }}" width="60" alt="QR Code"
+                                        style="margin: 0 auto; display: block;">
+                                    <span style="display: block; font-size: 6pt; color: #059669; font-weight: bold; margin-top: 2px;">VERIFIED BY LPPM</span>
+                                </div>
+                            @elseif($isApproved)
+                                {{-- Fallback if isApproved is true but no QR yet (legacy) --}}
+                                <div style="height: 60px;"></div>
                             @else
                                 <div
                                     style="color: #999; border: 1px dashed #ccc; padding: 10px; text-align: center; font-size: 8pt; width: 80%; margin: 0 auto;">
@@ -389,7 +404,11 @@
                                 </div>
                             @endif
                         </div>
-                        <p style="margin: 0;"><strong>( KEPALA LPPM )</strong></p>
+                        @php
+                            $headOfLppm = \App\Models\User::role('kepala lppm')->first();
+                        @endphp
+                        <p style="margin: 0;"><strong><u>{{ strtoupper($headOfLppm->name ?? 'KEPALA LPPM') }}</u></strong></p>
+                        <p style="margin: 0; font-size: 9pt;">NIDN. {{ $headOfLppm->identity?->identity_id ?? '-' }}</p>
                     </td>
                 </tr>
             </table>
@@ -580,5 +599,4 @@
         @endforeach
     @endif
 </body>
-
 </html>

@@ -16,6 +16,7 @@ use App\Models\Research;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
 class ResearchSeeder extends Seeder
 {
@@ -30,6 +31,12 @@ class ResearchSeeder extends Seeder
 
         if ($dosenUsers->count() < 2) {
             $this->command->warn('Tidak cukup dosen untuk membuat proposal penelitian');
+
+            return;
+        }
+
+        if (! $kepalaLppm || ! $adminLppm) {
+            $this->command->warn('Role Kepala LPPM atau Admin LPPM belum ada. Jalankan RoleSeeder dulu.');
 
             return;
         }
@@ -161,7 +168,7 @@ class ResearchSeeder extends Seeder
                 // Update proposal updated_at to match last log
                 $lastLog = $proposal->statusLogs()->latest('at')->first();
                 if ($lastLog) {
-                    $proposal->update(['updated_at' => $lastLog->at]);
+                    $proposal->update(['updated_at' => $lastLog->getAttribute('at')]);
                 }
 
                 // Team Members (Ketua + Members)
@@ -428,7 +435,7 @@ class ResearchSeeder extends Seeder
         }
     }
 
-    protected function createStatusLogHistory($proposal, $finalStatus, $submitter, $dekanUsers, $kepalaLppm, $adminLppm): void
+    protected function createStatusLogHistory(Proposal $proposal, ProposalStatus $finalStatus, User $submitter, Collection $dekanUsers, User $kepalaLppm, User $adminLppm): void
     {
         $baseTime = Carbon::parse($proposal->created_at);
         $facultyId = $submitter->identity?->faculty_id;
@@ -438,6 +445,10 @@ class ResearchSeeder extends Seeder
             ProposalStatus::DRAFT => [],
             ProposalStatus::SUBMITTED => [
                 ['f' => ProposalStatus::DRAFT, 't' => ProposalStatus::SUBMITTED, 'u' => $submitter, 'd' => 0],
+            ],
+            ProposalStatus::NEED_ASSIGNMENT => [
+                ['f' => ProposalStatus::DRAFT, 't' => ProposalStatus::SUBMITTED, 'u' => $submitter, 'd' => 0],
+                ['f' => ProposalStatus::SUBMITTED, 't' => ProposalStatus::NEED_ASSIGNMENT, 'u' => $submitter, 'd' => 1],
             ],
             ProposalStatus::APPROVED => [
                 ['f' => ProposalStatus::DRAFT, 't' => ProposalStatus::SUBMITTED, 'u' => $submitter, 'd' => 0],
@@ -484,7 +495,7 @@ class ResearchSeeder extends Seeder
         };
 
         foreach ($path as $step) {
-            $actor = $step['u'] ?? $adminLppm ?? $kepalaLppm ?? $dekan ?? $submitter;
+            $actor = $step['u'] ?? $adminLppm;
 
             ProposalStatusLog::create([
                 'proposal_id' => $proposal->id,

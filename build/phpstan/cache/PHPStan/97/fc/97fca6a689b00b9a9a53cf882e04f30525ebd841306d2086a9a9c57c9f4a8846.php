@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/ReviewCriteriaManager.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\Settings\ReviewCriteriaManager
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-c85b9eac09a6d6d722be80cf412e658c66662f5dcd2c094e5777c3ddfb1ea3b3',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-61b43b6bc459f5c7c3d283a409c3fc15465cf209d71ddb42c0854058f1739e84',
    'data' => 
   array (
     'locatedSource' => 
@@ -27,7 +27,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 11,
-    'endLine' => 90,
+    'endLine' => 190,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Livewire\\Component',
@@ -86,6 +86,49 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
       ),
+      'creating' => 
+      array (
+        'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'name' => 'creating',
+        'modifiers' => 1,
+        'type' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'array',
+            'isIdentifier' => true,
+          ),
+        ),
+        'default' => 
+        array (
+          'code' => '[]',
+          'attributes' => 
+          array (
+            'startLine' => 17,
+            'endLine' => 17,
+            'startTokenPos' => 67,
+            'startFilePos' => 333,
+            'endTokenPos' => 68,
+            'endFilePos' => 334,
+          ),
+        ),
+        'docComment' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'startLine' => 17,
+        'endLine' => 17,
+        'startColumn' => 5,
+        'endColumn' => 32,
+        'isPromoted' => false,
+        'declaredAtCompileTime' => true,
+        'immediateVirtual' => false,
+        'immediateHooks' => 
+        array (
+        ),
+      ),
     ),
     'immediateMethods' => 
     array (
@@ -109,8 +152,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 17,
-        'endLine' => 22,
+        'startLine' => 19,
+        'endLine' => 26,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -118,6 +161,41 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'isGenerator' => false,
         'isVariadic' => false,
         'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Settings',
+        'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'currentClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'aliasName' => NULL,
+      ),
+      'cleanupDuplicates' => 
+      array (
+        'name' => 'cleanupDuplicates',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'void',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 28,
+        'endLine' => 50,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 4,
         'namespace' => 'App\\Livewire\\Settings',
         'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
         'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
@@ -144,8 +222,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 24,
-        'endLine' => 30,
+        'startLine' => 52,
+        'endLine' => 58,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -179,8 +257,78 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 32,
-        'endLine' => 38,
+        'startLine' => 60,
+        'endLine' => 66,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Settings',
+        'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'currentClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'aliasName' => NULL,
+      ),
+      'monevResearchCriterias' => 
+      array (
+        'name' => 'monevResearchCriterias',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+          0 => 
+          array (
+            'name' => 'Livewire\\Attributes\\Computed',
+            'isRepeated' => false,
+            'arguments' => 
+            array (
+            ),
+          ),
+        ),
+        'docComment' => NULL,
+        'startLine' => 68,
+        'endLine' => 74,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Settings',
+        'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'currentClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'aliasName' => NULL,
+      ),
+      'monevPkmCriterias' => 
+      array (
+        'name' => 'monevPkmCriterias',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+          0 => 
+          array (
+            'name' => 'Livewire\\Attributes\\Computed',
+            'isRepeated' => false,
+            'arguments' => 
+            array (
+            ),
+          ),
+        ),
+        'docComment' => NULL,
+        'startLine' => 76,
+        'endLine' => 82,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -218,8 +366,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 40,
-            'endLine' => 40,
+            'startLine' => 84,
+            'endLine' => 84,
             'startColumn' => 34,
             'endColumn' => 40,
             'parameterIndex' => 0,
@@ -240,8 +388,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 40,
-        'endLine' => 45,
+        'startLine' => 84,
+        'endLine' => 89,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -279,8 +427,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 47,
-            'endLine' => 47,
+            'startLine' => 91,
+            'endLine' => 91,
             'startColumn' => 26,
             'endColumn' => 32,
             'parameterIndex' => 0,
@@ -301,8 +449,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 47,
-        'endLine' => 56,
+        'startLine' => 91,
+        'endLine' => 100,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -336,8 +484,69 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 58,
-        'endLine' => 61,
+        'startLine' => 102,
+        'endLine' => 105,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Settings',
+        'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'currentClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'aliasName' => NULL,
+      ),
+      'delete' => 
+      array (
+        'name' => 'delete',
+        'parameters' => 
+        array (
+          'id' => 
+          array (
+            'name' => 'id',
+            'default' => NULL,
+            'type' => 
+            array (
+              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+              'data' => 
+              array (
+                'name' => 'int',
+                'isIdentifier' => true,
+              ),
+            ),
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 107,
+            'endLine' => 107,
+            'startColumn' => 28,
+            'endColumn' => 34,
+            'parameterIndex' => 0,
+            'isOptional' => false,
+          ),
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'void',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 107,
+        'endLine' => 117,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -371,8 +580,151 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 63,
-        'endLine' => 84,
+        'startLine' => 119,
+        'endLine' => 140,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Settings',
+        'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'currentClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'aliasName' => NULL,
+      ),
+      'openCreate' => 
+      array (
+        'name' => 'openCreate',
+        'parameters' => 
+        array (
+          'type' => 
+          array (
+            'name' => 'type',
+            'default' => 
+            array (
+              'code' => '\'research\'',
+              'attributes' => 
+              array (
+                'startLine' => 142,
+                'endLine' => 142,
+                'startTokenPos' => 864,
+                'startFilePos' => 3841,
+                'endTokenPos' => 864,
+                'endFilePos' => 3850,
+              ),
+            ),
+            'type' => 
+            array (
+              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+              'data' => 
+              array (
+                'name' => 'string',
+                'isIdentifier' => true,
+              ),
+            ),
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 142,
+            'endLine' => 142,
+            'startColumn' => 32,
+            'endColumn' => 56,
+            'parameterIndex' => 0,
+            'isOptional' => true,
+          ),
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'void',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 142,
+        'endLine' => 150,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Settings',
+        'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'currentClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'aliasName' => NULL,
+      ),
+      'cancelCreate' => 
+      array (
+        'name' => 'cancelCreate',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'void',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 152,
+        'endLine' => 155,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Settings',
+        'declaringClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'implementingClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'currentClassName' => 'App\\Livewire\\Settings\\ReviewCriteriaManager',
+        'aliasName' => NULL,
+      ),
+      'createCriteria' => 
+      array (
+        'name' => 'createCriteria',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'void',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 157,
+        'endLine' => 184,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -398,8 +750,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 86,
-        'endLine' => 89,
+        'startLine' => 186,
+        'endLine' => 189,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

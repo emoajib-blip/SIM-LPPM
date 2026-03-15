@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('faculties', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('institution_id')->constrained('institutions')->onDelete('cascade')->comment('Institusi');
+            $table->foreignId('institution_id')->comment('Institusi')->constrained('institutions')->onDelete('cascade');
             $table->string('name')->comment('Nama Fakultas');
             $table->string('code')->unique()->comment('Kode Fakultas (ex: saintek, soshum)');
             $table->timestamps();

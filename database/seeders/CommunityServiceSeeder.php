@@ -132,7 +132,7 @@ class CommunityServiceSeeder extends Seeder
                 // Update proposal updated_at to match last log
                 $lastLog = $proposal->statusLogs()->latest('at')->first();
                 if ($lastLog) {
-                    $proposal->update(['updated_at' => $lastLog->at]);
+                    $proposal->update(['updated_at' => $lastLog->getAttribute('at')]);
                 }
 
                 // Team

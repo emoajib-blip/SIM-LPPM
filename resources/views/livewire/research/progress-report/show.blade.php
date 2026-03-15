@@ -9,10 +9,16 @@
         </a>
         @if ($progressReport)
             <a data-navigate-ignore="true"
-                href="{{ route('reports.export-pdf', ['proposal' => $proposal, 'type' => 'progress']) }}" target="_blank"
-                class="btn-outline-primary btn">
-                <x-lucide-download class="icon" />
-                Unduh Laporan (PDF)
+                href="{{ route('reports.export-pdf', ['proposal' => $proposal, 'type' => 'progress', 'preview' => 1]) }}" target="_blank"
+                class="btn btn-outline-info shadow-sm">
+                <i class="ti ti-eye me-2"></i>
+                Tinjau PDF
+            </a>
+            <a data-navigate-ignore="true"
+                href="{{ route('reports.export-pdf', ['proposal' => $proposal, 'type' => 'progress', 'download' => 'true']) }}"
+                class="btn btn-primary shadow-sm">
+                <x-lucide-download class="icon me-2" />
+                Unduh Laporan
             </a>
         @endif
     </div>

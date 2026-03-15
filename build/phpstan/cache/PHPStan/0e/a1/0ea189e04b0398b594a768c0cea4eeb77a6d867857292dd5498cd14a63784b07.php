@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProposalMonev.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Models\ProposalMonev
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-f16731c6954ec3014611db0a02164c7fd4256daee63f4c7787b75635a456f5e5',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-08c24d11882446702546093a7a9bb9c82a6b4688c13a6217dae1ecdf6a67ccce',
    'data' => 
   array (
     'locatedSource' => 
@@ -37,7 +37,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 23,
-    'endLine' => 72,
+    'endLine' => 74,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Model',
@@ -65,15 +65,15 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'type' => NULL,
         'default' => 
         array (
-          'code' => '[\'proposal_id\', \'monev_date\', \'progress_percentage\', \'notes\']',
+          'code' => '[\'proposal_id\', \'monev_date\', \'progress_percentage\', \'notes\', \'academic_year\', \'semester\']',
           'attributes' => 
           array (
             'startLine' => 27,
-            'endLine' => 32,
+            'endLine' => 34,
             'startTokenPos' => 70,
             'startFilePos' => 812,
-            'endTokenPos' => 84,
-            'endFilePos' => 911,
+            'endTokenPos' => 90,
+            'endFilePos' => 956,
           ),
         ),
         'docComment' => NULL,
@@ -81,7 +81,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'startLine' => 27,
-        'endLine' => 32,
+        'endLine' => 34,
         'startColumn' => 5,
         'endColumn' => 6,
         'isPromoted' => false,
@@ -114,8 +114,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 34,
-        'endLine' => 39,
+        'startLine' => 36,
+        'endLine' => 41,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -149,8 +149,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 41,
-        'endLine' => 44,
+        'startLine' => 43,
+        'endLine' => 46,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -184,8 +184,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 46,
-        'endLine' => 71,
+        'startLine' => 48,
+        'endLine' => 73,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

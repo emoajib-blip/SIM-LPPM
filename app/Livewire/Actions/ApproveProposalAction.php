@@ -26,7 +26,7 @@ class ApproveProposalAction
         }
 
         // Check if all reviewers completed
-        if (! $proposal->allReviewersCompleted()) {
+        if (! $proposal->allReviewsCompleted()) {
             $pendingReviewers = $proposal->getPendingReviewers();
 
             return [

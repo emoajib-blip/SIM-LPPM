@@ -27,9 +27,9 @@ Route::get('/dev/migrate', function () {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
 
-        return 'Migrasi Berhasil: ' . \Illuminate\Support\Facades\Artisan::output();
+        return 'Migrasi Berhasil: '.\Illuminate\Support\Facades\Artisan::output();
     } catch (\Exception $e) {
-        return 'Error Migrasi: ' . $e->getMessage();
+        return 'Error Migrasi: '.$e->getMessage();
     }
 });
 
@@ -65,6 +65,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/monitoring', \App\Livewire\Reports\InstitutionalReportMonitoring::class)
         ->middleware(['role:admin lppm|rektor|kepala lppm'])
         ->name('reports.monitoring');
+
+    Route::get('laporan-monev', \App\Livewire\Reports\MonevReport::class)
+        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->name('reports.monev');
 
     // User Management Routes
     Route::middleware(['role:admin lppm|superadmin'])->prefix('users')->name('users.')->group(function () {
@@ -229,6 +233,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('settings/master-data', MasterData::class)->name('settings.master-data');
         Route::get('settings/proposal-schedule', \App\Livewire\Settings\ProposalSchedule::class)->name('settings.proposal-schedule');
         Route::get('settings/proposal-template', \App\Livewire\Settings\ProposalTemplate::class)->name('settings.proposal-template');
+        Route::get('admin/eligibility-dashboard', \App\Livewire\Admin\EligibilityDashboard::class)->name('admin.eligibility-dashboard');
     });
 
     Route::get('settings/two-factor', TwoFactor::class)
@@ -275,7 +280,15 @@ Route::middleware(['auth'])->group(function () {
         ->name('export.monev.ba');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
+
+Route::get('/verify/reports/{institutionalReport}', [\App\Http\Controllers\ReportVerificationController::class, 'show'])
+    ->middleware(['signed'])
+    ->name('reports.verify');
+
+Route::get('/verify/signatures/{documentSignature}', [\App\Http\Controllers\DocumentSignatureVerificationController::class, 'show'])
+    ->middleware(['signed'])
+    ->name('signatures.verify');
 
 // Rute Ekspor Laporan via Standar HTTP (Bypass Livewire)
 Route::group(['middleware' => ['auth', 'verified', 'permission:module_laporan']], function () {

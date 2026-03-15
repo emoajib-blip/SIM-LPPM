@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reviewer/Monev/Index.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\Reviewer\Monev\Index
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-7b6026f8841a18e589d20df29ab3a69ac9a4ae409ce2053b603f6268a4ebec38',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-0c9afb431bef56185b78ebf3302e599c0f60fe0e41e140650d8a60cf3185ed09',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 13,
-    'endLine' => 111,
+    'startLine' => 14,
+    'endLine' => 225,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Livewire\\Component',
@@ -57,20 +57,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'\'',
           'attributes' => 
           array (
-            'startLine' => 17,
-            'endLine' => 17,
-            'startTokenPos' => 69,
-            'startFilePos' => 371,
-            'endTokenPos' => 69,
-            'endFilePos' => 372,
+            'startLine' => 18,
+            'endLine' => 18,
+            'startTokenPos' => 74,
+            'startFilePos' => 399,
+            'endTokenPos' => 74,
+            'endFilePos' => 400,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 17,
-        'endLine' => 17,
+        'startLine' => 18,
+        'endLine' => 18,
         'startColumn' => 5,
         'endColumn' => 24,
         'isPromoted' => false,
@@ -92,20 +92,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => 'false',
           'attributes' => 
           array (
-            'startLine' => 19,
-            'endLine' => 19,
-            'startTokenPos' => 78,
-            'startFilePos' => 406,
-            'endTokenPos' => 78,
-            'endFilePos' => 410,
+            'startLine' => 20,
+            'endLine' => 20,
+            'startTokenPos' => 83,
+            'startFilePos' => 434,
+            'endTokenPos' => 83,
+            'endFilePos' => 438,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 19,
-        'endLine' => 19,
+        'startLine' => 20,
+        'endLine' => 20,
         'startColumn' => 5,
         'endColumn' => 36,
         'isPromoted' => false,
@@ -127,8 +127,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 21,
-        'endLine' => 21,
+        'startLine' => 22,
+        'endLine' => 22,
         'startColumn' => 5,
         'endColumn' => 27,
         'isPromoted' => false,
@@ -150,8 +150,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 24,
-        'endLine' => 24,
+        'startLine' => 25,
+        'endLine' => 25,
         'startColumn' => 5,
         'endColumn' => 18,
         'isPromoted' => false,
@@ -173,8 +173,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 26,
-        'endLine' => 26,
+        'startLine' => 27,
+        'endLine' => 27,
         'startColumn' => 5,
         'endColumn' => 18,
         'isPromoted' => false,
@@ -196,8 +196,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 28,
-        'endLine' => 28,
+        'startLine' => 29,
+        'endLine' => 29,
         'startColumn' => 5,
         'endColumn' => 19,
         'isPromoted' => false,
@@ -219,8 +219,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 30,
-        'endLine' => 30,
+        'startLine' => 31,
+        'endLine' => 31,
         'startColumn' => 5,
         'endColumn' => 25,
         'isPromoted' => false,
@@ -242,20 +242,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '[]',
           'attributes' => 
           array (
-            'startLine' => 32,
-            'endLine' => 32,
-            'startTokenPos' => 116,
-            'startFilePos' => 610,
-            'endTokenPos' => 117,
-            'endFilePos' => 611,
+            'startLine' => 33,
+            'endLine' => 33,
+            'startTokenPos' => 121,
+            'startFilePos' => 638,
+            'endTokenPos' => 122,
+            'endFilePos' => 639,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 32,
-        'endLine' => 32,
+        'startLine' => 33,
+        'endLine' => 33,
         'startColumn' => 5,
         'endColumn' => 29,
         'isPromoted' => false,
@@ -280,8 +280,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 34,
-        'endLine' => 39,
+        'startLine' => 35,
+        'endLine' => 61,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -311,8 +311,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 41,
-            'endLine' => 41,
+            'startLine' => 63,
+            'endLine' => 63,
             'startColumn' => 34,
             'endColumn' => 36,
             'parameterIndex' => 0,
@@ -325,8 +325,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 41,
-        'endLine' => 53,
+        'startLine' => 63,
+        'endLine' => 92,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -352,8 +352,160 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 55,
-        'endLine' => 87,
+        'startLine' => 94,
+        'endLine' => 110,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+        'declaringClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'implementingClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'currentClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'aliasName' => NULL,
+      ),
+      'submitReview' => 
+      array (
+        'name' => 'submitReview',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 112,
+        'endLine' => 136,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+        'declaringClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'implementingClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'currentClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'aliasName' => NULL,
+      ),
+      'updatedBorangData' => 
+      array (
+        'name' => 'updatedBorangData',
+        'parameters' => 
+        array (
+          'value' => 
+          array (
+            'name' => 'value',
+            'default' => NULL,
+            'type' => NULL,
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 138,
+            'endLine' => 138,
+            'startColumn' => 39,
+            'endColumn' => 44,
+            'parameterIndex' => 0,
+            'isOptional' => false,
+          ),
+          'key' => 
+          array (
+            'name' => 'key',
+            'default' => NULL,
+            'type' => NULL,
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 138,
+            'endLine' => 138,
+            'startColumn' => 47,
+            'endColumn' => 50,
+            'parameterIndex' => 1,
+            'isOptional' => false,
+          ),
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 138,
+        'endLine' => 143,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+        'declaringClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'implementingClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'currentClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'aliasName' => NULL,
+      ),
+      'calculateTotalScore' => 
+      array (
+        'name' => 'calculateTotalScore',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 145,
+        'endLine' => 148,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 2,
+        'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+        'declaringClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'implementingClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'currentClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'aliasName' => NULL,
+      ),
+      'totalScore' => 
+      array (
+        'name' => 'totalScore',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+          0 => 
+          array (
+            'name' => 'Livewire\\Attributes\\Computed',
+            'isRepeated' => false,
+            'arguments' => 
+            array (
+            ),
+          ),
+        ),
+        'docComment' => NULL,
+        'startLine' => 150,
+        'endLine' => 163,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -387,8 +539,78 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 89,
-        'endLine' => 105,
+        'startLine' => 165,
+        'endLine' => 185,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+        'declaringClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'implementingClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'currentClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'aliasName' => NULL,
+      ),
+      'activeReport' => 
+      array (
+        'name' => 'activeReport',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+          0 => 
+          array (
+            'name' => 'Livewire\\Attributes\\Computed',
+            'isRepeated' => false,
+            'arguments' => 
+            array (
+            ),
+          ),
+        ),
+        'docComment' => NULL,
+        'startLine' => 187,
+        'endLine' => 202,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\Reviewer\\Monev',
+        'declaringClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'implementingClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'currentClassName' => 'App\\Livewire\\Reviewer\\Monev\\Index',
+        'aliasName' => NULL,
+      ),
+      'activeCriteria' => 
+      array (
+        'name' => 'activeCriteria',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+          0 => 
+          array (
+            'name' => 'Livewire\\Attributes\\Computed',
+            'isRepeated' => false,
+            'arguments' => 
+            array (
+            ),
+          ),
+        ),
+        'docComment' => NULL,
+        'startLine' => 204,
+        'endLine' => 219,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -414,8 +636,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 107,
-        'endLine' => 110,
+        'startLine' => 221,
+        'endLine' => 224,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

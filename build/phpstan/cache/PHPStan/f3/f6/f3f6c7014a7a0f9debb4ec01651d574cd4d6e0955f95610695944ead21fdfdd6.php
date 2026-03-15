@@ -13,12 +13,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1196,18 +1202,204 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           4 => NULL,
         ),
       )),
+      '4970876f568cc1aa3a769c3753349926' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
+          'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
+          'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+        ),
+         'className' => 'App\\Http\\Controllers\\ReportExportController',
+         'functionName' => 'institutionalVariant',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '597d2658079b6ffa067f6c2b6e588c92' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
+          'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
+          'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+        ),
+         'className' => 'App\\Http\\Controllers\\ReportExportController',
+         'functionName' => 'institutionalPdfCachePath',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '22586de3d4c7e04fe94ca6e730fcc7cf' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
+          'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
+          'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+        ),
+         'className' => 'App\\Http\\Controllers\\ReportExportController',
+         'functionName' => 'upsertInstitutionalSignatures',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '9955a357e7e82ac550477611a4630178' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
+          'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
+          'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+        ),
+         'className' => 'App\\Http\\Controllers\\ReportExportController',
+         'functionName' => 'pdfDownloadResponse',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '4477c36593e2a654dfed3f0c4156231a' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
+          'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
+          'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+        ),
+         'className' => 'App\\Http\\Controllers\\ReportExportController',
+         'functionName' => 'pdfInlineResponse',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
       '9694f3c8ff30cdd591e7ed7600a413a9' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Http\\Controllers',
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1232,12 +1424,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1262,12 +1460,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1292,12 +1496,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1322,12 +1532,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1352,12 +1568,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1382,12 +1604,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1412,12 +1640,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1442,12 +1676,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1472,12 +1712,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1502,12 +1748,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1532,12 +1784,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1562,12 +1820,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1592,12 +1856,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1622,12 +1892,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
           'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
           'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
           'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
           'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
           'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
           'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
           'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
         ),
          'className' => 'App\\Http\\Controllers\\ReportExportController',
@@ -1646,10 +1922,82 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      'f33444cfa06cf53ad361a4bbccab479e' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
+          'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
+          'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+        ),
+         'className' => 'App\\Http\\Controllers\\ReportExportController',
+         'functionName' => 'monevBaPdf',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '879db42f7dd8a90df4e0b6adc677b3c1' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Http\\Controllers',
+         'uses' => 
+        array (
+          'getpartnerreportquery' => 'App\\Actions\\Reports\\GetPartnerReportQuery',
+          'documentsignature' => 'App\\Models\\DocumentSignature',
+          'institutionalreport' => 'App\\Models\\InstitutionalReport',
+          'proposal' => 'App\\Models\\Proposal',
+          'documentsignatureservice' => 'App\\Services\\DocumentSignatureService',
+          'hasikucalculations' => 'App\\Traits\\HasIkuCalculations',
+          'pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+          'builder' => 'Illuminate\\Database\\Eloquent\\Builder',
+          'request' => 'Illuminate\\Http\\Request',
+          'response' => 'Illuminate\\Http\\Response',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'storage' => 'Illuminate\\Support\\Facades\\Storage',
+          'str' => 'Illuminate\\Support\\Str',
+          'excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+        ),
+         'className' => 'App\\Http\\Controllers\\ReportExportController',
+         'functionName' => 'monevPdf',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ReportExportController.php' => '91c82e382862710f54885b69c5adc186b1124540ed4d57e74942272ae1238bd1',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ReportExportController.php' => 'e0a7893db4469674fd1c1bb79b7f2a13e89074d567d099cf9bc9f73f4d64c250',
       '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Traits/HasIkuCalculations.php' => '4d01213ebd645ba017d10fa7b1b94ba70f179d5f996de779acc2f3e03c89ed4c',
     ),
   ),

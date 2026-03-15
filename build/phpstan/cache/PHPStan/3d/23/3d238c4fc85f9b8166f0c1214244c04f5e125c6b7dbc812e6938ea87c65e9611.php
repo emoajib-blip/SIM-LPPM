@@ -548,7 +548,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/MonevRecapExport.php' => 
     array (
-      0 => 'bb8f14d65cc693f3b65f128e1421adfb8b9ef028f9250914ee19b75215adf062',
+      0 => '7d7799b4fa765e13834ee6c7a01294b3dec39b3d750dad6a1f52910912d71d13',
       1 => 
       array (
         0 => 'app\\exports\\monevrecapexport',
@@ -767,14 +767,16 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/DailyNoteExportController.php' => 
     array (
-      0 => '40a54a7954cf7ef2b3ebacd13e8595a90482d3e93160fb7562436edc18892d8d',
+      0 => 'ba4f26e4f1acd01f6c20279b5acba98e991ef6d61c457b5675be22482a1e8f10',
       1 => 
       array (
         0 => 'app\\http\\controllers\\dailynoteexportcontroller',
       ),
       2 => 
       array (
-        0 => 'app\\http\\controllers\\download',
+        0 => 'app\\http\\controllers\\__construct',
+        1 => 'app\\http\\controllers\\download',
+        2 => 'app\\http\\controllers\\upsertlogbooksignature',
       ),
       3 => 
       array (
@@ -814,7 +816,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ProposalExportController.php' => 
     array (
-      0 => '2d3271910bc8277599ffbaaa76b63bbdc9f5b16f07de08e9e33cbb45c7bed1ad',
+      0 => 'fd2d305561c19306dfbcf691bc4814c7ff8b13955277520824325683d6105f62',
       1 => 
       array (
         0 => 'app\\http\\controllers\\proposalexportcontroller',
@@ -825,6 +827,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         1 => 'app\\http\\controllers\\download',
         2 => 'app\\http\\controllers\\preview',
         3 => 'app\\http\\controllers\\downloadreport',
+        4 => 'app\\http\\controllers\\upsertreportsignatures',
+        5 => 'app\\http\\controllers\\upsertproposalsignatures',
       ),
       3 => 
       array (
@@ -832,28 +836,35 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ReportExportController.php' => 
     array (
-      0 => '91c82e382862710f54885b69c5adc186b1124540ed4d57e74942272ae1238bd1',
+      0 => 'e0a7893db4469674fd1c1bb79b7f2a13e89074d567d099cf9bc9f73f4d64c250',
       1 => 
       array (
         0 => 'app\\http\\controllers\\reportexportcontroller',
       ),
       2 => 
       array (
-        0 => 'app\\http\\controllers\\ikupdf',
-        1 => 'app\\http\\controllers\\ikuexcel',
-        2 => 'app\\http\\controllers\\researchpdf',
-        3 => 'app\\http\\controllers\\researchexcel',
-        4 => 'app\\http\\controllers\\pkmpdf',
-        5 => 'app\\http\\controllers\\pkmexcel',
-        6 => 'app\\http\\controllers\\outputpdf',
-        7 => 'app\\http\\controllers\\outputexcel',
-        8 => 'app\\http\\controllers\\getoutputproposalsquery',
-        9 => 'app\\http\\controllers\\partnerpdf',
-        10 => 'app\\http\\controllers\\partnerexcel',
-        11 => 'app\\http\\controllers\\archiveexport',
-        12 => 'app\\http\\controllers\\archivetemplate',
-        13 => 'app\\http\\controllers\\dashboardresearchexport',
-        14 => 'app\\http\\controllers\\monevrecapexcel',
+        0 => 'app\\http\\controllers\\institutionalvariant',
+        1 => 'app\\http\\controllers\\institutionalpdfcachepath',
+        2 => 'app\\http\\controllers\\upsertinstitutionalsignatures',
+        3 => 'app\\http\\controllers\\pdfdownloadresponse',
+        4 => 'app\\http\\controllers\\pdfinlineresponse',
+        5 => 'app\\http\\controllers\\ikupdf',
+        6 => 'app\\http\\controllers\\ikuexcel',
+        7 => 'app\\http\\controllers\\researchpdf',
+        8 => 'app\\http\\controllers\\researchexcel',
+        9 => 'app\\http\\controllers\\pkmpdf',
+        10 => 'app\\http\\controllers\\pkmexcel',
+        11 => 'app\\http\\controllers\\outputpdf',
+        12 => 'app\\http\\controllers\\outputexcel',
+        13 => 'app\\http\\controllers\\getoutputproposalsquery',
+        14 => 'app\\http\\controllers\\partnerpdf',
+        15 => 'app\\http\\controllers\\partnerexcel',
+        16 => 'app\\http\\controllers\\archiveexport',
+        17 => 'app\\http\\controllers\\archivetemplate',
+        18 => 'app\\http\\controllers\\dashboardresearchexport',
+        19 => 'app\\http\\controllers\\monevrecapexcel',
+        20 => 'app\\http\\controllers\\monevbapdf',
+        21 => 'app\\http\\controllers\\monevpdf',
       ),
       3 => 
       array (
@@ -861,14 +872,16 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ReviewExportController.php' => 
     array (
-      0 => 'e7a9cd89fe3e8e2afe960949060e08c73f25b9748a2792fcac6e52506aa8194b',
+      0 => '9b63f7ee3e5d7e6f20cdb6f28e54d7b23c55b7abba9f4e7acf8b1ffc3cc35681',
       1 => 
       array (
         0 => 'app\\http\\controllers\\reviewexportcontroller',
       ),
       2 => 
       array (
-        0 => 'app\\http\\controllers\\download',
+        0 => 'app\\http\\controllers\\pdfdownloadresponse',
+        1 => 'app\\http\\controllers\\pdfinlineresponse',
+        2 => 'app\\http\\controllers\\download',
       ),
       3 => 
       array (
@@ -1082,7 +1095,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Abstracts/ProposalCreate.php' => 
     array (
-      0 => '985901e1690c02928cf9058066e90567476de388d887a50d7dc90ca4dd5bd4ff',
+      0 => '2c52a2a14f0a6543d161990e92b6c37d695c1dba3e37cee9760ac2f2d677bf88',
       1 => 
       array (
         0 => 'app\\livewire\\abstracts\\proposalcreate',
@@ -1216,7 +1229,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/ApproveProposalAction.php' => 
     array (
-      0 => 'e44f02d183b44d30e6b439b379e7a1764474fbacf9b4876123d816f8a9673a12',
+      0 => 'c268db799b700e52392823c584f6cc627f3597a5bfdcce7d6b5dde5975fe3c4b',
       1 => 
       array (
         0 => 'app\\livewire\\actions\\approveproposalaction',
@@ -1249,7 +1262,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/CompleteReviewAction.php' => 
     array (
-      0 => '645748dce7c49595ae797d898c99c9716ff303d6e7692d67ba0e9dea3ab23452',
+      0 => 'fc9cf643c7d5514e72d14884f3ca0609ab2932ab4c9b458045246e76dcf27f51',
       1 => 
       array (
         0 => 'app\\livewire\\actions\\completereviewaction',
@@ -1317,7 +1330,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/SubmitProposalAction.php' => 
     array (
-      0 => 'd925914574779ccdc4deb57c2c62db98570d7a8c0b2364d221a864a4598e5ea4',
+      0 => '66940b272f4e4e4db2003b2a27bebc9b6b2120069b2dc5b45b7a560bdf557d53',
       1 => 
       array (
         0 => 'app\\livewire\\actions\\submitproposalaction',
@@ -1380,7 +1393,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/AdminLppm/Monev/MonevIndex.php' => 
     array (
-      0 => '809cabfd0ace807c6d29a0b0ea46a0d29b396b1bf852b02fd1301fea3bd1756b',
+      0 => 'e9fcc47a736f64f9b77e457039aeea074dcc03bc486af8d7f0db36966fba9628',
       1 => 
       array (
         0 => 'app\\livewire\\adminlppm\\monev\\monevindex',
@@ -1389,19 +1402,24 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       array (
         0 => 'app\\livewire\\adminlppm\\monev\\mount',
         1 => 'app\\livewire\\adminlppm\\monev\\assignreviewer',
-        2 => 'app\\livewire\\adminlppm\\monev\\selectproposal',
-        3 => 'app\\livewire\\adminlppm\\monev\\addmonev',
-        4 => 'app\\livewire\\adminlppm\\monev\\editmonev',
-        5 => 'app\\livewire\\adminlppm\\monev\\savemonev',
-        6 => 'app\\livewire\\adminlppm\\monev\\deletemonev',
-        7 => 'app\\livewire\\adminlppm\\monev\\downloadtemplate',
-        8 => 'app\\livewire\\adminlppm\\monev\\monevberitaacaramedia',
-        9 => 'app\\livewire\\adminlppm\\monev\\monevborangmedia',
-        10 => 'app\\livewire\\adminlppm\\monev\\monevrekappenilaianmedia',
-        11 => 'app\\livewire\\adminlppm\\monev\\reviewers',
-        12 => 'app\\livewire\\adminlppm\\monev\\academicyears',
-        13 => 'app\\livewire\\adminlppm\\monev\\proposals',
-        14 => 'app\\livewire\\adminlppm\\monev\\render',
+        2 => 'app\\livewire\\adminlppm\\monev\\finalizereview',
+        3 => 'app\\livewire\\adminlppm\\monev\\unfinalizereview',
+        4 => 'app\\livewire\\adminlppm\\monev\\sendremindertokepala',
+        5 => 'app\\livewire\\adminlppm\\monev\\pendingrektorcount',
+        6 => 'app\\livewire\\adminlppm\\monev\\selectproposal',
+        7 => 'app\\livewire\\adminlppm\\monev\\loadselectedproposal',
+        8 => 'app\\livewire\\adminlppm\\monev\\addmonev',
+        9 => 'app\\livewire\\adminlppm\\monev\\editmonev',
+        10 => 'app\\livewire\\adminlppm\\monev\\savemonev',
+        11 => 'app\\livewire\\adminlppm\\monev\\deletemonev',
+        12 => 'app\\livewire\\adminlppm\\monev\\downloadtemplate',
+        13 => 'app\\livewire\\adminlppm\\monev\\monevberitaacaramedia',
+        14 => 'app\\livewire\\adminlppm\\monev\\monevborangmedia',
+        15 => 'app\\livewire\\adminlppm\\monev\\monevrekappenilaianmedia',
+        16 => 'app\\livewire\\adminlppm\\monev\\reviewers',
+        17 => 'app\\livewire\\adminlppm\\monev\\academicyears',
+        18 => 'app\\livewire\\adminlppm\\monev\\proposals',
+        19 => 'app\\livewire\\adminlppm\\monev\\render',
       ),
       3 => 
       array (
@@ -1943,7 +1961,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/SubmitButton.php' => 
     array (
-      0 => '69250719c2341917db7720a25302107d020d61e1eb041ff66fd4a98ad226cced',
+      0 => 'd5a5db0af054d6b850ce98a015199f4a9b9187c9eab8fcd21df5c17af3a3c66d',
       1 => 
       array (
         0 => 'app\\livewire\\communityservice\\proposal\\submitbutton',
@@ -1955,9 +1973,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         2 => 'app\\livewire\\communityservice\\proposal\\cansubmit',
         3 => 'app\\livewire\\communityservice\\proposal\\pendingmembers',
         4 => 'app\\livewire\\communityservice\\proposal\\rejectedmembers',
-        5 => 'app\\livewire\\communityservice\\proposal\\confirmsubmit',
-        6 => 'app\\livewire\\communityservice\\proposal\\submit',
-        7 => 'app\\livewire\\communityservice\\proposal\\render',
+        5 => 'app\\livewire\\communityservice\\proposal\\eligibility',
+        6 => 'app\\livewire\\communityservice\\proposal\\confirmsubmit',
+        7 => 'app\\livewire\\communityservice\\proposal\\submit',
+        8 => 'app\\livewire\\communityservice\\proposal\\render',
       ),
       3 => 
       array (
@@ -2643,7 +2662,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php' => 
     array (
-      0 => '562870cdd4fa9b6564feb4fa157491eff685ead572cab6d074f0c9a8adf8ff03',
+      0 => 'a75048b064b9c417a9fcd5f4b1dde3bd6cdc73dd970b660203ac67d317257c4e',
       1 => 
       array (
         0 => 'app\\livewire\\kepalalppm\\monev\\monevrecap',
@@ -2652,9 +2671,11 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       array (
         0 => 'app\\livewire\\kepalalppm\\monev\\mount',
         1 => 'app\\livewire\\kepalalppm\\monev\\reporttorektor',
-        2 => 'app\\livewire\\kepalalppm\\monev\\academicyears',
-        3 => 'app\\livewire\\kepalalppm\\monev\\reviews',
-        4 => 'app\\livewire\\kepalalppm\\monev\\render',
+        2 => 'app\\livewire\\kepalalppm\\monev\\approvereview',
+        3 => 'app\\livewire\\kepalalppm\\monev\\approveall',
+        4 => 'app\\livewire\\kepalalppm\\monev\\academicyears',
+        5 => 'app\\livewire\\kepalalppm\\monev\\reviews',
+        6 => 'app\\livewire\\kepalalppm\\monev\\render',
       ),
       3 => 
       array (
@@ -2777,7 +2798,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Rektor/MonevDashboard.php' => 
     array (
-      0 => '4e53bddd66c5cd5427cce2c9a1cc5d8d09b751aba5a0bd20787d97c200d86d94',
+      0 => 'd58eb63401543c91e9e6c8926d3f221c468a994f98e83042746f94e79913bf4c',
       1 => 
       array (
         0 => 'app\\livewire\\rektor\\monevdashboard',
@@ -2829,7 +2850,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/IkuReport.php' => 
     array (
-      0 => 'ffaecc29a9cca5ccc5f99271e8e4e5c23793afadd2b0d684fd58d1c2be1596b9',
+      0 => '6701748b65c6ff5ed550044b42afb09ea920532d94df71626f53d0ba7621e72d',
       1 => 
       array (
         0 => 'app\\livewire\\reports\\ikureport',
@@ -2841,7 +2862,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         2 => 'app\\livewire\\reports\\setperiod',
         3 => 'app\\livewire\\reports\\resetfilters',
         4 => 'app\\livewire\\reports\\toggledetails',
-        5 => 'app\\livewire\\reports\\render',
+        5 => 'app\\livewire\\reports\\previewpdf',
+        6 => 'app\\livewire\\reports\\render',
       ),
       3 => 
       array (
@@ -2849,7 +2871,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/InstitutionalReportMonitoring.php' => 
     array (
-      0 => 'a40ac82eb3787ec29262381931ea407b187bba3b4d6078827e5a151248f7d0d4',
+      0 => 'fe8f1562710515f0aac9b64de0e7cd8136a774cff09c024e9ccad0da3d601288',
       1 => 
       array (
         0 => 'app\\livewire\\reports\\institutionalreportmonitoring',
@@ -2867,7 +2889,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/OutputReports.php' => 
     array (
-      0 => 'c657930b6b200d591880a01fb636043ca2a76fe3ca86b4a310706e13b6a99cac',
+      0 => '97b08ab3b83e707f52ea13499d555ea1a7b2ea41014a0d5c213881eb34f07779',
       1 => 
       array (
         0 => 'app\\livewire\\reports\\outputreports',
@@ -3407,7 +3429,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/SubmitButton.php' => 
     array (
-      0 => '8b8c370564d83ac8d6e7e69ffed515cebaaddd5c84325c1cc2c9b3d839b4c13d',
+      0 => '2b96c2dbe3ea911dccc05a110af48f9a2e830f30f838ae142bf8c586b3e2919f',
       1 => 
       array (
         0 => 'app\\livewire\\research\\proposal\\submitbutton',
@@ -3419,9 +3441,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         2 => 'app\\livewire\\research\\proposal\\cansubmit',
         3 => 'app\\livewire\\research\\proposal\\pendingmembers',
         4 => 'app\\livewire\\research\\proposal\\rejectedmembers',
-        5 => 'app\\livewire\\research\\proposal\\confirmsubmit',
-        6 => 'app\\livewire\\research\\proposal\\submit',
-        7 => 'app\\livewire\\research\\proposal\\render',
+        5 => 'app\\livewire\\research\\proposal\\eligibility',
+        6 => 'app\\livewire\\research\\proposal\\confirmsubmit',
+        7 => 'app\\livewire\\research\\proposal\\submit',
+        8 => 'app\\livewire\\research\\proposal\\render',
       ),
       3 => 
       array (
@@ -3590,7 +3613,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reviewer/Monev/Index.php' => 
     array (
-      0 => '7b6026f8841a18e589d20df29ab3a69ac9a4ae409ce2053b603f6268a4ebec38',
+      0 => '0c9afb431bef56185b78ebf3302e599c0f60fe0e41e140650d8a60cf3185ed09',
       1 => 
       array (
         0 => 'app\\livewire\\reviewer\\monev\\index',
@@ -3600,8 +3623,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         0 => 'app\\livewire\\reviewer\\monev\\mount',
         1 => 'app\\livewire\\reviewer\\monev\\selectreview',
         2 => 'app\\livewire\\reviewer\\monev\\savereview',
-        3 => 'app\\livewire\\reviewer\\monev\\assignments',
-        4 => 'app\\livewire\\reviewer\\monev\\render',
+        3 => 'app\\livewire\\reviewer\\monev\\submitreview',
+        4 => 'app\\livewire\\reviewer\\monev\\updatedborangdata',
+        5 => 'app\\livewire\\reviewer\\monev\\calculatetotalscore',
+        6 => 'app\\livewire\\reviewer\\monev\\totalscore',
+        7 => 'app\\livewire\\reviewer\\monev\\assignments',
+        8 => 'app\\livewire\\reviewer\\monev\\activereport',
+        9 => 'app\\livewire\\reviewer\\monev\\activecriteria',
+        10 => 'app\\livewire\\reviewer\\monev\\render',
       ),
       3 => 
       array (
@@ -3791,7 +3820,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/ReviewCriteriaManager.php' => 
     array (
-      0 => 'c85b9eac09a6d6d722be80cf412e658c66662f5dcd2c094e5777c3ddfb1ea3b3',
+      0 => '61b43b6bc459f5c7c3d283a409c3fc15465cf209d71ddb42c0854058f1739e84',
       1 => 
       array (
         0 => 'app\\livewire\\settings\\reviewcriteriamanager',
@@ -3799,13 +3828,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       2 => 
       array (
         0 => 'app\\livewire\\settings\\mount',
-        1 => 'app\\livewire\\settings\\researchcriterias',
-        2 => 'app\\livewire\\settings\\pkmcriterias',
-        3 => 'app\\livewire\\settings\\toggleactive',
-        4 => 'app\\livewire\\settings\\edit',
-        5 => 'app\\livewire\\settings\\canceledit',
-        6 => 'app\\livewire\\settings\\save',
-        7 => 'app\\livewire\\settings\\render',
+        1 => 'app\\livewire\\settings\\cleanupduplicates',
+        2 => 'app\\livewire\\settings\\researchcriterias',
+        3 => 'app\\livewire\\settings\\pkmcriterias',
+        4 => 'app\\livewire\\settings\\monevresearchcriterias',
+        5 => 'app\\livewire\\settings\\monevpkmcriterias',
+        6 => 'app\\livewire\\settings\\toggleactive',
+        7 => 'app\\livewire\\settings\\edit',
+        8 => 'app\\livewire\\settings\\canceledit',
+        9 => 'app\\livewire\\settings\\delete',
+        10 => 'app\\livewire\\settings\\save',
+        11 => 'app\\livewire\\settings\\opencreate',
+        12 => 'app\\livewire\\settings\\cancelcreate',
+        13 => 'app\\livewire\\settings\\createcriteria',
+        14 => 'app\\livewire\\settings\\render',
       ),
       3 => 
       array (
@@ -4276,7 +4312,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/TktManager.php' => 
     array (
-      0 => '441b2ec90ea38495f84edcc963961587b6e1274586b8d3811400beeb6109051c',
+      0 => 'c23ebd42ed83d19853f32c2bc14e6d10ad2cb0b8b5100c7382136064b7e27a34',
       1 => 
       array (
         0 => 'app\\livewire\\settings\\tabs\\tktmanager',
@@ -5133,7 +5169,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/MonevReview.php' => 
     array (
-      0 => '9f9fb21a86613d033d532774f4ad9fe05701f3d32f9f3084f0f55270f0e68ccf',
+      0 => '93d5a882718bd62c2d5b6c6ba9b0c781994ad74222bdd8eabe91d42e64cbdcd3',
       1 => 
       array (
         0 => 'app\\models\\monevreview',
@@ -5143,6 +5179,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         0 => 'app\\models\\casts',
         1 => 'app\\models\\proposal',
         2 => 'app\\models\\reviewer',
+        3 => 'app\\models\\signatures',
       ),
       3 => 
       array (
@@ -5215,7 +5252,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProgressReport.php' => 
     array (
-      0 => 'bc599e42bb2e80c413c52421f907213d0f0bc078f7b44f3d3519ef84cc7ec7c1',
+      0 => '31ad15f0ebe325e93d3cbb2011611a03eadf639427f6f2504d1ea34e731756c6',
       1 => 
       array (
         0 => 'app\\models\\progressreport',
@@ -5228,10 +5265,11 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         3 => 'app\\models\\keywords',
         4 => 'app\\models\\mandatoryoutputs',
         5 => 'app\\models\\additionaloutputs',
-        6 => 'app\\models\\isfinalreport',
-        7 => 'app\\models\\scopefinalreports',
-        8 => 'app\\models\\scopeprogressreports',
-        9 => 'app\\models\\registermediacollections',
+        6 => 'app\\models\\signatures',
+        7 => 'app\\models\\isfinalreport',
+        8 => 'app\\models\\scopefinalreports',
+        9 => 'app\\models\\scopeprogressreports',
+        10 => 'app\\models\\registermediacollections',
       ),
       3 => 
       array (
@@ -5239,7 +5277,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Proposal.php' => 
     array (
-      0 => 'c3d67a6cc6b017d2c2f28faaaea821ef1e025f85696471c5c3e6a03c7f069798',
+      0 => 'f50a56bbe3bce1e83a2c89bafbb02fde26f7ce0e46e935298692070aaedfc048',
       1 => 
       array (
         0 => 'app\\models\\proposal',
@@ -5275,13 +5313,13 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         26 => 'app\\models\\statuslogs',
         27 => 'app\\models\\reviewlogs',
         28 => 'app\\models\\activities',
-        29 => 'app\\models\\allteammembersaccepted',
-        30 => 'app\\models\\allreviewscompleted',
-        31 => 'app\\models\\pendingteammembers',
-        32 => 'app\\models\\pendingreviewers',
-        33 => 'app\\models\\getpendingteammembers',
-        34 => 'app\\models\\getpendingreviewers',
-        35 => 'app\\models\\allreviewerscompleted',
+        29 => 'app\\models\\signatures',
+        30 => 'app\\models\\allteammembersaccepted',
+        31 => 'app\\models\\allreviewscompleted',
+        32 => 'app\\models\\pendingteammembers',
+        33 => 'app\\models\\pendingreviewers',
+        34 => 'app\\models\\getpendingteammembers',
+        35 => 'app\\models\\getpendingreviewers',
         36 => 'app\\models\\canbeapproved',
         37 => 'app\\models\\monevreviews',
         38 => 'app\\models\\scopeforacademicyear',
@@ -5309,7 +5347,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProposalMonev.php' => 
     array (
-      0 => 'f16731c6954ec3014611db0a02164c7fd4256daee63f4c7787b75635a456f5e5',
+      0 => '08c24d11882446702546093a7a9bb9c82a6b4688c13a6217dae1ecdf6a67ccce',
       1 => 
       array (
         0 => 'app\\models\\proposalmonev',
@@ -6375,7 +6413,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/ProposalPdfService.php' => 
     array (
-      0 => '88fd8bd5e87733498297e902b0cc1003f45711e35ea215c8ac6b9e9bb10ae8cd',
+      0 => '5b70476a531bc427fe95c89e3eff29a56c9dd2235bbad41914ab8bf2ad941dc5',
       1 => 
       array (
         0 => 'app\\services\\proposalpdfservice',
@@ -6483,7 +6521,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/View/Composers/MenuComposer.php' => 
     array (
-      0 => '412cf3e95b6881c06599e108ee65e23b3d6a73d89ea11015d7e4c513ca10ffcf',
+      0 => '06308373b8527babb20bb6aac2891df5f4b596ec8fbb1a34f19ffe80f81cbf7f',
       1 => 
       array (
         0 => 'app\\view\\composers\\menucomposer',
@@ -6520,6 +6558,237 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         8 => 'generate_qr_code_data_uri',
         9 => 'format_name',
         10 => 'to_roman',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/MonevReport.php' => 
+    array (
+      0 => '65f74268a930dd2a50a1a01ad3a44b4efae68340561276b6c9785babbe25e42e',
+      1 => 
+      array (
+        0 => 'app\\livewire\\reports\\monevreport',
+      ),
+      2 => 
+      array (
+        0 => 'app\\livewire\\reports\\mount',
+        1 => 'app\\livewire\\reports\\updatedsearch',
+        2 => 'app\\livewire\\reports\\updatedperiod',
+        3 => 'app\\livewire\\reports\\updatedselectedsemester',
+        4 => 'app\\livewire\\reports\\updatedselectedtype',
+        5 => 'app\\livewire\\reports\\updatedselectedstatus',
+        6 => 'app\\livewire\\reports\\resetfilters',
+        7 => 'app\\livewire\\reports\\summarymetrics',
+        8 => 'app\\livewire\\reports\\availableperiods',
+        9 => 'app\\livewire\\reports\\basequery',
+        10 => 'app\\livewire\\reports\\render',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/MonevReportReminderNotification.php' => 
+    array (
+      0 => 'ec929caaea542b18adc738bb27d200708852d9fe152ca55d8ac9de63a7fb9467',
+      1 => 
+      array (
+        0 => 'app\\notifications\\monevreportremindernotification',
+      ),
+      2 => 
+      array (
+        0 => 'app\\notifications\\__construct',
+        1 => 'app\\notifications\\via',
+        2 => 'app\\notifications\\todatabase',
+        3 => 'app\\notifications\\tomail',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ReportVerificationController.php' => 
+    array (
+      0 => '86b3b9a88ba7a123991aa2bd482c90e224082ec9d82b8e07755ffe8791256c51',
+      1 => 
+      array (
+        0 => 'app\\http\\controllers\\reportverificationcontroller',
+      ),
+      2 => 
+      array (
+        0 => 'app\\http\\controllers\\show',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/DocumentSignature.php' => 
+    array (
+      0 => 'c06e79276a446f30bbf335ce5e55620c70606b11b7d7d3867ff47a4216c86296',
+      1 => 
+      array (
+        0 => 'app\\models\\documentsignature',
+      ),
+      2 => 
+      array (
+        0 => 'app\\models\\document',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/DocumentSignatureService.php' => 
+    array (
+      0 => 'f070d26860cce2ebbc6f00cb8c620d575b25ec538a3648522d89d9d484cb8889',
+      1 => 
+      array (
+        0 => 'app\\services\\documentsignatureservice',
+      ),
+      2 => 
+      array (
+        0 => 'app\\services\\currentkid',
+        1 => 'app\\services\\secretforkid',
+        2 => 'app\\services\\canonicaljson',
+        3 => 'app\\services\\signpayload',
+        4 => 'app\\services\\verify',
+        5 => 'app\\services\\base64urlencode',
+        6 => 'app\\services\\ksortrecursive',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/DocumentSignatureVerificationController.php' => 
+    array (
+      0 => '803be2208fbac3b669b0a0e63db9bde2f45a98132d2fbb8303244ee969213693',
+      1 => 
+      array (
+        0 => 'app\\http\\controllers\\documentsignatureverificationcontroller',
+      ),
+      2 => 
+      array (
+        0 => 'app\\http\\controllers\\show',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Admin/EligibilityDashboard.php' => 
+    array (
+      0 => 'e8adf9c5427c9e59fbb9fcd2ddd8ddf074d4aa6523211b10222b14b271b5cd71',
+      1 => 
+      array (
+        0 => 'app\\livewire\\admin\\eligibilitydashboard',
+      ),
+      2 => 
+      array (
+        0 => 'app\\livewire\\admin\\mount',
+        1 => 'app\\livewire\\admin\\loaddashboarddata',
+        2 => 'app\\livewire\\admin\\selectscheme',
+        3 => 'app\\livewire\\admin\\eligibledosenforselectedscheme',
+        4 => 'app\\livewire\\admin\\ineligibledosenforselectedscheme',
+        5 => 'app\\livewire\\admin\\exporteligibilityreport',
+        6 => 'app\\livewire\\admin\\render',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Components/SchemeEligibilityChecker.php' => 
+    array (
+      0 => 'b5b69e4a868a46b7ce8358feb40f52d2e43256d6bb019d6e0e032e0ef817dbbc',
+      1 => 
+      array (
+        0 => 'app\\livewire\\components\\schemeeligibilitychecker',
+      ),
+      2 => 
+      array (
+        0 => 'app\\livewire\\components\\mount',
+        1 => 'app\\livewire\\components\\loadeligibilitydata',
+        2 => 'app\\livewire\\components\\checkeligibility',
+        3 => 'app\\livewire\\components\\selectscheme',
+        4 => 'app\\livewire\\components\\render',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/SintaScoreSubmission.php' => 
+    array (
+      0 => '97ba2846ff6501d46b57088e059d403152105ab6b5e91a1e0b82ed2452fbe946',
+      1 => 
+      array (
+        0 => 'app\\models\\sintascoresubmission',
+      ),
+      2 => 
+      array (
+        0 => 'app\\models\\identity',
+        1 => 'app\\models\\submitter',
+        2 => 'app\\models\\verifier',
+        3 => 'app\\models\\scopepending',
+        4 => 'app\\models\\scopeapproved',
+        5 => 'app\\models\\scoperejected',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/SintaScoreApproved.php' => 
+    array (
+      0 => '11aeb950f894979a6a1f01a81fcccde827f5e65ebf184afc059c8284b005b7f1',
+      1 => 
+      array (
+        0 => 'app\\notifications\\sintascoreapproved',
+      ),
+      2 => 
+      array (
+        0 => 'app\\notifications\\__construct',
+        1 => 'app\\notifications\\via',
+        2 => 'app\\notifications\\todatabase',
+        3 => 'app\\notifications\\tomail',
+        4 => 'app\\notifications\\toarray',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/SintaScoreRejected.php' => 
+    array (
+      0 => '1e6ebb1f7acc158045b080d48692537fc6fddcaa0378324d5069f18f5f7ebc30',
+      1 => 
+      array (
+        0 => 'app\\notifications\\sintascorerejected',
+      ),
+      2 => 
+      array (
+        0 => 'app\\notifications\\__construct',
+        1 => 'app\\notifications\\via',
+        2 => 'app\\notifications\\todatabase',
+        3 => 'app\\notifications\\tomail',
+        4 => 'app\\notifications\\toarray',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/EligibilityService.php' => 
+    array (
+      0 => '5f68fa2ab285097ec19bdbad162b815065771b3deb2e814543141ee42eaaa774',
+      1 => 
+      array (
+        0 => 'app\\services\\eligibilityservice',
+      ),
+      2 => 
+      array (
+        0 => 'app\\services\\cansubmitresearchproposal',
+        1 => 'app\\services\\cansubmitcommunityserviceproposal',
+        2 => 'app\\services\\geteligibilitystatus',
+        3 => 'app\\services\\geteligibleresearchschemes',
+        4 => 'app\\services\\getineligibleresearchschemes',
+        5 => 'app\\services\\geteligiblecommunityserviceschemes',
+        6 => 'app\\services\\checkeligibility',
+        7 => 'app\\services\\counteligibleforresearchscheme',
+        8 => 'app\\services\\getresearchschemeeligibilitybreakdown',
+        9 => 'app\\services\\getdetailedresearchschemeeligibility',
       ),
       3 => 
       array (

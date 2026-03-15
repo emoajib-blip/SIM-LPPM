@@ -20,17 +20,31 @@ class BudgetItemFactory extends Factory
         $unitPrice = fake()->randomFloat(2, 50000, 5000000);
 
         $group = \App\Models\BudgetGroup::inRandomOrder()->first();
-        $component = $group
-            ? \App\Models\BudgetComponent::where('budget_group_id', $group->id)->inRandomOrder()->first()
-            : null;
+        $component = null;
+        $groupId = null;
+        $groupName = fake()->word();
+
+        if ($group) {
+            $groupId = $group->id;
+            $groupName = $group->name;
+            $component = \App\Models\BudgetComponent::where('budget_group_id', $groupId)->inRandomOrder()->first();
+        }
+
+        $componentId = null;
+        $componentName = fake()->word();
+
+        if ($component) {
+            $componentId = $component->id;
+            $componentName = $component->name;
+        }
 
         return [
             'proposal_id' => \App\Models\Proposal::factory(),
             'year' => 1,
-            'budget_group_id' => $group?->id,
-            'budget_component_id' => $component?->id,
-            'group' => $group?->name ?? fake()->word(),
-            'component' => $component?->name ?? fake()->word(),
+            'budget_group_id' => $groupId,
+            'budget_component_id' => $componentId,
+            'group' => $groupName,
+            'component' => $componentName,
             'item_description' => fake()->sentence(4),
             'volume' => $volume,
             'unit_price' => $unitPrice,

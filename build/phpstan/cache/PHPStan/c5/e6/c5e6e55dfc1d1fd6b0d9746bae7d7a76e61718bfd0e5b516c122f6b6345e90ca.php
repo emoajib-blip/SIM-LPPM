@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/AdminLppm/Monev/MonevIndex.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\AdminLppm\Monev\MonevIndex
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-809cabfd0ace807c6d29a0b0ea46a0d29b396b1bf852b02fd1301fea3bd1756b',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-e9fcc47a736f64f9b77e457039aeea074dcc03bc486af8d7f0db36966fba9628',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 16,
-    'endLine' => 250,
+    'startLine' => 18,
+    'endLine' => 409,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Livewire\\Component',
@@ -65,12 +65,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'\'',
           'attributes' => 
           array (
-            'startLine' => 21,
-            'endLine' => 21,
-            'startTokenPos' => 90,
-            'startFilePos' => 475,
-            'endTokenPos' => 90,
-            'endFilePos' => 476,
+            'startLine' => 23,
+            'endLine' => 23,
+            'startTokenPos' => 100,
+            'startFilePos' => 551,
+            'endTokenPos' => 100,
+            'endFilePos' => 552,
           ),
         ),
         'docComment' => NULL,
@@ -85,8 +85,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             ),
           ),
         ),
-        'startLine' => 20,
-        'endLine' => 21,
+        'startLine' => 22,
+        'endLine' => 23,
         'startColumn' => 5,
         'endColumn' => 31,
         'isPromoted' => false,
@@ -116,12 +116,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'all\'',
           'attributes' => 
           array (
-            'startLine' => 24,
-            'endLine' => 24,
-            'startTokenPos' => 105,
-            'startFilePos' => 523,
-            'endTokenPos' => 105,
-            'endFilePos' => 527,
+            'startLine' => 26,
+            'endLine' => 26,
+            'startTokenPos' => 115,
+            'startFilePos' => 599,
+            'endTokenPos' => 115,
+            'endFilePos' => 603,
           ),
         ),
         'docComment' => NULL,
@@ -136,8 +136,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             ),
           ),
         ),
-        'startLine' => 23,
-        'endLine' => 24,
+        'startLine' => 25,
+        'endLine' => 26,
         'startColumn' => 5,
         'endColumn' => 38,
         'isPromoted' => false,
@@ -167,12 +167,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'\'',
           'attributes' => 
           array (
-            'startLine' => 27,
-            'endLine' => 27,
-            'startTokenPos' => 120,
-            'startFilePos' => 576,
-            'endTokenPos' => 120,
-            'endFilePos' => 577,
+            'startLine' => 29,
+            'endLine' => 29,
+            'startTokenPos' => 130,
+            'startFilePos' => 652,
+            'endTokenPos' => 130,
+            'endFilePos' => 653,
           ),
         ),
         'docComment' => NULL,
@@ -187,8 +187,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             ),
           ),
         ),
-        'startLine' => 26,
-        'endLine' => 27,
+        'startLine' => 28,
+        'endLine' => 29,
         'startColumn' => 5,
         'endColumn' => 37,
         'isPromoted' => false,
@@ -218,12 +218,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'all\'',
           'attributes' => 
           array (
-            'startLine' => 30,
-            'endLine' => 30,
-            'startTokenPos' => 135,
-            'startFilePos' => 622,
-            'endTokenPos' => 135,
-            'endFilePos' => 626,
+            'startLine' => 32,
+            'endLine' => 32,
+            'startTokenPos' => 145,
+            'startFilePos' => 698,
+            'endTokenPos' => 145,
+            'endFilePos' => 702,
           ),
         ),
         'docComment' => NULL,
@@ -238,8 +238,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             ),
           ),
         ),
-        'startLine' => 29,
-        'endLine' => 30,
+        'startLine' => 31,
+        'endLine' => 32,
         'startColumn' => 5,
         'endColumn' => 36,
         'isPromoted' => false,
@@ -261,8 +261,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 32,
-        'endLine' => 32,
+        'startLine' => 34,
+        'endLine' => 34,
         'startColumn' => 5,
         'endColumn' => 29,
         'isPromoted' => false,
@@ -284,10 +284,33 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 34,
-        'endLine' => 34,
+        'startLine' => 36,
+        'endLine' => 36,
         'startColumn' => 5,
         'endColumn' => 26,
+        'isPromoted' => false,
+        'declaredAtCompileTime' => true,
+        'immediateVirtual' => false,
+        'immediateHooks' => 
+        array (
+        ),
+      ),
+      'selectedMonevReview' => 
+      array (
+        'declaringClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'implementingClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'name' => 'selectedMonevReview',
+        'modifiers' => 1,
+        'type' => NULL,
+        'default' => NULL,
+        'docComment' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'startLine' => 38,
+        'endLine' => 38,
+        'startColumn' => 5,
+        'endColumn' => 32,
         'isPromoted' => false,
         'declaredAtCompileTime' => true,
         'immediateVirtual' => false,
@@ -307,8 +330,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 36,
-        'endLine' => 36,
+        'startLine' => 40,
+        'endLine' => 40,
         'startColumn' => 5,
         'endColumn' => 24,
         'isPromoted' => false,
@@ -330,8 +353,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 38,
-        'endLine' => 38,
+        'startLine' => 42,
+        'endLine' => 42,
         'startColumn' => 5,
         'endColumn' => 23,
         'isPromoted' => false,
@@ -353,20 +376,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '0',
           'attributes' => 
           array (
-            'startLine' => 40,
-            'endLine' => 40,
-            'startTokenPos' => 164,
-            'startFilePos' => 774,
-            'endTokenPos' => 164,
-            'endFilePos' => 774,
+            'startLine' => 44,
+            'endLine' => 44,
+            'startTokenPos' => 179,
+            'startFilePos' => 884,
+            'endTokenPos' => 179,
+            'endFilePos' => 884,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 40,
-        'endLine' => 40,
+        'startLine' => 44,
+        'endLine' => 44,
         'startColumn' => 5,
         'endColumn' => 36,
         'isPromoted' => false,
@@ -388,8 +411,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 42,
-        'endLine' => 42,
+        'startLine' => 46,
+        'endLine' => 46,
         'startColumn' => 5,
         'endColumn' => 18,
         'isPromoted' => false,
@@ -411,8 +434,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 44,
-        'endLine' => 44,
+        'startLine' => 48,
+        'endLine' => 48,
         'startColumn' => 5,
         'endColumn' => 25,
         'isPromoted' => false,
@@ -434,8 +457,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 46,
-        'endLine' => 46,
+        'startLine' => 50,
+        'endLine' => 50,
         'startColumn' => 5,
         'endColumn' => 19,
         'isPromoted' => false,
@@ -457,8 +480,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 48,
-        'endLine' => 48,
+        'startLine' => 52,
+        'endLine' => 52,
         'startColumn' => 5,
         'endColumn' => 28,
         'isPromoted' => false,
@@ -480,20 +503,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => 'false',
           'attributes' => 
           array (
-            'startLine' => 50,
-            'endLine' => 50,
-            'startTokenPos' => 193,
-            'startFilePos' => 904,
-            'endTokenPos' => 193,
-            'endFilePos' => 908,
+            'startLine' => 54,
+            'endLine' => 54,
+            'startTokenPos' => 208,
+            'startFilePos' => 1014,
+            'endTokenPos' => 208,
+            'endFilePos' => 1018,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 50,
-        'endLine' => 50,
+        'startLine' => 54,
+        'endLine' => 54,
         'startColumn' => 5,
         'endColumn' => 34,
         'isPromoted' => false,
@@ -515,20 +538,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => 'false',
           'attributes' => 
           array (
-            'startLine' => 52,
-            'endLine' => 52,
-            'startTokenPos' => 202,
-            'startFilePos' => 940,
-            'endTokenPos' => 202,
-            'endFilePos' => 944,
+            'startLine' => 56,
+            'endLine' => 56,
+            'startTokenPos' => 217,
+            'startFilePos' => 1050,
+            'endTokenPos' => 217,
+            'endFilePos' => 1054,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 52,
-        'endLine' => 52,
+        'startLine' => 56,
+        'endLine' => 56,
         'startColumn' => 5,
         'endColumn' => 34,
         'isPromoted' => false,
@@ -553,8 +576,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 54,
-        'endLine' => 61,
+        'startLine' => 58,
+        'endLine' => 104,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -580,8 +603,176 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 63,
-        'endLine' => 82,
+        'startLine' => 106,
+        'endLine' => 141,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\AdminLppm\\Monev',
+        'declaringClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'implementingClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'currentClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'aliasName' => NULL,
+      ),
+      'finalizeReview' => 
+      array (
+        'name' => 'finalizeReview',
+        'parameters' => 
+        array (
+          'id' => 
+          array (
+            'name' => 'id',
+            'default' => NULL,
+            'type' => 
+            array (
+              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+              'data' => 
+              array (
+                'name' => 'string',
+                'isIdentifier' => true,
+              ),
+            ),
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 143,
+            'endLine' => 143,
+            'startColumn' => 36,
+            'endColumn' => 45,
+            'parameterIndex' => 0,
+            'isOptional' => false,
+          ),
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 143,
+        'endLine' => 152,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\AdminLppm\\Monev',
+        'declaringClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'implementingClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'currentClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'aliasName' => NULL,
+      ),
+      'unfinalizeReview' => 
+      array (
+        'name' => 'unfinalizeReview',
+        'parameters' => 
+        array (
+          'id' => 
+          array (
+            'name' => 'id',
+            'default' => NULL,
+            'type' => 
+            array (
+              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+              'data' => 
+              array (
+                'name' => 'string',
+                'isIdentifier' => true,
+              ),
+            ),
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 154,
+            'endLine' => 154,
+            'startColumn' => 38,
+            'endColumn' => 47,
+            'parameterIndex' => 0,
+            'isOptional' => false,
+          ),
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 154,
+        'endLine' => 164,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\AdminLppm\\Monev',
+        'declaringClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'implementingClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'currentClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'aliasName' => NULL,
+      ),
+      'sendReminderToKepala' => 
+      array (
+        'name' => 'sendReminderToKepala',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 166,
+        'endLine' => 187,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\AdminLppm\\Monev',
+        'declaringClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'implementingClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'currentClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'aliasName' => NULL,
+      ),
+      'pendingRektorCount' => 
+      array (
+        'name' => 'pendingRektorCount',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+          0 => 
+          array (
+            'name' => 'Livewire\\Attributes\\Computed',
+            'isRepeated' => false,
+            'arguments' => 
+            array (
+            ),
+          ),
+        ),
+        'docComment' => NULL,
+        'startLine' => 189,
+        'endLine' => 197,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -619,8 +810,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 84,
-            'endLine' => 84,
+            'startLine' => 199,
+            'endLine' => 199,
             'startColumn' => 36,
             'endColumn' => 45,
             'parameterIndex' => 0,
@@ -633,8 +824,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 84,
-        'endLine' => 88,
+        'startLine' => 199,
+        'endLine' => 211,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -642,6 +833,33 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'isGenerator' => false,
         'isVariadic' => false,
         'modifiers' => 1,
+        'namespace' => 'App\\Livewire\\AdminLppm\\Monev',
+        'declaringClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'implementingClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'currentClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
+        'aliasName' => NULL,
+      ),
+      'loadSelectedProposal' => 
+      array (
+        'name' => 'loadSelectedProposal',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 213,
+        'endLine' => 230,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 2,
         'namespace' => 'App\\Livewire\\AdminLppm\\Monev',
         'declaringClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
         'implementingClassName' => 'App\\Livewire\\AdminLppm\\Monev\\MonevIndex',
@@ -660,8 +878,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 90,
-        'endLine' => 96,
+        'startLine' => 232,
+        'endLine' => 238,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -699,8 +917,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 98,
-            'endLine' => 98,
+            'startLine' => 240,
+            'endLine' => 240,
             'startColumn' => 31,
             'endColumn' => 40,
             'parameterIndex' => 0,
@@ -713,8 +931,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 98,
-        'endLine' => 105,
+        'startLine' => 240,
+        'endLine' => 247,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -740,8 +958,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 107,
-        'endLine' => 169,
+        'startLine' => 249,
+        'endLine' => 312,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -779,8 +997,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 171,
-            'endLine' => 171,
+            'startLine' => 314,
+            'endLine' => 314,
             'startColumn' => 33,
             'endColumn' => 42,
             'parameterIndex' => 0,
@@ -793,8 +1011,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 171,
-        'endLine' => 177,
+        'startLine' => 314,
+        'endLine' => 320,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -824,8 +1042,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 179,
-            'endLine' => 179,
+            'startLine' => 322,
+            'endLine' => 322,
             'startColumn' => 38,
             'endColumn' => 41,
             'parameterIndex' => 0,
@@ -838,8 +1056,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 179,
-        'endLine' => 186,
+        'startLine' => 322,
+        'endLine' => 329,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -873,8 +1091,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 188,
-        'endLine' => 192,
+        'startLine' => 331,
+        'endLine' => 335,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -908,8 +1126,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 194,
-        'endLine' => 198,
+        'startLine' => 337,
+        'endLine' => 341,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -943,8 +1161,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 200,
-        'endLine' => 204,
+        'startLine' => 343,
+        'endLine' => 347,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -978,8 +1196,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 206,
-        'endLine' => 210,
+        'startLine' => 349,
+        'endLine' => 353,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1013,8 +1231,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 212,
-        'endLine' => 216,
+        'startLine' => 355,
+        'endLine' => 359,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1048,8 +1266,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           ),
         ),
         'docComment' => NULL,
-        'startLine' => 218,
-        'endLine' => 244,
+        'startLine' => 361,
+        'endLine' => 403,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1075,8 +1293,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 246,
-        'endLine' => 249,
+        'startLine' => 405,
+        'endLine' => 408,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

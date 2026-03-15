@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('progress_reports', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('proposal_id')->constrained()->onDelete('cascade')->comment('Proposal');
+            $table->foreignUuid('proposal_id')->comment('Proposal')->constrained()->onDelete('cascade');
             $table->text('summary_update')->nullable()->comment('Updated summary');
             $table->integer('reporting_year')->comment('Tahun pelaporan');
             $table->enum('reporting_period', ['semester_1', 'semester_2', 'annual', 'final'])->comment('Periode pelaporan');
             $table->enum('status', ['draft', 'submitted', 'approved'])->default('draft')->comment('Status laporan');
-            $table->foreignUuid('submitted_by')->nullable()->constrained('users')->comment('User who submitted');
+            $table->foreignUuid('submitted_by')->nullable()->comment('User who submitted')->constrained('users');
             $table->timestamp('submitted_at')->nullable()->comment('Submission timestamp');
             $table->timestamps();
 

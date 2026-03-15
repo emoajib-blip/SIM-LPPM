@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DocumentSignature;
 use App\Models\Proposal;
+use App\Services\DocumentSignatureService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class DailyNoteExportController extends Controller
 {
+    protected $signatureService;
+
+    public function __construct(DocumentSignatureService $signatureService)
+    {
+        $this->signatureService = $signatureService;
+    }
+
     /**
      * Download the daily notes PDF.
      */
@@ -20,12 +31,12 @@ class DailyNoteExportController extends Controller
         $isSubmitter = $proposal->submitter_id === $user->id;
         $isLppm = $user->hasRole(['admin lppm', 'kepala lppm', 'superadmin', 'rektor', 'dekan']);
 
-        if (!$isSubmitter && !$isMember && !$isLppm) {
+        if (! $isSubmitter && ! $isMember && ! $isLppm) {
             abort(403, 'Anda tidak memiliki akses untuk mengekspor catatan harian ini.');
         }
 
         $proposal->load([
-            'dailyNotes' => fn($q) => $q->with(['media.model', 'budgetGroup'])->latest('activity_date'),
+            'dailyNotes' => fn ($q) => $q->with(['media.model', 'budgetGroup'])->latest('activity_date'),
             'submitter.identity.studyProgram',
             'teamMembers.identity',
             'researchScheme',
@@ -34,16 +45,53 @@ class DailyNoteExportController extends Controller
 
         $logbookApprovalMode = \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital';
 
+        // 1. Render for hash
         $pdf = Pdf::loadView('pdf.daily-notes', [
+            'isPreview' => $request->has('preview'),
             'proposal' => $proposal,
             'notes' => $proposal->dailyNotes,
             'isSigned' => $proposal->logbook_signed_at !== null || $request->query('signed') === 'true',
             'isApproved' => $proposal->logbook_approved_at !== null,
             'logbookApprovalMode' => $logbookApprovalMode,
+            'qrUrlSubmitter' => null,
+            'qrUrlLppm' => null,
+        ])->setPaper('a4', 'portrait');
+
+        if ($request->has('preview')) {
+            return $pdf->stream('preview.pdf');
+        }
+
+        $pdfBinary = $pdf->output();
+        $hash = hash('sha256', $pdfBinary);
+        $kid = $this->signatureService->currentKid();
+
+        // 2. Sign for Submitter
+        $submitterSig = null;
+        if ($proposal->logbook_signed_at || $request->query('signed') === 'true') {
+            $signedAt = $proposal->logbook_signed_at ?? now();
+            $submitterSig = $this->upsertLogbookSignature($proposal, 'lecturer', 'submitted', $signedAt, $hash, $kid);
+        }
+
+        // 3. Sign for LPPM (Approver)
+        $lppmSig = null;
+        if ($proposal->logbook_approved_at) {
+            $lppmSig = $this->upsertLogbookSignature($proposal, 'kepala_lppm', 'approved', $proposal->logbook_approved_at, $hash, $kid);
+        }
+
+        // 4. Re-render with QR codes
+        $pdf = Pdf::loadView('pdf.daily-notes', [
+            'isPreview' => false,
+            'proposal' => $proposal,
+            'notes' => $proposal->dailyNotes,
+            'isSigned' => $submitterSig !== null,
+            'isApproved' => $lppmSig !== null,
+            'logbookApprovalMode' => $logbookApprovalMode,
+            'qrUrlSubmitter' => $submitterSig ? URL::signedRoute('signatures.verify', ['documentSignature' => $submitterSig->id]) : null,
+            'qrUrlLppm' => $lppmSig ? URL::signedRoute('signatures.verify', ['documentSignature' => $lppmSig->id]) : null,
         ])->setPaper('a4', 'portrait');
 
         $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
-        $filename = 'Catatan_Harian_' . $title . '.pdf';
+        $filename = 'Catatan_Harian_'.$title.'.pdf';
 
         if (ob_get_level()) {
 
@@ -54,5 +102,61 @@ class DailyNoteExportController extends Controller
         }
 
         return $pdf->stream($filename);
+    }
+
+    /**
+     * Helper to upsert signatures for logbook.
+     */
+    protected function upsertLogbookSignature(Proposal $proposal, string $role, string $action, $signedAt, string $hash, string $kid): DocumentSignature
+    {
+        $user = match ($role) {
+            'lecturer' => $proposal->submitter,
+            'kepala_lppm' => \App\Models\User::role('kepala lppm')->first(),
+            default => null,
+        };
+
+        /** @var \App\Models\DocumentSignature|null $signatureRecord */
+        $signatureRecord = $proposal->signatures()
+            ->where('signed_role', $role)
+            ->where('action', $action)
+            ->where('variant', 'logbook')
+            ->first();
+
+        $nonce = $signatureRecord?->payload['nonce'] ?? Str::random(32);
+
+        $payload = [
+            'ver' => 1,
+            'doc_type' => 'logbook',
+            'doc_id' => (string) $proposal->id,
+            'variant' => 'logbook',
+            'action' => $action,
+            'signed_role' => $role,
+            'signed_by' => (string) ($user->id ?? ''),
+            'signed_at' => \Carbon\Carbon::parse($signedAt)->copy()->utc()->toIso8601ZuluString(),
+            'pdf_hash_alg' => 'SHA-256',
+            'pdf_hash' => $hash,
+            'kid' => $kid,
+            'nonce' => $nonce,
+        ];
+
+        /** @var \App\Models\DocumentSignature $signature */
+        $signature = $proposal->signatures()->updateOrCreate(
+            [
+                'signed_role' => $role,
+                'action' => $action,
+                'variant' => 'logbook',
+            ],
+            [
+                'signed_by' => $user->id ?? null,
+                'signed_at' => $signedAt,
+                'hash_alg' => 'sha256',
+                'document_hash' => $hash,
+                'kid' => $kid,
+                'payload' => $payload,
+                'signature' => $this->signatureService->signPayload($payload, $kid),
+            ]
+        );
+
+        return $signature;
     }
 }

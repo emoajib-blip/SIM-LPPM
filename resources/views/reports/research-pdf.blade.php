@@ -249,17 +249,7 @@
             padding-top: 4px;
         }
 
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 75pt;
-            color: rgba(200, 200, 200, 0.35);
-            z-index: -1000;
-            white-space: nowrap;
-            font-weight: bold;
-        }
+
 
         .summary-row td {
             font-weight: bold;
@@ -271,9 +261,6 @@
 </head>
 
 <body>
-    @if($isPreview ?? false)
-        <div class="watermark">DRAFT PREVIEW</div>
-    @endif
     <div class="kop-surat">
         <div class="kop-surat-inner">
             <img src="{{ public_path('logo.png') }}" class="logo">
@@ -365,12 +352,13 @@
                         <div>Pekalongan, {{ now()->translatedFormat('d F Y') }}</div>
                         <div>Mengetahui,</div>
                         <div style="font-weight: bold;">Rektor ITSNU Pekalongan</div>
-                    @if(!($isPreview ?? false) && $institutionalReport && $institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
+                    @if($institutionalReport && $institutionalReport->status === \App\Enums\InstitutionalReportStatus::APPROVED)
                         <div class="digital-signature">
-                            <img src="{{ generate_qr_code_data_uri(route('reports.research.pdf', ['period' => $period, 'ref' => substr($institutionalReport->id, 0, 8)])) }}"
+                            <img src="{{ generate_qr_code_data_uri(\Illuminate\Support\Facades\URL::signedRoute('reports.verify', ['institutionalReport' => $institutionalReport->id, 'variant' => 'approved'])) }}"
                                 alt="QR Code">
                             <span class="signature-label">DIGITALLY SIGNED</span>
                         </div>
+                        <div class="text-muted">Ditandatangani: {{ $institutionalReport->approved_at?->translatedFormat('d F Y H:i') ?? '-' }}</div>
                     @else
                         <div style="margin-bottom: 75px;"></div>
                     @endif
@@ -386,12 +374,13 @@
                     </div>
                     <div style="margin-bottom: 4px;">Dibuat oleh,</div>
                     <div style="margin-bottom: 4px; font-weight: bold;">Kepala LPPM ITSNU Pekalongan</div>
-                    @if(!($isPreview ?? false) && $institutionalReport && in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::SUBMITTED, \App\Enums\InstitutionalReportStatus::APPROVED]))
+                    @if($institutionalReport && in_array($institutionalReport->status, [\App\Enums\InstitutionalReportStatus::SUBMITTED, \App\Enums\InstitutionalReportStatus::APPROVED]))
                         <div class="digital-signature" style="border-color: #059669; color: #059669;">
-                            <img src="{{ generate_qr_code_data_uri(route('reports.research.pdf', ['period' => $period, 'ref' => substr($institutionalReport->id, 0, 8)])) }}"
+                            <img src="{{ generate_qr_code_data_uri(\Illuminate\Support\Facades\URL::signedRoute('reports.verify', ['institutionalReport' => $institutionalReport->id, 'variant' => ((string) ($institutionalReport->status?->value) === 'approved' ? 'approved' : 'submitted')])) }}"
                                 alt="QR Code">
                             <span class="signature-label" style="color: #059669;">VERIFIED BY LPPM</span>
                         </div>
+                        <div class="text-muted">Ditandatangani: {{ $institutionalReport->submitted_at?->translatedFormat('d F Y H:i') ?? '-' }}</div>
                     @else
                         <div style="margin-bottom: 75px;"></div>
                     @endif

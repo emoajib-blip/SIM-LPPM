@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/CompleteReviewAction.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\Actions\CompleteReviewAction
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-645748dce7c49595ae797d898c99c9716ff303d6e7692d67ba0e9dea3ab23452',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-fc9cf643c7d5514e72d14884f3ca0609ab2932ab4c9b458045246e76dcf27f51',
    'data' => 
   array (
     'locatedSource' => 
@@ -27,7 +27,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 13,
-    'endLine' => 148,
+    'endLine' => 147,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => NULL,
@@ -115,9 +115,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
         'docComment' => NULL,
         'startLine' => 15,
-        'endLine' => 18,
+        'endLine' => 17,
         'startColumn' => 5,
-        'endColumn' => 5,
+        'endColumn' => 8,
         'couldThrow' => false,
         'isClosure' => false,
         'isGenerator' => false,
@@ -153,8 +153,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 23,
-            'endLine' => 23,
+            'startLine' => 22,
+            'endLine' => 22,
             'startColumn' => 29,
             'endColumn' => 52,
             'parameterIndex' => 0,
@@ -179,8 +179,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 23,
-            'endLine' => 23,
+            'startLine' => 22,
+            'endLine' => 22,
             'startColumn' => 55,
             'endColumn' => 70,
             'parameterIndex' => 1,
@@ -205,8 +205,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 23,
-            'endLine' => 23,
+            'startLine' => 22,
+            'endLine' => 22,
             'startColumn' => 73,
             'endColumn' => 94,
             'parameterIndex' => 2,
@@ -229,8 +229,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Complete a review submission.
  */',
-        'startLine' => 23,
-        'endLine' => 80,
+        'startLine' => 22,
+        'endLine' => 79,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -268,8 +268,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 85,
-            'endLine' => 85,
+            'startLine' => 84,
+            'endLine' => 84,
             'startColumn' => 40,
             'endColumn' => 63,
             'parameterIndex' => 0,
@@ -294,8 +294,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 85,
-            'endLine' => 85,
+            'startLine' => 84,
+            'endLine' => 84,
             'startColumn' => 66,
             'endColumn' => 81,
             'parameterIndex' => 1,
@@ -320,8 +320,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 85,
-            'endLine' => 85,
+            'startLine' => 84,
+            'endLine' => 84,
             'startColumn' => 84,
             'endColumn' => 105,
             'parameterIndex' => 2,
@@ -344,8 +344,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Create a review log entry for history tracking.
  */',
-        'startLine' => 85,
-        'endLine' => 101,
+        'startLine' => 84,
+        'endLine' => 100,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -375,8 +375,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 106,
-            'endLine' => 106,
+            'startLine' => 105,
+            'endLine' => 105,
             'startColumn' => 42,
             'endColumn' => 50,
             'parameterIndex' => 0,
@@ -401,8 +401,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 106,
-            'endLine' => 106,
+            'startLine' => 105,
+            'endLine' => 105,
             'startColumn' => 53,
             'endColumn' => 66,
             'parameterIndex' => 1,
@@ -427,8 +427,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 106,
-            'endLine' => 106,
+            'startLine' => 105,
+            'endLine' => 105,
             'startColumn' => 69,
             'endColumn' => 92,
             'parameterIndex' => 2,
@@ -451,8 +451,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Send notifications when a review is completed
  */',
-        'startLine' => 106,
-        'endLine' => 121,
+        'startLine' => 105,
+        'endLine' => 120,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -482,8 +482,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 126,
-            'endLine' => 126,
+            'startLine' => 125,
+            'endLine' => 125,
             'startColumn' => 60,
             'endColumn' => 68,
             'parameterIndex' => 0,
@@ -506,8 +506,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Send special notification when all reviews are completed
  */',
-        'startLine' => 126,
-        'endLine' => 147,
+        'startLine' => 125,
+        'endLine' => 146,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

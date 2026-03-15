@@ -2,7 +2,7 @@
 
 // odsl-/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Proposal.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Models\Proposal
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.4.1-c3d67a6cc6b017d2c2f28faaaea821ef1e025f85696471c5c3e6a03c7f069798',
+   'variableKey' => 'v2-6.65.0.9-8.4.1-f50a56bbe3bce1e83a2c89bafbb02fde26f7ce0e46e935298692070aaedfc048',
    'data' => 
   array (
     'locatedSource' => 
@@ -71,12 +71,13 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * @property-read \\Illuminate\\Database\\Eloquent\\Collection|\\App\\Models\\ProposalStatusLog[] $statusLogs
  * @property-read \\Illuminate\\Database\\Eloquent\\Collection|\\App\\Models\\ReviewLog[] $reviewLogs
  * @property-read \\Illuminate\\Database\\Eloquent\\Collection|\\App\\Models\\ProposalActivity[] $activities
+ * @property-read \\Illuminate\\Database\\Eloquent\\Collection|\\App\\Models\\DocumentSignature[] $signatures
  * @property-read \\App\\Models\\User $user
  */',
     'attributes' => 
     array (
     ),
-    'startLine' => 66,
+    'startLine' => 68,
     'endLine' => 471,
     'startColumn' => 1,
     'endColumn' => 1,
@@ -134,20 +135,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => 'null',
           'attributes' => 
           array (
-            'startLine' => 71,
-            'endLine' => 71,
-            'startTokenPos' => 86,
-            'startFilePos' => 3791,
-            'endTokenPos' => 86,
-            'endFilePos' => 3794,
+            'startLine' => 73,
+            'endLine' => 73,
+            'startTokenPos' => 91,
+            'startFilePos' => 3948,
+            'endTokenPos' => 91,
+            'endFilePos' => 3951,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 71,
-        'endLine' => 71,
+        'startLine' => 73,
+        'endLine' => 73,
         'startColumn' => 5,
         'endColumn' => 33,
         'isPromoted' => false,
@@ -169,12 +170,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'string\'',
           'attributes' => 
           array (
-            'startLine' => 76,
-            'endLine' => 76,
-            'startTokenPos' => 97,
-            'startFilePos' => 3898,
-            'endTokenPos' => 97,
-            'endFilePos' => 3905,
+            'startLine' => 78,
+            'endLine' => 78,
+            'startTokenPos' => 102,
+            'startFilePos' => 4055,
+            'endTokenPos' => 102,
+            'endFilePos' => 4062,
           ),
         ),
         'docComment' => '/**
@@ -183,8 +184,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 76,
-        'endLine' => 76,
+        'startLine' => 78,
+        'endLine' => 78,
         'startColumn' => 5,
         'endColumn' => 34,
         'isPromoted' => false,
@@ -206,12 +207,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => 'false',
           'attributes' => 
           array (
-            'startLine' => 81,
-            'endLine' => 81,
-            'startTokenPos' => 108,
-            'startFilePos' => 4001,
-            'endTokenPos' => 108,
-            'endFilePos' => 4005,
+            'startLine' => 83,
+            'endLine' => 83,
+            'startTokenPos' => 113,
+            'startFilePos' => 4158,
+            'endTokenPos' => 113,
+            'endFilePos' => 4162,
           ),
         ),
         'docComment' => '/**
@@ -220,8 +221,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 81,
-        'endLine' => 81,
+        'startLine' => 83,
+        'endLine' => 83,
         'startColumn' => 5,
         'endColumn' => 33,
         'isPromoted' => false,
@@ -243,20 +244,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '[\'title\', \'submitter_id\', \'detailable_id\', \'detailable_type\', \'research_scheme_id\', \'community_service_scheme_id\', \'focus_area_id\', \'theme_id\', \'topic_id\', \'national_priority_id\', \'cluster_level1_id\', \'cluster_level2_id\', \'cluster_level3_id\', \'sbk_value\', \'duration_in_years\', \'start_year\', \'semester\', \'summary\', \'asta_cita\', \'status\', \'logbook_signed_at\', \'logbook_approved_at\', \'student_members\']',
           'attributes' => 
           array (
-            'startLine' => 83,
-            'endLine' => 107,
-            'startTokenPos' => 117,
-            'startFilePos' => 4035,
-            'endTokenPos' => 188,
-            'endFilePos' => 4624,
+            'startLine' => 85,
+            'endLine' => 109,
+            'startTokenPos' => 122,
+            'startFilePos' => 4192,
+            'endTokenPos' => 193,
+            'endFilePos' => 4781,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 83,
-        'endLine' => 107,
+        'startLine' => 85,
+        'endLine' => 109,
         'startColumn' => 5,
         'endColumn' => 6,
         'isPromoted' => false,
@@ -293,8 +294,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  *
  * @return array<string, string>
  */',
-        'startLine' => 114,
-        'endLine' => 124,
+        'startLine' => 116,
+        'endLine' => 126,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -330,8 +331,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the SDGs for the proposal.
  */',
-        'startLine' => 129,
-        'endLine' => 132,
+        'startLine' => 131,
+        'endLine' => 134,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -367,8 +368,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the targeted IKUs for the proposal.
  */',
-        'startLine' => 137,
-        'endLine' => 140,
+        'startLine' => 139,
+        'endLine' => 142,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -404,8 +405,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all monev sessions for the proposal.
  */',
-        'startLine' => 145,
-        'endLine' => 148,
+        'startLine' => 147,
+        'endLine' => 150,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -441,8 +442,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the user who submitted the proposal.
  */',
-        'startLine' => 153,
-        'endLine' => 156,
+        'startLine' => 155,
+        'endLine' => 158,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -478,8 +479,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Alias for submitter relationship.
  */',
-        'startLine' => 161,
-        'endLine' => 164,
+        'startLine' => 163,
+        'endLine' => 166,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -515,8 +516,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the detailable model (Research or CommunityService).
  */',
-        'startLine' => 169,
-        'endLine' => 172,
+        'startLine' => 171,
+        'endLine' => 174,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -552,8 +553,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the research scheme for the proposal.
  */',
-        'startLine' => 177,
-        'endLine' => 180,
+        'startLine' => 179,
+        'endLine' => 182,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -589,8 +590,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the community service scheme for the proposal.
  */',
-        'startLine' => 185,
-        'endLine' => 188,
+        'startLine' => 187,
+        'endLine' => 190,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -626,8 +627,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the focus area for the proposal.
  */',
-        'startLine' => 193,
-        'endLine' => 196,
+        'startLine' => 195,
+        'endLine' => 198,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -663,8 +664,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the theme for the proposal.
  */',
-        'startLine' => 201,
-        'endLine' => 204,
+        'startLine' => 203,
+        'endLine' => 206,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -700,8 +701,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the topic for the proposal.
  */',
-        'startLine' => 209,
-        'endLine' => 212,
+        'startLine' => 211,
+        'endLine' => 214,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -737,8 +738,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the national priority for the proposal.
  */',
-        'startLine' => 217,
-        'endLine' => 220,
+        'startLine' => 219,
+        'endLine' => 222,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -774,8 +775,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the level 1 science cluster for the proposal.
  */',
-        'startLine' => 225,
-        'endLine' => 228,
+        'startLine' => 227,
+        'endLine' => 230,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -811,8 +812,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the level 2 science cluster for the proposal.
  */',
-        'startLine' => 233,
-        'endLine' => 236,
+        'startLine' => 235,
+        'endLine' => 238,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -848,8 +849,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the level 3 science cluster for the proposal.
  */',
-        'startLine' => 241,
-        'endLine' => 244,
+        'startLine' => 243,
+        'endLine' => 246,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -883,8 +884,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 246,
-        'endLine' => 252,
+        'startLine' => 248,
+        'endLine' => 254,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -920,8 +921,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all keywords for the proposal.
  */',
-        'startLine' => 257,
-        'endLine' => 261,
+        'startLine' => 259,
+        'endLine' => 263,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -957,8 +958,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all outputs for the proposal.
  */',
-        'startLine' => 266,
-        'endLine' => 269,
+        'startLine' => 268,
+        'endLine' => 271,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -994,8 +995,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all budget items for the proposal.
  */',
-        'startLine' => 274,
-        'endLine' => 277,
+        'startLine' => 276,
+        'endLine' => 279,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1031,8 +1032,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all partners for the proposal.
  */',
-        'startLine' => 282,
-        'endLine' => 286,
+        'startLine' => 284,
+        'endLine' => 288,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1068,8 +1069,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all activity schedules for the proposal.
  */',
-        'startLine' => 291,
-        'endLine' => 294,
+        'startLine' => 293,
+        'endLine' => 296,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1105,8 +1106,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all research stages for the proposal.
  */',
-        'startLine' => 299,
-        'endLine' => 302,
+        'startLine' => 301,
+        'endLine' => 304,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1142,8 +1143,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all reviewers for the proposal.
  */',
-        'startLine' => 307,
-        'endLine' => 310,
+        'startLine' => 309,
+        'endLine' => 312,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1179,8 +1180,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all progress reports for the proposal.
  */',
-        'startLine' => 315,
-        'endLine' => 318,
+        'startLine' => 317,
+        'endLine' => 320,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1216,8 +1217,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all daily notes for the proposal.
  */',
-        'startLine' => 323,
-        'endLine' => 326,
+        'startLine' => 325,
+        'endLine' => 328,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1253,8 +1254,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all status change logs for the proposal.
  */',
-        'startLine' => 331,
-        'endLine' => 334,
+        'startLine' => 333,
+        'endLine' => 336,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1290,8 +1291,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all review logs for the proposal.
  */',
-        'startLine' => 339,
-        'endLine' => 342,
+        'startLine' => 341,
+        'endLine' => 344,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1327,8 +1328,45 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all activities for the proposal.
  */',
-        'startLine' => 347,
-        'endLine' => 350,
+        'startLine' => 349,
+        'endLine' => 352,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Models',
+        'declaringClassName' => 'App\\Models\\Proposal',
+        'implementingClassName' => 'App\\Models\\Proposal',
+        'currentClassName' => 'App\\Models\\Proposal',
+        'aliasName' => NULL,
+      ),
+      'signatures' => 
+      array (
+        'name' => 'signatures',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'Illuminate\\Database\\Eloquent\\Relations\\MorphMany',
+            'isIdentifier' => false,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => '/**
+ * Get all digital signatures for the proposal.
+ */',
+        'startLine' => 357,
+        'endLine' => 360,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1364,8 +1402,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Check if all team members have accepted the invitation.
  */',
-        'startLine' => 355,
-        'endLine' => 367,
+        'startLine' => 365,
+        'endLine' => 377,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1401,8 +1439,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Check if all reviewers have completed their reviews.
  */',
-        'startLine' => 372,
-        'endLine' => 384,
+        'startLine' => 382,
+        'endLine' => 397,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1430,8 +1468,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get pending team member invitations.
  */',
-        'startLine' => 389,
-        'endLine' => 393,
+        'startLine' => 402,
+        'endLine' => 406,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1459,8 +1497,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get pending reviewer assignments.
  */',
-        'startLine' => 398,
-        'endLine' => 405,
+        'startLine' => 411,
+        'endLine' => 418,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1488,8 +1526,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all pending team members (anggota who haven\'t accepted).
  */',
-        'startLine' => 410,
-        'endLine' => 415,
+        'startLine' => 423,
+        'endLine' => 428,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -1517,44 +1555,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get all pending reviewers (who haven\'t completed their review).
  */',
-        'startLine' => 420,
-        'endLine' => 425,
-        'startColumn' => 5,
-        'endColumn' => 5,
-        'couldThrow' => false,
-        'isClosure' => false,
-        'isGenerator' => false,
-        'isVariadic' => false,
-        'modifiers' => 1,
-        'namespace' => 'App\\Models',
-        'declaringClassName' => 'App\\Models\\Proposal',
-        'implementingClassName' => 'App\\Models\\Proposal',
-        'currentClassName' => 'App\\Models\\Proposal',
-        'aliasName' => NULL,
-      ),
-      'allReviewersCompleted' => 
-      array (
-        'name' => 'allReviewersCompleted',
-        'parameters' => 
-        array (
-        ),
-        'returnsReference' => false,
-        'returnType' => 
-        array (
-          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
-          'data' => 
-          array (
-            'name' => 'bool',
-            'isIdentifier' => true,
-          ),
-        ),
-        'attributes' => 
-        array (
-        ),
-        'docComment' => '/**
- * Check if all reviewers have completed their reviews.
- */',
-        'startLine' => 430,
+        'startLine' => 433,
         'endLine' => 438,
         'startColumn' => 5,
         'endColumn' => 5,

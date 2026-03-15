@@ -15,6 +15,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'proposalstatus' => 'App\\Enums\\ProposalStatus',
           'proposal' => 'App\\Models\\Proposal',
           'user' => 'App\\Models\\User',
+          'lecturereligibilityservice' => 'App\\Services\\LecturerEligibilityService',
           'notificationservice' => 'App\\Services\\NotificationService',
         ),
          'className' => 'App\\Livewire\\Actions\\SubmitProposalAction',
@@ -41,6 +42,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'proposalstatus' => 'App\\Enums\\ProposalStatus',
           'proposal' => 'App\\Models\\Proposal',
           'user' => 'App\\Models\\User',
+          'lecturereligibilityservice' => 'App\\Services\\LecturerEligibilityService',
           'notificationservice' => 'App\\Services\\NotificationService',
         ),
          'className' => 'App\\Livewire\\Actions\\SubmitProposalAction',
@@ -67,6 +69,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'proposalstatus' => 'App\\Enums\\ProposalStatus',
           'proposal' => 'App\\Models\\Proposal',
           'user' => 'App\\Models\\User',
+          'lecturereligibilityservice' => 'App\\Services\\LecturerEligibilityService',
           'notificationservice' => 'App\\Services\\NotificationService',
         ),
          'className' => 'App\\Livewire\\Actions\\SubmitProposalAction',
@@ -93,6 +96,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'proposalstatus' => 'App\\Enums\\ProposalStatus',
           'proposal' => 'App\\Models\\Proposal',
           'user' => 'App\\Models\\User',
+          'lecturereligibilityservice' => 'App\\Services\\LecturerEligibilityService',
           'notificationservice' => 'App\\Services\\NotificationService',
         ),
          'className' => 'App\\Livewire\\Actions\\SubmitProposalAction',
@@ -119,6 +123,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'proposalstatus' => 'App\\Enums\\ProposalStatus',
           'proposal' => 'App\\Models\\Proposal',
           'user' => 'App\\Models\\User',
+          'lecturereligibilityservice' => 'App\\Services\\LecturerEligibilityService',
           'notificationservice' => 'App\\Services\\NotificationService',
         ),
          'className' => 'App\\Livewire\\Actions\\SubmitProposalAction',
@@ -140,7 +145,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/SubmitProposalAction.php' => 'd925914574779ccdc4deb57c2c62db98570d7a8c0b2364d221a864a4598e5ea4',
+      '/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/SubmitProposalAction.php' => '66940b272f4e4e4db2003b2a27bebc9b6b2120069b2dc5b45b7a560bdf557d53',
     ),
   ),
 ));
