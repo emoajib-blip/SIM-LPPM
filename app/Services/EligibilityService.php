@@ -323,10 +323,12 @@ class EligibilityService
             ->map(function ($identity) use ($rules) {
                 $status = $this->checkEligibility($identity, $rules);
 
+                $user = $identity->user;
+
                 return [
                     'identity' => $identity,
-                    'user' => $identity->user,
-                    'name' => $identity->user?->name ?? 'Unknown',
+                    'user' => $user,
+                    'name' => $user->name ?? 'Unknown',
                     'nip' => $identity->identity_id,
                     'eligible' => $status['eligible'],
                     'passed_checks' => $status['passed_checks'],

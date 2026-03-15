@@ -211,6 +211,7 @@ class ProposalPdfService
                 'submitter.identity.faculty',
                 'teamMembers.identity.institution',
                 'teamMembers.identity.studyProgram',
+                'teamMembers.identity.faculty',
                 'researchScheme',
                 'focusArea',
                 'theme',

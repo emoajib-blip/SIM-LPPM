@@ -190,14 +190,18 @@
         }
     </style>
     @php
+        // Get submitter identity and related data
+        $submitterIdentity = $proposal->submitter->identity;
         $submitterFullName = format_name(
-            $proposal->submitter->identity?->title_prefix ?? '',
+            $submitterIdentity?->title_prefix ?? '',
             $proposal->submitter->name,
-            $proposal->submitter->identity?->title_suffix ?? ''
+            $submitterIdentity?->title_suffix ?? ''
         );
+        $submitterNidn = $submitterIdentity?->identity_id ?? '-';
         $academicYear = $proposal->start_year . '/' . ((int)$proposal->start_year + 1);
-        $facultyName = $proposal->submitter->identity?->faculty?->name ?? '.......................';
-        $prodiName = $proposal->submitter->identity?->studyProgram?->name ?? '.......................';
+        $facultyName = $submitterIdentity?->faculty?->name ?? '.......................';
+        $prodiName = $submitterIdentity?->studyProgram?->name ?? '.......................';
+        $institutionName = $submitterIdentity?->institution?->name ?? 'ITSNU Pekalongan';
     @endphp
 </head><body><table class="cover-table">
         <tr>
@@ -227,16 +231,29 @@
                             <td width="20%">Ketua</td>
                             <td width="5%" class="text-center">:</td>
                             <td width="45%">{{ $submitterFullName }}</td>
-                            <td width="30%">NIDN: {{ $proposal->submitter->identity?->identity_id ?? '-' }}</td>
+                            <td width="30%">NIDN: {{ $submitterNidn }}</td>
                         </tr>
                         @php
-                            $lecturerMembers = $proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id && ($m->identity?->type === 'dosen' || $m->pivot->role === 'anggota' || $m->pivot->role === 'dosen'));
+                            // Filter untuk mendapatkan anggota dosen yang bukan submitter
+                            // Pastikan data dari teamMembers sudah di-load dengan lengkap
+                            $lecturerMembers = $proposal->teamMembers
+                                ->where('id', '!=', $proposal->submitter_id)
+                                ->filter(fn($m) => $m->identity && ($m->identity->type === 'dosen' || $m->pivot->role === 'anggota'));
+                            
+                            // Reindex untuk numbering yang benar
+                            $lecturerMembers = $lecturerMembers->values();
                         @endphp
                         @foreach($lecturerMembers as $index => $member)
                         <tr>
                             <td width="20%">Anggota {{ $index + 1 }}</td>
                             <td width="5%" class="text-center">:</td>
-                            <td width="45%">{{ format_name($member->identity?->title_prefix ?? '', $member->name, $member->identity?->title_suffix ?? '') }}</td>
+                            <td width="45%">
+                                @if($member->identity)
+                                    {{ format_name($member->identity->title_prefix ?? '', $member->name, $member->identity->title_suffix ?? '') }}
+                                @else
+                                    {{ $member->name }}
+                                @endif
+                            </td>
                             <td width="30%">NIDN: {{ $member->identity?->identity_id ?? '-' }}</td>
                         </tr>
                         @endforeach
