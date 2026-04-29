@@ -15,6 +15,15 @@ use Livewire\WithPagination;
 class ProposalValidation extends Component
 {
     use WithPagination;
+    
+    public function mount(): void
+    {
+        $isKaprodiValidationActive = \App\Models\Setting::get('feature_kaprodi_validation', false);
+        
+        if (!$isKaprodiValidationActive) {
+            abort(403, 'Fitur Validasi Kaprodi sedang dinonaktifkan oleh Admin LPPM.');
+        }
+    }
 
     #[Url]
     public string $search = '';

@@ -20,6 +20,7 @@ class MenuComposer
     protected function menuItems(?User $user): array
     {
         $roadmapActive = \App\Models\Setting::get('feature_roadmap_active', false);
+        $kaprodiValidationActive = \App\Models\Setting::get('feature_kaprodi_validation', false);
 
         $items = [
             // Dashboard - available for all roles
@@ -83,12 +84,12 @@ class MenuComposer
                     ],
                 ],
             ],
-            [
+            ...( $kaprodiValidationActive ? [[
                 'title' => 'Persetujuan Kaprodi',
                 'icon' => 'clipboard-check',
                 'route' => 'kaprodi.proposals.index',
                 'roles' => ['kaprodi'],
-            ],
+            ]] : []),
             // Kaprodi - Conditional Roadmap
             ...( $roadmapActive ? [[
                 'title' => 'Kelola Peta Jalan',

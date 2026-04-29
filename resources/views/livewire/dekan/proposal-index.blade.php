@@ -178,7 +178,7 @@
                                 <x-tabler.badge :color="$proposal->status->color()" class="fw-normal">
                                     {{ $proposal->status->label() }}
                                 </x-tabler.badge>
-                                @if(\App\Models\Setting::get('feature_roadmap_active', false))
+                                @if(\App\Models\Setting::get('feature_roadmap_active', false) && \App\Models\Setting::get('feature_kaprodi_validation', false))
                                     <div class="mt-1">
                                         @if($proposal->is_roadmap_validated_by_kaprodi)
                                             <span class="badge badge-outline text-green d-inline-flex align-items-center">
