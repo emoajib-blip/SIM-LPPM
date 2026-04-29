@@ -12,7 +12,7 @@
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
 
-            <form method="POST" wire:submit="sendPasswordResetLink" autocomplete="off" novalidate>
+            <form method="POST" wire:submit.prevent="sendPasswordResetLink" autocomplete="off" novalidate>
                 <!-- Email Address -->
                 <div class="mb-3">
                     <label class="form-label">{{ __('Alamat Email') }}</label>
@@ -24,9 +24,23 @@
                 </div>
 
                 @if(config('turnstile.site_key'))
-                    <div class="text-center p-3 border mb-3">
-                        Pengecekan Keamanan Cloudflare Aktif (Uji Coba Diagnosa)
+                    <div class="mb-4 d-flex justify-content-center" wire:ignore>
+                        <div class="cf-turnstile" 
+                            data-sitekey="{{ config('turnstile.site_key') }}" 
+                            data-callback="onTurnstileFinished"></div>
                     </div>
+                    
+                    <input type="hidden" id="captcha" wire:model="captcha">
+
+                    @error('captcha')
+                        <div class="text-danger d-block mb-3 small text-center">{{ $message }}</div>
+                    @enderror
+
+                    <script>
+                        function onTurnstileFinished(token) {
+                            @this.set('captcha', token);
+                        }
+                    </script>
                 @endif
 
                 <div class="form-footer">
