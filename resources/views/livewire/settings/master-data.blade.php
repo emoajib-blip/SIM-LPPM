@@ -105,6 +105,16 @@
                                 <x-lucide-building-2 class="icon me-2" />
                                 Institusi
                             </button>
+                            <button wire:click="setActiveTab('faculty-roadmaps')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'faculty-roadmaps' ? 'active' : '' }}">
+                                <x-lucide-map class="icon me-2" />
+                                Peta Jalan Fakultas
+                            </button>
+                            <button wire:click="setActiveTab('study-program-roadmaps')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'study-program-roadmaps' ? 'active' : '' }}">
+                                <x-lucide-git-merge class="icon me-2" />
+                                Peta Jalan Prodi
+                            </button>
                         </div>
                     @endif
 
@@ -203,6 +213,14 @@
                     @elseif ($activeTab === 'institutions')
                         <div>
                             <livewire:settings.tabs.institution-manager />
+                        </div>
+                    @elseif ($activeTab === 'faculty-roadmaps')
+                        <div>
+                            <livewire:settings.tabs.faculty-roadmap-manager />
+                        </div>
+                    @elseif ($activeTab === 'study-program-roadmaps')
+                        <div>
+                            <livewire:settings.tabs.study-program-roadmap-manager />
                         </div>
                     @elseif ($activeTab === 'partners')
                         <div>
