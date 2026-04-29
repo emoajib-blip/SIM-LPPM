@@ -67,7 +67,7 @@ class FacultyRoadmapManager extends Component
         return view('livewire.settings.tabs.faculty-roadmap-manager', [
             'roadmaps' => $query->paginate(10),
             'faculties' => $facultiesQuery->get(),
-            'focusAreas' => FocusArea::where('is_active', true)->get(),
+            'focusAreas' => FocusArea::all(),
         ]);
     }
 
