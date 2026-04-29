@@ -14,7 +14,9 @@
 
                 @if(config('turnstile.site_key'))
                     <div class="mb-3 d-flex justify-content-center" wire:ignore>
-                        <div class="cf-turnstile" data-sitekey="{{ config('turnstile.site_key') }}"></div>
+                        <div class="cf-turnstile" 
+                            data-sitekey="{{ config('turnstile.site_key') }}" 
+                            data-callback="captchaSuccess"></div>
                     </div>
                 @endif
 
@@ -28,6 +30,14 @@
             <div class="mt-3 text-center">
                 <a href="{{ route('login') }}">{{ __('Kembali ke masuk') }}</a>
             </div>
+
+            @if(config('turnstile.site_key'))
+                <script>
+                    function captchaSuccess(token) {
+                        @this.set('captcha', token);
+                    }
+                </script>
+            @endif
         </div>
     </div>
 </div>
