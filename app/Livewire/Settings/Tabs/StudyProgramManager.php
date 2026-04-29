@@ -121,8 +121,11 @@ class StudyProgramManager extends Component
 
     public function confirmDelete(int $id): void
     {
+        $studyProgram = \App\Models\StudyProgram::find($id);
+        if (!$studyProgram) return;
+
         $this->deleteItemId = $id;
-        $this->deleteItemName = \App\Models\StudyProgram::find($id)?->name ?? '';
+        $this->deleteItemName = $studyProgram->name;
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-study-program');
     }
 }

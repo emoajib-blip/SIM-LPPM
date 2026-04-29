@@ -1,0 +1,391 @@
+Note: Using configuration file /Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/phpstan.neon.
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Fortify/CreateNewUser.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Fortify/PasswordValidationRules.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Fortify/ResetUserPassword.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Fortify/UpdateUserPassword.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Fortify/UpdateUserProfileInformation.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/HandleHybridInstitution.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Proposal/IdentityEligibilityAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Proposal/ValidateTeamCompositionAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Reports/GetPartnerReportQuery.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Reviewer/CreateExternalReviewerAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Reviewer/UpdateExternalReviewerAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Scheme/AuthorizeAdminAccessAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Actions/Scheme/UpdateSchemeEligibilityAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/BenchmarkNotifications.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/CheckOverdueReviews.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/CleanupDummyData.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/ImportSintaAuthor.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/ImportUsers.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/InstallCommand.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/RunInstallationCommand.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/SendDailySummaries.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/SendReviewReminders.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Console/Commands/SendWeeklySummaries.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Constants/ProposalConstants.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Enums/InstitutionalReportStatus.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Enums/ProposalStatus.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Enums/ReportStatus.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Enums/ReviewStatus.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/ArchiveDataExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/ArchiveTemplateExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/CommunityServiceReportExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/IkuReportExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/MonevRecapExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/OutputReportExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/PartnerCollaborationExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/ResearchProposalExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/ResearchReportExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/SintaCommunityServiceExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/SintaResearchExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Exports/UsersTemplateExport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/Api/PublicCommunityServiceController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/Api/PublicResearchController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/Api/PublicStatsController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/Auth/VerifyEmailController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/Controller.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/DailyNoteExportController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/DocumentSignatureVerificationController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/HealthCheckController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/MediaDownloadController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ProposalExportController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ReportExportController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ReportVerificationController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/ReviewExportController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/RoleSwitcherController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/SintaExportController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Controllers/TwoFactorChallengeController.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Middleware/ActiveRoleMiddleware.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Middleware/InstallerMiddleware.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Middleware/RecordActivity.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Resources/PublicCommunityServiceResource.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Http/Resources/PublicResearchResource.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Imports/HistoricalProposalImport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Imports/SintaAuthorImport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Imports/UsersImport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Listeners/UserActivityListener.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Abstracts/ProposalCreate.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Abstracts/ProposalIndex.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Abstracts/ProposalShow.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Abstracts/ReportIndex.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/ApproveProposalAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/AssignReviewersAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/CompleteReviewAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/DekanApprovalAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/Logout.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/RequestReReviewAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Actions/SubmitProposalAction.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Admin/Archive/ManageArchives.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Admin/EligibilityDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/AdminLppm/ExportSinta.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/AdminLppm/Monev/MonevIndex.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/AdminLppm/ReviewMonitoring.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/AdminLppm/ReviewerAssignment.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/AdminLppm/ReviewerWorkload.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/AdminLppm/SyncSinta.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Auth/ForgotPassword.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Auth/Login.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Auth/ResetPassword.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Auth/VerifyEmail.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/DailyNote/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/FinalReport/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/FinalReport/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/ProgressReport/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/ProgressReport/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/ApprovalButton.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/Create.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/Edit.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/KepalaLppmFinalDecision.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/KepalaLppmInitialApproval.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/ReviewForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/ReviewerAssignment.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/ReviewerForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/SubmitButton.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/TeamMemberForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/TeamMemberInvitation.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/Proposal/TeamMemberInvitations.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/ProposalRevision/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/CommunityService/ProposalRevision/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Components/SchemeEligibilityChecker.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Concerns/HasToast.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dashboard/AdminDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dashboard/DashboardRedirector.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dashboard/DefaultDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dashboard/DosenDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dashboard/ExecDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dashboard/KepalaLppmDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dashboard/ReviewerDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dekan/ApprovalHistory.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dekan/ProposalIndex.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Dekan/ReportIndex.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Forms/AccreditationFilterForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Forms/Installer/AdminAccountForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Forms/Installer/DatabaseConfigForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Forms/Installer/EnvironmentConfigForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Forms/Installer/InstitutionSetupForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Forms/ProposalForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Forms/ReportForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Forms/TeamMembersForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Iku/IkuDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Iku/IkuVerification.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Installer/InstallerWizard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Kaprodi/ProposalValidation.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/FinalDecision.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/InitialApproval.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/Monev/MonevRecap.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/KepalaLppm/ReportApproval.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Lecturer/PolicyInvolvement/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Notifications/NotificationCenter.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Notifications/NotificationDropdown.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Proposals/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Proposals/ProposalActivityTimeline.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Rektor/MonevDashboard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/CommunityService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/IkuReport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/InstitutionalReportMonitoring.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/MonevReport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/OutputReports.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/PartnerCollaboration.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/Research.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reports/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/DailyNote/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/DailyNote/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/FinalReport/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/FinalReport/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/ProgressReport/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/ProgressReport/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/ApprovalButton.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/Components/SubstansiUsulan.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/Components/TktMeasurement.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/Create.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/Edit.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/KepalaLppmFinalDecision.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/KepalaLppmInitialApproval.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/ReviewForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/ReviewerAssignment.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/ReviewerForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/SubmitButton.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/TeamMemberForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/TeamMemberInvitation.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/Proposal/TeamMemberInvitations.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/ProposalRevision/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Research/ProposalRevision/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Review/CommunityService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Review/Research.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Review/ReviewHistory.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Reviewer/Monev/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Appearance.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/AuditLog.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/DeleteUserForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/FeatureFlags.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/MasterData.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Password.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/ProfileForm.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/ProposalSchedule.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/ProposalTemplate.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/ReviewCriteriaManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/RolePermissionMatrix.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/SettingsIndex.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/BudgetCapManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/BudgetComponentManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/BudgetGroupManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/CommunityServiceSchemeManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/FacultyManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/FacultyRoadmapManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/FocusAreaManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/IkuOutputTypeManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/InstitutionManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/KeywordManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/MasterIkuManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/NationalPriorityManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/PartnerManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/ResearchSchemeManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/ScienceClusterManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/SdgManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/StrataManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/StudyProgramManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/StudyProgramRoadmapManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/ThemeManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/TktManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/Tabs/TopicManager.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/TwoFactor.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Settings/TwoFactor/RecoveryCodes.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/HasFileUploads.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/HasReportTemplates.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/ManagesOutputs.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/ReportAccess.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/ReportAuthorization.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/ReportData.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/ReportFilters.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithApproval.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithFilters.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithInstitutionalApproval.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithProposalWizard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithReportApproval.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithStepWizard.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Traits/WithTeamManagement.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Users/ActivityLogList.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Users/Create.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Users/Edit.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Users/Import.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Users/Index.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Livewire/Users/Show.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ActivityLog.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ActivitySchedule.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/AdditionalOutput.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/BudgetCap.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/BudgetComponent.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/BudgetGroup.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/BudgetItem.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/CommunityService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/CommunityServiceScheme.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/DailyNote.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/DocumentSignature.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Faculty.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/FacultyRoadmap.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/FocusArea.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Identity.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/IkuOutputType.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Institution.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/InstitutionalReport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Keyword.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/MacroResearchGroup.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/MandatoryOutput.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/MasterIku.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/MonevReview.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/NationalPriority.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Partner.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Permission.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/PolicyInvolvement.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProgressReport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Proposal.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProposalActivity.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProposalMonev.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProposalOutput.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProposalReviewer.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ProposalStatusLog.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Research.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ResearchScheme.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ResearchStage.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ReviewCriteria.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ReviewLog.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ReviewScore.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ReviewerProfile.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Role.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/ScienceCluster.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Sdg.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Setting.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/SintaScoreSubmission.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Strata.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/StudyProgram.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/StudyProgramRoadmap.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Theme.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/TktIndicator.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/TktLevel.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/Topic.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Models/User.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/DailySummaryReport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/DekanApprovalDecision.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/FinalDecisionMade.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/MonevReportReminderNotification.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/ProposalRevised.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/ProposalSubmitted.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/ReviewCompleted.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/ReviewOverdue.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/ReviewReminder.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/ReviewerAssigned.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/ReviewerAssignment.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/SintaScoreApproved.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/SintaScoreRejected.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/System/EmailVerification.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/System/PasswordReset.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/System/RoleAssigned.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/System/TwoFactorAuthentication.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/TeamInvitationAccepted.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/TeamInvitationRejected.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/TeamInvitationSent.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Notifications/WeeklySummaryReport.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Observers/ProposalObserver.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Policies/MediaPolicy.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Policies/ProposalPolicy.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Providers/AppServiceProvider.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Providers/FortifyServiceProvider.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Providers/TelescopeServiceProvider.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Rules/Turnstile.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/BudgetValidationService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/DocumentSignatureService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/EligibilityCheckerService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/EligibilityService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/Installer/DatabaseTester.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/Installer/EnvironmentWriter.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/Installer/InstallationService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/LecturerEligibilityService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/MasterDataService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/MediaDownloadService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/NotificationService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/ProposalPdfService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/ProposalService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Services/SintaService.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Support/MediaLibrary/CustomPathGenerator.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/Traits/HasIkuCalculations.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/View/Composers/MenuComposer.php
+/Volumes/WORK/PROJECT PROTOTYPE/sim-lppm-itsnu-main/app/helpers.php
+ ------ ---------------------------------------------------------------- 
+  Line   Livewire/Settings/Tabs/FacultyManager.php                       
+ ------ ---------------------------------------------------------------- 
+  169    Using nullsafe property access "?->name" on left side of ?? is  
+         unnecessary. Use -> instead.                                    
+         🪪  nullsafe.neverNull                                          
+ ------ ---------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------- 
+  Line   Livewire/Settings/Tabs/FacultyRoadmapManager.php                 
+ ------ ----------------------------------------------------------------- 
+  178    Using nullsafe property access "?->title" on left side of ?? is  
+         unnecessary. Use -> instead.                                     
+         🪪  nullsafe.neverNull                                           
+ ------ ----------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------------- 
+  Line   Livewire/Settings/Tabs/InstitutionManager.php                   
+ ------ ---------------------------------------------------------------- 
+  163    Using nullsafe property access "?->name" on left side of ?? is  
+         unnecessary. Use -> instead.                                    
+         🪪  nullsafe.neverNull                                          
+ ------ ---------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------------- 
+  Line   Livewire/Settings/Tabs/StudyProgramManager.php                  
+ ------ ---------------------------------------------------------------- 
+  125    Using nullsafe property access "?->name" on left side of ?? is  
+         unnecessary. Use -> instead.                                    
+         🪪  nullsafe.neverNull                                          
+ ------ ---------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------------------- 
+  Line   Livewire/Users/Create.php                                             
+ ------ ---------------------------------------------------------------------- 
+  134    Call to function is_array() with array will always evaluate to true.  
+         🪪  function.alreadyNarrowedType                                      
+  156    Call to function is_array() with array will always evaluate to true.  
+         🪪  function.alreadyNarrowedType                                      
+ ------ ---------------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------------------- 
+  Line   Livewire/Users/Edit.php                                               
+ ------ ---------------------------------------------------------------------- 
+  123    Call to function is_array() with array will always evaluate to true.  
+         🪪  function.alreadyNarrowedType                                      
+  287    Call to function is_array() with array will always evaluate to true.  
+         🪪  function.alreadyNarrowedType                                      
+ ------ ---------------------------------------------------------------------- 
+
+ [ERROR] Found 8 errors                                                         
+

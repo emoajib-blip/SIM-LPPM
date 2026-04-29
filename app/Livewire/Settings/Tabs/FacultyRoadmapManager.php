@@ -175,7 +175,7 @@ class FacultyRoadmapManager extends Component
         }
 
         $this->deleteItemId = $id;
-        $this->deleteItemName = FacultyRoadmap::find($id)?->title ?? '';
+        $this->deleteItemName = $roadmap->title;
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-faculty-roadmap');
     }
 

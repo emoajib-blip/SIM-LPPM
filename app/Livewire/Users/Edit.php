@@ -120,7 +120,7 @@ class Edit extends Component
      */
     protected function rules(): array
     {
-        $roles = is_array($this->selectedRoles) ? $this->selectedRoles : [];
+        $roles = $this->selectedRoles;
         $isExempt = count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], array_map('strtolower', $roles))) > 0;
 
         return [
@@ -284,7 +284,7 @@ class Edit extends Component
     #[Computed]
     public function isExempt(): bool
     {
-        $roles = is_array($this->selectedRoles) ? $this->selectedRoles : [];
+        $roles = $this->selectedRoles;
 
         return count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], array_map('strtolower', $roles))) > 0;
     }

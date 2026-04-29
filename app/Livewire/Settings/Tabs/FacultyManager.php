@@ -165,8 +165,11 @@ class FacultyManager extends Component
 
     public function confirmDelete(int $id): void
     {
+        $faculty = \App\Models\Faculty::find($id);
+        if (!$faculty) return;
+
         $this->deleteItemId = $id;
-        $this->deleteItemName = \App\Models\Faculty::find($id)?->name ?? '';
+        $this->deleteItemName = $faculty->name;
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-faculty');
     }
 }
