@@ -25,59 +25,39 @@
 
                 @if(config('turnstile.site_key'))
                     <div class="mb-4 d-flex justify-content-center" wire:ignore>
-                        {{-- Container kosong tanpa atribut data untuk menghindari blokir WAF --}}
-                        <div id="turnstile-verification-container"></div>
+                        <div class="cf-turnstile" 
+                            data-sitekey="{{ config('turnstile.site_key') }}" 
+                            data-callback="onTurnstileFinished"></div>
                     </div>
                     
-                    {{-- Input untuk menampung token --}}
-                    <input type="hidden" id="captcha-token-field" wire:model="captcha">
+                    <input type="hidden" id="captcha-token" wire:model="captcha">
                     
                     @error('captcha')
                         <div class="text-danger small text-center mb-3">{{ $message }}</div>
                     @enderror
 
                     <script>
-                        (function() {
-                            function renderTurnstile() {
-                                const container = document.getElementById('turnstile-verification-container');
-                                if (!container || typeof turnstile === 'undefined') {
-                                    setTimeout(renderTurnstile, 500);
-                                    return;
-                                }
-
-                                // Reset container untuk mencegah duplikasi
-                                container.innerHTML = '';
-                                
-                                turnstile.render('#turnstile-verification-container', {
-                                    sitekey: '{{ config('turnstile.site_key') }}',
-                                    callback: function(token) {
-                                        const field = document.getElementById('captcha-token-field');
-                                        if (field) {
-                                            field.value = token;
-                                            field.dispatchEvent(new Event('input'));
-                                        }
-                                    }
-                                });
+                        function onTurnstileFinished(token) {
+                            const input = document.getElementById('captcha-token');
+                            if (input) {
+                                input.value = token;
+                                input.dispatchEvent(new Event('input'));
                             }
-
-                            // Jalankan saat load dan saat navigasi Livewire
-                            if (document.readyState === 'complete') renderTurnstile();
-                            else window.addEventListener('load', renderTurnstile);
-                            document.addEventListener('livewire:navigated', renderTurnstile);
-                        })();
+                        }
                     </script>
                 @endif
 
                 <div class="form-footer">
-                    <button type="submit" class="w-100 btn btn-primary btn-lg fw-bold shadow-sm">
+                    <button type="submit" class="w-100 btn btn-primary btn-lg fw-bold shadow-sm" wire:loading.attr="disabled">
                         <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-                        {{ __('Kirim tautan reset kata sandi') }}
+                        <span wire:loading.remove>{{ __('Kirim tautan reset kata sandi') }}</span>
+                        <span wire:loading>{{ __('Mengirim...') }}</span>
                     </button>
                 </div>
             </form>
         </div>
     </div>
-    <div class="mt-4 text-center text-secondary">
+    <div class="mt-4 text-center text-secondary small">
         {{ __('Atau, kembali ke') }} <a href="{{ route('login') }}" class="fw-bold text-decoration-none" wire:navigate>{{ __('masuk') }}</a>
     </div>
 </div>
