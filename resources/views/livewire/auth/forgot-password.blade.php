@@ -14,9 +14,7 @@
 
                 @if(config('turnstile.site_key'))
                     <div class="mb-3 d-flex justify-content-center" wire:ignore>
-                        <div class="cf-turnstile" 
-                            data-sitekey="{{ config('turnstile.site_key') }}" 
-                            data-callback="captchaSuccess"></div>
+                        <div id="turnstile-container"></div>
                     </div>
                 @endif
 
@@ -33,9 +31,21 @@
 
             @if(config('turnstile.site_key'))
                 <script>
-                    function captchaSuccess(token) {
-                        @this.set('captcha', token);
+                    function initTurnstile() {
+                        if (typeof turnstile !== 'undefined') {
+                            turnstile.render('#turnstile-container', {
+                                sitekey: '{{ config('turnstile.site_key') }}',
+                                callback: function(token) {
+                                    @this.set('captcha', token);
+                                },
+                            });
+                        } else {
+                            setTimeout(initTurnstile, 500);
+                        }
                     }
+                    
+                    document.addEventListener('livewire:navigated', initTurnstile);
+                    document.addEventListener('DOMContentLoaded', initTurnstile);
                 </script>
             @endif
         </div>
