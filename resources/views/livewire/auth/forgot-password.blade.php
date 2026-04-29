@@ -38,14 +38,6 @@
                 </div>
             </form>
 
-            @if(config('turnstile.site_key'))
-                <script>
-                    function onTurnstileFinished(token) {
-                        @this.set('captcha', token);
-                    }
-                </script>
-            @endif
-
             <div class="mt-3 text-secondary text-center">
                 <span>{{ __('Atau, kembali ke') }}</span>
                 <a href="{{ route('login') }}" wire:navigate.hover>{{ __('masuk') }}</a>
