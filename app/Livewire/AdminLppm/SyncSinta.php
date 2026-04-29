@@ -35,17 +35,32 @@ class SyncSinta extends Component
         $this->validate();
 
         try {
-            $extension = $this->file->getClientOriginalExtension();
+            $path = $this->file->getRealPath();
+            $readerType = null;
 
-            // Secara eksplisit tentukan tipe reader berdasarkan ekstensi file
-            // Ini mencegah PhpSpreadsheet salah mengidentifikasi file (misal .xlsx dianggap .xls)
-            $readerType = match (strtolower($extension)) {
-                'xlsx' => \Maatwebsite\Excel\Excel::XLSX,
-                'xls' => \Maatwebsite\Excel\Excel::XLS,
-                'csv' => \Maatwebsite\Excel\Excel::CSV,
-                'ods' => \Maatwebsite\Excel\Excel::ODS,
-                default => null,
-            };
+            try {
+                // Gunakan PhpSpreadsheet IOFactory untuk mengidentifikasi format file secara akurat
+                // Ini sangat penting karena ekspor SINTA seringkali berupa file HTML dengan ekstensi .xls
+                $identifiedType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($path);
+                
+                $readerType = match ($identifiedType) {
+                    'Xlsx' => \Maatwebsite\Excel\Excel::XLSX,
+                    'Xls'  => \Maatwebsite\Excel\Excel::XLS,
+                    'Csv'  => \Maatwebsite\Excel\Excel::CSV,
+                    'Ods'  => \Maatwebsite\Excel\Excel::ODS,
+                    'Html' => \Maatwebsite\Excel\Excel::HTML,
+                    default => null,
+                };
+            } catch (\Exception $e) {
+                // Fallback ke deteksi ekstensi jika identify gagal
+                $extension = $this->file->getClientOriginalExtension();
+                $readerType = match (strtolower($extension)) {
+                    'xlsx' => \Maatwebsite\Excel\Excel::XLSX,
+                    'xls'  => \Maatwebsite\Excel\Excel::XLS,
+                    'csv'  => \Maatwebsite\Excel\Excel::CSV,
+                    default => null,
+                };
+            }
 
             Excel::import(new SintaAuthorImport, $this->file, null, $readerType);
 
