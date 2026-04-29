@@ -35,12 +35,24 @@ class SyncSinta extends Component
         $this->validate();
 
         try {
-            Excel::import(new SintaAuthorImport, $this->file);
+            $extension = $this->file->getClientOriginalExtension();
+
+            // Secara eksplisit tentukan tipe reader berdasarkan ekstensi file
+            // Ini mencegah PhpSpreadsheet salah mengidentifikasi file (misal .xlsx dianggap .xls)
+            $readerType = match (strtolower($extension)) {
+                'xlsx' => \Maatwebsite\Excel\Excel::XLSX,
+                'xls' => \Maatwebsite\Excel\Excel::XLS,
+                'csv' => \Maatwebsite\Excel\Excel::CSV,
+                'ods' => \Maatwebsite\Excel\Excel::ODS,
+                default => null,
+            };
+
+            Excel::import(new SintaAuthorImport, $this->file, null, $readerType);
 
             $this->toastSuccess('Data SINTA berhasil disinkronisasi.');
             session()->flash('success', 'Sinkronisasi selesai.');
 
-            // Redirect or show success state
+            // Redirect atau tampilkan status sukses
             $this->redirect(route('users.index'), navigate: true);
 
         } catch (\Exception $e) {
