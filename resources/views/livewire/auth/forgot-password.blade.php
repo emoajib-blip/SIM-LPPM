@@ -24,10 +24,8 @@
                 </div>
 
                 @if(config('turnstile.site_key'))
-                    <div class="mb-3 d-flex justify-content-center" wire:ignore>
-                        <div class="cf-turnstile" 
-                            data-sitekey="{{ config('turnstile.site_key') }}" 
-                            data-callback="onTurnstileFinished"></div>
+                    <div class="mb-4 d-flex justify-content-center" wire:ignore>
+                        <div class="cf-turnstile" data-sitekey="{{ config('turnstile.site_key') }}" data-callback="onTurnstileFinished"></div>
                     </div>
                 @endif
 
@@ -42,6 +40,14 @@
                 <span>{{ __('Atau, kembali ke') }}</span>
                 <a href="{{ route('login') }}" wire:navigate.hover>{{ __('masuk') }}</a>
             </div>
+
+            @if(config('turnstile.site_key'))
+                <script>
+                    function onTurnstileFinished(token) {
+                        @this.set('captcha', token);
+                    }
+                </script>
+            @endif
         </div>
     </div>
 </div>
