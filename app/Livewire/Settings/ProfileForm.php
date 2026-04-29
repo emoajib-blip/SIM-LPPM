@@ -77,8 +77,8 @@ class ProfileForm extends Component
 
         // Load identity data
         if ($user->identity) {
-            $this->identity_id = $user->identity->identity_id;
-            $this->type = $user->identity->type;
+            $this->identity_id = $user->identity->identity_id ?? '';
+            $this->type = $user->identity->type ?? '';
             $this->sinta_id = $user->identity->sinta_id ?? '';
             $this->scopus_id = $user->identity->scopus_id ?? '';
             $this->google_scholar_id = $user->identity->google_scholar_id ?? '';
@@ -165,7 +165,10 @@ class ProfileForm extends Component
                 Rule::unique(User::class)->ignore($user->id),
             ],
             'identity_id' => ['required', 'string', 'max:255'],
-            'type' => [Auth::user()->hasAnyRole(['superadmin', 'admin lppm']) ? 'nullable' : 'required', 'in:dosen,mahasiswa'],
+            'type' => [
+                Auth::user()->hasAnyRole(['superadmin', 'admin lppm', 'reviewer']) ? 'nullable' : 'required',
+                Rule::in(['dosen', 'mahasiswa', 'reviewer']),
+            ],
             'sinta_id' => ['nullable', 'string', 'max:255'],
             'scopus_id' => ['nullable', 'string', 'max:255'],
             'google_scholar_id' => ['nullable', 'string', 'max:255'],

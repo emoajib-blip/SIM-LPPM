@@ -63,17 +63,17 @@ class StudyProgramRoadmapManager extends Component
         $facultyRoadmapsQuery = FacultyRoadmap::where('is_active', true);
 
         if ($user->hasRole('kaprodi')) {
-            $studyProgramId = $user->identity->study_program_id;
+            $studyProgramId = $user->identity?->study_program_id;
             $query->where('study_program_id', $studyProgramId);
             $studyProgramsQuery->where('id', $studyProgramId);
             
             // Limit faculty roadmap choices to their own faculty
-            $facultyId = $user->identity->faculty_id;
+            $facultyId = $user->identity?->faculty_id;
             if ($facultyId) {
                 $facultyRoadmapsQuery->where('faculty_id', $facultyId);
             }
         } elseif ($user->hasRole('dekan')) {
-            $facultyId = $user->identity->faculty_id;
+            $facultyId = $user->identity?->faculty_id;
             // Dekan can see all study programs under their faculty
             $query->whereHas('studyProgram', function($q) use ($facultyId) {
                 $q->where('faculty_id', $facultyId);
@@ -98,7 +98,7 @@ class StudyProgramRoadmapManager extends Component
         
         $user = auth()->user();
         if ($user->hasRole('kaprodi')) {
-            $this->studyProgramId = $user->identity->study_program_id;
+            $this->studyProgramId = $user->identity?->study_program_id;
         }
 
         $this->modalTitle = 'Tambah Peta Jalan Prodi';
@@ -127,14 +127,14 @@ class StudyProgramRoadmapManager extends Component
 
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $user = auth()->user();
-        if ($user->hasRole('kaprodi') && $this->studyProgramId !== $user->identity->study_program_id) {
+        if ($user->hasRole('kaprodi') && $this->studyProgramId !== $user->identity?->study_program_id) {
             abort(403, 'Unauthorized action.');
         }
 
         if ($this->editingId) {
             $roadmap = StudyProgramRoadmap::findOrFail($this->editingId);
             
-            if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity->study_program_id) {
+            if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity?->study_program_id) {
                 abort(403);
             }
             
@@ -157,7 +157,7 @@ class StudyProgramRoadmapManager extends Component
         $this->abortIfReadOnly();
         
         $user = auth()->user();
-        if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity->study_program_id) {
+        if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity?->study_program_id) {
             abort(403);
         }
 
@@ -196,7 +196,7 @@ class StudyProgramRoadmapManager extends Component
         if (!$roadmap) return;
 
         $user = auth()->user();
-        if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity->study_program_id) {
+        if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity?->study_program_id) {
             abort(403);
         }
 
@@ -213,7 +213,7 @@ class StudyProgramRoadmapManager extends Component
             $roadmap = StudyProgramRoadmap::findOrFail($this->deleteItemId);
             
             $user = auth()->user();
-            if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity->study_program_id) {
+            if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity?->study_program_id) {
                 abort(403);
             }
             

@@ -291,14 +291,11 @@
                     </div>
                 </div>
 
-                @php
-                    $isReviewer = in_array('reviewer', $selectedRoles);
-                @endphp
 
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label" for="institution">
-                            Institusi <span class="{{ $isReviewer ? 'd-none' : 'text-danger' }}">*</span>
+                            Institusi <span class="{{ $this->isExempt ? 'd-none' : 'text-danger' }}">*</span>
                         </label>
                         <div wire:ignore>
                             <select id="institution" class="form-select @error('institution_id') is-invalid @enderror"
@@ -323,7 +320,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label" for="faculty">
-                            Fakultas <span class="{{ $isReviewer ? 'd-none' : 'text-danger' }}">*</span>
+                            Fakultas <span class="{{ $this->isExempt ? 'd-none' : 'text-danger' }}">*</span>
                         </label>
                         <select id="faculty" class="form-select @error('faculty_id') is-invalid @enderror"
                             wire:model.live="faculty_id" @disabled(empty($facultyOptions))>
@@ -341,7 +338,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label" for="study-program">
-                            Program Studi <span class="{{ $isReviewer ? 'd-none' : 'text-danger' }}">*</span>
+                            Program Studi <span class="{{ $this->isExempt ? 'd-none' : 'text-danger' }}">*</span>
                         </label>
                         <select id="study-program"
                             class="form-select @error('study_program_id') is-invalid @enderror"

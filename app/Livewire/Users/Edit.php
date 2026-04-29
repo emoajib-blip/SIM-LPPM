@@ -91,7 +91,7 @@ class Edit extends Component
 
         // Load identity data
         if ($user->identity) {
-            $this->identity_id = $user->identity->identity_id;
+            $this->identity_id = $user->identity->identity_id ?? '';
             $this->address = $user->identity->address ?? '';
             $this->birthdate = $user->identity->birthdate?->format('Y-m-d');
             $this->birthplace = $user->identity->birthplace ?? '';
@@ -120,7 +120,8 @@ class Edit extends Component
      */
     protected function rules(): array
     {
-        $isExempt = count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], $this->selectedRoles)) > 0;
+        $roles = is_array($this->selectedRoles) ? $this->selectedRoles : [];
+        $isExempt = count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], array_map('strtolower', $roles))) > 0;
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -129,7 +130,12 @@ class Edit extends Component
             'selectedRoles' => ['nullable', 'array'],
             'selectedRoles.*' => ['string', Rule::exists('roles', 'name')],
             'emailVerified' => ['boolean'],
-            'identity_id' => ['required', 'string', 'max:255', Rule::unique('identities', 'identity_id')->ignore($this->user->identity?->id)],
+            'identity_id' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('identities', 'identity_id')->ignore($this->userId, 'user_id')
+            ],
             'address' => ['nullable', 'string', 'max:255'],
             'birthdate' => ['nullable', 'date', 'before:today'],
             'birthplace' => ['nullable', 'string', 'max:255'],
@@ -275,6 +281,14 @@ class Edit extends Component
      * Render the component view.
      * All public properties and computed properties are automatically available in the view.
      */
+    #[Computed]
+    public function isExempt(): bool
+    {
+        $roles = is_array($this->selectedRoles) ? $this->selectedRoles : [];
+
+        return count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], array_map('strtolower', $roles))) > 0;
+    }
+
     public function render(): View
     {
         return view('livewire.users.edit');
@@ -285,6 +299,10 @@ class Edit extends Component
      */
     public function getUserProperty(): User
     {
+        if (empty($this->userId)) {
+            return new User();
+        }
+
         return User::query()
             ->with(['roles', 'identity'])
             ->findOrFail($this->userId);

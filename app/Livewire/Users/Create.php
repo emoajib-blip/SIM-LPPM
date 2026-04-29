@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
@@ -127,6 +128,14 @@ class Create extends Component
     /**
      * Render the component view.
      */
+    #[Computed]
+    public function isExempt(): bool
+    {
+        $roles = is_array($this->selectedRoles) ? $this->selectedRoles : [];
+
+        return count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], array_map('strtolower', $roles))) > 0;
+    }
+
     public function render(): View
     {
         return view('livewire.users.create', [
@@ -144,7 +153,8 @@ class Create extends Component
      */
     protected function rules(): array
     {
-        $isExempt = count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], $this->selectedRoles)) > 0;
+        $roles = is_array($this->selectedRoles) ? $this->selectedRoles : [];
+        $isExempt = count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], array_map('strtolower', $roles))) > 0;
         $isInternal = $this->institution_id == '1'; // Assuming 1 is ITSNU
 
         return [

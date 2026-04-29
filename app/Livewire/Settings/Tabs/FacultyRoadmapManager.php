@@ -56,12 +56,12 @@ class FacultyRoadmapManager extends Component
 
         // RBAC: Dekan hanya melihat roadmap fakultasnya sendiri
         if ($user->hasRole('dekan')) {
-            $query->where('faculty_id', $user->identity->faculty_id);
+            $query->where('faculty_id', $user->identity?->faculty_id);
         }
 
         $facultiesQuery = Faculty::query();
         if ($user->hasRole('dekan')) {
-            $facultiesQuery->where('id', $user->identity->faculty_id);
+            $facultiesQuery->where('id', $user->identity?->faculty_id);
         }
 
         return view('livewire.settings.tabs.faculty-roadmap-manager', [
@@ -77,7 +77,7 @@ class FacultyRoadmapManager extends Component
         
         $user = auth()->user();
         if ($user->hasRole('dekan')) {
-            $this->facultyId = $user->identity->faculty_id;
+            $this->facultyId = $user->identity?->faculty_id;
         }
 
         $this->modalTitle = 'Tambah Peta Jalan Fakultas';
@@ -105,7 +105,7 @@ class FacultyRoadmapManager extends Component
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Ensure Dekan cannot spoof faculty_id
         $user = auth()->user();
-        if ($user->hasRole('dekan') && $this->facultyId !== $user->identity->faculty_id) {
+        if ($user->hasRole('dekan') && $this->facultyId !== $user->identity?->faculty_id) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -113,7 +113,7 @@ class FacultyRoadmapManager extends Component
             $roadmap = FacultyRoadmap::findOrFail($this->editingId);
             
             // Re-verify ownership for Dekan on update
-            if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity->faculty_id) {
+            if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity?->faculty_id) {
                 abort(403);
             }
             
@@ -134,7 +134,7 @@ class FacultyRoadmapManager extends Component
     public function edit(FacultyRoadmap $roadmap): void
     {
         $user = auth()->user();
-        if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity->faculty_id) {
+        if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity?->faculty_id) {
             abort(403);
         }
 
@@ -170,12 +170,12 @@ class FacultyRoadmapManager extends Component
         if (!$roadmap) return;
 
         $user = auth()->user();
-        if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity->faculty_id) {
+        if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity?->faculty_id) {
             abort(403);
         }
 
         $this->deleteItemId = $id;
-        $this->deleteItemName = $roadmap->title ?? '';
+        $this->deleteItemName = FacultyRoadmap::find($id)?->title ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-faculty-roadmap');
     }
 
@@ -185,7 +185,7 @@ class FacultyRoadmapManager extends Component
             $roadmap = FacultyRoadmap::findOrFail($this->deleteItemId);
             
             $user = auth()->user();
-            if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity->faculty_id) {
+            if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity?->faculty_id) {
                 abort(403);
             }
             
