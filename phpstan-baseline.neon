@@ -1,24 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Method App\\Actions\\Proposal\\IdentityEligibilityAction\:\:execute\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Actions/Proposal/IdentityEligibilityAction.php
-
-		-
-			message: '#^Method App\\Actions\\Proposal\\ValidateTeamCompositionAction\:\:execute\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Actions/Proposal/ValidateTeamCompositionAction.php
-
-		-
-			message: '#^Method App\\Actions\\Reports\\GetPartnerReportQuery\:\:handle\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Actions/Reports/GetPartnerReportQuery.php
-
-		-
 			message: '#^Method App\\Actions\\Scheme\\UpdateSchemeEligibilityAction\:\:execute\(\) has parameter \$rules with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -29,30 +11,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: app/Actions/Scheme/UpdateSchemeEligibilityAction.php
-
-		-
-			message: '#^Method App\\Console\\Commands\\BenchmarkNotifications\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/BenchmarkNotifications.php
-
-		-
-			message: '#^Method App\\Console\\Commands\\CleanupDummyData\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/CleanupDummyData.php
-
-		-
-			message: '#^Method App\\Console\\Commands\\ImportSintaAuthor\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/ImportSintaAuthor.php
-
-		-
-			message: '#^Method App\\Console\\Commands\\ImportUsers\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/ImportUsers.php
 
 		-
 			message: '#^Method App\\Console\\Commands\\InstallCommand\:\:buildExtensionPackages\(\) has parameter \$extensions with no value type specified in iterable type array\.$#'
@@ -319,68 +277,8 @@ parameters:
 			path: app/Console/Commands/SendWeeklySummaries.php
 
 		-
-			message: '#^Method App\\Enums\\ProposalStatus\:\:filterOptions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Enums/ProposalStatus.php
-
-		-
-			message: '#^Method App\\Enums\\ProposalStatus\:\:values\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Enums/ProposalStatus.php
-
-		-
-			message: '#^Method App\\Enums\\ReportStatus\:\:filterOptions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Enums/ReportStatus.php
-
-		-
-			message: '#^Method App\\Enums\\ReviewStatus\:\:actionRequired\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Enums/ReviewStatus.php
-
-		-
-			message: '#^Method App\\Enums\\ReviewStatus\:\:filterOptions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Enums/ReviewStatus.php
-
-		-
-			message: '#^Method App\\Enums\\ReviewStatus\:\:values\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Enums/ReviewStatus.php
-
-		-
-			message: '#^Class App\\Exports\\ArchiveDataExport implements generic interface Maatwebsite\\Excel\\Concerns\\WithMapping but does not specify its types\: RowType$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Exports/ArchiveDataExport.php
-
-		-
 			message: '#^Method App\\Exports\\ArchiveDataExport\:\:headings\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Exports/ArchiveDataExport.php
-
-		-
-			message: '#^Method App\\Exports\\ArchiveDataExport\:\:map\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Exports/ArchiveDataExport.php
-
-		-
-			message: '#^Method App\\Exports\\ArchiveDataExport\:\:query\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Exports/ArchiveDataExport.php
-
-		-
-			message: '#^Method App\\Exports\\ArchiveDataExport\:\:styles\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Exports/ArchiveDataExport.php
 
@@ -559,26 +457,8 @@ parameters:
 			path: app/Exports/PartnerCollaborationExport.php
 
 		-
-			message: '#^Class App\\Exports\\ResearchProposalExport implements generic interface Maatwebsite\\Excel\\Concerns\\WithMapping but does not specify its types\: RowType$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Exports/ResearchProposalExport.php
-
-		-
 			message: '#^Method App\\Exports\\ResearchProposalExport\:\:headings\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Exports/ResearchProposalExport.php
-
-		-
-			message: '#^Method App\\Exports\\ResearchProposalExport\:\:map\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Exports/ResearchProposalExport.php
-
-		-
-			message: '#^Method App\\Exports\\ResearchProposalExport\:\:query\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Exports/ResearchProposalExport.php
 
@@ -1237,12 +1117,6 @@ parameters:
 			path: app/Livewire/Abstracts/ProposalCreate.php
 
 		-
-			message: '#^Method App\\Livewire\\Abstracts\\ProposalCreate\:\:nationalPriorities\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Abstracts/ProposalCreate.php
-
-		-
 			message: '#^Method App\\Livewire\\Abstracts\\ProposalCreate\:\:onTktCalculated\(\) has parameter \$indicatorScores with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1310,12 +1184,6 @@ parameters:
 
 		-
 			message: '#^Method App\\Livewire\\Abstracts\\ProposalCreate\:\:tktTypes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Abstracts/ProposalCreate.php
-
-		-
-			message: '#^Method App\\Livewire\\Abstracts\\ProposalCreate\:\:topics\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/Livewire/Abstracts/ProposalCreate.php
@@ -6955,6 +6823,12 @@ parameters:
 			path: app/Models/Faculty.php
 
 		-
+			message: '#^Class App\\Models\\FacultyRoadmap uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/FacultyRoadmap.php
+
+		-
 			message: '#^Method App\\Models\\FocusArea\:\:proposals\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
 			identifier: missingType.generics
 			count: 1
@@ -7221,30 +7095,6 @@ parameters:
 		-
 			message: '#^Class App\\Models\\Proposal has PHPDoc tag @property for property \$student_members with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Models/Proposal.php
-
-		-
-			message: '#^Method App\\Models\\Proposal\:\:getPendingReviewers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/Proposal.php
-
-		-
-			message: '#^Method App\\Models\\Proposal\:\:getPendingTeamMembers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/Proposal.php
-
-		-
-			message: '#^Method App\\Models\\Proposal\:\:pendingReviewers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/Proposal.php
-
-		-
-			message: '#^Method App\\Models\\Proposal\:\:pendingTeamMembers\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Models/Proposal.php
 
@@ -7853,6 +7703,12 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: app/Models/StudyProgram.php
+
+		-
+			message: '#^Class App\\Models\\StudyProgramRoadmap uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/StudyProgramRoadmap.php
 
 		-
 			message: '#^Class App\\Models\\Theme uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'

@@ -30,16 +30,31 @@ class StudyProgramRoadmap extends Model
         'is_active' => 'boolean',
     ];
 
+    /**
+     * Get the study program that owns the roadmap.
+     *
+     * @return BelongsTo<StudyProgram, $this>
+     */
     public function studyProgram(): BelongsTo
     {
         return $this->belongsTo(StudyProgram::class);
     }
 
+    /**
+     * Get the faculty roadmap this roadmap belongs to.
+     *
+     * @return BelongsTo<FacultyRoadmap, $this>
+     */
     public function facultyRoadmap(): BelongsTo
     {
         return $this->belongsTo(FacultyRoadmap::class);
     }
 
+    /**
+     * Get the proposals associated with the roadmap.
+     *
+     * @return HasMany<Proposal, $this>
+     */
     public function proposals(): HasMany
     {
         return $this->hasMany(Proposal::class);

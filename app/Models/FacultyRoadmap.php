@@ -29,11 +29,21 @@ class FacultyRoadmap extends Model
         'is_active' => 'boolean',
     ];
 
+    /**
+     * Get the faculty that owns the roadmap.
+     *
+     * @return BelongsTo<Faculty, $this>
+     */
     public function faculty(): BelongsTo
     {
         return $this->belongsTo(Faculty::class);
     }
 
+    /**
+     * Get the study program roadmaps for the faculty roadmap.
+     *
+     * @return HasMany<StudyProgramRoadmap, $this>
+     */
     public function studyProgramRoadmaps(): HasMany
     {
         return $this->hasMany(StudyProgramRoadmap::class);

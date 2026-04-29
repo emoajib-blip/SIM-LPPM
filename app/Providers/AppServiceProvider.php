@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -48,6 +49,9 @@ class AppServiceProvider extends ServiceProvider
             if (! in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1'])) {
                 URL::forceRootUrl(config('app.url'));
                 URL::forceScheme('https');
+
+                // Force secure cookies in production/HTTPS
+                config(['session.secure' => true]);
             }
         }
 
@@ -60,6 +64,19 @@ class AppServiceProvider extends ServiceProvider
             // Register Policies
             \Illuminate\Support\Facades\Gate::policy(\App\Models\Proposal::class, \App\Policies\ProposalPolicy::class);
             \Illuminate\Support\Facades\Gate::policy(\Spatie\MediaLibrary\MediaCollections\Models\Media::class, \App\Policies\MediaPolicy::class);
+
+            // Global Password Policy
+            Password::defaults(function () {
+                $rule = Password::min(12)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols();
+
+                return $this->app->isProduction()
+                    ? $rule->uncompromised()
+                    : $rule;
+            });
 
             // Spatie: Implicitly grant "superadmin" role all permissions
             // This works in the app by using gate-related functions like auth()->user->can() and @can()

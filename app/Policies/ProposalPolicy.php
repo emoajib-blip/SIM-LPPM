@@ -77,16 +77,17 @@ class ProposalPolicy
                 return in_array($proposal->status, [
                     ProposalStatus::DRAFT,
                     ProposalStatus::REVISION_NEEDED,
-                    ProposalStatus::NEED_ASSIGNMENT
+                    ProposalStatus::NEED_ASSIGNMENT,
                 ]);
             }
+
             return false;
         }
 
         return in_array($proposal->status, [
             ProposalStatus::DRAFT,
             ProposalStatus::REVISION_NEEDED,
-            ProposalStatus::NEED_ASSIGNMENT
+            ProposalStatus::NEED_ASSIGNMENT,
         ]);
     }
 
@@ -112,11 +113,12 @@ class ProposalPolicy
      */
     public function approveAsDekan(User $user, Proposal $proposal): bool
     {
-        if (!$user->activeHasRole('dekan')) {
+        if (! $user->activeHasRole('dekan')) {
             return false;
         }
 
         $submitterFacultyId = $proposal->submitter->identity?->faculty_id;
+
         return $user->identity?->faculty_id === $submitterFacultyId && $proposal->status === ProposalStatus::SUBMITTED;
     }
 
@@ -125,7 +127,7 @@ class ProposalPolicy
      */
     public function review(User $user, Proposal $proposal): bool
     {
-        return $proposal->reviewers()->where('user_id', $user->id)->exists() 
+        return $proposal->reviewers()->where('user_id', $user->id)->exists()
             && in_array($proposal->status, [ProposalStatus::UNDER_REVIEW, ProposalStatus::REVIEWED]);
     }
 }

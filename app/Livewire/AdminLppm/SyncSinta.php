@@ -42,12 +42,12 @@ class SyncSinta extends Component
                 // Gunakan PhpSpreadsheet IOFactory untuk mengidentifikasi format file secara akurat
                 // Ini sangat penting karena ekspor SINTA seringkali berupa file HTML dengan ekstensi .xls
                 $identifiedType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($path);
-                
+
                 $readerType = match ($identifiedType) {
                     'Xlsx' => \Maatwebsite\Excel\Excel::XLSX,
-                    'Xls'  => \Maatwebsite\Excel\Excel::XLS,
-                    'Csv'  => \Maatwebsite\Excel\Excel::CSV,
-                    'Ods'  => \Maatwebsite\Excel\Excel::ODS,
+                    'Xls' => \Maatwebsite\Excel\Excel::XLS,
+                    'Csv' => \Maatwebsite\Excel\Excel::CSV,
+                    'Ods' => \Maatwebsite\Excel\Excel::ODS,
                     'Html' => \Maatwebsite\Excel\Excel::HTML,
                     default => null,
                 };
@@ -56,8 +56,8 @@ class SyncSinta extends Component
                 $extension = $this->file->getClientOriginalExtension();
                 $readerType = match (strtolower($extension)) {
                     'xlsx' => \Maatwebsite\Excel\Excel::XLSX,
-                    'xls'  => \Maatwebsite\Excel\Excel::XLS,
-                    'csv'  => \Maatwebsite\Excel\Excel::CSV,
+                    'xls' => \Maatwebsite\Excel\Excel::XLS,
+                    'csv' => \Maatwebsite\Excel\Excel::CSV,
                     default => null,
                 };
             }

@@ -46,10 +46,13 @@ class ProposalValidation extends Component
 
     /**
      * Apply study program scope to a query (only proposals from Kaprodi's study program).
+     *
+     * @param \Illuminate\Database\Eloquent\Builder<Proposal> $query
+     * @return \Illuminate\Database\Eloquent\Builder<Proposal>
      */
-    protected function applyStudyProgramScope($query)
+    protected function applyStudyProgramScope(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
-        $studyProgramId = $this->kaprodiStudyProgramId;
+        $studyProgramId = $this->kaprodiStudyProgramId();
 
         if (! $studyProgramId) {
             $query->whereRaw('1 = 0');
@@ -62,8 +65,13 @@ class ProposalValidation extends Component
         return $query;
     }
 
+    /**
+     * Get proposals for validation.
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, Proposal>
+     */
     #[Computed]
-    public function proposals()
+    public function proposals(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $query = Proposal::query()
             ->where('status', ProposalStatus::SUBMITTED);
@@ -89,10 +97,15 @@ class ProposalValidation extends Component
             ->paginate(15);
     }
 
+    /**
+     * Get status stats.
+     *
+     * @return array{all: int, unvalidated: int, validated: int}
+     */
     #[Computed]
     public function statusStats(): array
     {
-        $studyProgramId = $this->kaprodiStudyProgramId;
+        $studyProgramId = $this->kaprodiStudyProgramId();
 
         $baseQuery = Proposal::where('status', ProposalStatus::SUBMITTED);
 
@@ -118,14 +131,14 @@ class ProposalValidation extends Component
         return Auth::user()?->identity?->studyProgram?->name;
     }
 
-    public function validateProposal(string $proposalId)
+    public function validateProposal(string $proposalId): void
     {
         $proposal = Proposal::where('id', $proposalId)
             ->where('status', ProposalStatus::SUBMITTED)
             ->firstOrFail();
 
         // Ensure Kaprodi is validating their own study program
-        if ($proposal->submitter->identity->study_program_id !== $this->kaprodiStudyProgramId) {
+        if ($proposal->submitter->identity->study_program_id !== $this->kaprodiStudyProgramId()) {
             abort(403, 'Unauthorized action.');
         }
 

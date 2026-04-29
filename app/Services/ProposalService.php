@@ -30,7 +30,7 @@ class ProposalService
     public function updateProposal(Proposal $proposal, ProposalForm $form, bool $validate = true): void
     {
         \Illuminate\Support\Facades\Gate::authorize('update', $proposal);
-        
+
         $form->proposal = $proposal;
         $form->update($validate);
     }

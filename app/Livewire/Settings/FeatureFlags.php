@@ -11,27 +11,27 @@ class FeatureFlags extends Component
 
     public bool $featureKaprodiValidation = false;
 
-    public function mount()
+    public function mount(): void
     {
         $this->featureRoadmapActive = Setting::get('feature_roadmap_active', false);
         $this->featureKaprodiValidation = Setting::get('feature_kaprodi_validation', false);
     }
 
-    public function updated($property, $value)
+    public function updated(string $property, mixed $value): void
     {
         if ($property === 'featureRoadmapActive') {
-            Setting::set('feature_roadmap_active', clone $value);
+            Setting::set('feature_roadmap_active', $value, 'boolean');
         }
 
         if ($property === 'featureKaprodiValidation') {
-            Setting::set('feature_kaprodi_validation', clone $value);
+            Setting::set('feature_kaprodi_validation', $value, 'boolean');
         }
 
         // We dispatch a browser event or notify the user
         $this->dispatch('settings-updated', message: 'Feature Flags berhasil diperbarui.');
     }
 
-    public function render()
+    public function render(): \Illuminate\View\View
     {
         return view('livewire.settings.feature-flags');
     }

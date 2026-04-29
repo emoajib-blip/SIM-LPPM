@@ -119,7 +119,7 @@ abstract class ProposalShow extends Component
         }
 
         // Dosen: enforce submission schedule window
-        return $this->isScheduleOpen;
+        return $this->isScheduleOpen();
     }
 
     /**

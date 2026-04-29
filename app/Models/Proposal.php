@@ -459,8 +459,10 @@ class Proposal extends Model
 
     /**
      * Get pending team member invitations.
+     *
+     * @return BelongsToMany<User, $this>
      */
-    public function pendingTeamMembers()
+    public function pendingTeamMembers(): BelongsToMany
     {
         return $this->teamMembers()
             ->wherePivot('status', 'pending');
@@ -468,8 +470,10 @@ class Proposal extends Model
 
     /**
      * Get pending reviewer assignments.
+     *
+     * @return HasMany<ProposalReviewer, $this>
      */
-    public function pendingReviewers()
+    public function pendingReviewers(): HasMany
     {
         return $this->reviewers()
             ->whereIn('status', [
@@ -480,8 +484,10 @@ class Proposal extends Model
 
     /**
      * Get all pending team members (anggota who haven't accepted).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, User>
      */
-    public function getPendingTeamMembers()
+    public function getPendingTeamMembers(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->teamMembers()
             ->wherePivot('status', '!=', 'accepted')
@@ -490,8 +496,10 @@ class Proposal extends Model
 
     /**
      * Get all pending reviewers (who haven't completed their review).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, ProposalReviewer>
      */
-    public function getPendingReviewers()
+    public function getPendingReviewers(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->reviewers()
             ->where('status', '!=', \App\Enums\ReviewStatus::COMPLETED)
@@ -534,6 +542,8 @@ class Proposal extends Model
 
     /**
      * Get the study program roadmap this proposal aligns with.
+     *
+     * @return BelongsTo<StudyProgramRoadmap, $this>
      */
     public function studyProgramRoadmap(): BelongsTo
     {

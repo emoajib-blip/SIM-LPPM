@@ -389,8 +389,13 @@ abstract class ProposalCreate extends Component
         return app(MasterDataService::class)->themes($this->form->focus_area_id ? (int) $this->form->focus_area_id : null, $this->getProposalType());
     }
 
+    /**
+     * Get available topics.
+     *
+     * @return \Illuminate\Support\Collection<int, \App\Models\Topic>
+     */
     #[Computed]
-    public function topics()
+    public function topics(): \Illuminate\Support\Collection
     {
         return app(MasterDataService::class)->topics(
             $this->form->focus_area_id ? (int) $this->form->focus_area_id : null,
@@ -399,14 +404,24 @@ abstract class ProposalCreate extends Component
         );
     }
 
+    /**
+     * Get national priorities.
+     *
+     * @return \Illuminate\Support\Collection<int, \App\Models\NationalPriority>
+     */
     #[Computed]
-    public function nationalPriorities()
+    public function nationalPriorities(): \Illuminate\Support\Collection
     {
         return app(MasterDataService::class)->nationalPriorities();
     }
 
+    /**
+     * Get study program roadmaps.
+     *
+     * @return \Illuminate\Support\Collection<int, \App\Models\StudyProgramRoadmap>
+     */
     #[Computed]
-    public function studyProgramRoadmaps()
+    public function studyProgramRoadmaps(): \Illuminate\Support\Collection
     {
         $user = Auth::user();
         if ($user && $user->identity && $user->identity->study_program_id) {
