@@ -14,9 +14,9 @@ return [
     */
 
     'reset' => 'Kata sandi Anda telah direset.',
-    'sent' => 'Kami telah mengirim email link reset kata sandi Anda.',
+    'sent' => 'Jika alamat email tersebut terdaftar di sistem kami, link reset kata sandi akan segera dikirimkan.',
     'throttled' => 'Harap tunggu sebelum mencoba lagi.',
     'token' => 'Token reset kata sandi ini tidak valid.',
-    'user' => 'Kami tidak dapat menemukan pengguna dengan alamat email tersebut.',
+    'user' => 'Jika alamat email tersebut terdaftar di sistem kami, link reset kata sandi akan segera dikirimkan.',
 
 ];
