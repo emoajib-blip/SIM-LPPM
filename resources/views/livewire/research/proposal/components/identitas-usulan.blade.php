@@ -78,6 +78,15 @@
                     <p class="text-reset">{{ $proposal->nationalPriority?->name ?? '—' }}</p>
                 </div>
             </div>
+
+            @if(\App\Models\Setting::get('feature_roadmap_active', false))
+                <div class="mb-3 row">
+                    <div class="col-md-12">
+                        <label class="form-label"><x-lucide-git-merge class="me-2 icon" />Peta Jalan / Pohon Penelitian Prodi</label>
+                        <p class="text-reset">{{ $proposal->studyProgramRoadmap?->title ?? '—' }}</p>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 

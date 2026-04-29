@@ -32,6 +32,7 @@ class FacultyRoadmapManager extends Component
     #[Validate('nullable|string')]
     public string $strategicThemesInput = '';
 
+    /** @var array<int, int|string> */
     #[Validate('nullable|array')]
     public array $focusAreaIds = [];
 
@@ -46,7 +47,7 @@ class FacultyRoadmapManager extends Component
     public ?int $deleteItemId = null;
     public string $deleteItemName = '';
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View
     {
         $user = auth()->user();
         $query = FacultyRoadmap::with('faculty')->latest();
@@ -138,8 +139,8 @@ class FacultyRoadmapManager extends Component
         $this->editingId = $roadmap->id;
         $this->facultyId = $roadmap->faculty_id;
         $this->title = $roadmap->title;
-        $this->periodStart = $roadmap->period_start;
-        $this->periodEnd = $roadmap->period_end;
+        $this->periodStart = $roadmap->period_start !== null ? (int) $roadmap->period_start : null;
+        $this->periodEnd = $roadmap->period_end !== null ? (int) $roadmap->period_end : null;
         $this->vision = $roadmap->vision ?? '';
         
         // Convert JSON array back to textarea string

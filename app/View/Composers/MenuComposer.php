@@ -81,11 +81,17 @@ class MenuComposer
                     ],
                 ],
             ],
-            // Kaprodi menu
             [
                 'title' => 'Persetujuan Kaprodi',
                 'icon' => 'clipboard-check',
                 'route' => 'kaprodi.proposals.index',
+                'roles' => ['kaprodi'],
+            ],
+            [
+                'title' => 'Kelola Peta Jalan',
+                'icon' => 'map-2',
+                'route' => 'settings.master-data',
+                'params' => ['group' => 'academic-structure', 'tab' => 'study-program-roadmaps'],
                 'roles' => ['kaprodi'],
             ],
             // Dekan menu
@@ -99,6 +105,13 @@ class MenuComposer
                 'title' => 'Persetujuan Laporan',
                 'icon' => 'report-analytics',
                 'route' => 'dekan.reports.index',
+                'roles' => ['dekan'],
+            ],
+            [
+                'title' => 'Kelola Peta Jalan',
+                'icon' => 'map-2',
+                'route' => 'settings.master-data',
+                'params' => ['group' => 'academic-structure', 'tab' => 'faculty-roadmaps'],
                 'roles' => ['dekan'],
             ],
             [

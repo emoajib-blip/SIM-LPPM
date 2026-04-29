@@ -52,7 +52,7 @@ class StudyProgramRoadmapManager extends Component
     public ?int $deleteItemId = null;
     public string $deleteItemName = '';
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View
     {
         $user = auth()->user();
         $query = StudyProgramRoadmap::with(['studyProgram', 'facultyRoadmap'])->latest();
@@ -163,8 +163,8 @@ class StudyProgramRoadmapManager extends Component
         $this->studyProgramId = $roadmap->study_program_id;
         $this->facultyRoadmapId = $roadmap->faculty_roadmap_id;
         $this->title = $roadmap->title;
-        $this->periodStart = $roadmap->period_start;
-        $this->periodEnd = $roadmap->period_end;
+        $this->periodStart = $roadmap->period_start !== null ? (int) $roadmap->period_start : null;
+        $this->periodEnd = $roadmap->period_end !== null ? (int) $roadmap->period_end : null;
         $this->vision = $roadmap->vision ?? '';
         
         $this->researchTreeInput = $roadmap->research_tree ? implode("\n", $roadmap->research_tree) : '';

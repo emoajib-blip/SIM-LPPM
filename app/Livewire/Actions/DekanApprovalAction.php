@@ -52,6 +52,15 @@ class DekanApprovalAction
             ];
         }
 
+        // Validate roadmap validation by Kaprodi if feature is active
+        $isRoadmapFeatureActive = \App\Models\Setting::get('feature_roadmap_active', false);
+        if ($isRoadmapFeatureActive && ! $proposal->is_roadmap_validated_by_kaprodi) {
+            return [
+                'success' => false,
+                'message' => 'Proposal belum divalidasi kesesuaian peta jalannya oleh Kaprodi.',
+            ];
+        }
+
         try {
             $newStatus = $decision === 'approved'
                 ? ProposalStatus::APPROVED

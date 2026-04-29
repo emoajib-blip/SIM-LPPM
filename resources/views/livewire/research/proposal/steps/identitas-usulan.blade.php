@@ -163,7 +163,7 @@
                                 wire:model="form.study_program_roadmap_id" x-data="tomSelect" placeholder="Pilih Pohon Penelitian Prodi" required>
                                 <option value="">-- Pilih Pohon Penelitian Prodi --</option>
                                 @foreach ($this->studyProgramRoadmaps as $roadmap)
-                                    <option value="{{ $roadmap->id }}">{{ $roadmap->name }}</option>
+                                    <option value="{{ $roadmap->id }}">{{ $roadmap->title }}</option>
                                 @endforeach
                             </select>
                         </div>

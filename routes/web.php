@@ -234,8 +234,11 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(['permission:module_pengaturan'])
         ->name('settings.appearance');
 
-    Route::middleware(['role:admin lppm|superadmin'])->group(function () {
+    Route::middleware(['role:admin lppm|superadmin|dekan|kaprodi'])->group(function () {
         Route::get('settings/master-data', MasterData::class)->name('settings.master-data');
+    });
+
+    Route::middleware(['role:admin lppm|superadmin'])->group(function () {
         Route::get('settings/proposal-schedule', \App\Livewire\Settings\ProposalSchedule::class)->name('settings.proposal-schedule');
         Route::get('settings/proposal-template', \App\Livewire\Settings\ProposalTemplate::class)->name('settings.proposal-template');
         Route::get('admin/eligibility-dashboard', \App\Livewire\Admin\EligibilityDashboard::class)->name('admin.eligibility-dashboard');

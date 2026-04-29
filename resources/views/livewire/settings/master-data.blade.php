@@ -90,31 +90,39 @@
                     @if ($group === 'academic-structure')
                         <h4 class="subheader">Struktur Akademik</h4>
                         <div class="list-group list-group-transparent">
-                            <button wire:click="setActiveTab('study-programs')"
-                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'study-programs' ? 'active' : '' }}">
-                                <x-lucide-graduation-cap class="icon me-2" />
-                                Program Studi
-                            </button>
-                            <button wire:click="setActiveTab('faculties')"
-                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'faculties' ? 'active' : '' }}">
-                                <x-lucide-building class="icon me-2" />
-                                Fakultas
-                            </button>
-                            <button wire:click="setActiveTab('institutions')"
-                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'institutions' ? 'active' : '' }}">
-                                <x-lucide-building-2 class="icon me-2" />
-                                Institusi
-                            </button>
-                            <button wire:click="setActiveTab('faculty-roadmaps')"
-                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'faculty-roadmaps' ? 'active' : '' }}">
-                                <x-lucide-map class="icon me-2" />
-                                Peta Jalan Fakultas
-                            </button>
-                            <button wire:click="setActiveTab('study-program-roadmaps')"
-                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'study-program-roadmaps' ? 'active' : '' }}">
-                                <x-lucide-git-merge class="icon me-2" />
-                                Peta Jalan Prodi
-                            </button>
+                            @if(active_has_any_role(['admin lppm', 'superadmin']))
+                                <button wire:click="setActiveTab('study-programs')"
+                                    class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'study-programs' ? 'active' : '' }}">
+                                    <x-lucide-graduation-cap class="icon me-2" />
+                                    Program Studi
+                                </button>
+                                <button wire:click="setActiveTab('faculties')"
+                                    class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'faculties' ? 'active' : '' }}">
+                                    <x-lucide-building class="icon me-2" />
+                                    Fakultas
+                                </button>
+                                <button wire:click="setActiveTab('institutions')"
+                                    class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'institutions' ? 'active' : '' }}">
+                                    <x-lucide-building-2 class="icon me-2" />
+                                    Institusi
+                                </button>
+                            @endif
+
+                            @if(active_has_any_role(['admin lppm', 'superadmin', 'dekan']))
+                                <button wire:click="setActiveTab('faculty-roadmaps')"
+                                    class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'faculty-roadmaps' ? 'active' : '' }}">
+                                    <x-lucide-map class="icon me-2" />
+                                    Peta Jalan Fakultas
+                                </button>
+                            @endif
+
+                            @if(active_has_any_role(['admin lppm', 'superadmin', 'dekan', 'kaprodi']))
+                                <button wire:click="setActiveTab('study-program-roadmaps')"
+                                    class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'study-program-roadmaps' ? 'active' : '' }}">
+                                    <x-lucide-git-merge class="icon me-2" />
+                                    Peta Jalan Prodi
+                                </button>
+                            @endif
                         </div>
                     @endif
 

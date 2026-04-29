@@ -178,6 +178,21 @@
                                 <x-tabler.badge :color="$proposal->status->color()" class="fw-normal">
                                     {{ $proposal->status->label() }}
                                 </x-tabler.badge>
+                                @if(\App\Models\Setting::get('feature_roadmap_active', false))
+                                    <div class="mt-1">
+                                        @if($proposal->is_roadmap_validated_by_kaprodi)
+                                            <span class="badge badge-outline text-green d-inline-flex align-items-center">
+                                                <x-lucide-check-circle-2 class="icon icon-sm me-1" />
+                                                Roadmap OK
+                                            </span>
+                                        @else
+                                            <span class="badge badge-outline text-warning d-inline-flex align-items-center" title="Menunggu validasi Kaprodi">
+                                                <x-lucide-alert-circle class="icon icon-sm me-1" />
+                                                Cek Roadmap
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
                                 <div class="mt-1">
                                     <small class="text-secondary">
                                         {{ $proposal->created_at?->format('d M Y') }}

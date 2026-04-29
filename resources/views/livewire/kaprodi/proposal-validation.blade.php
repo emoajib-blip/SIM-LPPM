@@ -164,7 +164,7 @@
                             </td>
                             <td>
                                 @if ($proposal->studyProgramRoadmap)
-                                    <div>{{ $proposal->studyProgramRoadmap->name }}</div>
+                                    <div>{{ $proposal->studyProgramRoadmap->title }}</div>
                                 @else
                                     <span class="text-muted">—</span>
                                 @endif
