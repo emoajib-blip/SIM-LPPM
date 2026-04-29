@@ -14,7 +14,7 @@ class ForgotPassword extends Component
 
     public string $email = '';
 
-    public string $captcha = '';
+    public ?string $captcha = null;
 
     /**
      * Send a password reset link to the provided email address.

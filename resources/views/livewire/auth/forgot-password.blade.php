@@ -30,13 +30,19 @@
                             data-callback="onTurnstileFinished"></div>
                     </div>
                     
+                    <input type="hidden" id="turnstile-token" wire:model="captcha">
+
                     @error('captcha')
                         <div class="text-danger d-block mb-3 small text-center">{{ $message }}</div>
                     @enderror
 
                     <script>
                         function onTurnstileFinished(token) {
-                            @this.set('captcha', token);
+                            const input = document.getElementById('turnstile-token');
+                            if (input) {
+                                input.value = token;
+                                input.dispatchEvent(new Event('input'));
+                            }
                         }
                     </script>
                 @endif
