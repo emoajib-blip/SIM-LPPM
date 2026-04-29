@@ -72,18 +72,37 @@
                                 @enderror
                             </div>
 
-                            <div class="mb-4 bg-light p-3 rounded-3 border-dashed border-2">
-                                <label class="form-label fw-bold text-dark mb-2">Verifikasi Keamanan</label>
-                                <p class="small text-muted mb-2">Berapa hasil dari <strong>{{ $n1 }} + {{ $n2 }}</strong>?</p>
-                                <input type="number" wire:model="math_answer"
-                                    class="form-control rounded-2 @error('math_answer') is-invalid @enderror"
-                                    placeholder="Isi jawaban" autocomplete="off" />
-                                @error('math_answer')
-                                    <div class="invalid-feedback d-block mt-2 small">
-                                        {{ $message }}
-                                    </div>
+                            @if(config('turnstile.site_key'))
+                                <div class="mb-4 d-flex justify-content-center" wire:ignore>
+                                    <div class="cf-turnstile" 
+                                        data-sitekey="{{ config('turnstile.site_key') }}" 
+                                        data-callback="onTurnstileFinished"></div>
+                                </div>
+                                <input type="hidden" id="captcha" wire:model="captcha">
+                                @error('captcha')
+                                    <div class="text-danger d-block mb-4 small text-center">{{ $message }}</div>
                                 @enderror
-                            </div>
+
+                                <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+                                <script>
+                                    function onTurnstileFinished(token) {
+                                        @this.set('captcha', token);
+                                    }
+                                </script>
+                            @else
+                                <div class="mb-4 bg-light p-3 rounded-3 border-dashed border-2">
+                                    <label class="form-label fw-bold text-dark mb-2">Verifikasi Keamanan</label>
+                                    <p class="small text-muted mb-2">Berapa hasil dari <strong>{{ $n1 }} + {{ $n2 }}</strong>?</p>
+                                    <input type="number" wire:model="math_answer"
+                                        class="form-control rounded-2 @error('math_answer') is-invalid @enderror"
+                                        placeholder="Isi jawaban" autocomplete="off" />
+                                    @error('math_answer')
+                                        <div class="invalid-feedback d-block mt-2 small">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            @endif
 
                             <div class="mb-4">
                                 <label class="form-check form-check-inline">

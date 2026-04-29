@@ -62,8 +62,8 @@ class Login extends Component
             ];
 
             if (! app()->environment('testing')) {
-                if (! empty($this->captcha)) {
-                    $rules['captcha'] = [new Turnstile];
+                if (config('turnstile.site_key')) {
+                    $rules['captcha'] = ['required', new Turnstile];
                 } else {
                     $rules['math_answer'] = [
                         'required',
