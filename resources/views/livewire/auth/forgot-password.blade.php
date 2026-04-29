@@ -23,14 +23,13 @@
                     @enderror
                 </div>
 
-                {{-- 
                 @if(config('turnstile.site_key'))
-                    <div class="mb-3 d-flex justify-content-center" wire:ignore>
+                    <div class="mb-4 d-flex justify-content-center" wire:ignore>
                         <div class="cf-turnstile" 
                             data-sitekey="{{ config('turnstile.site_key') }}" 
                             data-callback="onTurnstileFinished"></div>
                     </div>
-                    <input type="hidden" id="captcha" wire:model="captcha">
+                    
                     @error('captcha')
                         <div class="text-danger d-block mb-3 small text-center">{{ $message }}</div>
                     @enderror
@@ -41,7 +40,6 @@
                         }
                     </script>
                 @endif
-                --}}
 
                 <div class="form-footer">
                     <button type="submit" class="w-100 btn btn-primary">
