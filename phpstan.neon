@@ -1,13 +1,14 @@
 includes:
     - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
 
 parameters:
-    tmpDir: build/phpstan
+    tmpDir: storage/framework/cache/phpstan
     paths:
         - app/
     
     # Level 9 is the highest level
-    level: 5
+    level: 6
 
     # Vetted by AI - Manual Review Required by Senior Engineer/Manager
     treatPhpDocTypesAsCertain: false

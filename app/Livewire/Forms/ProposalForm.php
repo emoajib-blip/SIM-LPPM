@@ -870,7 +870,6 @@ class ProposalForm extends Form
                     $status = ! empty($member['is_manual']) ? 'accepted' : 'pending';
                     if (isset($existingMembers[$userId])) {
                         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-                        // @phpstan-ignore-next-line
                         $status = $existingMembers[$userId]->pivot->getAttribute('status');
                     }
 
