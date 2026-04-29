@@ -19,6 +19,8 @@ class MenuComposer
 
     protected function menuItems(?User $user): array
     {
+        $roadmapActive = \App\Models\Setting::get('feature_roadmap_active', false);
+
         $items = [
             // Dashboard - available for all roles
             [
@@ -87,13 +89,14 @@ class MenuComposer
                 'route' => 'kaprodi.proposals.index',
                 'roles' => ['kaprodi'],
             ],
-            [
+            // Kaprodi - Conditional Roadmap
+            ...( $roadmapActive ? [[
                 'title' => 'Kelola Peta Jalan',
                 'icon' => 'map-2',
                 'route' => 'settings.master-data',
                 'params' => ['group' => 'academic-structure', 'tab' => 'study-program-roadmaps'],
                 'roles' => ['kaprodi'],
-            ],
+            ]] : []),
             // Dekan menu
             [
                 'title' => 'Persetujuan Dekan',
@@ -107,13 +110,14 @@ class MenuComposer
                 'route' => 'dekan.reports.index',
                 'roles' => ['dekan'],
             ],
-            [
+            // Dekan - Conditional Roadmap
+            ...( $roadmapActive ? [[
                 'title' => 'Kelola Peta Jalan',
                 'icon' => 'map-2',
                 'route' => 'settings.master-data',
                 'params' => ['group' => 'academic-structure', 'tab' => 'faculty-roadmaps'],
                 'roles' => ['dekan'],
-            ],
+            ]] : []),
             [
                 'title' => 'Riwayat Persetujuan',
                 'icon' => 'history',

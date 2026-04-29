@@ -108,7 +108,7 @@
                                 </button>
                             @endif
 
-                            @if(active_has_any_role(['admin lppm', 'superadmin', 'dekan']))
+                            @if(active_has_any_role(['admin lppm', 'superadmin', 'dekan']) && \App\Models\Setting::get('feature_roadmap_active', false))
                                 <button wire:click="setActiveTab('faculty-roadmaps')"
                                     class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'faculty-roadmaps' ? 'active' : '' }}">
                                     <x-lucide-map class="icon me-2" />
@@ -116,7 +116,7 @@
                                 </button>
                             @endif
 
-                            @if(active_has_any_role(['admin lppm', 'superadmin', 'dekan', 'kaprodi']))
+                            @if(active_has_any_role(['admin lppm', 'superadmin', 'dekan', 'kaprodi']) && \App\Models\Setting::get('feature_roadmap_active', false))
                                 <button wire:click="setActiveTab('study-program-roadmaps')"
                                     class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'study-program-roadmaps' ? 'active' : '' }}">
                                     <x-lucide-git-merge class="icon me-2" />

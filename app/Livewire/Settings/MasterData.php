@@ -18,6 +18,16 @@ class MasterData extends Component
 
     public function mount(): void
     {
+        $user = auth()->user();
+        $roadmapActive = \App\Models\Setting::get('feature_roadmap_active', false);
+
+        // Jika fitur roadmap nonaktif, Dekan & Kaprodi dilarang akses (kecuali mereka juga admin)
+        if (!$roadmapActive && ($user->hasRole('dekan') || $user->hasRole('kaprodi'))) {
+            if (!$user->hasRole('admin lppm') && !$user->hasRole('superadmin')) {
+                abort(403, 'Fitur Peta Jalan sedang dinonaktifkan.');
+            }
+        }
+
         if (empty($this->activeTab)) {
             $this->activeTab = match ($this->group) {
                 'academic-structure' => 'study-programs',
