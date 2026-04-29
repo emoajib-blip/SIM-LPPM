@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('components.layouts.auth')]
+#[Layout('components.layouts.auth', ['title' => 'Lupa Kata Sandi'])]
 class ForgotPassword extends Component
 {
     use HasToast;

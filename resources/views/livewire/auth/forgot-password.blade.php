@@ -25,7 +25,7 @@
 
                 @if(config('turnstile.site_key'))
                     <div class="mb-4 d-flex justify-content-center" wire:ignore>
-                        <div class="cf-turnstile" data-sitekey="{{ config('turnstile.site_key') }}" data-callback="onTurnstileFinished"></div>
+                        <div class="cf-turnstile" data-sitekey="{{ config('turnstile.site_key') }}"></div>
                     </div>
                 @endif
 
