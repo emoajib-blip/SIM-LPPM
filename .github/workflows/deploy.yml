@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     # ⚠️ Hapus komentar di bawah ini jika VPS sudah dikonfigurasi
-    if: false # TODO: ubah ke true dan isi secrets (VPS_HOST, VPS_USERNAME, VPS_SSH_KEY)
+    if: true # Aktif: Pastikan secrets (VPS_HOST, VPS_USERNAME, VPS_SSH_KEY) sudah terisi di GitHub
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
