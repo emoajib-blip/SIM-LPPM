@@ -42,9 +42,11 @@ class FacultyRoadmapManager extends Component
     public bool $isActive = true;
 
     public ?int $editingId = null;
+    
     public string $modalTitle = 'Peta Jalan Fakultas';
 
     public ?int $deleteItemId = null;
+    
     public string $deleteItemName = '';
 
     public function render(): \Illuminate\Contracts\View\View

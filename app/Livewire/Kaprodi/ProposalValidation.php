@@ -54,7 +54,7 @@ class ProposalValidation extends Component
     {
         $studyProgramId = $this->kaprodiStudyProgramId();
 
-        if (! $studyProgramId) {
+        if (!$studyProgramId) {
             $query->whereRaw('1 = 0');
         } else {
             $query->whereHas('submitter.identity', function ($q) use ($studyProgramId) {

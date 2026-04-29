@@ -165,7 +165,7 @@ class ProfileForm extends Component
                 Rule::unique(User::class)->ignore($user->id),
             ],
             'identity_id' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'in:dosen,mahasiswa'],
+            'type' => [Auth::user()->hasAnyRole(['superadmin', 'admin lppm']) ? 'nullable' : 'required', 'in:dosen,mahasiswa'],
             'sinta_id' => ['nullable', 'string', 'max:255'],
             'scopus_id' => ['nullable', 'string', 'max:255'],
             'google_scholar_id' => ['nullable', 'string', 'max:255'],

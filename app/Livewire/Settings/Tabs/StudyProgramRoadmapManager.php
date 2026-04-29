@@ -47,9 +47,11 @@ class StudyProgramRoadmapManager extends Component
     public bool $isActive = true;
 
     public ?int $editingId = null;
+    
     public string $modalTitle = 'Peta Jalan Program Studi';
 
     public ?int $deleteItemId = null;
+    
     public string $deleteItemName = '';
 
     public function render(): \Illuminate\Contracts\View\View

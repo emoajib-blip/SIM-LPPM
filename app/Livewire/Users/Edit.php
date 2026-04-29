@@ -120,7 +120,7 @@ class Edit extends Component
      */
     protected function rules(): array
     {
-        $isReviewer = in_array('reviewer', $this->selectedRoles);
+        $isExempt = count(array_intersect(['reviewer', 'superadmin', 'admin lppm'], $this->selectedRoles)) > 0;
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -142,14 +142,14 @@ class Edit extends Component
             'scopus_h_index' => ['nullable', 'integer', 'min:0'],
             'gs_h_index' => ['nullable', 'integer', 'min:0'],
             'wos_h_index' => ['nullable', 'integer', 'min:0'],
-            'type' => ['required', Rule::in('dosen', 'mahasiswa', 'reviewer')],
+            'type' => [$isExempt ? 'nullable' : 'required', Rule::in('dosen', 'mahasiswa', 'reviewer')],
 
             // Internal vs External logic
             'institution_id' => ['nullable'], // Flexibel karena bisa ID (numeric) atau Nama (string)
             'institution_name' => ['nullable', 'string', 'max:255'],
 
             'faculty_id' => [
-                $isReviewer ? 'nullable' : 'required',
+                $isExempt ? 'nullable' : 'required',
                 'exists:faculties,id',
                 function ($attribute, $value, $fail) {
                     if (is_numeric($this->institution_id) && $value) {
@@ -162,7 +162,7 @@ class Edit extends Component
                 },
             ],
             'study_program_id' => [
-                $isReviewer ? 'nullable' : 'required',
+                $isExempt ? 'nullable' : 'required',
                 'exists:study_programs,id',
                 function ($attribute, $value, $fail) {
                     if ($this->faculty_id && $value) {
