@@ -21,15 +21,9 @@ class ForgotPassword extends Component
      */
     public function sendPasswordResetLink(): void
     {
-        $rules = [
+        $this->validate([
             'email' => ['required', 'string', 'email'],
-        ];
-
-        if (!app()->environment('testing') && config('turnstile.site_key')) {
-            $rules['captcha'] = ['required', new \App\Rules\Turnstile];
-        }
-
-        $this->validate($rules);
+        ]);
 
         Password::sendResetLink($this->only('email'));
 
