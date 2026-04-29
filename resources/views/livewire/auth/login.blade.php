@@ -83,7 +83,6 @@
                                     <div class="text-danger d-block mb-4 small text-center">{{ $message }}</div>
                                 @enderror
 
-                                <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
                                 <script>
                                     function onTurnstileFinished(token) {
                                         @this.set('captcha', token);
