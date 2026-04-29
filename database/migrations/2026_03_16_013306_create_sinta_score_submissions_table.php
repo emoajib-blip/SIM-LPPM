@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sinta_score_submissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('identity_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
 
             $table->float('sinta_score_v3_overall')->nullable();
             $table->float('sinta_score_v3_3yr')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('wos_h_index')->nullable();
 
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->foreignId('verified_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignUuid('verified_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('verified_at')->nullable();
             $table->text('verification_notes')->nullable();
             $table->text('submission_notes')->nullable();
