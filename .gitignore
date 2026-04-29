@@ -55,3 +55,8 @@ CLAUDE.md
 /database/*.sqlite
 /database/*.sqlite-journal
 build/phpstan/
+
+# Deployments
+/sosiomen_deploy/
+/sosiomen_deploy.zip
+/vendor_deploy.zip
