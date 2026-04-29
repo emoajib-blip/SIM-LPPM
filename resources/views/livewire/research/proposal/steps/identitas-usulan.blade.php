@@ -148,6 +148,32 @@
                 </div>
             </div>
 
+            @if(\App\Models\Setting::get('feature_roadmap_active', false))
+                <div class="col-md-12">
+                    <div class="">
+                        <label class="form-label d-flex align-items-center gap-2" for="study_program_roadmap">
+                            Pohon Penelitian Prodi <span class="text-danger">*</span>
+                            <span class="text-muted" data-bs-toggle="tooltip"
+                                title="Pilih topik/pohon penelitian prodi yang relevan dengan usulan ini.">
+                                <i class="ti ti-info-circle"></i>
+                            </span>
+                        </label>
+                        <div wire:ignore>
+                            <select id="study_program_roadmap" class="form-select @error('form.study_program_roadmap_id') is-invalid @enderror"
+                                wire:model="form.study_program_roadmap_id" x-data="tomSelect" placeholder="Pilih Pohon Penelitian Prodi" required>
+                                <option value="">-- Pilih Pohon Penelitian Prodi --</option>
+                                @foreach ($this->studyProgramRoadmaps as $roadmap)
+                                    <option value="{{ $roadmap->id }}">{{ $roadmap->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('form.study_program_roadmap_id')
+                            <div class="d-block invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            @endif
+
         </div>
     </div>
 </div>

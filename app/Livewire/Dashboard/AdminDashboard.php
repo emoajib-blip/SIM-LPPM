@@ -267,7 +267,7 @@ class AdminDashboard extends Component
     private function loadRecentProposals(string $yearFilter): void
     {
         // Filter by start_year (tahun pelaksanaan) — konsisten dengan KPI cards
-        $recentProposals = Proposal::with(['submitter'])
+        $recentProposals = Proposal::with(['submitter', 'focusArea', 'researchScheme', 'communityServiceScheme'])
             ->where('start_year', $yearFilter)
             ->latest()
             ->limit(20)

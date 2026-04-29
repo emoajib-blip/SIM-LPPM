@@ -19,6 +19,11 @@
                 <x-lucide-pencil class="icon" />
                 Edit
             </a>
+        @elseif ($proposal->status === \App\Enums\ProposalStatus::DRAFT && $proposal->submitter_id === auth()->id() && !$this->isScheduleOpen)
+            <button type="button" class="btn btn-secondary" disabled title="Periode pengajuan ditutup">
+                <x-lucide-lock class="icon" />
+                Edit (Ditutup)
+            </button>
         @endif
         @if ($this->canDelete)
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -42,6 +47,29 @@
     <div class="col-md-12">
         <x-tabler.alert />
     </div>
+
+    {{-- Schedule Closed Banner: only visible to submitter when draft & window is closed --}}
+    @if ($proposal->status === \App\Enums\ProposalStatus::DRAFT
+        && $proposal->submitter_id === auth()->id()
+        && !$this->isScheduleOpen)
+        <div class="col-md-12 mb-3">
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <div class="d-flex">
+                    <div>
+                        <x-lucide-calendar-x class="alert-icon icon me-2" />
+                    </div>
+                    <div>
+                        <h4 class="alert-title">Periode Pengajuan Ditutup</h4>
+                        <div class="text-secondary">
+                            Proposal ini tidak dapat diedit karena periode pengajuan/revisi saat ini sedang ditutup oleh Admin LPPM.
+                            Silakan hubungi Admin LPPM untuk informasi jadwal berikutnya.
+                        </div>
+                    </div>
+                </div>
+                <a class="btn-close" data-bs-dismiss="alert" aria-label="Close"></a>
+            </div>
+        </div>
+    @endif
 
     @php
         $user = auth()->user();

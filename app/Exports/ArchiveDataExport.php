@@ -13,7 +13,9 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
+/**
+ * @implements \Maatwebsite\Excel\Concerns\WithMapping<\App\Models\Proposal>
+ */
 class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     use Exportable;
@@ -28,6 +30,9 @@ class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, With
         $this->yearFilter = $yearFilter;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
+     */
     public function query(): Builder
     {
         return Proposal::query()
@@ -55,6 +60,10 @@ class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, With
         ];
     }
 
+    /**
+     * @param  \App\Models\Proposal  $proposal
+     * @return array<int, mixed>
+     */
     public function map($proposal): array
     {
         static $no = 1;
@@ -80,6 +89,9 @@ class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, With
         ];
     }
 
+    /**
+     * @return array<int|string, array<string, mixed>>
+     */
     public function styles(Worksheet $sheet)
     {
         return [

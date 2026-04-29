@@ -44,6 +44,11 @@
                                 <x-lucide-eye class="me-2 icon" />
                                 Audit Log
                             </button>
+                            <button wire:click="setActiveTab('feature-flags')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'feature-flags' ? 'active' : '' }}">
+                                <x-lucide-toggle-left class="me-2 icon" />
+                                Feature Flags
+                            </button>
                         </div>
                     @endrole
                 </div>
@@ -83,6 +88,12 @@
                             <h2 class="mb-4">Log Keamanan</h2>
                             <p class="mb-4 card-subtitle">Pantau riwayat aktivitas login dan akses akun Anda untuk menjaga keamanan.</p>
                             <livewire:users.activity-log-list :user="auth()->user()" />
+                        </div>
+                    @elseif ($activeTab === 'feature-flags')
+                        <div>
+                            <h2 class="mb-4">Feature Flags (Eksperimental)</h2>
+                            <p class="mb-4 card-subtitle">Aktifkan atau nonaktifkan fitur sistem yang belum diwajibkan secara institusional.</p>
+                            <livewire:settings.feature-flags />
                         </div>
                     @endif
                 </div>

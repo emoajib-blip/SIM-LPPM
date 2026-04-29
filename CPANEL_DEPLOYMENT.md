@@ -1,67 +1,99 @@
-# Panduan Utama Go-Live: sosiomen.web.id
+# Panduan Deployment cPanel: SIM LPPM ITSNU
 
-Ikuti langkah-langkah di bawah ini secara berurutan untuk m m mmlai m m n m mmlai m n n n n me-revisi tampilan cPanel Anda mnjadi aplikasi SIM LPPM yang aktif.
-
----
-
-### Tahap 1: Persiapan File & Ekstrak
-1.  **Akses File Manager**: Login ke cPanel dan buka **File Manager**.
-2.  **Upload ZIP**: Pastikan file `sosiomen_deploy.zip` dan `vendor_deploy.zip` sudah berada di folder **home** ( `/home/sosiomen/`), bukan di dalam `public_html`.
-3.  **Extract All**: 
-    - Klik kanan `sosiomen_deploy.zip` -> **Extract** -> Klik **Extract File(s)**.
-    - Klik kanan `vendor_deploy.zip` -> **Extract** -> Klik **Extract File(s)**.
-4.  **Verifikasi**: Sekarang Anda harus memiliki folder `app`, `bootstrap`, `config`, `vendor`, dll. tepat di bawah `/home/sosiomen/`.
+Dokumen ini berisi panduan langkah-demi-langkah untuk melakukan deployment aplikasi SIM LPPM ITSNU ke lingkungan shared hosting (cPanel).
 
 ---
 
-### Tahap 2: Menghidupkan Domain (Setting public_html)
-Domain `sosiomen.web.id` secara standar m m mmlai m m m m n n n n n n n n m nuju ke folder `public_html`. Kita harus mengisi folder tersebut dngan "pintu masuk" Laravel.
-1.  **Masuk ke folder `public`**: Cari dan buka folder bernama `public` di File Manager.
-2.  **Pindahkan Isinya**:
-    - Pilih semua file/folder di dalamnya (termasuk folder `build`, file `index.php`, dan `.htaccess`).
-    - Klik tombol **Move** di menu atas.
-    - Ketik tujuannya: `/public_html` (lalu klik Move File).
-3.  **Bersihkan File Lama**: Masuk ke folder `public_html`, hapus file `default.html` atau file `.shtml` bawaan hosting agar tidak mengganggu.
+## 📋 Prasyarat Sistem
+Sebelum memulai, pastikan server cPanel Anda memenuhi kriteria berikut:
+- **PHP Version**: 8.4 atau lebih tinggi.
+- **PHP Extensions**: `bcmath`, `ctype`, `fileinfo`, `json`, `mbstring`, `openssl`, `pdo_mysql`, `tokenizer`, `xml`, `gd`.
+- **Database**: MySQL 8.0+ atau MariaDB 10.4+.
+- **Terminal Access**: Opsional (sangat disarankan untuk symlink storage).
 
 ---
 
-### Tahap 3: Menghubungkan "Wajah" dan "Otak" (Edit index.php)
-Kita perlu memberi tahu file `index.php` (di `public_html`) di mana letak folder `vendor` dan `bootstrap` yang berada di luar.
-1.  Di folder `public_html`, klik kanan file **`index.php`** -> **Edit**.
-2.  Cari dan ubah dua baris berikut (sekitar baris 34 dan 47):
+## 🛠️ Tahap 1: Persiapan & Pengemasan (Local)
+Jangan mengunggah file satu per satu. Gunakan script otomatis untuk mengemas aplikasi Anda:
 
+1. Jalankan terminal di folder root project lokal Anda.
+2. Jalankan perintah:
+   ```bash
+   bash pack-cpanel.sh
+   ```
+3. Script ini akan menghasilkan dua file ZIP:
+   - `app_deploy.zip`: Berisi seluruh kode aplikasi (tanpa vendor & node_modules).
+   - `vendor_deploy.zip`: Berisi folder vendor (dependensi PHP).
+
+---
+
+## 📂 Tahap 2: Pengunggahan & Ekstraksi
+1. Buka **File Manager** di cPanel.
+2. Unggah kedua file ZIP tersebut ke folder **Home** Anda ( `/home/[USERNAME]/`), **BUKAN** di dalam `public_html`. Ini penting untuk keamanan agar file sensitif seperti `.env` tidak dapat diakses publik.
+3. Ekstrak kedua file tersebut:
+   - Klik kanan `app_deploy.zip` -> **Extract**.
+   - Klik kanan `vendor_deploy.zip` -> **Extract**.
+4. Sekarang Anda harus memiliki struktur folder seperti `app`, `bootstrap`, `config`, `vendor`, dll. tepat di folder Home.
+
+---
+
+## 🌐 Tahap 3: Konfigurasi Public Akses
+Folder `public` Laravel harus dipindahkan isinya ke folder publik cPanel (biasanya `public_html`).
+
+1. Buka folder `public` yang baru diekstrak di Home.
+2. Pilih semua file dan folder di dalamnya (termasuk folder `build`, file `index.php`, dan `.htaccess`).
+3. Gunakan fitur **Move** dan pindahkan ke `/public_html`.
+4. Hapus file bawaan hosting seperti `default.html` atau `index.php` lama di `public_html` agar tidak bentrok.
+
+---
+
+## 🔗 Tahap 4: Penghubungan Sistem (Edit index.php)
+Karena folder `vendor` dan `bootstrap` berada di luar `public_html`, kita perlu menyesuaikan jalurnya.
+
+1. Di folder `public_html`, edit file **`index.php`**.
+2. Cari dan ubah dua baris berikut (biasanya baris 34 dan 47):
    ```php
-   // Baris 34: Ubah mnjadi seperti ini
+   // Baris 34: Sesuaikan path autoload.php
    require __DIR__.'/../vendor/autoload.php';
 
-   // Baris 47: Ubah mnjadi seperti ini
+   // Baris 47: Sesuaikan path app.php
    $app = require_once __DIR__.'/../bootstrap/app.php';
    ```
-3.  Klik **Save Changes**.
+3. Klik **Save Changes**.
 
 ---
 
-### Tahap 4: Konfigurasi Database (.env)
-1.  Pastikan fitur **Show Hidden Files** aktif (Settings di pojok kanan atas File Manager).
-2.  Klik kanan file **`.env`** di folder `/home/sosiomen/` -> **Edit**.
-3.  Sesuaikan data berikut dngan database yang Anda buat di cPanel:
+## ⚙️ Tahap 5: Konfigurasi Environment (.env)
+1. Aktifkan **Show Hidden Files** di Settings File Manager.
+2. Cari file **`.env`** di folder Home (BUKAN di `public_html`).
+3. Gunakan template dari `.env.cpanel.example` dan sesuaikan nilainya:
    ```env
-   APP_URL=https://sosiomen.web.id
-   DB_DATABASE=sosiomen_lppm  # Nama DB cPanel Anda
-   DB_USERNAME=sosiomen_user  # Username DB cPanel Anda
-   DB_PASSWORD=password_anda  # Password DB cPanel Anda
+   APP_ENV=production
+   APP_URL=https://[DOMAIN_ANDA]
+   
+   DB_DATABASE=[DB_NAME]
+   DB_USERNAME=[DB_USER]
+   DB_PASSWORD=[PASSWORD]
    ```
-4.  Klik **Save Changes**.
+4. Pastikan `APP_KEY` sudah terisi. Jika belum, jalankan `php artisan key:generate` di lokal sebelum pengemasan.
 
 ---
 
-### Tahap 5: Perbaikan Gambar Kosong (Storage Symlink)
-Jika gambar atau file upload tidak muncul, jalankan perintah ini via **Terminal** di cPanel:
-```bash
-php artisan storage:link
-```
-*Jika tidak ada Terminal, hubungi support hosting agar mereka m m mmlai m m n bantu m m n n n n m n n buatkan symlink dari `storage/app/public` ke `public_html/storage`.*
+## 🚀 Tahap 6: Finalisasi & Symlink Storage
+Agar file yang diunggah (tanda tangan, lampiran) dapat diakses publik:
+
+1. Buka **Terminal** di cPanel (jika tersedia).
+2. Jalankan perintah:
+   ```bash
+   php artisan storage:link
+   ```
+3. Jika Terminal tidak tersedia, Anda bisa membuat file PHP sementara (misal `link.php`) di `public_html` dengan isi:
+   ```php
+   <?php
+   symlink('/home/[USERNAME]/storage/app/public', '/home/[USERNAME]/public_html/storage');
+   echo "Symlink Success!";
+   ```
+   Lalu akses `domain.com/link.php` melalui browser, kemudian hapus file tersebut.
 
 ---
 **Vetted by AI - Manual Review Required by Senior Engineer/Manager**
-

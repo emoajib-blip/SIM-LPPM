@@ -4,58 +4,133 @@
 <head>
     <title>Laporan Kerjasama Mitra</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style>
+        <style>
         /* Vetted by AI - Manual Review Required by Senior Engineer/Manager */
-        html, body { margin: 0; padding: 0; border: 0; }
-        @page { margin: 3cm 2.5cm 3cm 3.5cm; }
-        body { font-family: "Arial", "Helvetica", sans-serif; font-size: 10pt; line-height: 1.4; color: #000; }
-
-        .kop-surat { border-bottom: 3pt solid #000; padding-bottom: 6px; margin-bottom: 0; position: relative; overflow: hidden; }
-        .kop-surat-inner { border-bottom: 1pt solid #000; padding-bottom: 4px; margin-bottom: 2px; }
-        .logo { position: absolute; left: 0; top: 4px; width: 75px; }
-        .header-text { text-align: center; margin-left: 85px; margin-right: 0; }
-        .inst-name { font-size: 13pt; font-weight: bold; color: #000; margin-bottom: 1px; }
-        .lppm-name { font-size: 11pt; font-weight: bold; margin-top: 1px; margin-bottom: 4px; }
-        .inst-address { font-size: 8.5pt; color: #333; }
-
-        .report-title-container { text-align: center; margin-top: 8px; margin-bottom: 8px; }
-        .report-title { font-size: 11pt; font-weight: bold; text-decoration: underline; text-transform: uppercase; }
-        .report-subtitle { font-size: 9.5pt; margin-top: 2px; color: #333; }
-
-        .summary-box { margin: 6px 0 8px 0; padding: 8px 10px; border: 0.75pt solid #1a4a8e; background: #f0f4ff; }
-        .summary-title { font-weight: bold; color: #1a4a8e; font-size: 9pt; margin-bottom: 3px; text-transform: uppercase; }
-
-        table.data-table { width: 100%; border-collapse: collapse; margin-top: 6px; table-layout: fixed; page-break-inside: auto; }
-        table.data-table thead tr { page-break-inside: avoid; page-break-after: avoid; }
-        table.data-table tbody tr { page-break-inside: avoid; }
-        table.data-table th { background-color: #1a4a8e; color: #fff; font-weight: bold; text-align: center; vertical-align: middle; font-size: 9pt; padding: 5px 6px; border: 0.5pt solid #0e2e5a; line-height: 1.3; }
-        table.data-table td { font-size: 9pt; line-height: 1.35; padding: 4px 6px; vertical-align: top; border: 0.5pt solid #c0c8d8; word-wrap: break-word; overflow-wrap: break-word; }
-        table.data-table tbody tr:nth-child(even) td { background-color: #f4f6fa; }
-        table.data-table tbody tr:nth-child(odd) td { background-color: #ffffff; }
-
+        @page {
+            margin: 3cm 3cm 3cm 4cm;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9pt;
+            line-height: 1.4;
+            color: #000;
+            text-align: left;
+        }
+        .kop-surat {
+            border-bottom: 2pt solid #000;
+            padding-bottom: 2px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        .kop-surat-inner {
+            border-bottom: 0.5pt solid #000;
+            padding-bottom: 5px;
+        }
+        .logo {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 65px;
+        }
+        .header-text {
+            text-align: center;
+            margin-left: 70px;
+        }
+        .inst-name {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        .lppm-name {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        .inst-address {
+            font-size: 8pt;
+            color: #333;
+        }
+        .report-title-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .report-title {
+            font-size: 11pt;
+            font-weight: bold;
+            text-decoration: underline;
+            text-transform: uppercase;
+        }
+        .report-subtitle {
+            font-size: 9pt;
+            margin-top: 5px;
+        }
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        table.data-table th {
+            background-color: #f2f2f2;
+            border: 0.5pt solid #000;
+            padding: 5px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 8.5pt;
+        }
+        table.data-table td {
+            border: 0.5pt solid #000;
+            padding: 5px;
+            vertical-align: top;
+            font-size: 8.5pt;
+        }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
-        .fw-bold { font-weight: bold; }
-        .text-muted { color: #555; font-size: 8pt; }
-
-        .signature-wrapper { margin-top: 20px; page-break-inside: avoid; }
-        table.signature-table { width: 100%; border-collapse: collapse; border: none; }
-        table.signature-table td { border: none; padding: 0; vertical-align: top; }
-        .sign-block { text-align: center; font-size: 10pt; line-height: 1.6; }
-        .sign-name { font-weight: bold; text-decoration: underline; }
-        .sign-nip { font-size: 9pt; color: #333; }
-        .digital-signature { border: 1pt solid #1a56db; padding: 4px; display: inline-block; margin: 4px auto; border-radius: 4px; background-color: #f0f4ff; color: #1a56db; text-align: center; width: 75px; }
-        .digital-signature img { width: 65px; height: 65px; }
-        .signature-label { display: block; font-size: 6.5pt; margin-top: 2px; color: #1a56db; font-weight: bold; }
-        .footer { position: fixed; bottom: -1.5cm; left: 0; right: 0; font-size: 8pt; text-align: center; color: #666; border-top: 0.5pt solid #ccc; padding-top: 4px; }
-
+        .font-bold { font-weight: bold; }
+        .signature-wrapper {
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
+        table.signature-table {
+            width: 100%;
+            border: none;
+        }
+        table.signature-table td {
+            border: none;
+            padding: 0;
+            vertical-align: top;
+            text-align: center;
+        }
+        .sign-block {
+            display: inline-block;
+            text-align: center;
+        }
+        .sign-name {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 60px;
+        }
+        .digital-signature {
+            margin: 5px 0;
+        }
+        .digital-signature img {
+            width: 60px;
+        }
+        .footer {
+            position: fixed;
+            bottom: -2cm;
+            left: 0;
+            right: 0;
+            font-size: 7pt;
+            text-align: center;
+            color: #888;
+        }
     </style>
 </head>
 
 <body>
     <div class="kop-surat">
         <div class="kop-surat-inner">
-            <img src="{{ public_path('logo.png') }}" class="logo">
+            <img src="{{ get_logo_base64() }}" class="logo">
             <div class="header-text">
                 <div class="inst-name">INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN</div>
                 <div class="lppm-name">LEMBAGA PENELITIAN DAN PENGABDIAN KEPADA MASYARAKAT (LPPM)</div>

@@ -27,7 +27,7 @@ class BenchmarkNotifications extends Command
     /**
      * Execute the console command.
      */
-    public function handle(NotificationService $notificationService)
+    public function handle(NotificationService $notificationService): int
     {
         $count = (int) $this->argument('count');
         $this->info("🚀 Menyiapkan simulasi load test untuk {$count} dosen...");
@@ -58,5 +58,7 @@ class BenchmarkNotifications extends Command
 
         $this->info('✅ Dispatch selesai. Semua pekerjaan telah masuk ke antrean (Queue).');
         $this->warn("💡 Pastikan 'php artisan queue:work' sedang berjalan untuk melihat proses konsumsi data secara real-time.");
+
+        return self::SUCCESS;
     }
 }

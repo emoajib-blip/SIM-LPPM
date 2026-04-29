@@ -4,256 +4,132 @@
 <head>
     <title>Laporan Monitoring dan Evaluasi</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style>
+        <style>
         /* Vetted by AI - Manual Review Required by Senior Engineer/Manager */
-        html, body {
-            margin: 0;
-            padding: 0;
-            border: 0;
-        }
-
         @page {
-            margin: 3cm 2.5cm 3cm 3.5cm;
+            margin: 3cm 3cm 3cm 4cm;
         }
-
         body {
-            font-family: "Arial", "Helvetica", sans-serif;
-            font-size: 10pt;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9pt;
             line-height: 1.4;
             color: #000;
             text-align: left;
         }
-
-        /* ============================
-           KOP SURAT
-        ============================ */
         .kop-surat {
-            border-bottom: 3pt solid #000;
-            padding-bottom: 6px;
-            margin-bottom: 0;
+            border-bottom: 2pt solid #000;
+            padding-bottom: 2px;
+            margin-bottom: 5px;
             position: relative;
-            overflow: hidden;
         }
-
         .kop-surat-inner {
-            border-bottom: 1pt solid #000;
-            padding-bottom: 4px;
-            margin-bottom: 2px;
+            border-bottom: 0.5pt solid #000;
+            padding-bottom: 5px;
         }
-
         .logo {
             position: absolute;
             left: 0;
-            top: 4px;
-            width: 75px;
+            top: 0;
+            width: 65px;
         }
-
         .header-text {
             text-align: center;
-            margin-left: 85px;
-            margin-right: 0;
+            margin-left: 70px;
         }
-
         .inst-name {
-            font-size: 13pt;
+            font-size: 12pt;
             font-weight: bold;
-            color: #000;
-            margin-bottom: 1px;
-            letter-spacing: 0.5pt;
+            margin-bottom: 2px;
         }
-
         .lppm-name {
-            font-size: 11pt;
+            font-size: 10pt;
             font-weight: bold;
-            margin-top: 1px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
-
         .inst-address {
-            font-size: 8.5pt;
+            font-size: 8pt;
             color: #333;
-            margin-top: 1px;
         }
-
-        /* ============================
-           JUDUL LAPORAN
-        ============================ */
         .report-title-container {
             text-align: center;
-            margin-top: 8px;
-            margin-bottom: 8px;
+            margin: 15px 0;
         }
-
         .report-title {
             font-size: 11pt;
             font-weight: bold;
             text-decoration: underline;
             text-transform: uppercase;
         }
-
         .report-subtitle {
-            font-size: 9.5pt;
-            margin-top: 2px;
-            color: #333;
+            font-size: 9pt;
+            margin-top: 5px;
         }
-
-        /* ============================
-           TABEL DATA UTAMA
-        ============================ */
         table.data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 6px;
-            table-layout: fixed;
-            page-break-inside: auto;
+            margin: 10px 0;
         }
-
-        table.data-table thead tr {
-            page-break-inside: avoid;
-            page-break-after: avoid;
-        }
-
-        table.data-table tbody tr {
-            page-break-inside: avoid;
-        }
-
         table.data-table th {
-            background-color: #5c21b5; /* Purple for Monev */
-            color: #fff;
+            background-color: #f2f2f2;
+            border: 0.5pt solid #000;
+            padding: 5px;
             font-weight: bold;
             text-align: center;
-            vertical-align: middle;
-            font-size: 9pt;
-            padding: 5px 6px;
-            border: 0.5pt solid #4c1d95;
-            line-height: 1.3;
+            font-size: 8.5pt;
         }
-
         table.data-table td {
-            font-size: 9pt;
-            line-height: 1.35;
-            padding: 4px 6px;
+            border: 0.5pt solid #000;
+            padding: 5px;
             vertical-align: top;
-            border: 0.5pt solid #ddd6fe;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            font-size: 8.5pt;
         }
-
-        table.data-table tbody tr:nth-child(even) td {
-            background-color: #f5f3ff;
-        }
-
-        table.data-table tbody tr:nth-child(odd) td {
-            background-color: #ffffff;
-        }
-
         .text-center { text-align: center; }
-        .text-right  { text-align: right; }
-        .text-left   { text-align: left; }
-        .text-justify { text-align: justify; }
-        .fw-bold     { font-weight: bold; }
-
-        .cell-title {
-            font-weight: bold;
-            text-align: left;
-            line-height: 1.35;
-        }
-
-        .text-muted {
-            color: #555;
-            font-size: 8pt;
-        }
-
-        .status-ok   { color: #166534; font-weight: bold; }
-        .status-warn { color: #92400e; font-weight: bold; }
-
-        /* ============================
-           TANDA TANGAN
-        ============================ */
+        .text-right { text-align: right; }
+        .font-bold { font-weight: bold; }
         .signature-wrapper {
-            margin-top: 28px;
+            margin-top: 30px;
             page-break-inside: avoid;
         }
-
         table.signature-table {
             width: 100%;
-            border-collapse: collapse;
             border: none;
         }
-
         table.signature-table td {
             border: none;
             padding: 0;
             vertical-align: top;
-        }
-
-        .sign-block {
             text-align: center;
-            font-size: 10.5pt;
-            line-height: 1.6;
         }
-
-        .sign-space {
-            height: 70px;
+        .sign-block {
+            display: inline-block;
+            text-align: center;
         }
-
         .sign-name {
             font-weight: bold;
             text-decoration: underline;
-            font-size: 10.5pt;
+            margin-top: 60px;
         }
-
-        .sign-nip {
-            font-size: 9pt;
-            color: #333;
-        }
-
         .digital-signature {
-            border: 1pt solid #7c3aed;
-            padding: 4px;
-            display: inline-block;
-            margin: 4px auto;
-            border-radius: 4px;
-            background-color: #f5f3ff;
-            color: #7c3aed;
-            text-align: center;
-            width: 75px;
+            margin: 5px 0;
         }
-
         .digital-signature img {
-            width: 65px;
-            height: 65px;
+            width: 60px;
         }
-
-        .signature-label {
-            display: block;
-            font-size: 6.5pt;
-            margin-top: 2px;
-            color: #7c3aed;
-            font-weight: bold;
-        }
-
-        /* ============================
-           FOOTER & WATERMARK
-        ============================ */
         .footer {
             position: fixed;
-            bottom: -1.5cm;
+            bottom: -2cm;
             left: 0;
             right: 0;
-            font-size: 8pt;
+            font-size: 7pt;
             text-align: center;
-            color: #666;
-            border-top: 0.5pt solid #ccc;
-            padding-top: 4px;
+            color: #888;
         }
-
     </style>
 </head>
 <body>
     <div class="kop-surat">
         <div class="kop-surat-inner">
-            <img src="{{ public_path('logo.png') }}" class="logo">
+            <img src="{{ get_logo_base64() }}" class="logo">
             <div class="header-text">
                 <div class="inst-name">INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN</div>
                 <div class="lppm-name">LEMBAGA PENELITIAN DAN PENGABDIAN KEPADA MASYARAKAT (LPPM)</div>

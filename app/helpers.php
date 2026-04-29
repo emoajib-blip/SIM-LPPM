@@ -236,3 +236,48 @@ if (! function_exists('to_roman')) {
         return $result;
     }
 }
+
+if (! function_exists('get_logo_base64')) {
+    /**
+     * Get the logo image as a base64 encoded data URI.
+     */
+    function get_logo_base64(): ?string
+    {
+        $path = public_path('logo.png');
+        if (! file_exists($path)) {
+            return null;
+        }
+
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+
+        return 'data:image/'.$type.';base64,'.base64_encode($data);
+    }
+}
+
+if (! function_exists('clean_proposal_title')) {
+    /**
+     * Clean redundant prefixes from proposal title for display.
+     */
+    function clean_proposal_title(?string $title): string
+    {
+        if (empty($title)) {
+            return '-';
+        }
+
+        $prefixes = [
+            'Penelitian:',
+            'Pengabdian Masyarakat:',
+            'Pemberdayaan Kemitraan Masyarakat:',
+        ];
+
+        $cleaned = $title;
+        foreach ($prefixes as $prefix) {
+            if (str_starts_with(strtolower($cleaned), strtolower($prefix))) {
+                $cleaned = trim(substr($cleaned, strlen($prefix)));
+            }
+        }
+
+        return $cleaned;
+    }
+}

@@ -30,7 +30,7 @@ class ImportSintaAuthor extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $file = $this->argument('file');
 
@@ -233,6 +233,6 @@ class ImportSintaAuthor extends Command
             return 1;
         }
 
-        return 0; // Success
+        return self::SUCCESS; // Success
     }
 }

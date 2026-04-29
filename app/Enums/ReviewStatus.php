@@ -97,6 +97,8 @@ enum ReviewStatus: string
 
     /**
      * Mendapatkan semua status yang bisa ditampilkan di filter
+     *
+     * @return array<string, string>
      */
     public static function filterOptions(): array
     {
@@ -111,6 +113,8 @@ enum ReviewStatus: string
 
     /**
      * Mendapatkan array dari semua nilai enum
+     *
+     * @return array<int, string>
      */
     public static function values(): array
     {
@@ -119,6 +123,8 @@ enum ReviewStatus: string
 
     /**
      * Mendapatkan status yang memerlukan aksi
+     *
+     * @return array<int, ReviewStatus>
      */
     public static function actionRequired(): array
     {

@@ -4,120 +4,115 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Laporan Export - {{ $proposal->id }}</title>
     <style>
-    @page { 
-        size: a4 portrait;
-        margin: 3cm 3cm 3cm 4cm; 
-    }
-    html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100%;
-    }
-    body { 
-        font-family: "Times New Roman", Times, serif; 
-        font-size: 12pt; 
-        line-height: 1.5; 
-        color: #000;
-        text-align: justify;
-    }
-        .header-table { width: 100%; border-bottom: 2px solid #000; margin-bottom: 5px; padding-bottom: 5px; }
-        .logo { width: 60px; }
-        .header-text { text-align: left; padding-left: 10px; }
-        .header-text div { font-weight: bold; font-size: 11.5pt; color: #1a4d2e; } /* Dark Green branding */
-        .report-type-box {
-            text-align: center; margin: 10px 0; font-weight: bold; text-transform: uppercase;
-            background-color: #000; color: #fff; padding: 3px; font-size: 10pt;
+        @page {
+            margin: 3cm 3cm 3cm 4cm;
         }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        th, td { border: 1px solid #000; padding: 6px; text-align: left; vertical-align: top; font-size: 11pt; line-height: 1.5; }
-        th { background-color: #f2f2f2; text-align: center; font-weight: bold; }
-        .no-border, .no-border td, .no-border th { border: none !important; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9pt;
+            line-height: 1.4;
+            color: #000;
+            text-align: justify;
+        }
+        .header-table {
+            width: 100%;
+            border-bottom: 2px solid #000;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+        }
+        .logo {
+            width: 60px;
+        }
+        .header-text {
+            text-align: left;
+            padding-left: 10px;
+        }
+        .header-text div {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+        .protection-box {
+            text-align: center;
+            border: 1px solid #000;
+            padding: 5px;
+            margin-top: 5px;
+            font-size: 8pt;
+            background-color: #fff;
+            margin-bottom: 15px;
+        }
+        .report-type-box {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            background-color: #000;
+            color: #fff;
+            padding: 5px;
+            font-size: 10pt;
+        }
+        .report-id {
+            text-align: center;
+            font-size: 9pt;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+        th, td {
+            border: 0.5pt solid #000;
+            padding: 6px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 8.5pt;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .no-border, .no-border td, .no-border th {
+            border: none !important;
+            padding: 2px !important;
+        }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
+        .text-justify { text-align: justify; }
         .font-bold { font-weight: bold; }
         .page-break { page-break-after: always; }
+        
         .section-title {
             font-weight: bold;
             margin-top: 15px;
             margin-bottom: 5px;
-            font-size: 11pt;
-            border-left: 3px solid #000;
-            padding-left: 8px;
-        }
-        .title-border-box { border: 1px solid #000; padding: 8px; margin-bottom: 10px; font-weight: bold; text-align: justify; }
-        .mb-0 { margin-bottom: 0; }
-        .mt-0 { margin-top: 0; }
-        .group-total { font-weight: bold; margin-top: 10px; margin-bottom: 5px; background-color: #e9ecef; padding: 5px; border: 1px solid #ccc; font-size: 8.5pt; }
-
-        /* Improved Cover Page Styles (DomPDF Compatible) */
-        .cover-page {
-            box-sizing: border-box;
-            width: 100%;
-            text-align: center;
-            padding-top: 1cm;
-            margin: 0;
-            page-break-after: always;
-            position: relative;
-        }
-        .cover-header {
-            font-size: 16pt;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            margin-top: 10px;
-        }
-        .cover-logo {
-            margin: 30px 0;
-        }
-        .cover-logo img {
-            width: 150px;
-        }
-        .cover-title {
-            font-size: 14pt;
-            font-weight: bold;
-            margin: 20px 0;
-            padding: 0 40px;
-            line-height: 1.4;
-            text-transform: uppercase;
-        }
-        .cover-authors-container {
-            margin: 30px auto;
-            width: 90%;
-        }
-        .cover-authors-table {
-            width: 100%;
-            border-collapse: collapse;
             font-size: 10pt;
-            border: 1px dashed #999;
-        }
-        .cover-authors-table td {
-            padding: 8px;
-            border: 1px dashed #999;
-        }
-        .cover-footer {
-            margin-top: 40px;
-            font-weight: bold;
-            font-size: 12pt;
             text-transform: uppercase;
-            line-height: 1.4;
-            position: absolute;
-            bottom: 0.5cm;
-            width: 100%;
         }
-        .cover-table {
-            width: 100%;
-            height: 18cm;
-            border-collapse: collapse;
-            border: none !important;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+        
+        .title-border-box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: justify;
+            background-color: #fafafa;
         }
-        .cover-table td {
-            border: none !important;
-            padding: 0;
-            vertical-align: top;
+        
+        .footer-institutional {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             text-align: center;
+            font-size: 8pt;
+            border-top: 1px solid #ccc;
+            padding-top: 3px;
+            color: #444;
+        }
+        .page-number::after {
+            content: counter(page);
         }
     </style>
     @php
@@ -131,67 +126,67 @@
         $prodiName = $proposal->submitter->identity?->studyProgram?->name ?? '.......................';
         $periodLabel = $report->reporting_period === 'final' ? 'AKHIR' : 'KEMAJUAN';
     @endphp
-</head><body><table class="cover-table">
-        <tr>
-            <td>
-                <div class="cover-header">
-                    LAPORAN {{ $periodLabel }} {{ $proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN' }} INTERNAL
-                </div>
+</head>
+<body>
+    {{-- Institutional Footer for all pages --}}
+    <div class="footer-institutional">
+        Lppm ITSNU Pekalongan - Tahun Akademik {{ $academicYear ?? date('Y') }}<br>
+        <span class="page-number">Halaman </span>
+    </div>
 
-                <div class="cover-logo">
-                    @if(file_exists(public_path('logo.png')))
-                        <img src="{{ public_path('logo.png') }}" alt="Logo">
-                    @else
-                        <div style="height: 150px; border: 1px dashed #ccc; padding: 50px; margin: 0 auto; width: 200px;">LOGO UNIVERSITAS</div>
-                    @endif
-                </div>
+    <div class="page-break">
+        <div style="font-size: 14pt; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; text-align: center;">
+            LAPORAN {{ $periodLabel }} {{ $proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN' }} INTERNAL
+        </div>
+        
+        <div style="margin: 40px 0; text-align: center;">
+            @if(get_logo_base64())
+                <img src="{{ get_logo_base64() }}" style="width: 180px;">
+            @endif
+        </div>
 
-                <div class="cover-title">
-                    {{ $proposal->title }}
-                </div>
+        <div style="font-size: 14pt; font-weight: bold; margin-bottom: 30px; line-height: 1.3; text-align: center;">
+            {{ clean_proposal_title($proposal->title) }}
+        </div>
 
-                <div class="cover-authors-container">
-                    <table class="cover-authors-table">
-                        <tr>
-                            <td colspan="4" class="text-center" style="background-color: #f9f9f9; font-weight: bold;">Oleh:</td>
-                        </tr>
-                        <tr>
-                            <td width="20%">Ketua</td>
-                            <td width="5%" class="text-center">:</td>
-                            <td width="45%">{{ $submitterFullName }}</td>
-                            <td width="30%">NIDN: {{ $proposal->submitter->identity?->identity_id ?? '-' }}</td>
-                        </tr>
-                        @php
-                            $lecturerMembers = $proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id && ($m->identity?->type === 'dosen' || $m->pivot->role === 'anggota' || $m->pivot->role === 'dosen'));
-                        @endphp
-                        @foreach($lecturerMembers as $index => $member)
-                        <tr>
-                            <td width="20%">Anggota {{ $index + 1 }}</td>
-                            <td width="5%" class="text-center">:</td>
-                            <td width="45%">{{ format_name($member->identity?->title_prefix ?? '', $member->name, $member->identity?->title_suffix ?? '') }}</td>
-                            <td width="30%">NIDN: {{ $member->identity?->identity_id ?? '-' }}</td>
-                        </tr>
-                        @endforeach
-                    </table>
-                </div>
+        <div style="width: 100%; margin: 20px 0;">
+            <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">Oleh:</div>
+            <table style="width: 100%; border: 0.5pt dashed #000; margin-bottom: 0;">
+                <tr>
+                    <td style="width: 15%; border: 0.5pt dashed #000; padding: 8px;">Ketua</td>
+                    <td style="width: 45%; border: 0.5pt dashed #000; padding: 8px; font-weight: bold;">{{ $submitterFullName }}</td>
+                    <td style="width: 10%; border: 0.5pt dashed #000; padding: 8px;">NIDN</td>
+                    <td style="width: 30%; border: 0.5pt dashed #000; padding: 8px; font-weight: bold;">{{ $proposal->submitter->identity?->identity_id ?? '-' }}</td>
+                </tr>
+                @php
+                    $lecturerMembersCover = $proposal->teamMembers->filter(fn($m) => $m->id !== $proposal->submitter_id && ($m->identity?->type === 'dosen' || $m->pivot->role === 'anggota' || $m->pivot->role === 'dosen'));
+                @endphp
+                @foreach($lecturerMembersCover as $index => $member)
+                <tr>
+                    <td style="width: 15%; border: 0.5pt dashed #000; padding: 8px;">Anggota {{ to_roman($index + 1) }}</td>
+                    <td style="width: 45%; border: 0.5pt dashed #000; padding: 8px; font-weight: bold;">{{ format_name($member->identity?->title_prefix ?? '', $member->name, $member->identity?->title_suffix ?? '') }}</td>
+                    <td style="width: 10%; border: 0.5pt dashed #000; padding: 8px;">NIDN</td>
+                    <td style="width: 30%; border: 0.5pt dashed #000; padding: 8px; font-weight: bold;">{{ $member->identity?->identity_id ?? '-' }}</td>
+                </tr>
+                @endforeach
+            </table>
+        </div>
 
-                <div class="cover-footer">
-                    PROGRAM STUDI {{ strtoupper($prodiName) }}<br>
-                    FAKULTAS {{ strtoupper($facultyName) }}<br>
-                    INSTITUT TEKNOLOGI DAN SAINS NAHDLATUL ULAMA PEKALONGAN<br>
-                    TAHUN {{ $academicYear }}
-                </div>
-            </td>
-        </tr>
-    </table>
+        <div style="position: absolute; bottom: 2cm; width: 100%; text-align: center; font-weight: bold; font-size: 12pt; text-transform: uppercase;">
+            FAKULTAS {{ strtoupper($facultyName) }}<br>
+            PROGRAM STUDI {{ strtoupper($prodiName) }}<br>
+            ITSNU PEKALONGAN<br>
+            TAHUN {{ $report->reporting_year }}
+        </div>
+    </div>
 
     <div style="page-break-after: always;"></div>
 
     <table class="header-table no-border">
         <tr>
             <td class="logo" style="width: 60px;">
-                @if(file_exists(public_path('logo.png')))
-                    <img src="{{ public_path('logo.png') }}" alt="Logo" style="width: 50px;">
+                @if(get_logo_base64())
+                    <img src="{{ get_logo_base64() }}" alt="Logo" style="width: 50px;">
                 @endif
             </td>
             <td class="header-text">
@@ -225,7 +220,7 @@
 
     {{-- 1. JUDUL --}}
     <div class="section-title">{{ $sectionNum++ }}. JUDUL {{ $proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN' }}</div>
-    <div class="title-border-box">{{ $proposal->title }}</div>
+    <div class="title-border-box">{{ clean_proposal_title($proposal->title) }}</div>
 
     <table>
         <thead>
@@ -741,41 +736,20 @@
         </table>
 
         <div style="page-break-inside: avoid;">
+            {{-- Row 1: Dekan & Ketua --}}
             <table class="no-border" style="width: 100%; margin-top: 30px;">
                 <tr>
-                    <td width="33%"></td>
-                    <td width="33%"></td>
-                    <td width="34%" class="text-center">Pekalongan, @if(isset($report->updated_at)) {{ $report->updated_at->format('d F Y') }} @else {{ date('d F Y') }} @endif</td>
-                </tr>
-                <tr>
-                    <td class="text-center" style="vertical-align: top;">
-                        Menyetujui,<br>
-                        Kepala LPPM ITSNU Pekalongan
-                    </td>
-                    <td class="text-center" style="vertical-align: top;">
+                    <td width="50%" class="text-center" style="vertical-align: top;">
                         Mengetahui,<br>
                         Dekan {{ $proposal->submitter->identity?->faculty?->name ?? '.......................' }}
                     </td>
-                    <td class="text-center" style="vertical-align: top;">
-                        <br>
+                    <td width="50%" class="text-center" style="vertical-align: top;">
+                        Pekalongan, @if(isset($report->updated_at)) {{ $report->updated_at->format('d F Y') }} @else {{ date('d F Y') }} @endif<br>
                         Ketua {{ $proposal->detailable_type === 'App\Models\Research' ? 'Peneliti' : 'Pelaksana' }}
                     </td>
                 </tr>
-
                 <tr>
-                    <td class="text-center" style="height: 100px; vertical-align: bottom;">
-                        @if($qrLppmUrl ?? null)
-                            <div style="margin-bottom: 5px;">
-                                <img src="{{ generate_qr_code_data_uri($qrLppmUrl, 140) }}" width="70">
-                            </div>
-                            <div style="font-size: 7pt; color: #059669; font-weight: bold; margin-bottom: 5px;">VERIFIED BY LPPM</div>
-                        @else
-                            <div style="height: 70px;"></div>
-                        @endif
-                        <strong><u>{{ $lppm_head_name ?? '.......................' }}</u></strong><br>
-                        NPP. {{ $lppm_head_id ?? '-' }}
-                    </td>
-                    <td class="text-center" style="height: 100px; vertical-align: bottom;">
+                    <td class="text-center" style="height: 120px; vertical-align: bottom; padding-bottom: 20px;">
                         @if($qrDeanUrl ?? null)
                             <div style="margin-bottom: 5px;">
                                 <img src="{{ generate_qr_code_data_uri($qrDeanUrl, 140) }}" width="70">
@@ -787,7 +761,7 @@
                         <strong><u>{{ $dean_name ?? '.......................' }}</u></strong><br>
                         NPP. {{ $dean_id ?? '-' }}
                     </td>
-                    <td class="text-center" style="height: 100px; vertical-align: bottom;">
+                    <td class="text-center" style="height: 120px; vertical-align: bottom; padding-bottom: 20px;">
                         @if($qrLecturerUrl ?? null)
                             <div style="margin-bottom: 5px;">
                                 <img src="{{ generate_qr_code_data_uri($qrLecturerUrl, 140) }}" width="70">
@@ -796,6 +770,30 @@
                         @endif
                         <strong><u>{{ $submitterFullName }}</u></strong><br>
                         NPP. {{ $proposal->submitter->identity?->identity_id ?? '-' }}
+                    </td>
+                </tr>
+            </table>
+
+            {{-- Row 2: Kepala LPPM (Centered) --}}
+            <table class="no-border" style="width: 100%;">
+                <tr>
+                    <td class="text-center" style="vertical-align: top;">
+                        Menyetujui,<br>
+                        Kepala LPPM ITSNU Pekalongan
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center" style="height: 120px; vertical-align: bottom;">
+                        @if($qrLppmUrl ?? null)
+                            <div style="margin-bottom: 5px;">
+                                <img src="{{ generate_qr_code_data_uri($qrLppmUrl, 140) }}" width="70">
+                            </div>
+                            <div style="font-size: 7pt; color: #059669; font-weight: bold; margin-bottom: 5px;">VERIFIED BY LPPM</div>
+                        @else
+                            <div style="height: 70px;"></div>
+                        @endif
+                        <strong><u>{{ $lppm_head_name ?? '.......................' }}</u></strong><br>
+                        NPP. {{ $lppm_head_id ?? '-' }}
                     </td>
                 </tr>
             </table>

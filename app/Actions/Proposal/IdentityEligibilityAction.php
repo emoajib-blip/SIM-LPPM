@@ -13,7 +13,7 @@ class IdentityEligibilityAction
      *
      * @param  mixed  $scheme  (ResearchScheme|CommunityServiceScheme)
      * @param  string  $role  (leader|member)
-     * @return array ['is_eligible' => bool, 'reason' => ?string]
+     * @return array{is_eligible: bool, reason: string|null}
      */
     public function execute(User $user, $scheme, string $role = 'leader'): array
     {

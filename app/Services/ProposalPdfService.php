@@ -233,7 +233,22 @@ class ProposalPdfService
             'dean_signed_at' => $deanLog?->at,
             'lppm_signed_at' => $lppmLog?->at,
             'lecturer_signed_at' => $lecturerSignedAt,
-        ])->setPaper('a4', 'portrait')->output();
+        ])
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'times-roman',
+            ]);
+
+        // Add metadata
+        $infoPdfContent->getDomPDF()->add_info('Title', 'PROPOSAL '.($proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN').' - '.$proposal->title);
+        $infoPdfContent->getDomPDF()->add_info('Author', $proposal->submitter->name);
+        $infoPdfContent->getDomPDF()->add_info('Subject', 'Dokumen Usulan Program PPM Internal ITSNU Pekalongan');
+        $infoPdfContent->getDomPDF()->add_info('Keywords', 'SIM-LPPM, ITSNU, Pekalongan, '.($proposal->researchScheme->name ?? '').', '.($proposal->focusArea->name ?? ''));
+        $infoPdfContent->getDomPDF()->add_info('Creator', 'SIM-LPPM ITSNU Pekalongan');
+
+        $infoPdfContent = $infoPdfContent->output();
 
         $tempInfoPath = tempnam($cacheDir, 'proposal_info_');
         file_put_contents($tempInfoPath, $infoPdfContent);
@@ -488,7 +503,23 @@ class ProposalPdfService
             'qrLecturerUrl' => $qrLecturerUrl,
             'qrDeanUrl' => $qrDeanUrl,
             'qrLppmUrl' => $qrLppmUrl,
-        ])->setPaper('a4', 'portrait')->output();
+        ])
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'times-roman',
+            ]);
+
+        // Add metadata
+        $periodLabel = $report->reporting_period === 'final' ? 'AKHIR' : 'KEMAJUAN';
+        $infoPdfContent->getDomPDF()->add_info('Title', 'LAPORAN '.$periodLabel.' - '.$proposal->title);
+        $infoPdfContent->getDomPDF()->add_info('Author', $proposal->submitter->name);
+        $infoPdfContent->getDomPDF()->add_info('Subject', 'Laporan Program PPM Internal ITSNU Pekalongan');
+        $infoPdfContent->getDomPDF()->add_info('Keywords', 'SIM-LPPM, ITSNU, Pekalongan, Laporan, '.$periodLabel);
+        $infoPdfContent->getDomPDF()->add_info('Creator', 'SIM-LPPM ITSNU Pekalongan');
+
+        $infoPdfContent = $infoPdfContent->output();
 
         $tempInfoPath = tempnam($cacheDir, 'report_info_');
         file_put_contents($tempInfoPath, $infoPdfContent);
@@ -605,12 +636,45 @@ class ProposalPdfService
             ->get();
 
         if ($dailyNotes->isNotEmpty()) {
+            // Prepare submitter information for daily notes view
+            $submitterIdentity = $proposal->submitter->identity;
+            $submitterFullName = format_name($submitterIdentity?->title_prefix, $proposal->submitter->name, $submitterIdentity?->title_suffix);
+            $facultyName = $submitterIdentity?->faculty?->name ?? '-';
+            $prodiName = $submitterIdentity?->studyProgram?->name ?? '-';
+            $institutionName = $submitterIdentity?->institution?->name ?? 'ITSNU Pekalongan';
+            $academicYear = $proposal->start_year.'/'.($proposal->start_year + 1);
+
+            // Get QR URLs for daily notes signatures
+            $logbookSigs = $proposal->signatures()
+                ->where('variant', 'logbook')
+                ->get()
+                ->keyBy(function (\Illuminate\Database\Eloquent\Model $s) {
+                    /** @var \App\Models\DocumentSignature $s */
+                    return "{$s->action}|{$s->signed_role}";
+                });
+
+            $qrUrlSubmitter = isset($logbookSigs['submitted|lecturer'])
+                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $logbookSigs['submitted|lecturer']->id])
+                : null;
+
+            $qrUrlLppm = isset($logbookSigs['approved|kepala_lppm'])
+                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $logbookSigs['approved|kepala_lppm']->id])
+                : null;
+
             $notesPdfContent = Pdf::loadView('pdf.daily-notes', [
                 'proposal' => $proposal,
                 'notes' => $dailyNotes,
                 'isSigned' => $proposal->logbook_signed_at !== null,
                 'isApproved' => $proposal->logbook_approved_at !== null,
                 'logbookApprovalMode' => \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital',
+                'submitterFullName' => $submitterFullName,
+                'facultyName' => $facultyName,
+                'prodiName' => $prodiName,
+                'institutionName' => $institutionName,
+                'academicYear' => $academicYear,
+                'docTitle' => 'CATATAN HARIAN '.($proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN').' INTERNAL',
+                'qrUrlSubmitter' => $qrUrlSubmitter,
+                'qrUrlLppm' => $qrUrlLppm,
             ])->setPaper('a4', 'portrait')->output();
 
             $tempNotesPath = tempnam(storage_path('app'), 'report_notes_');

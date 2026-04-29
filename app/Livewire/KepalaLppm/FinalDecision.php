@@ -48,6 +48,7 @@ class FinalDecision extends Component
                 'detailable',
                 'focusArea',
                 'researchScheme',
+                'communityServiceScheme',
                 'reviewers.user',
             ])
             ->when($this->search, function ($query) {

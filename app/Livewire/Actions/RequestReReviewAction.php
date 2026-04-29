@@ -19,6 +19,8 @@ class RequestReReviewAction
      *
      * This action is called when a proposal is resubmitted after REVISION_NEEDED status.
      * It resets all reviewer statuses and notifies them of the revision.
+     *
+     * @return array{success: bool, message: string}
      */
     public function execute(Proposal $proposal, int $daysToReview = 14): array
     {

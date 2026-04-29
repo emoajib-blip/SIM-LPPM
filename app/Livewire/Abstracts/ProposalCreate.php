@@ -113,6 +113,20 @@ abstract class ProposalCreate extends Component
 
         if ($proposal->submitter_id === $user->getAuthIdentifier()) {
             if ($proposal->status === \App\Enums\ProposalStatus::DRAFT) {
+                // Dosen: enforce submission schedule window
+                if ($user instanceof \App\Models\User && $user->activeHasRole('dosen')) {
+                    $eligibilityService = app(LecturerEligibilityService::class);
+                    $schedule = $eligibilityService->getScheduleStatus();
+                    $type = $this->getProposalType();
+                    $isOpen = $type === 'research'
+                        ? $schedule['research_open']
+                        : $schedule['pkm_open'];
+
+                    if (! $isOpen) {
+                        return false;
+                    }
+                }
+
                 return true;
             }
 
@@ -394,6 +408,19 @@ abstract class ProposalCreate extends Component
     }
 
     #[Computed]
+    public function studyProgramRoadmaps()
+    {
+        $user = Auth::user();
+        if ($user && $user->identity && $user->identity->study_program_id) {
+            return \App\Models\StudyProgramRoadmap::where('is_active', true)
+                ->where('study_program_id', $user->identity->study_program_id)
+                ->get();
+        }
+
+        return collect();
+    }
+
+    #[Computed]
     public function scienceClusters()
     {
         return app(MasterDataService::class)->scienceClusters($this->getProposalType());
@@ -516,6 +543,7 @@ abstract class ProposalCreate extends Component
                 'form.focus_area_id' => 'required|exists:focus_areas,id',
                 'form.theme_id' => 'required|exists:themes,id',
                 'form.topic_id' => 'required|exists:topics,id',
+                'form.study_program_roadmap_id' => \App\Models\Setting::get('feature_roadmap_active', false) ? 'required|exists:study_program_roadmaps,id' : 'nullable',
                 'form.keywords' => 'required|array|min:1|max:5',
                 'form.sdg_ids' => 'required|array|min:1',
                 'form.targeted_iku_ids' => 'required|array|min:1',

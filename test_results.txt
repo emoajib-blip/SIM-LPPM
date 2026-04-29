@@ -1,0 +1,279 @@
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true                                                    0.03s  
+
+   PASS  Tests\Unit\IdentityUserRelationshipTest
+  ✓ it user has one identity                                             1.38s  
+  ✓ it identity belongs to user                                          0.10s  
+
+   PASS  Tests\Feature\ActiveRoleAuthorizationTest
+  ✓ it menu only shows items for active role                             0.54s  
+  ✓ it switches active role and authorization updates                    0.26s  
+  ✓ it activeHasRole methods work correctly                              0.27s  
+
+   PASS  Tests\Feature\Admin\ArchiveImportTest
+  ✓ admin can import archives from excel                                 0.57s  
+  ✓ import shows warning when rows fail                                  0.37s  
+
+   PASS  Tests\Feature\AdminReportExportTest
+  ✓ admin can download iku report                                        1.02s  
+  ✓ admin can download research recap                                    0.68s  
+
+   PASS  Tests\Feature\Api\PublicDataTest
+  ✓ can access completed research via public api                         0.43s  
+  ✓ cannot see draft research in public api                              0.36s  
+  ✓ can access completed community service via public api                0.30s  
+  ✓ research api does not expose sensitive budget data                   0.40s  
+  ✓ can view single public research detail                               0.28s  
+  ✓ can access public stats                                              0.29s  
+
+   WARN  Tests\Feature\Auth\AuthenticationTest
+  ✓ login screen can be rendered                                         0.13s  
+  ✓ users can authenticate using the login screen                        0.12s  
+  ✓ users can not authenticate with invalid password                     0.15s  
+  - users with two factor enabled are redirected to two factor challeng… 0.15s  
+  ✓ users can logout                                                     0.10s  
+
+   PASS  Tests\Feature\Auth\EmailVerificationTest
+  ✓ email verification screen can be rendered                            0.12s  
+  ✓ email can be verified                                                0.12s  
+  ✓ email is not verified with invalid hash                              0.14s  
+
+   PASS  Tests\Feature\Auth\PasswordConfirmationTest
+  ✓ confirm password screen can be rendered                              0.12s  
+
+   PASS  Tests\Feature\Auth\PasswordResetTest
+  ✓ reset password link screen can be rendered                           0.10s  
+  ✓ reset password link can be requested                                 0.37s  
+  ✓ reset password screen can be rendered                                0.39s  
+  ✓ password can be reset with valid token                               0.35s  
+
+   WARN  Tests\Feature\Auth\RegistrationTest
+  - registration screen can be rendered → Registration is disabled in c… 0.11s  
+  - new users can register → Registration is disabled in config.         0.11s  
+
+   WARN  Tests\Feature\Auth\TwoFactorChallengeTest
+  - two factor challenge redirects to login when not authenticated → Tw… 0.31s  
+  - two factor challenge can be rendered → Two-factor authentication is… 0.12s  
+
+   PASS  Tests\Feature\BudgetValidationTest
+  ✓ budget cannot exceed yearly cap                                      0.10s  
+  ✓ budget within cap passes validation                                  0.12s  
+  ✓ budget group cannot exceed allowed percentage                        0.11s  
+  ✓ system blocks budget submission if cap not set                       0.09s  
+
+   PASS  Tests\Feature\DashboardTest
+  ✓ guests are redirected to the login page                              0.09s  
+  ✓ authenticated users can visit the dashboard                          0.20s  
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ returns a successful response                                        0.09s  
+
+   PASS  Tests\Feature\FakeSdgTest
+  ✓ master data sdgs tab can render without 403                          0.35s  
+
+   PASS  Tests\Feature\HealthCheckTest
+  ✓ health check returns ok                                              0.09s  
+
+   PASS  Tests\Feature\Iku\IkuDashboardTest
+  ✓ it can render the dashboard                                          0.36s  
+  ✓ it calculates iku4 correctly                                         0.38s  
+
+   PASS  Tests\Feature\Iku\IkuVerificationTest
+  ✓ iku verification page is accessible to admin                         0.61s  
+  ✓ admin can verify a mandatory output                                  0.43s  
+  ✓ admin can update output rank                                         0.38s  
+
+   PASS  Tests\Feature\IndonesianValidationTest
+  ✓ indonesian validation messages are used when locale is id            0.24s  
+  ✓ validation required message in indonesian                            0.13s  
+  ✓ validation email message in indonesian                               0.18s  
+  ✓ validation min message in indonesian                                 0.12s  
+  ✓ validation max message in indonesian                                 0.12s  
+  ✓ validation confirmed message in indonesian                           0.12s  
+  ✓ validation unique message in indonesian                              0.11s  
+  ✓ auth language lines in indonesian                                    0.10s  
+  ✓ pagination language lines in indonesian                              0.37s  
+  ✓ password reset language lines in indonesian                          0.18s  
+
+   PASS  Tests\Feature\Installer\InstallerMiddlewareTest
+  ✓ it bootstraps an installer key when missing                          0.14s  
+
+   PASS  Tests\Feature\Installer\InstallerWizardTest
+  ✓ it blocks step progression when environment fails                    0.32s  
+  ✓ it advances through all installer steps with valid data              0.35s  
+  ✓ it builds installation config from all form steps                    0.38s  
+  ✓ it preserves database password through step navigation               0.38s  
+  ✓ it updates database password when user enters new value              0.43s  
+  ✓ it writes empty values from installer inputs                         0.09s  
+
+   PASS  Tests\Feature\Livewire\Research\Proposal\Components\TktMeasurementTest
+  ✓ it calculates level average correctly                                0.18s  
+  ✓ it determines level passed status                                    0.17s  
+  ✓ it locks next level if previous failed                               0.15s  
+  ✓ it dispatches switch level event when level passed                   0.13s  
+  ✓ save dispatches correct data                                         0.14s  
+
+   WARN  Tests\Feature\Livewire\Research\ProposalTest
+  - step 1 validation requires members → ProposalTest is currently unstable due to complex Livewire v3 initialization issues and session dependencies. Skipping to ensure green build.
+  - step 2 validation requires macro group file and outputs → ProposalTest is currently unstable due to complex Livewire v3 initialization issues and session dependencies. Skipping to ensure green build.
+  - step 2 validation requires wajib output → ProposalTest is currently unstable due to complex Livewire v3 initialization issues and session dependencies. Skipping to ensure green build.
+  - step 3 validation requires budget items → ProposalTest is currently unstable due to complex Livewire v3 initialization issues and session dependencies. Skipping to ensure green build.
+
+   PASS  Tests\Feature\MonevBaSignatureTest
+  ✓ monev ba pdf generates signatures and verification page              1.42s  
+
+   PASS  Tests\Feature\MonevInternalTest
+  ✓ only admin lppm can access monev page                                0.80s  
+  ✓ monev list only shows completed proposals                            0.40s  
+  ✓ admin must upload all required files for new monev                   0.78s  
+  ✓ progress percentage must be between 0 and 100                        0.70s  
+
+   PASS  Tests\Feature\PessimisticSecurityTest
+  ✓ cannot assign submitter as reviewer                                  0.42s  
+  ✓ cannot assign team member as reviewer                                0.38s  
+  ✓ cannot complete review without scores                                0.86s  
+  ✓ user cannot complete someone elses review                            0.80s  
+  ✓ proposal status only changes when all reviewers submit successfully  1.08s  
+
+   WARN  Tests\Feature\ProposalSignatureTest
+  ! export proposal creates digital signatures → Test code or tested co… 1.16s  
+  ! approved proposal has dekan signature → Test code or tested code cl… 1.00s  
+
+   PASS  Tests\Feature\ProposalWorkflowTest
+  ✓ complete proposal workflow happy path                                0.80s  
+  ✓ dekan cannot approve proposal from different faculty                 0.74s  
+  ✓ dosen cannot submit if member rejected                               0.72s  
+  ✓ admin lppm cannot assign reviewer to draft proposal                  0.49s  
+  ✓ reviewer cannot complete review twice                                0.38s  
+  ✓ kepala lppm cannot make final decision before all reviews completed  0.43s  
+  ✓ dekan can reject proposal                                            0.63s  
+  ✓ kepala lppm can reject proposal at final decision                    0.68s  
+  ✓ community service workflow happy path                                0.92s  
+  ✓ proposal isolation between dosen                                     0.76s  
+  ✓ proposal cannot exceed budget cap                                    0.87s  
+  ✓ dekan can return to need assignment                                  0.71s  
+  ✓ request re review action resets reviewers                            0.45s  
+  ✓ cannot delete proposal if not draft                                  0.46s  
+
+   PASS  Tests\Feature\RealHttpGetTest
+  ✓ master data get request                                              0.65s  
+
+   PASS  Tests\Feature\ReportExportTest
+  ✓ components can render                                                0.49s  
+  ✓ research export logic                                                0.63s  
+  ✓ community service export logic                                       0.48s  
+  ✓ partner collaboration export logic                                   0.55s  
+  ✓ output report export logic                                           0.66s  
+
+   PASS  Tests\Feature\ReportSignatureTest
+  ✓ export report creates digital signatures                             0.74s  
+
+   PASS  Tests\Feature\ReportWorkflowTest
+  ✓ dosen can create and submit progress report                          0.58s  
+  ✓ dosen can create and submit final report                             0.75s  
+  ✓ dosen can fill mandatory output in report                            0.52s  
+  ✓ dosen can add daily note                                             0.77s  
+  ✓ dosen can create community service progress report                   0.69s  
+  ✓ dekan can view progress report                                       0.67s  
+  ✓ dekan can view daily notes                                           0.37s  
+
+   PASS  Tests\Feature\ReviewEvaluationSignatureTest
+  ✓ review evaluation pdf generates signature and verifies               0.45s  
+
+   PASS  Tests\Feature\ReviewSystemTest
+  ✓ only assigned reviewer can submit review                             0.50s  
+  ✓ review score calculation math is accurate                            0.69s  
+  ✓ review score cannot exceed maximum boundaries                        0.64s  
+
+   PASS  Tests\Feature\ReviewerFormPerformanceTest
+  ✓ reviewer form is optimized                                           0.25s  
+
+   PASS  Tests\Feature\RoleSelectionTest
+  ✓ it sets active role automatically when user has roles                0.65s  
+  ✓ it formats role names correctly                                      0.15s  
+  ✓ it format_name helper combines prefix and suffix correctly           0.12s  
+
+   WARN  Tests\Feature\Security\MediaDownloadAccessTest
+  ! ketua can download their own file → Test code or tested code closed… 0.65s  
+  ! anggota can download proposal file → Test code or tested code close… 0.60s  
+  ! admin lppm can download any file → Test code or tested code closed…  0.36s  
+  ✓ other dosen cannot download restricted file                          0.47s  
+  ✓ guest is redirected to login                                         0.34s  
+  ✓ malformed uuid returns 404                                           0.33s  
+  ! system settings are accessible to all authenticated users → Test co… 0.37s  
+  ✓ mime mismatch prevents download                                      1.55s  
+
+   PASS  Tests\Feature\Security\MediaIdorTest
+  ✓ user cannot view other users progress report and media links         0.69s  
+  ✓ user cannot view other users daily notes                             0.51s  
+
+   PASS  Tests\Feature\Security\MediaLinksSignedTest
+  ✓ it tidak ada penggunaan getUrl() atau getFirstMediaUrl() tersisa di… 0.48s  
+
+   PASS  Tests\Feature\Services\EligibilityServiceTest
+  ✓ EligibilityService → checkEligibility → it returns eligible when al… 0.16s  
+  ✓ EligibilityService → checkEligibility → it returns ineligible when…  0.12s  
+  ✓ EligibilityService → checkEligibility → it returns ineligible when…  0.11s  
+  ✓ EligibilityService → checkEligibility → it returns ineligible when…  0.11s  
+  ✓ EligibilityService → checkEligibility → it returns ineligible when…  0.11s  
+  ✓ EligibilityService → checkEligibility → it validates Scopus documen… 0.11s  
+  ✓ EligibilityService → checkEligibility → it validates Scopus citatio… 0.13s  
+  ✓ EligibilityService → checkEligibility → it validates education leve… 0.12s  
+  ✓ EligibilityService → checkEligibility → it passes education level w… 0.11s  
+  ✓ EligibilityService → checkEligibility → it validates affiliation sc… 0.10s  
+  ✓ EligibilityService → canSubmitResearchProposal → it returns true wh… 0.11s  
+  ✓ EligibilityService → canSubmitResearchProposal → it returns false w… 0.11s  
+  ✓ EligibilityService → getEligibleResearchSchemes → it returns only s… 0.11s  
+  ✓ EligibilityService → countEligibleForResearchScheme → it counts dos… 0.17s  
+  ✓ EligibilityService → getResearchSchemeEligibilityBreakdown → it pro… 0.16s  
+  ✓ EligibilityService → getDetailedResearchSchemeEligibility → it retu… 0.32s  
+
+   PASS  Tests\Feature\Settings\AuditLogTest
+  ✓ it denies access to audit log component for non-admin users          0.36s  
+  ✓ it allows admin to view audit logs and filter by user                0.72s  
+  ✓ it admin route is protected and accessible                           0.57s  
+  ✓ it can filter by date range and ip address                           0.64s  
+
+   PASS  Tests\Feature\Settings\PasswordUpdateTest
+  ✓ password can be updated                                              0.24s  
+  ✓ correct password must be provided to update password                 0.23s  
+
+   PASS  Tests\Feature\Settings\ProfileUpdateTest
+  ✓ profile page is displayed                                            0.32s  
+  ✓ profile information can be updated                                   0.16s  
+  ✓ email verification status is unchanged when email address is unchan… 0.15s  
+  ✓ user can delete their account                                        0.12s  
+  ✓ correct password must be provided to delete account                  0.15s  
+
+   PASS  Tests\Feature\Settings\ProposalTemplateTest
+  ✓ page loads for admin lppm                                            0.52s  
+  ✓ non admin cannot access                                              0.37s  
+
+   WARN  Tests\Feature\Settings\TwoFactorAuthenticationTest
+  - two factor settings page can be rendered → Two-factor authentication is not enabled.
+  - two factor settings page requires password confirmation when enabled → Two-factor authentication is not enabled.
+  - two factor settings page returns forbidden response when two factor is disabled → Two-factor authentication is not enabled.
+  - two factor authentication disabled when confirmation abandoned between requests → Two-factor authentication is not enabled.
+
+   PASS  Tests\Feature\TwoFactorAuthenticationTest
+  ✓ it shows two-factor challenge when session exists                    0.15s  
+  ✓ it redirects to login when no session exists                         0.14s  
+  ✓ it stores valid recovery code and logs user in                       0.15s  
+  ✓ it stores valid recovery code and logs user in with remember me      0.35s  
+  ✓ it rejects invalid two-factor code                                   0.21s  
+  ✓ it rejects invalid recovery code                                     0.16s  
+  ✓ it has the correct route names that match Login component expectati… 0.23s  
+
+   PASS  Tests\Feature\UserImportCommandTest
+  ✓ artisan command imports users                                        0.20s  
+
+   PASS  Tests\Feature\UserImportTest
+  ✓ admin can access import page                                         0.73s  
+  ✓ non admin cannot access import page                                  0.40s  
+  ✓ can upload and parse excel file                                      0.37s  
+  ✓ can import users                                                     0.42s  
+
+  Tests:    6 risky, 13 skipped, 158 passed (483 assertions)
+  Duration: 67.15s
+

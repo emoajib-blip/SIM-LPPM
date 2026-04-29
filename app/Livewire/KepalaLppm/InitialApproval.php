@@ -43,7 +43,7 @@ class InitialApproval extends Component
             ->where('status', ProposalStatus::APPROVED);
 
         return $query
-            ->with(['submitter.identity', 'detailable', 'focusArea', 'researchScheme'])
+            ->with(['submitter.identity', 'detailable', 'focusArea', 'researchScheme', 'communityServiceScheme'])
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('title', 'like', "%{$this->search}%")

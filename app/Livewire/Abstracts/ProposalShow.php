@@ -6,7 +6,9 @@ use App\Livewire\Forms\ProposalForm;
 use App\Livewire\Traits\WithApproval;
 use App\Livewire\Traits\WithTeamManagement;
 use App\Models\Proposal;
+use App\Services\LecturerEligibilityService;
 use App\Services\ProposalService;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -101,17 +103,45 @@ abstract class ProposalShow extends Component
     #[Computed]
     public function canEdit(): bool
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
 
-        return $this->proposal->status === \App\Enums\ProposalStatus::DRAFT
-            && $this->proposal->submitter_id === $user->id;
+        // Only submitter of a draft proposal can edit
+        if ($this->proposal->status !== \App\Enums\ProposalStatus::DRAFT
+            || $this->proposal->submitter_id !== $user->id) {
+            return false;
+        }
+
+        // Admin LPPM is always allowed to assist editing
+        if ($user->activeHasAnyRole(['admin lppm', 'admin lppm saintek', 'admin lppm dekabita', 'superadmin'])) {
+            return true;
+        }
+
+        // Dosen: enforce submission schedule window
+        return $this->isScheduleOpen;
+    }
+
+    /**
+     * Check whether the submission schedule is currently open for this proposal type.
+     * Returns true if no schedule is configured (defaults open).
+     * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+     */
+    #[Computed]
+    public function isScheduleOpen(): bool
+    {
+        $schedule = app(LecturerEligibilityService::class)->getScheduleStatus();
+        $type = $this->getProposalType(); // 'research' or 'community-service'
+
+        return $type === 'research'
+            ? $schedule['research_open']
+            : $schedule['pkm_open'];
     }
 
     #[Computed]
     public function canDelete(): bool
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
 
+        // Submitter of a draft proposal can always delete (schedule does not restrict deletion)
         return $this->proposal->status === \App\Enums\ProposalStatus::DRAFT
             && $this->proposal->submitter_id === $user->id;
     }

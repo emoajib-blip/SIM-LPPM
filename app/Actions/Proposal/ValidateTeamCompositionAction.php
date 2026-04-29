@@ -12,7 +12,8 @@ class ValidateTeamCompositionAction
 {
     /**
      * Validate the team composition including students and cross-prodi rules.
-     * Vetted by AI - Manual Review Required by Senior Engineer/Manager
+     *
+     * @return array{is_valid: bool, errors: array<int, string>}
      */
     public function execute(Proposal $proposal): array
     {

@@ -127,6 +127,8 @@ class Proposal extends Model
 
     /**
      * Get the SDGs for the proposal.
+     *
+     * @return BelongsToMany<Sdg, $this>
      */
     public function sdgs(): BelongsToMany
     {
@@ -135,6 +137,8 @@ class Proposal extends Model
 
     /**
      * Get the targeted IKUs for the proposal.
+     *
+     * @return BelongsToMany<MasterIku, $this>
      */
     public function targetedIkus(): BelongsToMany
     {
@@ -143,6 +147,8 @@ class Proposal extends Model
 
     /**
      * Get all monev sessions for the proposal.
+     *
+     * @return HasMany<ProposalMonev, $this>
      */
     public function monevs(): HasMany
     {
@@ -151,6 +157,8 @@ class Proposal extends Model
 
     /**
      * Get the user who submitted the proposal.
+     *
+     * @return BelongsTo<User, $this>
      */
     public function submitter(): BelongsTo
     {
@@ -159,6 +167,8 @@ class Proposal extends Model
 
     /**
      * Alias for submitter relationship.
+     *
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -167,6 +177,8 @@ class Proposal extends Model
 
     /**
      * Get the detailable model (Research or CommunityService).
+     *
+     * @return MorphTo<Model, $this>
      */
     public function detailable(): MorphTo
     {
@@ -175,6 +187,8 @@ class Proposal extends Model
 
     /**
      * Get the research scheme for the proposal.
+     *
+     * @return BelongsTo<ResearchScheme, $this>
      */
     public function researchScheme(): BelongsTo
     {
@@ -183,6 +197,8 @@ class Proposal extends Model
 
     /**
      * Get the community service scheme for the proposal.
+     *
+     * @return BelongsTo<CommunityServiceScheme, $this>
      */
     public function communityServiceScheme(): BelongsTo
     {
@@ -191,6 +207,8 @@ class Proposal extends Model
 
     /**
      * Get the focus area for the proposal.
+     *
+     * @return BelongsTo<FocusArea, $this>
      */
     public function focusArea(): BelongsTo
     {
@@ -199,6 +217,8 @@ class Proposal extends Model
 
     /**
      * Get the theme for the proposal.
+     *
+     * @return BelongsTo<Theme, $this>
      */
     public function theme(): BelongsTo
     {
@@ -207,6 +227,8 @@ class Proposal extends Model
 
     /**
      * Get the topic for the proposal.
+     *
+     * @return BelongsTo<Topic, $this>
      */
     public function topic(): BelongsTo
     {
@@ -215,6 +237,8 @@ class Proposal extends Model
 
     /**
      * Get the national priority for the proposal.
+     *
+     * @return BelongsTo<NationalPriority, $this>
      */
     public function nationalPriority(): BelongsTo
     {
@@ -223,6 +247,8 @@ class Proposal extends Model
 
     /**
      * Get the level 1 science cluster for the proposal.
+     *
+     * @return BelongsTo<ScienceCluster, $this>
      */
     public function clusterLevel1(): BelongsTo
     {
@@ -231,6 +257,8 @@ class Proposal extends Model
 
     /**
      * Get the level 2 science cluster for the proposal.
+     *
+     * @return BelongsTo<ScienceCluster, $this>
      */
     public function clusterLevel2(): BelongsTo
     {
@@ -239,12 +267,19 @@ class Proposal extends Model
 
     /**
      * Get the level 3 science cluster for the proposal.
+     *
+     * @return BelongsTo<ScienceCluster, $this>
      */
     public function clusterLevel3(): BelongsTo
     {
         return $this->belongsTo(ScienceCluster::class, 'cluster_level3_id');
     }
 
+    /**
+     * Get the team members for the proposal.
+     *
+     * @return BelongsToMany<User, $this>
+     */
     public function teamMembers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'proposal_user')
@@ -255,6 +290,8 @@ class Proposal extends Model
 
     /**
      * Get all keywords for the proposal.
+     *
+     * @return BelongsToMany<Keyword, $this>
      */
     public function keywords(): BelongsToMany
     {
@@ -264,6 +301,8 @@ class Proposal extends Model
 
     /**
      * Get all outputs for the proposal.
+     *
+     * @return HasMany<ProposalOutput, $this>
      */
     public function outputs(): HasMany
     {
@@ -272,6 +311,8 @@ class Proposal extends Model
 
     /**
      * Get all budget items for the proposal.
+     *
+     * @return HasMany<BudgetItem, $this>
      */
     public function budgetItems(): HasMany
     {
@@ -280,6 +321,8 @@ class Proposal extends Model
 
     /**
      * Get all partners for the proposal.
+     *
+     * @return BelongsToMany<Partner, $this>
      */
     public function partners(): BelongsToMany
     {
@@ -289,6 +332,8 @@ class Proposal extends Model
 
     /**
      * Get all activity schedules for the proposal.
+     *
+     * @return HasMany<ActivitySchedule, $this>
      */
     public function activitySchedules(): HasMany
     {
@@ -297,6 +342,8 @@ class Proposal extends Model
 
     /**
      * Get all research stages for the proposal.
+     *
+     * @return HasMany<ResearchStage, $this>
      */
     public function researchStages(): HasMany
     {
@@ -305,6 +352,8 @@ class Proposal extends Model
 
     /**
      * Get all reviewers for the proposal.
+     *
+     * @return HasMany<ProposalReviewer, $this>
      */
     public function reviewers(): HasMany
     {
@@ -313,6 +362,8 @@ class Proposal extends Model
 
     /**
      * Get all progress reports for the proposal.
+     *
+     * @return HasMany<ProgressReport, $this>
      */
     public function progressReports(): HasMany
     {
@@ -321,6 +372,8 @@ class Proposal extends Model
 
     /**
      * Get all daily notes for the proposal.
+     *
+     * @return HasMany<DailyNote, $this>
      */
     public function dailyNotes(): HasMany
     {
@@ -329,6 +382,8 @@ class Proposal extends Model
 
     /**
      * Get all status change logs for the proposal.
+     *
+     * @return HasMany<ProposalStatusLog, $this>
      */
     public function statusLogs(): HasMany
     {
@@ -337,6 +392,8 @@ class Proposal extends Model
 
     /**
      * Get all review logs for the proposal.
+     *
+     * @return HasMany<ReviewLog, $this>
      */
     public function reviewLogs(): HasMany
     {
@@ -345,6 +402,8 @@ class Proposal extends Model
 
     /**
      * Get all activities for the proposal.
+     *
+     * @return HasMany<ProposalActivity, $this>
      */
     public function activities(): HasMany
     {
@@ -353,6 +412,8 @@ class Proposal extends Model
 
     /**
      * Get all digital signatures for the proposal.
+     *
+     * @return MorphMany<DocumentSignature, $this>
      */
     public function signatures(): MorphMany
     {
@@ -447,6 +508,8 @@ class Proposal extends Model
 
     /**
      * Get all monev reviews (post-completion audits) for the proposal.
+     *
+     * @return HasMany<MonevReview, $this>
      */
     public function monevReviews(): HasMany
     {
@@ -467,5 +530,21 @@ class Proposal extends Model
     public function scopeForSemester($query, string $semester)
     {
         return $query->where('semester', $semester);
+    }
+
+    /**
+     * Get the study program roadmap this proposal aligns with.
+     */
+    public function studyProgramRoadmap(): BelongsTo
+    {
+        return $this->belongsTo(StudyProgramRoadmap::class);
+    }
+
+    /**
+     * Check if proposal is validated by kaprodi.
+     */
+    public function isValidatedByKaprodi(): bool
+    {
+        return (bool) $this->is_roadmap_validated_by_kaprodi;
     }
 }

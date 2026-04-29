@@ -155,7 +155,7 @@ class ReviewerDashboard extends Component
      */
     private function loadUrgentReviews(string $yearFilter): void
     {
-        $urgentReviews = ProposalReviewer::with(['proposal.submitter', 'proposal.detailable'])
+        $urgentReviews = ProposalReviewer::with(['proposal.submitter', 'proposal.detailable', 'proposal.researchScheme', 'proposal.communityServiceScheme'])
             ->where('user_id', $this->user->id)
             ->whereHas('proposal', fn ($q) => $q->whereYear('created_at', $yearFilter))
             ->where(function ($query) {
@@ -202,7 +202,7 @@ class ReviewerDashboard extends Component
     {
         $pendingStatuses = [ReviewStatus::PENDING, ReviewStatus::IN_PROGRESS, ReviewStatus::RE_REVIEW_REQUESTED];
 
-        $recentProposals = Proposal::with(['submitter'])
+        $recentProposals = Proposal::with(['submitter', 'researchScheme', 'communityServiceScheme'])
             ->whereHas('reviewers', function ($query) use ($pendingStatuses) {
                 $query->where('user_id', $this->user->id)
                     ->whereIn('status', $pendingStatuses);

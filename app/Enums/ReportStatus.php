@@ -54,6 +54,8 @@ enum ReportStatus: string
 
     /**
      * Get descriptive labels for filters
+     *
+     * @return array<string, string>
      */
     public static function filterOptions(): array
     {

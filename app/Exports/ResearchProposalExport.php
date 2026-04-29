@@ -7,6 +7,9 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
+/**
+ * @implements \Maatwebsite\Excel\Concerns\WithMapping<\App\Models\Proposal>
+ */
 class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
 {
     protected int $year;
@@ -16,6 +19,9 @@ class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
         $this->year = $year;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
+     */
     public function query(): \Illuminate\Database\Eloquent\Builder
     {
         return Proposal::where('detailable_type', \App\Models\Research::class)
@@ -76,6 +82,10 @@ class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
         ];
     }
 
+    /**
+     * @param  \App\Models\Proposal  $proposal
+     * @return array<int, mixed>
+     */
     public function map($proposal): array
     {
         $no = 1;

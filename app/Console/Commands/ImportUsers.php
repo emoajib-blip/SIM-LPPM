@@ -24,7 +24,7 @@ class ImportUsers extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $file = $this->argument('file');
 
@@ -46,7 +46,7 @@ class ImportUsers extends Command
             if (! $this->confirm('Do you want to import these users?')) {
                 $this->info('Import cancelled.');
 
-                return 0;
+                return self::SUCCESS;
             }
 
             $this->info('Importing...');
@@ -67,6 +67,6 @@ class ImportUsers extends Command
             return 1;
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 }

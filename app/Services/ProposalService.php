@@ -229,8 +229,16 @@ class ProposalService
             default => Research::class,
         };
 
+        $relations = ['submitter.identity.faculty', 'detailable', 'focusArea'];
+
+        if ($type === 'research') {
+            $relations[] = 'researchScheme';
+        } else {
+            $relations[] = 'communityServiceScheme';
+        }
+
         return Proposal::query()
-            ->with(['submitter.identity.faculty', 'detailable', 'focusArea'])
+            ->with($relations)
             ->whereHas('detailable', function ($query) use ($detailableType) {
                 $query->where('detailable_type', $detailableType);
             });

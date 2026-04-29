@@ -179,6 +179,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('riwayat-persetujuan', \App\Livewire\Dekan\ApprovalHistory::class)->name('approval-history');
     });
 
+    // Kaprodi Routes
+    Route::middleware(['permission:module_persetujuan_kaprodi'])->prefix('kaprodi')->name('kaprodi.')->group(function () {
+        Route::get('proposals', \App\Livewire\Kaprodi\ProposalValidation::class)->name('proposals.index');
+    });
+
     // Review Routes
     Route::middleware(['permission:module_review'])->prefix('review')->name('review.')->group(function () {
         Route::get('research', ReviewResearch::class)->name('research');

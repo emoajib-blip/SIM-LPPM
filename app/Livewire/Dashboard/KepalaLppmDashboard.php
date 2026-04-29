@@ -139,7 +139,7 @@ class KepalaLppmDashboard extends Component
     {
         $relevantStatuses = ['reviewed', 'approved', 'rejected', 'completed'];
 
-        $recentProposals = Proposal::with(['submitter'])
+        $recentProposals = Proposal::with(['submitter', 'focusArea', 'researchScheme', 'communityServiceScheme'])
             ->whereYear('created_at', $yearFilter)
             ->whereIn('status', $relevantStatuses)
             ->latest()

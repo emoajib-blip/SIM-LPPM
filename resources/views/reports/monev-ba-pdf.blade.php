@@ -147,7 +147,7 @@
         <table class="proposal-info" style="width: 100%; border: none; border-collapse: collapse;">
             <tr>
                 <td style="width: 180px; font-weight: bold;">Judul {{ $review->proposal->detailable_type === \App\Models\Research::class ? 'Penelitian' : 'Kegiatan' }}</td>
-                <td>: <strong>{{ $review->proposal->title }}</strong></td>
+                <td>: <strong>{{ clean_proposal_title($review->proposal->title) }}</strong></td>
             </tr>
             @if($review->proposal->detailable_type === \App\Models\Research::class)
                 <tr>
@@ -270,9 +270,10 @@
     </div>
 
     <div class="signature-section">
+        {{-- Row 1: Reviewer & Admin --}}
         <table class="signature-table">
             <tr>
-                <td>
+                <td width="50%">
                     <p style="margin-bottom: 5px;">Monev Reviewer,</p>
                     <div class="sign-space">
                         @if($review->reviewed_at)
@@ -290,7 +291,7 @@
                     <div class="sign-name">{{ $review->reviewer->name }}</div>
                     <div style="font-size: 9pt;">NIDN: {{ $review->reviewer->identity?->identity_id ?? '-' }}</div>
                 </td>
-                <td>
+                <td width="50%">
                     <p style="margin-bottom: 5px;">Mengetahui,<br>Admin LPPM ITSNU Pekalongan</p>
                     <div class="sign-space">
                         @if($review->finalized_by_lppm_at)
@@ -305,11 +306,17 @@
                             <div style="height: 100px;"></div>
                         @endif
                     </div>
-                    <br>
+                    @php $admin = \App\Models\User::find($review->finalized_by_lppm_by); @endphp
+                    <div class="sign-name">{{ $admin->name ?? '.......................' }}</div>
+                    <div style="font-size: 9pt;">NIDN: {{ $admin->identity?->identity_id ?? '-' }}</div>
                 </td>
             </tr>
+        </table>
+
+        {{-- Row 2: Kepala LPPM (Centered) --}}
+        <table class="signature-table" style="margin-top: 20px;">
             <tr>
-                <td colspan="2" style="text-align: center; padding-top: 30px;">
+                <td style="text-align: center;">
                     <p style="margin-bottom: 5px;">Mengesahkan,<br>Kepala LPPM ITSNU Pekalongan</p>
                     <div class="sign-space">
                         @if($review->approved_by_kepala_at)

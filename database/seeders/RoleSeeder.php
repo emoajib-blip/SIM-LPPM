@@ -22,6 +22,7 @@ class RoleSeeder extends Seeder
             'admin lppm',
             'kepala lppm',
             'dekan',
+            'kaprodi',
             'dosen',
             'reviewer',
             'rektor',
@@ -36,10 +37,11 @@ class RoleSeeder extends Seeder
 
         // Consolidated Mapping from Migrations
         $mappings = [
-            'module_penelitian' => ['dosen', 'kepala lppm', 'admin lppm', 'rektor', 'dekan', 'reviewer'],
-            'module_pengabdian' => ['dosen', 'kepala lppm', 'admin lppm', 'rektor', 'dekan', 'reviewer'],
+            'module_penelitian' => ['dosen', 'kepala lppm', 'admin lppm', 'rektor', 'dekan', 'kaprodi', 'reviewer'],
+            'module_pengabdian' => ['dosen', 'kepala lppm', 'admin lppm', 'rektor', 'dekan', 'kaprodi', 'reviewer'],
             'module_rekognisi' => ['dosen'],
             'module_persetujuan_dekan' => ['dekan'],
+            'module_persetujuan_kaprodi' => ['kaprodi'],
             'module_persetujuan_awal' => ['kepala lppm'],
             'module_persetujuan_akhir' => ['kepala lppm'],
             'module_reviewer_management' => ['admin lppm'],

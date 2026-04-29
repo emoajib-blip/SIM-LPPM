@@ -43,6 +43,14 @@ class DailyNoteExportController extends Controller
             'communityServiceScheme',
         ]);
 
+        $submitterIdentity = $proposal->submitter->identity;
+        $submitterFullName = format_name($submitterIdentity?->title_prefix, $proposal->submitter->name, $submitterIdentity?->title_suffix);
+        $submitterNidn = $submitterIdentity?->identity_id ?? '-';
+        $facultyName = $submitterIdentity?->faculty?->name ?? '.......................';
+        $prodiName = $submitterIdentity?->studyProgram?->name ?? '.......................';
+        $institutionName = $submitterIdentity?->institution?->name ?? 'ITSNU Pekalongan';
+        $academicYear = $proposal->start_year.'/'.($proposal->start_year + 1);
+
         $logbookApprovalMode = \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital';
 
         // 1. Render for hash
@@ -55,6 +63,13 @@ class DailyNoteExportController extends Controller
             'logbookApprovalMode' => $logbookApprovalMode,
             'qrUrlSubmitter' => null,
             'qrUrlLppm' => null,
+            'submitterFullName' => $submitterFullName,
+            'submitterNidn' => $submitterNidn,
+            'facultyName' => $facultyName,
+            'prodiName' => $prodiName,
+            'institutionName' => $institutionName,
+            'academicYear' => $academicYear,
+            'docTitle' => 'CATATAN HARIAN '.($proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN').' INTERNAL',
         ])->setPaper('a4', 'portrait');
 
         if ($request->has('preview')) {
@@ -88,6 +103,13 @@ class DailyNoteExportController extends Controller
             'logbookApprovalMode' => $logbookApprovalMode,
             'qrUrlSubmitter' => $submitterSig ? URL::signedRoute('signatures.verify', ['documentSignature' => $submitterSig->id]) : null,
             'qrUrlLppm' => $lppmSig ? URL::signedRoute('signatures.verify', ['documentSignature' => $lppmSig->id]) : null,
+            'submitterFullName' => $submitterFullName,
+            'submitterNidn' => $submitterNidn,
+            'facultyName' => $facultyName,
+            'prodiName' => $prodiName,
+            'institutionName' => $institutionName,
+            'academicYear' => $academicYear,
+            'docTitle' => 'CATATAN HARIAN '.($proposal->detailable_type === 'App\Models\Research' ? 'PENELITIAN' : 'PENGABDIAN').' INTERNAL',
         ])->setPaper('a4', 'portrait');
 
         $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));

@@ -14,16 +14,17 @@ npm run build
 
 # 2. Hapus ZIP lama jika ada
 echo "🧹 Membersihkan file ZIP lama..."
-rm -f sosiomen_deploy.zip vendor_deploy.zip
+rm -f app_deploy.zip vendor_deploy.zip
 
 # 3. Pack Aplikasi (Tanpa Vendor, Tanpa Git)
-echo "📂 Mengemas Kode Aplikasi (sosiomen_deploy.zip)..."
-zip -r sosiomen_deploy.zip . -x \
+echo "📂 Mengemas Kode Aplikasi (app_deploy.zip)..."
+zip -r app_deploy.zip . -x \
     ".git/*" \
     "node_modules/*" \
     "vendor/*" \
     "storage/logs/*" \
-    "storage/framework/cache/data/*" \
+    "storage/debugbar/*" \
+    "storage/framework/cache/*" \
     "storage/framework/sessions/*" \
     "storage/framework/views/*" \
     "storage/app/public/*" \
@@ -34,17 +35,23 @@ zip -r sosiomen_deploy.zip . -x \
     "phpunit.xml" \
     ".phpunit.result.cache" \
     "*.log" \
-    "*.zip"
+    "*.zip" \
+    "*.txt" \
+    "*.sqlite"
 
 # 4. Pack Vendor (Terpisah untuk kemudahan upload)
 echo "🚚 Mengemas Folder Vendor (vendor_deploy.zip)..."
-zip -r vendor_deploy.zip vendor -x "*.DS_Store"
+if [ -d "vendor" ]; then
+    (cd vendor && zip -r ../vendor_deploy.zip . -x "*.DS_Store")
+else
+    echo "⚠️ Folder vendor tidak ditemukan!"
+fi
 
 echo ""
 echo "✅ PROSES SELESAI!"
 echo "------------------------------------------------"
 echo "File Berikut Siap Diupload ke cPanel:"
-echo "1. sosiomen_deploy.zip (~$(du -h sosiomen_deploy.zip | cut -f1))"
+echo "1. app_deploy.zip (~$(du -h app_deploy.zip | cut -f1))"
 echo "2. vendor_deploy.zip (~$(du -h vendor_deploy.zip | cut -f1))"
 echo "------------------------------------------------"
 echo "Panduan Ekstrak ada di CPANEL_DEPLOYMENT.md"

@@ -45,7 +45,7 @@ class DosenDashboard extends Component
 
     public function mount(): void
     {
-        $this->user = Auth::user();
+        $this->user = Auth::user()->load('identity');
         $this->roleName = active_role();
         $this->selectedYear = date('Y');
         $this->availableYears = $this->getAvailableYears();
@@ -154,6 +154,7 @@ class DosenDashboard extends Component
     private function loadRecentProposals(string $yearFilter): void
     {
         $recentProposals = Proposal::query()
+            ->with(['researchScheme', 'communityServiceScheme'])
             ->where('submitter_id', $this->user->id)
             ->whereYear('created_at', $yearFilter)
             ->latest()

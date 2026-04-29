@@ -22,6 +22,9 @@ class ProposalForm extends Form
 
     public string $community_service_scheme_id = '';
 
+    #[Validate('nullable|exists:study_program_roadmaps,id')]
+    public ?string $study_program_roadmap_id = null;
+
     #[Validate('required|exists:focus_areas,id')]
     public string $focus_area_id = '';
 
@@ -161,6 +164,7 @@ class ProposalForm extends Form
         $this->focus_area_id = $proposal->focus_area_id ?? '';
         $this->theme_id = $proposal->theme_id ?? '';
         $this->topic_id = $proposal->topic_id ?? '';
+        $this->study_program_roadmap_id = $proposal->study_program_roadmap_id ? (string) $proposal->study_program_roadmap_id : null;
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
         $this->keywords = $proposal->keywords ? $proposal->keywords->pluck('name')->toArray() : [];
@@ -382,6 +386,7 @@ class ProposalForm extends Form
             'theme_id' => $this->theme_id,
             'topic_id' => $this->topic_id,
             'national_priority_id' => $this->national_priority_id ?: null,
+            'study_program_roadmap_id' => $this->study_program_roadmap_id ?: null,
             'cluster_level1_id' => $this->cluster_level1_id,
             'cluster_level2_id' => $this->cluster_level2_id ?: null,
             'cluster_level3_id' => $this->cluster_level3_id ?: null,
@@ -469,6 +474,7 @@ class ProposalForm extends Form
             'theme_id' => $this->theme_id,
             'topic_id' => $this->topic_id,
             'national_priority_id' => $this->national_priority_id ?: null,
+            'study_program_roadmap_id' => $this->study_program_roadmap_id ?: null,
             'cluster_level1_id' => $this->cluster_level1_id,
             'cluster_level2_id' => $this->cluster_level2_id ?: null,
             'cluster_level3_id' => $this->cluster_level3_id ?: null,
@@ -604,6 +610,7 @@ class ProposalForm extends Form
                 'theme_id' => $this->theme_id,
                 'topic_id' => $this->topic_id,
                 'national_priority_id' => $this->national_priority_id ?: null,
+                'study_program_roadmap_id' => $this->study_program_roadmap_id ?: null,
                 'cluster_level1_id' => $this->cluster_level1_id,
                 'cluster_level2_id' => $this->cluster_level2_id ?: null,
                 'cluster_level3_id' => $this->cluster_level3_id ?: null,

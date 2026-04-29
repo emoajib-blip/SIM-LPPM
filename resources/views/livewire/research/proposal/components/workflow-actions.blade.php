@@ -21,12 +21,30 @@
                 <h3 class="card-title">Persetujuan Dekan</h3>
             </div>
             <div class="card-body">
-                <p class="mb-3 text-secondary">
-                    Silakan tinjau proposal ini dan berikan keputusan Anda sebagai Dekan.
-                </p>
+                @php
+                    $isKaprodiValidationRequired = \App\Models\Setting::get('feature_kaprodi_validation', false);
+                    $isKaprodiValidated = $proposal->is_roadmap_validated_by_kaprodi;
+                    $isApprovalDisabled = $isKaprodiValidationRequired && !$isKaprodiValidated;
+                @endphp
+
+                @if ($isApprovalDisabled)
+                    <div class="alert alert-warning mb-3">
+                        <div class="d-flex">
+                            <div><x-lucide-alert-triangle class="icon alert-icon" /></div>
+                            <div>
+                                <h4 class="alert-title">Menunggu Validasi Prodi</h4>
+                                <div class="text-secondary">Persetujuan Dekan terkunci karena proposal ini belum divalidasi kesesuaian roadmap/pohon penelitiannya oleh Kepala Program Studi.</div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <p class="mb-3 text-secondary">
+                        Silakan tinjau proposal ini dan berikan keputusan Anda sebagai Dekan.
+                    </p>
+                @endif
                 <div class="gap-2 btn-list">
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approvalModal"
-                        wire:click="$set('approvalDecision', 'approved')">
+                        wire:click="$set('approvalDecision', 'approved')" @if($isApprovalDisabled) disabled @endif>
                         <x-lucide-check class="icon" />
                         Setujui Proposal
                     </button>

@@ -17,20 +17,31 @@
 
         @php
             $user = auth()->user();
-            $eligibility = ['eligible' => true];
+            $eligibility = ['eligible' => true, 'reasons' => []];
+            $scheduleInfo = ['pkm_open' => false, 'pkm_schemes' => []];
             if ($user && $user->activeHasRole('dosen')) {
                 $eligibility = app(\App\Services\LecturerEligibilityService::class)->checkEligibility($user);
+                $scheduleInfo = app(\App\Services\LecturerEligibilityService::class)->getScheduleStatus($user);
             }
+            $hasEligibleSchemes = !empty($scheduleInfo['pkm_schemes']);
         @endphp
 
         @if ($isWithinSchedule && auth()->user()->activeHasRole('dosen'))
-            @if ($eligibility['eligible'])
+            @if ($eligibility['eligible'] && $hasEligibleSchemes)
                 <a href="{{ route('community-service.proposal.create') }}" wire:navigate.hover class="btn btn-primary">
                     <x-lucide-plus class="icon" />
                     Usulan Pengabdian Baru
                 </a>
             @else
-                <button class="btn btn-secondary" disabled title="Selesaikan tanggungan laporan Anda untuk mengusulkan baru">
+                @php
+                    $reason = '';
+                    if (!$hasEligibleSchemes) {
+                        $reason = 'Anda tidak memenuhi syarat untuk skema pengabdian manapun.';
+                    } elseif (!empty($eligibility['reasons'])) {
+                        $reason = implode(' ', $eligibility['reasons']);
+                    }
+                @endphp
+                <button class="btn btn-secondary" disabled title="{{ $reason }}">
                     <x-lucide-lock class="icon" />
                     Usulan Dikunci
                 </button>

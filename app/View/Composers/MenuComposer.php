@@ -81,14 +81,13 @@ class MenuComposer
                     ],
                 ],
             ],
-            // Kepala LPPM menu
-            // [
-            //     'title' => 'Persetujuan Usulan',
-            //     'icon' => 'checkbox',
-            //     'route' => 'proposals.index',
-            //     'href' => '/proposals',
-            //     'roles' => ['kepala lppm'],
-            // ],
+            // Kaprodi menu
+            [
+                'title' => 'Persetujuan Kaprodi',
+                'icon' => 'clipboard-check',
+                'route' => 'kaprodi.proposals.index',
+                'roles' => ['kaprodi'],
+            ],
             // Dekan menu
             [
                 'title' => 'Persetujuan Dekan',

@@ -93,6 +93,8 @@ enum ProposalStatus: string
 
     /**
      * Mendapatkan semua status yang bisa ditampilkan di filter
+     *
+     * @return array<string, string>
      */
     public static function filterOptions(): array
     {
@@ -113,6 +115,8 @@ enum ProposalStatus: string
 
     /**
      * Mendapatkan array dari semua nilai enum
+     *
+     * @return array<int, string>
      */
     public static function values(): array
     {
