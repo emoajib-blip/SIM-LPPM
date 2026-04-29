@@ -24,27 +24,9 @@
                 </div>
 
                 @if(config('turnstile.site_key'))
-                    <div class="mb-4 d-flex justify-content-center" wire:ignore>
-                        <div class="cf-turnstile" 
-                            data-sitekey="{{ config('turnstile.site_key') }}" 
-                            data-callback="onTurnstileFinished"></div>
+                    <div class="text-center p-3 border mb-3">
+                        Pengecekan Keamanan Cloudflare Aktif (Uji Coba Diagnosa)
                     </div>
-                    
-                    <input type="hidden" id="turnstile-token" wire:model="captcha">
-
-                    @error('captcha')
-                        <div class="text-danger d-block mb-3 small text-center">{{ $message }}</div>
-                    @enderror
-
-                    <script>
-                        function onTurnstileFinished(token) {
-                            const input = document.getElementById('turnstile-token');
-                            if (input) {
-                                input.value = token;
-                                input.dispatchEvent(new Event('input'));
-                            }
-                        }
-                    </script>
                 @endif
 
                 <div class="form-footer">
