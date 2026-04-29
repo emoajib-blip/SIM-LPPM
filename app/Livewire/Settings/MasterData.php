@@ -24,7 +24,7 @@ class MasterData extends Component
         // Jika fitur roadmap nonaktif, Dekan & Kaprodi dilarang akses (kecuali mereka juga admin)
         if (!$roadmapActive && ($user->hasRole('dekan') || $user->hasRole('kaprodi'))) {
             if (!$user->hasRole('admin lppm') && !$user->hasRole('superadmin')) {
-                abort(403, 'Fitur Peta Jalan sedang dinonaktifkan.');
+                abort(403, 'Maaf Anda tidak memiliki akses ini');
             }
         }
 

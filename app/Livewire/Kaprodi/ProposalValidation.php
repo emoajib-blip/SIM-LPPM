@@ -21,7 +21,7 @@ class ProposalValidation extends Component
         $isKaprodiValidationActive = \App\Models\Setting::get('feature_kaprodi_validation', false);
         
         if (!$isKaprodiValidationActive) {
-            abort(403, 'Fitur Validasi Kaprodi sedang dinonaktifkan oleh Admin LPPM.');
+            abort(403, 'Maaf Anda tidak memiliki akses ini');
         }
     }
 
