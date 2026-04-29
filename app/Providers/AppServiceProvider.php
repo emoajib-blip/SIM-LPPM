@@ -58,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\Event::subscribe(\App\Listeners\UserActivityListener::class);
 
             // Register Policies
+            \Illuminate\Support\Facades\Gate::policy(\App\Models\Proposal::class, \App\Policies\ProposalPolicy::class);
             \Illuminate\Support\Facades\Gate::policy(\Spatie\MediaLibrary\MediaCollections\Models\Media::class, \App\Policies\MediaPolicy::class);
 
             // Spatie: Implicitly grant "superadmin" role all permissions

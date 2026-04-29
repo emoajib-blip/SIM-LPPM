@@ -45,6 +45,8 @@ abstract class ProposalShow extends Component
 
     public function mount(Proposal $proposal): void
     {
+        $this->authorize('view', $proposal);
+
         $this->proposal = $proposal;
 
         $this->form->setProposal($proposal);

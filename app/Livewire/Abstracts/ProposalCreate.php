@@ -78,9 +78,7 @@ abstract class ProposalCreate extends Component
         $proposalToLoad = $proposal ?? ($proposalId ? \App\Models\Proposal::find($proposalId) : null);
 
         if ($proposalToLoad) {
-            if (! $this->canEditProposal($proposalToLoad)) {
-                abort(403);
-            }
+            $this->authorize('update', $proposalToLoad);
 
             $this->form->setProposal($proposalToLoad);
         } else {

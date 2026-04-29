@@ -20,6 +20,8 @@ class SubmitProposalAction
      */
     public function execute(Proposal $proposal): array
     {
+        \Illuminate\Support\Facades\Gate::authorize('submit', $proposal);
+
         // Check if all team members accepted
         if (! $proposal->allTeamMembersAccepted()) {
             $pendingMembers = $proposal->getPendingTeamMembers();

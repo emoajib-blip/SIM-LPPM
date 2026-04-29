@@ -29,12 +29,16 @@ class ProposalService
 
     public function updateProposal(Proposal $proposal, ProposalForm $form, bool $validate = true): void
     {
+        \Illuminate\Support\Facades\Gate::authorize('update', $proposal);
+        
         $form->proposal = $proposal;
         $form->update($validate);
     }
 
     public function deleteProposal(Proposal $proposal): void
     {
+        \Illuminate\Support\Facades\Gate::authorize('delete', $proposal);
+
         if ($proposal->status !== ProposalStatus::DRAFT) {
             throw new \Exception('Hanya proposal dengan status draft yang dapat dihapus.');
         }
