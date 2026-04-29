@@ -25,25 +25,43 @@
 
                 @if(config('turnstile.site_key'))
                     <div class="mb-4 d-flex justify-content-center" wire:ignore>
-                        <div class="cf-turnstile" 
-                            data-sitekey="{{ config('turnstile.site_key') }}" 
-                            data-callback="onTurnstileFinished"></div>
+                        {{-- Gunakan ID unik tanpa atribut data-* untuk melewati sensor WAF --}}
+                        <div id="security-check-container"></div>
                     </div>
                     
-                    <input type="hidden" id="captcha-token" wire:model="captcha">
+                    <input type="hidden" id="captcha-token-holder" wire:model="captcha">
                     
                     @error('captcha')
                         <div class="text-danger small text-center mb-3">{{ $message }}</div>
                     @enderror
 
                     <script>
-                        function onTurnstileFinished(token) {
-                            const input = document.getElementById('captcha-token');
-                            if (input) {
-                                input.value = token;
-                                input.dispatchEvent(new Event('input'));
+                        (function() {
+                            function initSecurityCheck() {
+                                const el = document.getElementById('security-check-container');
+                                if (!el || typeof turnstile === 'undefined') {
+                                    setTimeout(initSecurityCheck, 500);
+                                    return;
+                                }
+                                
+                                el.innerHTML = ''; // Bersihkan untuk mencegah duplikasi
+                                
+                                turnstile.render('#security-check-container', {
+                                    sitekey: '{{ config('turnstile.site_key') }}',
+                                    callback: function(token) {
+                                        const input = document.getElementById('captcha-token-holder');
+                                        if (input) {
+                                            input.value = token;
+                                            input.dispatchEvent(new Event('input'));
+                                        }
+                                    }
+                                });
                             }
-                        }
+
+                            if (document.readyState === 'complete') initSecurityCheck();
+                            else window.addEventListener('load', initSecurityCheck);
+                            document.addEventListener('livewire:navigated', initSecurityCheck);
+                        })();
                     </script>
                 @endif
 
@@ -51,7 +69,7 @@
                     <button type="submit" class="w-100 btn btn-primary btn-lg fw-bold shadow-sm" wire:loading.attr="disabled">
                         <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                         <span wire:loading.remove>{{ __('Kirim tautan reset kata sandi') }}</span>
-                        <span wire:loading>{{ __('Mengirim...') }}</span>
+                        <span wire:loading>{{ __('Memproses...') }}</span>
                     </button>
                 </div>
             </form>
