@@ -23,6 +23,7 @@
                     @enderror
                 </div>
 
+                {{-- 
                 @if(config('turnstile.site_key'))
                     <div class="mb-3 d-flex justify-content-center" wire:ignore>
                         <div class="cf-turnstile" 
@@ -40,6 +41,7 @@
                         }
                     </script>
                 @endif
+                --}}
 
                 <div class="form-footer">
                     <button type="submit" class="w-100 btn btn-primary">
