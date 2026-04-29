@@ -27,7 +27,7 @@
                     <div class="mb-4 d-flex justify-content-center" wire:ignore>
                         <div class="cf-turnstile" 
                             data-sitekey="{{ config('turnstile.site_key') }}" 
-                            data-callback="onTurnstileFinished"></div>
+                            data-callback="captchaSuccess"></div>
                     </div>
                 @endif
 
@@ -45,7 +45,7 @@
 
             @if(config('turnstile.site_key'))
                 <script>
-                    function onTurnstileFinished(token) {
+                    function captchaSuccess(token) {
                         @this.set('captcha', token);
                     }
                 </script>
