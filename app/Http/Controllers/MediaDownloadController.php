@@ -35,8 +35,6 @@ class MediaDownloadController extends Controller
         }
         $realPath = realpath($path);
 
-
-
         // Security Barrier: Ensure path is restricted to authorized storage
         $storagePath = realpath(storage_path());
         if ($realPath === false || $storagePath === false || ! str_starts_with($realPath, $storagePath)) {

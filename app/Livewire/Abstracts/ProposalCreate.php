@@ -315,32 +315,13 @@ abstract class ProposalCreate extends Component
 
     public function saveDraft(): void
     {
-        // Validate only the current step
-        $rules = $this->getStepValidationRules($this->currentStep);
-        if (! empty($rules)) {
-            $this->validate($rules);
-        }
+        // For draft, we only strictly require the title
+        $this->validate([
+            'form.title' => 'required|string|max:255',
+        ]);
 
-        // Additional validation for budget in step 3 if items are present
-        if ($this->currentStep === 3 && ! empty($this->form->budget_items)) {
-            $schemeId = $this->getProposalType() === 'research'
-                ? (int) $this->form->research_scheme_id
-                : (int) $this->form->community_service_scheme_id;
-
-            app(BudgetValidationService::class)->validateBudgetGroupPercentages(
-                $this->form->budget_items,
-                $this->getProposalType(),
-                null,
-                $schemeId
-            );
-
-            app(BudgetValidationService::class)->validateBudgetCap(
-                $this->form->budget_items,
-                $this->getProposalType(),
-                null,
-                $schemeId
-            );
-        }
+        // Set draft flag on form to skip strict validations (like budget)
+        $this->form->isDraft = true;
 
         if ($this->form->proposal) {
             app(ProposalService::class)->updateProposal(

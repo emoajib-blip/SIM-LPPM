@@ -16,6 +16,8 @@ class ProposalForm extends Form
 {
     public ?Proposal $proposal = null;
 
+    public bool $isDraft = false;
+
     public string $title = '';
 
     public string $research_scheme_id = '';
@@ -922,9 +924,11 @@ class ProposalForm extends Form
     private function attachBudgetItems(Proposal $proposal): void
     {
         if (! empty($this->budget_items)) {
-            // Validate budget before saving
-            $this->validateBudgetGroupPercentages();
-            $this->validateBudgetCap($this->getProposalType());
+            // Validate budget before saving (skip for drafts)
+            if (! $this->isDraft) {
+                $this->validateBudgetGroupPercentages();
+                $this->validateBudgetCap($this->getProposalType());
+            }
 
             foreach ($this->budget_items as $item) {
                 // Skip entirely empty items (often added as defaults but not filled)
