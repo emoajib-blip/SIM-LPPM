@@ -295,7 +295,8 @@ abstract class ProposalCreate extends Component
         if ($this->form->proposal) {
             app(ProposalService::class)->updateProposal(
                 $this->form->proposal,
-                $this->form
+                $this->form,
+                false // Disable global validation
             );
             $proposal = $this->form->proposal;
             $message = 'Proposal berhasil diperbarui.';
@@ -310,7 +311,8 @@ abstract class ProposalCreate extends Component
         session()->flash('success', $message);
         $this->toastSuccess($message);
 
-        $this->redirect($this->getShowRoute($proposal->id));
+        // For drafts, redirect to edit page so data persists on refresh
+        $this->redirect(route($this->getProposalType().'.proposal.edit', $proposal->id));
     }
 
     public function saveDraft(): void
