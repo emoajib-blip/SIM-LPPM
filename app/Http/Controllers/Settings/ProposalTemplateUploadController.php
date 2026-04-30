@@ -61,34 +61,10 @@ class ProposalTemplateUploadController extends Controller
         $setting = Setting::firstOrCreate(['key' => $settingKey]);
         $setting->clearMediaCollection('template');
 
-        $tmpPath = $file->getRealPath();
-        \Illuminate\Support\Facades\Log::info('Upload debug', [
-            'tmp_path' => $tmpPath,
-            'tmp_exists' => file_exists($tmpPath),
-            'tmp_readable' => is_readable($tmpPath),
-        ]);
-
-        try {
-            $media = $setting->addMedia($tmpPath)
-                ->usingName($file->getClientOriginalName())
-                ->usingFileName($file->getClientOriginalName())
-                ->toMediaCollection('template');
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Add media failed', [
-                'error' => $e->getMessage(),
-                'tmp_path' => $tmpPath,
-                'key' => $settingKey,
-            ]);
-            abort(500, 'Upload failed: ' . $e->getMessage());
-        }
-
-        \Illuminate\Support\Facades\Log::info('Template uploaded', [
-            'key' => $settingKey,
-            'file' => $file->getClientOriginalName(),
-            'media_id' => $media->id,
-            'path' => $media->getPath(),
-            'final_exists' => file_exists(storage_path('app/public/' . $media->getPath())),
-        ]);
+        $media = $setting->addMedia($file->getRealPath())
+            ->usingName($file->getClientOriginalName())
+            ->usingFileName($file->getClientOriginalName())
+            ->toMediaCollection('template');
 
         return redirect()
             ->route('settings.proposal-template')

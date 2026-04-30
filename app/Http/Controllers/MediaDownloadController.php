@@ -20,8 +20,14 @@ class MediaDownloadController extends Controller
         // 2. Policy-Based Authorization
         $this->authorize('download', $media);
 
-        // 3. Path Traversal & Existence Check
         $diskName = config('media-library.disk_name', 'public');
+
+        if ($diskName === 's3') {
+            // For S3, redirect to temporary signed URL
+            return redirect($media->getTemporaryUrl(now()->addMinutes(5)));
+        }
+
+        // 3. Path Traversal & Existence Check for local disks
         $disk = \Illuminate\Support\Facades\Storage::disk($diskName);
         $path = $disk->path($media->getPath());
         if (str_contains($path, '..')) {
@@ -29,16 +35,7 @@ class MediaDownloadController extends Controller
         }
         $realPath = realpath($path);
 
-        // Debug logging
-        Log::info('Media Download Paths', [
-            'disk' => $diskName,
-            'originalPath' => $media->getPath(),
-            'constructedPath' => $path,
-            'realPath' => $realPath,
-            'fileExists' => file_exists($path),
-            'storagePath' => realpath(storage_path()),
-            'starts' => $realPath ? str_starts_with($realPath, realpath(storage_path())) : false,
-        ]);
+
 
         // Security Barrier: Ensure path is restricted to authorized storage
         $storagePath = realpath(storage_path());
