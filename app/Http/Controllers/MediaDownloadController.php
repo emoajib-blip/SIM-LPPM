@@ -21,7 +21,7 @@ class MediaDownloadController extends Controller
         $this->authorize('download', $media);
 
         // 3. Path Traversal & Existence Check
-        $path = storage_path('app/public/' . $media->getPath());
+        $path = storage_path('app/' . $media->getPath());
         if (str_contains($path, '..')) {
             abort(403, 'Invalid file path.');
         }
