@@ -60,7 +60,15 @@ class ProposalTemplateUploadController extends Controller
 
         $setting = Setting::firstOrCreate(['key' => $settingKey]);
         $setting->clearMediaCollection('template');
-        $media = $setting->addMedia($file->getRealPath())
+
+        $tmpPath = $file->getRealPath();
+        \Illuminate\Support\Facades\Log::info('Upload debug', [
+            'tmp_path' => $tmpPath,
+            'tmp_exists' => file_exists($tmpPath),
+            'tmp_readable' => is_readable($tmpPath),
+        ]);
+
+        $media = $setting->addMedia($tmpPath)
             ->usingName($file->getClientOriginalName())
             ->usingFileName($file->getClientOriginalName())
             ->toMediaCollection('template');
@@ -70,6 +78,7 @@ class ProposalTemplateUploadController extends Controller
             'file' => $file->getClientOriginalName(),
             'media_id' => $media->id,
             'path' => $media->getPath(),
+            'final_exists' => file_exists(storage_path('app/public/' . $media->getPath())),
         ]);
 
         return redirect()
