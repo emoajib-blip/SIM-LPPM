@@ -68,10 +68,19 @@ class ProposalTemplateUploadController extends Controller
             'tmp_readable' => is_readable($tmpPath),
         ]);
 
-        $media = $setting->addMedia($tmpPath)
-            ->usingName($file->getClientOriginalName())
-            ->usingFileName($file->getClientOriginalName())
-            ->toMediaCollection('template');
+        try {
+            $media = $setting->addMedia($tmpPath)
+                ->usingName($file->getClientOriginalName())
+                ->usingFileName($file->getClientOriginalName())
+                ->toMediaCollection('template');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Add media failed', [
+                'error' => $e->getMessage(),
+                'tmp_path' => $tmpPath,
+                'key' => $settingKey,
+            ]);
+            abort(500, 'Upload failed: ' . $e->getMessage());
+        }
 
         \Illuminate\Support\Facades\Log::info('Template uploaded', [
             'key' => $settingKey,
