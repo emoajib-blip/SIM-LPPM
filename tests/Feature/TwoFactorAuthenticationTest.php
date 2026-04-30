@@ -8,7 +8,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 it('shows two-factor challenge when session exists', function () {
-    session(['login.id' => 1, 'login.remember' => false]);
+    $user = User::factory()->create();
+    $user->forceFill([
+        'two_factor_secret' => encrypt('JBSWY3DPEHPK3PXP'),
+    ])->save();
+
+    session(['login.id' => $user->id]);
 
     $response = $this->get('two-factor-challenge');
 
@@ -28,10 +33,12 @@ it('stores valid recovery code and logs user in', function () {
         'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1', 'recovery-code-2'])),
     ])->save();
 
-    session(['login.id' => $user->id, 'login.remember' => false]);
+    $token = \Illuminate\Support\Str::random(40);
+    session(['login.id' => $user->id, 'login.remember' => false, '_token' => $token]);
 
     $response = $this->post('two-factor-challenge', [
         'recovery_code' => 'recovery-code-1',
+        '_token' => $token,
     ]);
 
     $response->assertStatus(302);
@@ -45,10 +52,12 @@ it('stores valid recovery code and logs user in with remember me', function () {
         'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1', 'recovery-code-2'])),
     ])->save();
 
-    session(['login.id' => $user->id, 'login.remember' => true]);
+    $token = \Illuminate\Support\Str::random(40);
+    session(['login.id' => $user->id, 'login.remember' => true, '_token' => $token]);
 
     $response = $this->post('two-factor-challenge', [
         'recovery_code' => 'recovery-code-1',
+        '_token' => $token,
     ]);
 
     $response->assertStatus(302);
@@ -61,10 +70,12 @@ it('rejects invalid two-factor code', function () {
         'two_factor_secret' => encrypt('JBSWY3DPEHPK3PXP'),
     ])->save();
 
-    session(['login.id' => $user->id, 'login.remember' => false]);
+    $token = \Illuminate\Support\Str::random(40);
+    session(['login.id' => $user->id, 'login.remember' => false, '_token' => $token]);
 
     $response = $this->post('two-factor-challenge', [
         'code' => '999999',
+        '_token' => $token,
     ]);
 
     $response->assertStatus(302);
@@ -79,10 +90,12 @@ it('rejects invalid recovery code', function () {
         'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1', 'recovery-code-2'])),
     ])->save();
 
-    session(['login.id' => $user->id, 'login.remember' => false]);
+    $token = \Illuminate\Support\Str::random(40);
+    session(['login.id' => $user->id, 'login.remember' => false, '_token' => $token]);
 
     $response = $this->post('two-factor-challenge', [
         'recovery_code' => 'invalid-code',
+        '_token' => $token,
     ]);
 
     $response->assertStatus(302);

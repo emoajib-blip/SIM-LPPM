@@ -584,8 +584,8 @@ class ProposalWorkflowTest extends TestCase
         $this->actingAs($this->dosen);
         $proposalService = app(ProposalService::class);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Hanya proposal dengan status draft yang dapat dihapus.');
+        $this->expectException(\Illuminate\Auth\Access\AuthorizationException::class);
+        $this->expectExceptionMessage('This action is unauthorized.');
 
         $proposalService->deleteProposal($proposal);
     }

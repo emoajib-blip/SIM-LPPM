@@ -112,8 +112,8 @@ test('password reset language lines in indonesian', function () {
     App::setLocale('id');
 
     expect(__('passwords.reset'))->toBe('Kata sandi Anda telah direset.');
-    expect(__('passwords.sent'))->toBe('Kami telah mengirim email link reset kata sandi Anda.');
+    expect(__('passwords.sent'))->toBe('Jika alamat email tersebut terdaftar di sistem kami, link reset kata sandi akan segera dikirimkan.');
     expect(__('passwords.throttled'))->toBe('Harap tunggu sebelum mencoba lagi.');
     expect(__('passwords.token'))->toBe('Token reset kata sandi ini tidak valid.');
-    expect(__('passwords.user'))->toBe('Kami tidak dapat menemukan pengguna dengan alamat email tersebut.');
+    expect(__('passwords.user'))->toBe('Jika alamat email tersebut terdaftar di sistem kami, link reset kata sandi akan segera dikirimkan.');
 });
