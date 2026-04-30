@@ -221,6 +221,7 @@
 
         @if ($this->proposals->hasPages())
             <div class="d-flex align-items-center card-footer">
+                @php /** @var \Illuminate\Pagination\LengthAwarePaginator $proposals */ @endphp
                 {{ $this->proposals->links() }}
             </div>
         @endif
