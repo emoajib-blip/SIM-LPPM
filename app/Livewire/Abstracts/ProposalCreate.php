@@ -317,35 +317,44 @@ abstract class ProposalCreate extends Component
 
     public function saveDraft(): void
     {
-        // For draft, we only strictly require the title
-        $this->validate([
-            'form.title' => 'required|string|max:255',
-        ]);
+        try {
+            // For draft, we only strictly require the title
+            $this->validate([
+                'form.title' => 'required|string|max:255',
+            ]);
 
-        // Set draft flag on form to skip strict validations (like budget)
-        $this->form->isDraft = true;
+            // Set draft flag on form to skip strict validations (like budget)
+            $this->form->isDraft = true;
 
-        if ($this->form->proposal) {
-            app(ProposalService::class)->updateProposal(
-                $this->form->proposal,
-                $this->form,
-                false // Disable global validation
-            );
-        } else {
-            $proposal = app(ProposalService::class)->createProposal(
-                $this->form,
-                $this->getProposalType()
-            );
-            $this->form->proposal = $proposal;
+            if ($this->form->proposal) {
+                app(ProposalService::class)->updateProposal(
+                    $this->form->proposal,
+                    $this->form,
+                    false // Disable global validation
+                );
+                $proposal = $this->form->proposal;
+                $message = 'Proposal berhasil diperbarui.';
+            } else {
+                $proposal = app(ProposalService::class)->createProposal(
+                    $this->form,
+                    $this->getProposalType()
+                );
+                $message = 'Proposal berhasil dibuat.';
+            }
+
+            session()->flash('success', $message);
+            $this->toastSuccess($message);
+
+            // For drafts, redirect to edit page so data persists on refresh
+            $this->redirect(route($this->getProposalType().'.proposal.edit', $proposal->id));
+        } catch (\Exception $e) {
+            \Log::error('Save draft failed: '.$e->getMessage(), [
+                'user_id' => Auth::id(),
+                'form_data' => $this->form->toArray(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            $this->toastError('Gagal menyimpan draft: '.$e->getMessage());
         }
-
-        // Force clear file input and reset iteration to clear frontend state
-        $this->form->substance_file = null;
-        $this->fileInputIteration++;
-
-        $message = 'Draft proposal berhasil disimpan.';
-        session()->flash('success', $message);
-        $this->toastSuccess($message);
     }
 
     #[Computed]
