@@ -77,10 +77,10 @@ class ProposalValidation extends Component
     /**
      * Get proposals for validation.
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, Proposal>
+     * @return \Illuminate\Pagination\LengthAwarePaginator<int, Proposal>
      */
     #[Computed]
-    public function proposals(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function proposals(): \Illuminate\Pagination\LengthAwarePaginator
     {
         $query = Proposal::query()
             ->where('status', ProposalStatus::SUBMITTED);

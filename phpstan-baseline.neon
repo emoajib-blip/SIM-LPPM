@@ -889,6 +889,18 @@ parameters:
 			path: app/Http/Controllers/ReviewExportController.php
 
 		-
+			message: '#^Method App\\Http\\Controllers\\Settings\\ProposalTemplateUploadController\:\:upload\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Settings/ProposalTemplateUploadController.php
+
+		-
+			message: '#^Property App\\Http\\Controllers\\Settings\\ProposalTemplateUploadController\:\:\$keyMap type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/Settings/ProposalTemplateUploadController.php
+
+		-
 			message: '#^Method App\\Http\\Controllers\\SintaExportController\:\:downloadPkm\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -5851,90 +5863,6 @@ parameters:
 			path: app/Livewire/Settings/ProposalTemplate.php
 
 		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadCommunityServiceFinalReportTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadCommunityServiceProgressReportTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadCommunityServiceTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadMonevBeritaAcaraTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadMonevBorangTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadMonevRekapPenilaianTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadPartnerCommitmentTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadProposalApprovalPageTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadReportApprovalPageTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadResearchFinalReportTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadResearchProgressReportTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadResearchTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:downloadTemplate\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
 			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:monevBeritaAcaraTemplateMedia\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -5948,12 +5876,6 @@ parameters:
 
 		-
 			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:monevRekapPenilaianTemplateMedia\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:mount\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/Livewire/Settings/ProposalTemplate.php
@@ -5997,192 +5919,6 @@ parameters:
 		-
 			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:researchTemplateMedia\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveApprovalSettings\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveCommunityServiceFinalReportTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveCommunityServiceProgressReportTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveCommunityServiceTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveMonevBeritaAcaraTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveMonevBorangTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveMonevRekapPenilaianTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:savePartnerCommitmentTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveProposalApprovalPageTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveReportApprovalPageTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveResearchFinalReportTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveResearchProgressReportTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveResearchTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveTemplate\(\) has parameter \$file with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Method App\\Livewire\\Settings\\ProposalTemplate\:\:saveTemplate\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$community_service_final_report_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$community_service_progress_report_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$community_service_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$logbook_approval_mode has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$monev_berita_acara_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$monev_borang_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$monev_rekap_penilaian_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$partner_commitment_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$proposal_approval_mode has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$proposal_approval_page_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$report_approval_mode has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$report_approval_page_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$research_final_report_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$research_progress_report_template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Livewire/Settings/ProposalTemplate.php
-
-		-
-			message: '#^Property App\\Livewire\\Settings\\ProposalTemplate\:\:\$research_template has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: app/Livewire/Settings/ProposalTemplate.php
 
