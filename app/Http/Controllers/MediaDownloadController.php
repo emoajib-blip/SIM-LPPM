@@ -27,6 +27,14 @@ class MediaDownloadController extends Controller
         $path = $media->getPath();
         $realPath = realpath($path);
 
+        // Debug logging
+        Log::info('Media Download Paths', [
+            'path' => $path,
+            'realPath' => $realPath,
+            'storagePath' => realpath(storage_path()),
+            'starts' => str_starts_with($realPath, realpath(storage_path())),
+        ]);
+
         // Security Barrier: Ensure path is restricted to authorized storage
         $storagePath = realpath(storage_path());
         if ($realPath === false || $storagePath === false || ! str_starts_with($realPath, $storagePath)) {
