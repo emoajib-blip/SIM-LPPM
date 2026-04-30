@@ -8,7 +8,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        <x-lucide-file-text class="icon me-2" /> Template Proposal & Laporan
+                        <x-lucide-file-text class="icon me-2" /> Template Proposal &amp; Laporan
                     </h2>
                     <div class="text-secondary mt-1">
                         Kelola semua template dokumen yang digunakan dosen untuk menyusun proposal, laporan, dan monev.
@@ -23,6 +23,20 @@
     ═══════════════════════════════════════════════════════════════════ --}}
     <div class="page-body">
         <div class="container-xl">
+
+            {{-- Flash Success/Error --}}
+            @if(session('success'))
+                <div class="alert alert-success d-flex align-items-center" role="alert">
+                    <x-lucide-check-circle class="icon me-2 flex-shrink-0" />
+                    <div>{{ session('success') }}</div>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <x-lucide-alert-circle class="icon me-2 flex-shrink-0" />
+                    <div>{{ session('error') }}</div>
+                </div>
+            @endif
 
             {{-- Info Banner --}}
             <div class="alert alert-info d-flex align-items-center" role="alert">
@@ -46,28 +60,22 @@
             @php
                 $proposalTemplates = [
                     [
-                        'title' => 'Template Penelitian',
+                        'title'       => 'Template Penelitian',
                         'description' => 'Digunakan untuk proposal penelitian.',
-                        'media' => 'researchTemplateMedia',
-                        'uploadModel' => 'research_template',
-                        'saveAction' => 'saveResearchTemplate',
-                        'downloadAction' => 'downloadResearchTemplate',
+                        'media'       => $this->researchTemplateMedia,
+                        'type'        => 'research',
                     ],
                     [
-                        'title' => 'Template Pengabdian Masyarakat',
+                        'title'       => 'Template Pengabdian Masyarakat',
                         'description' => 'Digunakan untuk proposal pengabdian masyarakat.',
-                        'media' => 'communityServiceTemplateMedia',
-                        'uploadModel' => 'community_service_template',
-                        'saveAction' => 'saveCommunityServiceTemplate',
-                        'downloadAction' => 'downloadCommunityServiceTemplate',
+                        'media'       => $this->communityServiceTemplateMedia,
+                        'type'        => 'community-service',
                     ],
                     [
-                        'title' => 'Template Kesanggupan Mitra',
+                        'title'       => 'Template Kesanggupan Mitra',
                         'description' => 'Format surat kesanggupan mitra untuk penelitian/pengabdian terapan.',
-                        'media' => 'partnerCommitmentTemplateMedia',
-                        'uploadModel' => 'partner_commitment_template',
-                        'saveAction' => 'savePartnerCommitmentTemplate',
-                        'downloadAction' => 'downloadPartnerCommitmentTemplate',
+                        'media'       => $this->partnerCommitmentTemplateMedia,
+                        'type'        => 'partner-commitment',
                     ],
                 ];
             @endphp
@@ -81,35 +89,50 @@
                             </div>
                             <div class="card-body">
                                 <p class="text-muted small mb-3">{{ $template['description'] }}</p>
-                                <form wire:submit.prevent="{{ $template['saveAction'] }}">
+                                <form
+                                    method="POST"
+                                    enctype="multipart/form-data"
+                                    action="{{ route('settings.proposal-template.upload', $template['type']) }}"
+                                >
+                                    @csrf
                                     <label class="form-label">Pilih file untuk diunggah:</label>
                                     <div class="input-group">
-                                        <input type="file" class="form-control" wire:model="{{ $template['uploadModel'] }}">
-                                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                                        <input
+                                            type="file"
+                                            class="form-control @error('template_file') is-invalid @enderror"
+                                            name="template_file"
+                                            accept=".doc,.docx,.pdf"
+                                        >
+                                        <button type="submit" class="btn btn-primary">
                                             <x-lucide-upload class="icon icon-sm me-1" /> Unggah
                                         </button>
                                     </div>
-                                    @error($template['uploadModel'])
+                                    @error('template_file')
                                         <span class="text-danger small">{{ $message }}</span>
                                     @enderror
                                 </form>
 
-                                @if($this->{$template['media']})
+                                @if($template['media'])
                                     <div class="mt-3 p-2 bg-light rounded d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center">
                                             <x-lucide-file-check class="icon text-success me-2" />
                                             <div>
-                                                <div class="fw-medium small">{{ $this->{$template['media']}->file_name }}</div>
+                                                <div class="fw-medium small">{{ $template['media']->file_name }}</div>
                                                 <div class="text-secondary" style="font-size: 0.75rem;">
-                                                    {{ $this->{$template['media']}->human_readable_size }} &middot;
-                                                    diubah {{ $this->{$template['media']}->updated_at->format('d M Y') }}
+                                                    {{ $template['media']->human_readable_size }} &middot;
+                                                    diubah {{ $template['media']->updated_at->format('d M Y') }}
                                                 </div>
                                             </div>
                                         </div>
-                                        <button wire:click="{{ $template['downloadAction'] }}"
-                                            class="btn btn-outline-primary btn-sm ms-2">
+                                        <a
+                                            href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $template['media']]) }}"
+                                            class="btn btn-outline-primary btn-sm ms-2"
+                                            data-navigate-ignore="true"
+                                            target="_blank"
+                                            download="{{ $template['media']->file_name }}"
+                                        >
                                             <x-lucide-download class="icon icon-sm me-1" /> Unduh
-                                        </button>
+                                        </a>
                                     </div>
                                 @endif
                             </div>
@@ -132,10 +155,18 @@
             @php
                 $reportSections = [
                     'Laporan Penelitian' => [
-                        ['label' => 'Template Laporan Akhir', 'media' => 'researchFinalReportTemplateMedia', 'uploadModel' => 'research_final_report_template', 'saveAction' => 'saveResearchFinalReportTemplate', 'downloadAction' => 'downloadResearchFinalReportTemplate'],
+                        [
+                            'label'  => 'Template Laporan Akhir',
+                            'media'  => $this->researchFinalReportTemplateMedia,
+                            'type'   => 'research-final-report',
+                        ],
                     ],
                     'Laporan Pengabdian' => [
-                        ['label' => 'Template Laporan Akhir', 'media' => 'communityServiceFinalReportTemplateMedia', 'uploadModel' => 'community_service_final_report_template', 'saveAction' => 'saveCommunityServiceFinalReportTemplate', 'downloadAction' => 'downloadCommunityServiceFinalReportTemplate'],
+                        [
+                            'label'  => 'Template Laporan Akhir',
+                            'media'  => $this->communityServiceFinalReportTemplateMedia,
+                            'type'   => 'community-service-final-report',
+                        ],
                     ],
                 ];
             @endphp
@@ -148,38 +179,50 @@
                                 <h3 class="card-title">{{ $sectionTitle }}</h3>
                             </div>
                             <div class="card-body">
-                                @foreach($templates as $idx => $template)
+                                @foreach($templates as $template)
                                     <div class="{{ !$loop->last ? 'mb-4 pb-4 border-bottom' : '' }}">
                                         <label class="form-label fw-semibold">{{ $template['label'] }}</label>
-                                        <form wire:submit.prevent="{{ $template['saveAction'] }}">
+                                        <form
+                                            method="POST"
+                                            enctype="multipart/form-data"
+                                            action="{{ route('settings.proposal-template.upload', $template['type']) }}"
+                                        >
+                                            @csrf
                                             <div class="input-group">
-                                                <input type="file" class="form-control"
-                                                    wire:model="{{ $template['uploadModel'] }}">
-                                                <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                                                <input
+                                                    type="file"
+                                                    class="form-control @error('template_file') is-invalid @enderror"
+                                                    name="template_file"
+                                                    accept=".doc,.docx,.pdf"
+                                                >
+                                                <button type="submit" class="btn btn-primary">
                                                     <x-lucide-upload class="icon icon-sm me-1" /> Unggah
                                                 </button>
                                             </div>
-                                            @error($template['uploadModel'])
+                                            @error('template_file')
                                                 <span class="text-danger small">{{ $message }}</span>
                                             @enderror
                                         </form>
-                                        @if($this->{$template['media']})
-                                            <div
-                                                class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
+                                        @if($template['media'])
+                                            <div class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
                                                 <div class="d-flex align-items-center">
                                                     <x-lucide-file-check class="icon text-success me-2" />
                                                     <div>
-                                                        <div class="fw-medium small">{{ $this->{$template['media']}->file_name }}
-                                                        </div>
+                                                        <div class="fw-medium small">{{ $template['media']->file_name }}</div>
                                                         <div class="text-secondary" style="font-size: 0.75rem;">
-                                                            {{ $this->{$template['media']}->human_readable_size }}
+                                                            {{ $template['media']->human_readable_size }}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button wire:click="{{ $template['downloadAction'] }}"
-                                                    class="btn btn-outline-primary btn-sm ms-2">
+                                                <a
+                                                    href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $template['media']]) }}"
+                                                    class="btn btn-outline-primary btn-sm ms-2"
+                                                    data-navigate-ignore="true"
+                                                    target="_blank"
+                                                    download="{{ $template['media']->file_name }}"
+                                                >
                                                     <x-lucide-download class="icon icon-sm me-1" /> Unduh
-                                                </button>
+                                                </a>
                                             </div>
                                         @endif
                                     </div>
@@ -194,7 +237,7 @@
             SECTION 3: Konfigurasi Persetujuan & Pengesahan
             ─────────────────────────────────────────────────────────── --}}
             <h3 class="mb-3">
-                <x-lucide-settings class="icon me-1" /> Konfigurasi Persetujuan & Pengesahan
+                <x-lucide-settings class="icon me-1" /> Konfigurasi Persetujuan &amp; Pengesahan
             </h3>
 
             <div class="card shadow-sm mb-4">
@@ -203,7 +246,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label fw-semibold">Metode Persetujuan Proposal (Dekan &
+                                    <label class="form-label fw-semibold">Metode Persetujuan Proposal (Dekan &amp;
                                         LPPM)</label>
                                     <select class="form-select" wire:model="proposal_approval_mode">
                                         <option value="digital">Opsi A: Digital (Otomatis di PDF)</option>
@@ -228,7 +271,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="form-label fw-semibold">Metode Pengesahan Catatan Harian &
+                                    <label class="form-label fw-semibold">Metode Pengesahan Catatan Harian &amp;
                                         Keuangan</label>
                                     <select class="form-select" wire:model="logbook_approval_mode">
                                         <option value="digital">Opsi A: Digital (Otomatis di PDF)</option>
@@ -236,7 +279,7 @@
                                         <option value="both">Keduanya (A dan B)</option>
                                     </select>
                                     <small class="text-muted">Menentukan apakah dosen perlu mengunggah scan lembar
-                                        pengesahan pada catatan harian & keuangan.</small>
+                                        pengesahan pada catatan harian &amp; keuangan.</small>
                                 </div>
                             </div>
                         </div>
@@ -258,15 +301,24 @@
                                 </p>
                             </div>
                             <div class="col-md-7 mt-3 mt-md-0">
-                                <form wire:submit.prevent="saveProposalApprovalPageTemplate">
+                                <form
+                                    method="POST"
+                                    enctype="multipart/form-data"
+                                    action="{{ route('settings.proposal-template.upload', 'proposal-approval-page') }}"
+                                >
+                                    @csrf
                                     <div class="input-group">
-                                        <input type="file" class="form-control"
-                                            wire:model="proposal_approval_page_template">
-                                        <button type="submit" class="btn btn-azure" wire:loading.attr="disabled">
+                                        <input
+                                            type="file"
+                                            class="form-control @error('template_file') is-invalid @enderror"
+                                            name="template_file"
+                                            accept=".doc,.docx,.pdf"
+                                        >
+                                        <button type="submit" class="btn btn-azure">
                                             Simpan
                                         </button>
                                     </div>
-                                    @error('proposal_approval_page_template')
+                                    @error('template_file')
                                         <span class="text-danger small">{{ $message }}</span>
                                     @enderror
                                 </form>
@@ -274,8 +326,7 @@
                                     <div class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center">
                                             <x-lucide-file-check class="icon text-success me-2" />
-                                            <span
-                                                class="small fw-medium">{{ $this->proposalApprovalPageTemplateMedia->file_name }}</span>
+                                            <span class="small fw-medium">{{ $this->proposalApprovalPageTemplateMedia->file_name }}</span>
                                         </div>
                                         <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $this->proposalApprovalPageTemplateMedia]) }}"
                                             class="btn btn-outline-primary btn-sm" data-navigate-ignore="true" target="_blank"
@@ -300,14 +351,24 @@
                                 </p>
                             </div>
                             <div class="col-md-7 mt-3 mt-md-0">
-                                <form wire:submit.prevent="saveReportApprovalPageTemplate">
+                                <form
+                                    method="POST"
+                                    enctype="multipart/form-data"
+                                    action="{{ route('settings.proposal-template.upload', 'report-approval-page') }}"
+                                >
+                                    @csrf
                                     <div class="input-group">
-                                        <input type="file" class="form-control" wire:model="report_approval_page_template">
-                                        <button type="submit" class="btn btn-azure" wire:loading.attr="disabled">
+                                        <input
+                                            type="file"
+                                            class="form-control @error('template_file') is-invalid @enderror"
+                                            name="template_file"
+                                            accept=".doc,.docx,.pdf"
+                                        >
+                                        <button type="submit" class="btn btn-azure">
                                             Simpan
                                         </button>
                                     </div>
-                                    @error('report_approval_page_template')
+                                    @error('template_file')
                                         <span class="text-danger small">{{ $message }}</span>
                                     @enderror
                                 </form>
@@ -315,8 +376,7 @@
                                     <div class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center">
                                             <x-lucide-file-check class="icon text-success me-2" />
-                                            <span
-                                                class="small fw-medium">{{ $this->reportApprovalPageTemplateMedia->file_name }}</span>
+                                            <span class="small fw-medium">{{ $this->reportApprovalPageTemplateMedia->file_name }}</span>
                                         </div>
                                         <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $this->reportApprovalPageTemplateMedia]) }}"
                                             class="btn btn-outline-primary btn-sm" data-navigate-ignore="true" target="_blank"
@@ -343,9 +403,21 @@
 
             @php
                 $monevTemplates = [
-                    ['title' => 'Berita Acara Monev', 'media' => 'monevBeritaAcaraTemplateMedia', 'uploadModel' => 'monev_berita_acara_template', 'saveAction' => 'saveMonevBeritaAcaraTemplate', 'downloadAction' => 'downloadMonevBeritaAcaraTemplate'],
-                    ['title' => 'Borang Monev', 'media' => 'monevBorangTemplateMedia', 'uploadModel' => 'monev_borang_template', 'saveAction' => 'saveMonevBorangTemplate', 'downloadAction' => 'downloadMonevBorangTemplate'],
-                    ['title' => 'Rekap Penilaian Monev', 'media' => 'monevRekapPenilaianTemplateMedia', 'uploadModel' => 'monev_rekap_penilaian_template', 'saveAction' => 'saveMonevRekapPenilaianTemplate', 'downloadAction' => 'downloadMonevRekapPenilaianTemplate'],
+                    [
+                        'title' => 'Berita Acara Monev',
+                        'media' => $this->monevBeritaAcaraTemplateMedia,
+                        'type'  => 'monev-berita-acara',
+                    ],
+                    [
+                        'title' => 'Borang Monev',
+                        'media' => $this->monevBorangTemplateMedia,
+                        'type'  => 'monev-borang',
+                    ],
+                    [
+                        'title' => 'Rekap Penilaian Monev',
+                        'media' => $this->monevRekapPenilaianTemplateMedia,
+                        'type'  => 'monev-rekap-penilaian',
+                    ],
                 ];
             @endphp
 
@@ -357,29 +429,43 @@
                                 <h3 class="card-title">{{ $template['title'] }}</h3>
                             </div>
                             <div class="card-body">
-                                <form wire:submit.prevent="{{ $template['saveAction'] }}">
+                                <form
+                                    method="POST"
+                                    enctype="multipart/form-data"
+                                    action="{{ route('settings.proposal-template.upload', $template['type']) }}"
+                                >
+                                    @csrf
                                     <label class="form-label">Unggah Template Baru</label>
                                     <div class="input-group">
-                                        <input type="file" class="form-control" wire:model="{{ $template['uploadModel'] }}">
-                                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                                        <input
+                                            type="file"
+                                            class="form-control @error('template_file') is-invalid @enderror"
+                                            name="template_file"
+                                            accept=".doc,.docx,.pdf"
+                                        >
+                                        <button type="submit" class="btn btn-primary">
                                             <x-lucide-upload class="icon icon-sm me-1" /> Unggah
                                         </button>
                                     </div>
-                                    @error($template['uploadModel'])
+                                    @error('template_file')
                                         <span class="text-danger small">{{ $message }}</span>
                                     @enderror
                                 </form>
-                                @if($this->{$template['media']})
+                                @if($template['media'])
                                     <div class="mt-3 p-2 bg-light rounded d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center">
                                             <x-lucide-file-check class="icon text-success me-2" />
                                             <div>
-                                                <div class="fw-medium small">{{ $this->{$template['media']}->file_name }}</div>
+                                                <div class="fw-medium small">{{ $template['media']->file_name }}</div>
                                             </div>
                                         </div>
-                                        <a href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $this->{$template['media']}]) }}"
-                                            class="btn btn-outline-primary btn-sm" data-navigate-ignore="true" target="_blank"
-                                            download="{{ $this->{$template['media']}->file_name }}">
+                                        <a
+                                            href="{{ \Illuminate\Support\Facades\URL::temporarySignedRoute('media.download', now()->addMinutes(config('media-library.temporary_url_default_lifetime', 5)), ['media' => $template['media']]) }}"
+                                            class="btn btn-outline-primary btn-sm"
+                                            data-navigate-ignore="true"
+                                            target="_blank"
+                                            download="{{ $template['media']->file_name }}"
+                                        >
                                             <x-lucide-download class="icon icon-sm me-1" /> Unduh
                                         </a>
                                     </div>

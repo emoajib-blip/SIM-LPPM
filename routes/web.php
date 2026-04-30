@@ -242,6 +242,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('settings/proposal-schedule', \App\Livewire\Settings\ProposalSchedule::class)->name('settings.proposal-schedule');
         Route::get('settings/proposal-template', \App\Livewire\Settings\ProposalTemplate::class)->name('settings.proposal-template');
         Route::get('admin/eligibility-dashboard', \App\Livewire\Admin\EligibilityDashboard::class)->name('admin.eligibility-dashboard');
+
+        // Template upload via traditional POST (bypass Livewire WAF block on /livewire/upload-file)
+        Route::post(
+            'settings/proposal-template/upload/{type}',
+            [\App\Http\Controllers\Settings\ProposalTemplateUploadController::class, 'upload']
+        )->name('settings.proposal-template.upload');
     });
 
     Route::get('settings/two-factor', TwoFactor::class)
