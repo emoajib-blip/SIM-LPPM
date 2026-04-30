@@ -84,14 +84,14 @@ class MenuComposer
                     ],
                 ],
             ],
-            ...( $kaprodiValidationActive ? [[
+            ...($kaprodiValidationActive ? [[
                 'title' => 'Persetujuan Kaprodi',
                 'icon' => 'clipboard-check',
                 'route' => 'kaprodi.proposals.index',
                 'roles' => ['kaprodi'],
             ]] : []),
             // Kaprodi - Conditional Roadmap
-            ...( $roadmapActive ? [[
+            ...($roadmapActive ? [[
                 'title' => 'Kelola Peta Jalan',
                 'icon' => 'map-2',
                 'route' => 'settings.master-data',
@@ -112,7 +112,7 @@ class MenuComposer
                 'roles' => ['dekan'],
             ],
             // Dekan - Conditional Roadmap
-            ...( $roadmapActive ? [[
+            ...($roadmapActive ? [[
                 'title' => 'Kelola Peta Jalan',
                 'icon' => 'map-2',
                 'route' => 'settings.master-data',

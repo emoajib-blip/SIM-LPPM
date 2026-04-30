@@ -134,7 +134,7 @@ class Edit extends Component
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('identities', 'identity_id')->ignore($this->userId, 'user_id')
+                Rule::unique('identities', 'identity_id')->ignore($this->userId, 'user_id'),
             ],
             'address' => ['nullable', 'string', 'max:255'],
             'birthdate' => ['nullable', 'date', 'before:today'],
@@ -300,7 +300,7 @@ class Edit extends Component
     public function getUserProperty(): User
     {
         if (empty($this->userId)) {
-            return new User();
+            return new User;
         }
 
         return User::query()

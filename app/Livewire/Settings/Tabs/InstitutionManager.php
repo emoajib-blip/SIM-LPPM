@@ -160,7 +160,9 @@ class InstitutionManager extends Component
     public function confirmDelete(int $id): void
     {
         $institution = \App\Models\Institution::find($id);
-        if (!$institution) return;
+        if (! $institution) {
+            return;
+        }
 
         $this->deleteItemId = $id;
         $this->deleteItemName = $institution->name;

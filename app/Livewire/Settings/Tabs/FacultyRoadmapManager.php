@@ -42,11 +42,11 @@ class FacultyRoadmapManager extends Component
     public bool $isActive = true;
 
     public ?int $editingId = null;
-    
+
     public string $modalTitle = 'Peta Jalan Fakultas';
 
     public ?int $deleteItemId = null;
-    
+
     public string $deleteItemName = '';
 
     public function render(): \Illuminate\Contracts\View\View
@@ -74,7 +74,7 @@ class FacultyRoadmapManager extends Component
     public function create(): void
     {
         $this->resetForm();
-        
+
         $user = auth()->user();
         if ($user->hasRole('dekan')) {
             $this->facultyId = $user->identity?->faculty_id;
@@ -111,12 +111,12 @@ class FacultyRoadmapManager extends Component
 
         if ($this->editingId) {
             $roadmap = FacultyRoadmap::findOrFail($this->editingId);
-            
+
             // Re-verify ownership for Dekan on update
             if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity?->faculty_id) {
                 abort(403);
             }
-            
+
             $roadmap->update($data);
             $message = 'Peta Jalan Fakultas berhasil diubah';
         } else {
@@ -144,10 +144,10 @@ class FacultyRoadmapManager extends Component
         $this->periodStart = $roadmap->period_start !== null ? (int) $roadmap->period_start : null;
         $this->periodEnd = $roadmap->period_end !== null ? (int) $roadmap->period_end : null;
         $this->vision = $roadmap->vision ?? '';
-        
+
         // Convert JSON array back to textarea string
         $this->strategicThemesInput = $roadmap->strategic_themes ? implode("\n", $roadmap->strategic_themes) : '';
-        
+
         $this->focusAreaIds = $roadmap->focus_area_ids ?? [];
         $this->documentUrl = $roadmap->document_url ?? '';
         $this->isActive = $roadmap->is_active;
@@ -159,15 +159,17 @@ class FacultyRoadmapManager extends Component
     public function resetForm(): void
     {
         $this->reset([
-            'facultyId', 'title', 'periodStart', 'periodEnd', 'vision', 
-            'strategicThemesInput', 'focusAreaIds', 'documentUrl', 'isActive', 'editingId'
+            'facultyId', 'title', 'periodStart', 'periodEnd', 'vision',
+            'strategicThemesInput', 'focusAreaIds', 'documentUrl', 'isActive', 'editingId',
         ]);
     }
 
     public function confirmDelete(int $id): void
     {
         $roadmap = FacultyRoadmap::find($id);
-        if (!$roadmap) return;
+        if (! $roadmap) {
+            return;
+        }
 
         $user = auth()->user();
         if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity?->faculty_id) {
@@ -183,12 +185,12 @@ class FacultyRoadmapManager extends Component
     {
         if ($this->deleteItemId) {
             $roadmap = FacultyRoadmap::findOrFail($this->deleteItemId);
-            
+
             $user = auth()->user();
             if ($user->hasRole('dekan') && $roadmap->faculty_id !== $user->identity?->faculty_id) {
                 abort(403);
             }
-            
+
             $roadmap->delete();
 
             $message = 'Peta Jalan Fakultas berhasil dihapus';

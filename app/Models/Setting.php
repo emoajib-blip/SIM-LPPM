@@ -9,6 +9,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Setting extends Model implements HasMedia
 {
+    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     use HasUuids, InteractsWithMedia;
 
     protected $fillable = [
@@ -16,6 +17,16 @@ class Setting extends Model implements HasMedia
         'value',
         'type',
     ];
+
+    /**
+     * Register Spatie MediaLibrary collections for template files.
+     * Without this, addMedia() to 'template' collection will silently fail.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('template')
+            ->singleFile(); // Hanya simpan 1 file per setting key; file lama otomatis tergantikan
+    }
 
     /**
      * Get a setting value by key.

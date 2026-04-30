@@ -47,18 +47,18 @@ class StudyProgramRoadmapManager extends Component
     public bool $isActive = true;
 
     public ?int $editingId = null;
-    
+
     public string $modalTitle = 'Peta Jalan Program Studi';
 
     public ?int $deleteItemId = null;
-    
+
     public string $deleteItemName = '';
 
     public function render(): \Illuminate\Contracts\View\View
     {
         $user = auth()->user();
         $query = StudyProgramRoadmap::with(['studyProgram', 'facultyRoadmap'])->latest();
-        
+
         $studyProgramsQuery = StudyProgram::query();
         $facultyRoadmapsQuery = FacultyRoadmap::where('is_active', true);
 
@@ -66,7 +66,7 @@ class StudyProgramRoadmapManager extends Component
             $studyProgramId = $user->identity?->study_program_id;
             $query->where('study_program_id', $studyProgramId);
             $studyProgramsQuery->where('id', $studyProgramId);
-            
+
             // Limit faculty roadmap choices to their own faculty
             $facultyId = $user->identity?->faculty_id;
             if ($facultyId) {
@@ -75,7 +75,7 @@ class StudyProgramRoadmapManager extends Component
         } elseif ($user->hasRole('dekan')) {
             $facultyId = $user->identity?->faculty_id;
             // Dekan can see all study programs under their faculty
-            $query->whereHas('studyProgram', function($q) use ($facultyId) {
+            $query->whereHas('studyProgram', function ($q) use ($facultyId) {
                 $q->where('faculty_id', $facultyId);
             });
             $studyProgramsQuery->where('faculty_id', $facultyId);
@@ -86,16 +86,16 @@ class StudyProgramRoadmapManager extends Component
             'roadmaps' => $query->paginate(10),
             'studyPrograms' => $studyProgramsQuery->get(),
             'facultyRoadmaps' => $facultyRoadmapsQuery->get(),
-            'canMutate' => !$user->hasRole('dekan') || $user->hasRole('superadmin') || $user->hasRole('admin lppm') // Dekan is read-only unless they have other roles
+            'canMutate' => ! $user->hasRole('dekan') || $user->hasRole('superadmin') || $user->hasRole('admin lppm'), // Dekan is read-only unless they have other roles
         ]);
     }
 
     public function create(): void
     {
         $this->abortIfReadOnly();
-        
+
         $this->resetForm();
-        
+
         $user = auth()->user();
         if ($user->hasRole('kaprodi')) {
             $this->studyProgramId = $user->identity?->study_program_id;
@@ -133,11 +133,11 @@ class StudyProgramRoadmapManager extends Component
 
         if ($this->editingId) {
             $roadmap = StudyProgramRoadmap::findOrFail($this->editingId);
-            
+
             if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity?->study_program_id) {
                 abort(403);
             }
-            
+
             $roadmap->update($data);
             $message = 'Peta Jalan Prodi berhasil diubah';
         } else {
@@ -155,7 +155,7 @@ class StudyProgramRoadmapManager extends Component
     public function edit(StudyProgramRoadmap $roadmap): void
     {
         $this->abortIfReadOnly();
-        
+
         $user = auth()->user();
         if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity?->study_program_id) {
             abort(403);
@@ -168,9 +168,9 @@ class StudyProgramRoadmapManager extends Component
         $this->periodStart = $roadmap->period_start !== null ? (int) $roadmap->period_start : null;
         $this->periodEnd = $roadmap->period_end !== null ? (int) $roadmap->period_end : null;
         $this->vision = $roadmap->vision ?? '';
-        
+
         $this->researchTreeInput = $roadmap->research_tree ? implode("\n", $roadmap->research_tree) : '';
-        
+
         $this->cplAlignment = $roadmap->cpl_alignment ?? '';
         $this->tktTargetMin = $roadmap->tkt_target_min ?? 1;
         $this->tktTargetMax = $roadmap->tkt_target_max ?? 9;
@@ -183,17 +183,19 @@ class StudyProgramRoadmapManager extends Component
     public function resetForm(): void
     {
         $this->reset([
-            'studyProgramId', 'facultyRoadmapId', 'title', 'periodStart', 'periodEnd', 'vision', 
-            'researchTreeInput', 'cplAlignment', 'tktTargetMin', 'tktTargetMax', 'isActive', 'editingId'
+            'studyProgramId', 'facultyRoadmapId', 'title', 'periodStart', 'periodEnd', 'vision',
+            'researchTreeInput', 'cplAlignment', 'tktTargetMin', 'tktTargetMax', 'isActive', 'editingId',
         ]);
     }
 
     public function confirmDelete(int $id): void
     {
         $this->abortIfReadOnly();
-        
+
         $roadmap = StudyProgramRoadmap::find($id);
-        if (!$roadmap) return;
+        if (! $roadmap) {
+            return;
+        }
 
         $user = auth()->user();
         if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity?->study_program_id) {
@@ -208,15 +210,15 @@ class StudyProgramRoadmapManager extends Component
     public function handleConfirmDeleteAction(): void
     {
         $this->abortIfReadOnly();
-        
+
         if ($this->deleteItemId) {
             $roadmap = StudyProgramRoadmap::findOrFail($this->deleteItemId);
-            
+
             $user = auth()->user();
             if ($user->hasRole('kaprodi') && $roadmap->study_program_id !== $user->identity?->study_program_id) {
                 abort(403);
             }
-            
+
             $roadmap->delete();
 
             $message = 'Peta Jalan Prodi berhasil dihapus';
@@ -225,12 +227,12 @@ class StudyProgramRoadmapManager extends Component
             $this->reset(['deleteItemId', 'deleteItemName']);
         }
     }
-    
+
     private function abortIfReadOnly(): void
     {
         $user = auth()->user();
         // Dekan can only view, unless they are also admin
-        if ($user->hasRole('dekan') && !$user->hasRole('superadmin') && !$user->hasRole('admin lppm') && !$user->hasRole('kaprodi')) {
+        if ($user->hasRole('dekan') && ! $user->hasRole('superadmin') && ! $user->hasRole('admin lppm') && ! $user->hasRole('kaprodi')) {
             abort(403, 'Dekan hanya memiliki akses baca pada Peta Jalan Prodi.');
         }
     }

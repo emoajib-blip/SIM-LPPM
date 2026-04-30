@@ -15,12 +15,12 @@ use Livewire\WithPagination;
 class ProposalValidation extends Component
 {
     use WithPagination;
-    
+
     public function mount(): void
     {
         $isKaprodiValidationActive = \App\Models\Setting::get('feature_kaprodi_validation', false);
-        
-        if (!$isKaprodiValidationActive) {
+
+        if (! $isKaprodiValidationActive) {
             abort(403, 'Maaf Anda tidak memiliki akses ini');
         }
     }
@@ -56,14 +56,14 @@ class ProposalValidation extends Component
     /**
      * Apply study program scope to a query (only proposals from Kaprodi's study program).
      *
-     * @param \Illuminate\Database\Eloquent\Builder<Proposal> $query
+     * @param  \Illuminate\Database\Eloquent\Builder<Proposal>  $query
      * @return \Illuminate\Database\Eloquent\Builder<Proposal>
      */
     protected function applyStudyProgramScope(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         $studyProgramId = $this->kaprodiStudyProgramId();
 
-        if (!$studyProgramId) {
+        if (! $studyProgramId) {
             $query->whereRaw('1 = 0');
         } else {
             $query->whereHas('submitter.identity', function ($q) use ($studyProgramId) {

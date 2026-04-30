@@ -22,8 +22,8 @@ class MasterData extends Component
         $roadmapActive = \App\Models\Setting::get('feature_roadmap_active', false);
 
         // Jika fitur roadmap nonaktif, Dekan & Kaprodi dilarang akses (kecuali mereka juga admin)
-        if (!$roadmapActive && ($user->hasRole('dekan') || $user->hasRole('kaprodi'))) {
-            if (!$user->hasRole('admin lppm') && !$user->hasRole('superadmin')) {
+        if (! $roadmapActive && ($user->hasRole('dekan') || $user->hasRole('kaprodi'))) {
+            if (! $user->hasRole('admin lppm') && ! $user->hasRole('superadmin')) {
                 abort(403, 'Maaf Anda tidak memiliki akses ini');
             }
         }
