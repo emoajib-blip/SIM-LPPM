@@ -21,11 +21,8 @@ class MediaDownloadController extends Controller
         $this->authorize('download', $media);
 
         // 3. Path Traversal & Existence Check
-        $path = $media->getPath();
-        if (! str_starts_with($path, '/')) {
-            // Path is relative to disk root, assume public disk
-            $path = storage_path('app/public/' . $path);
-        }
+        $disk = \Illuminate\Support\Facades\Storage::disk($media->disk ?? 'public');
+        $path = $disk->path($media->getPath());
         if (str_contains($path, '..')) {
             abort(403, 'Invalid file path.');
         }
@@ -33,10 +30,11 @@ class MediaDownloadController extends Controller
 
         // Debug logging
         Log::info('Media Download Paths', [
-            'path' => $path,
+            'originalPath' => $media->getPath(),
+            'constructedPath' => $path,
             'realPath' => $realPath,
             'storagePath' => realpath(storage_path()),
-            'starts' => str_starts_with($realPath, realpath(storage_path())),
+            'starts' => $realPath ? str_starts_with($realPath, realpath(storage_path())) : false,
         ]);
 
         // Security Barrier: Ensure path is restricted to authorized storage
