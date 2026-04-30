@@ -121,7 +121,7 @@
                 </div>
                 
                 <p class="text-center mt-4 text-secondary small">
-                    &copy; {{ date('Y') }} SIM LPPM ITSNU Pasuruan. All rights reserved.
+                    &copy; {{ date('Y') }} SIM LPPM ITSNU Pekalongan. All rights reserved.
                 </p>
             </div>
         </div>
