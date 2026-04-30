@@ -60,10 +60,17 @@ class ProposalTemplateUploadController extends Controller
 
         $setting = Setting::firstOrCreate(['key' => $settingKey]);
         $setting->clearMediaCollection('template');
-        $setting->addMedia($file->getRealPath())
+        $media = $setting->addMedia($file->getRealPath())
             ->usingName($file->getClientOriginalName())
             ->usingFileName($file->getClientOriginalName())
             ->toMediaCollection('template');
+
+        \Illuminate\Support\Facades\Log::info('Template uploaded', [
+            'key' => $settingKey,
+            'file' => $file->getClientOriginalName(),
+            'media_id' => $media->id,
+            'path' => $media->getPath(),
+        ]);
 
         return redirect()
             ->route('settings.proposal-template')
