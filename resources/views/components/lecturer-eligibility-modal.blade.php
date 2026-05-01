@@ -78,16 +78,6 @@
 
     $meetsResearchRequirements = !empty($allResearchSchemeRequirements) ? $checkEligibility($allResearchSchemeRequirements, $userSintaScore, $userFunctionalPosition) : true;
     $meetsPkmRequirements = !empty($allPkmSchemeRequirements) ? $checkEligibility($allPkmSchemeRequirements, $userSintaScore, $userFunctionalPosition) : true;
-
-    // Find which requirements user doesn't meet
-    $researchFailedReasons = [];
-    $pkmFailedReasons = [];
-
-    foreach ($allResearchSchemeRequirements as $req) {
-        $issues = [];
-        if ($req['min_sinta'] !== null && $userSintaScore < $req['min_sinta']) {
-            $issues[] = "SINTA minimal {$req['min_sinta']}";
-        }
         if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
             $positions = implode(', ', $req['allowed_positions']);
             $issues[] = "Jabatan: {$positions}";
@@ -263,7 +253,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @elseif ((!empty($hasNoResearchSchemes) || !empty($hasNoPkmSchemes)) && !$hasSubmittableProposals)
+                            @elseif (!$hasSubmittableProposals)
                                 <!-- Accordion Scheme Ineligible -->
                                 <div class="accordion" id="accordion-scheme-ineligible">
                                     <div class="accordion-item bg-warning-lt border-warning mb-3 rounded shadow-sm">
@@ -297,30 +287,92 @@
                                                     </div>
                                                 </div>
 
-                                                <p class="mb-2 pt-1 text-warning fw-bold">Jadwal terbuka tetapi tidak ada skema
-                                                    yang memenuhi syarat:</p>
+                                                <p class="mb-2 pt-1 text-info fw-bold">Persyaratan Skema Berdasarkan Profil Anda:</p>
 
-                                                @if(!empty($hasNoResearchSchemes) && !empty($allResearchSchemeRequirements))
-                                                    <div class="mb-3">
-                                                        <div class="fw-bold text-warning mb-1">Penelitian - Persyaratan Skema:</div>
-                                                        @foreach($researchFailedReasons as $schemeName => $reasons)
-                                                            <div class="small text-muted ms-2 mb-1">
-                                                                <strong>{{ $schemeName }}:</strong> {{ implode(', ', $reasons) }}
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                @endif
+                                                @if(!empty($allResearchSchemeRequirements))
+                                                     <div class="mb-3">
+                                                         <div class="fw-bold text-info mb-1">📚 Penelitian:</div>
+                                                         @foreach($allResearchSchemeRequirements as $req)
+                                                             <div class="small ms-2 mb-1">
+                                                                 <strong>{{ $req['name'] }}:</strong>
+                                                                 @php
+                                                                     $issues = [];
+                                                                     if ($req['min_sinta'] !== null && $userSintaScore < $req['min_sinta']) {
+                                                                         $issues[] = "SINTA minimal {$req['min_sinta']} (anda: {$userSintaScore})";
+                                                                     }
+                                                                     if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
+                                                                         $positions = implode(', ', $req['allowed_positions']);
+                                                                         $issues[] = "Jabatan: {$positions} (anda: {$userFunctionalPosition})";
+                                                                     }
+                                                                     $meetsReq = empty($issues);
+                                                                 @endphp
+                                                                 @if($meetsReq)
+                                                                     <span class="text-success">✅ Memenuhi syarat</span>
+                                                                 @else
+                                                                     <span class="text-danger">❌ {{ implode(', ', $issues) }}</span>
+                                                                 @endif
+                                                             </div>
+                                                         @endforeach
+                                                     </div>
+                                                 @endif
 
-                                                @if(!empty($hasNoPkmSchemes) && !empty($allPkmSchemeRequirements))
-                                                    <div class="mb-3">
-                                                        <div class="fw-bold text-warning mb-1">Pengabdian - Persyaratan Skema:</div>
-                                                        @foreach($pkmFailedReasons as $schemeName => $reasons)
-                                                            <div class="small text-muted ms-2 mb-1">
-                                                                <strong>{{ $schemeName }}:</strong> {{ implode(', ', $reasons) }}
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                @endif
+                                                 @if(!empty($allPkmSchemeRequirements))
+                                                     <div class="mb-3">
+                                                         <div class="fw-bold text-info mb-1">🤝 Pengabdian Masyarakat:</div>
+                                                         @foreach($allPkmSchemeRequirements as $req)
+                                                             <div class="small ms-2 mb-1">
+                                                                 <strong>{{ $req['name'] }}:</strong>
+                                                                 @php
+                                                                     $issues = [];
+                                                                     if ($req['min_sinta'] !== null && $userSintaScore < $req['min_sinta']) {
+                                                                         $issues[] = "SINTA minimal {$req['min_sinta']} (anda: {$userSintaScore})";
+                                                                     }
+                                                                     if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
+                                                                         $positions = implode(', ', $req['allowed_positions']);
+                                                                         $issues[] = "Jabatan: {$positions} (anda: {$userFunctionalPosition})";
+                                                                     }
+                                                                     $meetsReq = empty($issues);
+                                                                 @endphp
+                                                                 @if($meetsReq)
+                                                                     <span class="text-success">✅ Memenuhi syarat</span>
+                                                                 @else
+                                                                     <span class="text-danger">❌ {{ implode(', ', $issues) }}</span>
+                                                                 @endif
+                                                             </div>
+                                                         @endforeach
+                                                     </div>
+                                                 @endif
+                                                             </div>
+                                                         @endforeach
+                                                     </div>
+                                                 @endif
+
+                                                 @if(!empty($allPkmSchemeRequirements))
+                                                     <div class="mb-3">
+                                                         <div class="fw-bold text-info mb-1">Pengabdian - Persyaratan Skema:</div>
+                                                         @foreach($allPkmSchemeRequirements as $req)
+                                                             <div class="small ms-2 mb-1">
+                                                                 <strong>{{ $req['name'] }}:</strong>
+                                                                 @php
+                                                                     $issues = [];
+                                                                     if ($req['min_sinta'] !== null && $userSintaScore < $req['min_sinta']) {
+                                                                         $issues[] = "SINTA minimal {$req['min_sinta']} (anda: {$userSintaScore})";
+                                                                     }
+                                                                     if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
+                                                                         $positions = implode(', ', $req['allowed_positions']);
+                                                                         $issues[] = "Jabatan: {$positions} (anda: {$userFunctionalPosition})";
+                                                                     }
+                                                                     $meetsReq = empty($issues);
+                                                                 @endphp
+                                                                 @if($meetsReq)
+                                                                     <span class="text-success">✅ Memenuhi syarat</span>
+                                                                 @else
+                                                                     <span class="text-danger">❌ {{ implode(', ', $issues) }}</span>
+                                                                 @endif
+                                                             </div>
+                                                         @endforeach
+                                                     </div>
+                                                 @endif
 
                                                 <p class="mt-2 mb-0 text-secondary small">
                                                     <i class="ti ti-info-circle me-1"></i>
