@@ -39,7 +39,7 @@ class ProposalService
     {
         \Illuminate\Support\Facades\Gate::authorize('delete', $proposal);
 
-        if ($proposal->status !== ProposalStatus::DRAFT) {
+        if ($proposal->status !== 'draft') {
             throw new \Exception('Hanya proposal dengan status draft yang dapat dihapus.');
         }
 
@@ -104,7 +104,8 @@ class ProposalService
         if (isset($filters['status']) && $filters['status'] !== '') {
             $statusValue = (string) $filters['status'];
             // Validate status against ProposalStatus enum values
-            if (in_array($statusValue, array_column(ProposalStatus::cases(), 'value'))) {
+            $allStatusValues = ['draft', 'submitted', 'need_assignment', 'approved', 'waiting_reviewer', 'under_review', 'reviewed', 'revision_needed', 'completed', 'rejected'];
+            if (in_array($statusValue, $allStatusValues)) {
                 $query->where('status', $statusValue);
             }
         }
@@ -168,7 +169,7 @@ class ProposalService
             ->pluck('count', 'status')
             ->toArray();
 
-        $allStatuses = array_map(fn ($status) => $status->value, ProposalStatus::cases());
+        $allStatuses = ['draft', 'submitted', 'need_assignment', 'approved', 'waiting_reviewer', 'under_review', 'reviewed', 'revision_needed', 'completed', 'rejected'];
         $emptyStats = array_fill_keys($allStatuses, 0);
 
         return [
@@ -188,7 +189,7 @@ class ProposalService
 
     public function validateProposalBeforeSubmit(Proposal $proposal): void
     {
-        if ($proposal->status->value !== ProposalStatus::DRAFT->value) {
+        if ($proposal->status !== 'draft') {
             throw new \Exception('Hanya proposal dengan status draft yang dapat disubmit.');
         }
 
@@ -210,7 +211,7 @@ class ProposalService
         $recipients = $notificationService->getUsersByRole('dekan');
 
         DB::transaction(function () use ($proposal, $notificationService, $submitter, $recipients) {
-            $proposal->update(['status' => ProposalStatus::SUBMITTED->value]);
+            $proposal->update(['status' => 'submitted']);
 
             $notificationService->notifyProposalSubmitted($proposal, $submitter, $recipients);
         });

@@ -444,7 +444,7 @@ class Proposal extends Model
     {
         $stats = $this->reviewers()
             ->selectRaw('COUNT(*) as total, SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed',
-                [\App\Enums\ReviewStatus::COMPLETED])
+                ['completed'])
             ->first();
 
         if (! $stats) {
@@ -477,8 +477,8 @@ class Proposal extends Model
     {
         return $this->reviewers()
             ->whereIn('status', [
-                \App\Enums\ReviewStatus::PENDING,
-                \App\Enums\ReviewStatus::RE_REVIEW_REQUESTED,
+                'pending',
+                're_review_requested',
             ]);
     }
 
@@ -502,7 +502,7 @@ class Proposal extends Model
     public function getPendingReviewers(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->reviewers()
-            ->where('status', '!=', \App\Enums\ReviewStatus::COMPLETED)
+            ->where('status', '!=', 'completed')
             ->get();
     }
 
