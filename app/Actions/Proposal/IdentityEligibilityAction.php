@@ -59,6 +59,7 @@ class IdentityEligibilityAction
 
         // 4. Quota Check (Active proposals)
         $activeStatuses = [
+            ProposalStatus::DRAFT,
             ProposalStatus::SUBMITTED,
             ProposalStatus::NEED_ASSIGNMENT,
             ProposalStatus::APPROVED,

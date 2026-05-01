@@ -26,6 +26,93 @@ class EligibilityService
     }
 
     /**
+     * Check if a user can create a new proposal of given type
+     *
+     * @return array{can_create: bool, reason: ?string, quota_info: array{head_limit: int, head_current: int, member_limit: int, member_current: int}}
+     */
+    public function canCreateProposal(\App\Models\User $user, string $type): array
+    {
+        $schemes = $type === 'research'
+            ? \App\Models\ResearchScheme::all()
+            : \App\Models\CommunityServiceScheme::all();
+
+        $totalHeadLimit = 0;
+        $totalMemberLimit = 0;
+
+        // Find the maximum global limits across all schemes
+        foreach ($schemes as $scheme) {
+            $rules = $scheme->eligibility_rules ?? [];
+            if (isset($rules['max_total_proposals_as_head'])) {
+                $totalHeadLimit = max($totalHeadLimit, (int) $rules['max_total_proposals_as_head']);
+            }
+            if (isset($rules['max_total_proposals_as_member'])) {
+                $totalMemberLimit = max($totalMemberLimit, (int) $rules['max_total_proposals_as_member']);
+            }
+        }
+
+        // Count current active proposals (including drafts)
+        $activeStatuses = [
+            \App\Enums\ProposalStatus::DRAFT,
+            \App\Enums\ProposalStatus::SUBMITTED,
+            \App\Enums\ProposalStatus::NEED_ASSIGNMENT,
+            \App\Enums\ProposalStatus::APPROVED,
+            \App\Enums\ProposalStatus::WAITING_REVIEWER,
+            \App\Enums\ProposalStatus::UNDER_REVIEW,
+            \App\Enums\ProposalStatus::REVIEWED,
+            \App\Enums\ProposalStatus::REVISION_NEEDED,
+        ];
+
+        $currentHeadCount = \App\Models\Proposal::where('submitter_id', $user->id)
+            ->whereIn('status', $activeStatuses)
+            ->count();
+
+        $currentMemberCount = \Illuminate\Support\Facades\DB::table('proposal_user')
+            ->where('user_id', $user->id)
+            ->where('role', '!=', 'Ketua')
+            ->distinct('proposal_id')
+            ->count('proposal_id');
+
+        $quotaInfo = [
+            'head_limit' => $totalHeadLimit,
+            'head_current' => $currentHeadCount,
+            'member_limit' => $totalMemberLimit,
+            'member_current' => $currentMemberCount,
+        ];
+
+        // Check head quota
+        if ($totalHeadLimit > 0 && $currentHeadCount >= $totalHeadLimit) {
+            $messageService = app(\App\Services\QuotaMessageService::class);
+
+            return [
+                'can_create' => false,
+                'reason' => $messageService->getMessage('access_denied', [
+                    'limit' => $totalHeadLimit,
+                ]),
+                'quota_info' => $quotaInfo,
+            ];
+        }
+
+        // Check member quota
+        if ($totalMemberLimit > 0 && $currentMemberCount >= $totalMemberLimit) {
+            $messageService = app(\App\Services\QuotaMessageService::class);
+
+            return [
+                'can_create' => false,
+                'reason' => $messageService->getMessage('member_denied', [
+                    'limit' => $totalMemberLimit,
+                ]),
+                'quota_info' => $quotaInfo,
+            ];
+        }
+
+        return [
+            'can_create' => true,
+            'reason' => null,
+            'quota_info' => $quotaInfo,
+        ];
+    }
+
+    /**
      * Get eligibility status for a dosen against a scheme
      * Returns: ['eligible' => bool, 'passed_checks' => [], 'failed_checks' => []]
      */

@@ -39,6 +39,29 @@ abstract class ProposalIndex extends Component
 
     abstract protected function getShowRoute(string $proposalId): string;
 
+    /**
+     * @return array{can_create: bool, reason: ?string, quota_info: array{head_limit: int, head_current: int, member_limit: int, member_current: int}}
+     */
+    #[Computed]
+    public function canCreateProposal(): array
+    {
+        $eligibilityService = app(\App\Services\EligibilityService::class);
+        $result = $eligibilityService->canCreateProposal(Auth::user(), $this->getProposalType());
+
+        return $result;
+    }
+
+    #[Computed]
+    public function quotaTooltip(): string
+    {
+        $quotaInfo = $this->canCreateProposal()['quota_info'];
+        $messageService = app(\App\Services\QuotaMessageService::class);
+
+        return $messageService->getMessage('button_tooltip', [
+            'limit' => $quotaInfo['head_limit'],
+        ]);
+    }
+
     #[Computed]
     public function proposals()
     {

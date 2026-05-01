@@ -76,6 +76,11 @@
                                 <x-lucide-layers class="icon me-2" />
                                 Strata
                             </button>
+                            <button wire:click="setActiveTab('quota-messages')"
+                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'quota-messages' ? 'active' : '' }}">
+                                <x-lucide-message-circle class="icon me-2" />
+                                Pesan Kuota
+                            </button>
                         </div>
                         <h4 class="subheader mt-4">Manajemen Akses</h4>
                         <div class="list-group list-group-transparent">
@@ -209,6 +214,10 @@
                     @elseif ($activeTab === 'science-clusters')
                         <div>
                             <livewire:settings.tabs.science-cluster-manager />
+                        </div>
+                    @elseif ($activeTab === 'quota-messages')
+                        <div>
+                            <livewire:settings.tabs.quota-message-manager />
                         </div>
                     @elseif ($activeTab === 'study-programs')
                         <div>

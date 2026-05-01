@@ -27,11 +27,17 @@
         @endphp
 
         @if ($isWithinSchedule && auth()->user()->activeHasRole('dosen'))
-            @if ($eligibility['eligible'] && $hasEligibleSchemes)
+            @if ($eligibility['eligible'] && $hasEligibleSchemes && $this->canCreateProposal['can_create'])
                 <a href="{{ route('research.proposal.create') }}" wire:navigate.hover class="btn btn-primary">
                     <x-lucide-plus class="icon" />
                     Usulan Penelitian Baru
                 </a>
+            @elseif ($eligibility['eligible'] && $hasEligibleSchemes && !$this->canCreateProposal['can_create'])
+                <button type="button" class="btn btn-secondary" disabled
+                    title="{{ $this->quotaTooltip }}">
+                    <x-lucide-plus class="icon" />
+                    Kuota Terbatas
+                </button>
             @else
                 @php
                     $reason = '';

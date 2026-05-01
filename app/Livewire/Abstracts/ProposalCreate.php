@@ -84,10 +84,17 @@ abstract class ProposalCreate extends Component
         } else {
             // Check eligibility for new proposals
             if ($user instanceof \App\Models\User && $user->activeHasRole('dosen')) {
+                // First check general eligibility
                 $eligibilityService = app(LecturerEligibilityService::class);
                 $eligibility = $eligibilityService->checkEligibility($user);
                 if (! $eligibility['eligible']) {
                     abort(403, 'Anda tidak memenuhi syarat untuk membuat proposal baru. '.implode(', ', $eligibility['reasons']));
+                }
+
+                // Then check quota limits for creating new proposals
+                $quotaCheck = app(\App\Services\EligibilityService::class)->canCreateProposal($user, $this->getProposalType());
+                if (! $quotaCheck['can_create']) {
+                    abort(403, $quotaCheck['reason']);
                 }
             }
 
