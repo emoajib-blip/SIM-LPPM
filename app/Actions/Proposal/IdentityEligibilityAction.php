@@ -24,6 +24,13 @@ class IdentityEligibilityAction
 
         $identity = $user->identity;
 
+        if (! $identity && $role === 'leader') {
+            return [
+                'is_eligible' => false,
+                'reason' => 'Profil akademik Anda belum lengkap. Silakan lengkapi profil Anda terlebih dahulu.',
+            ];
+        }
+
         // 1. Functional Position (Leader only usually)
         if ($role === 'leader' && ! empty($rules['allowed_functional_positions'])) {
             $userPosition = $identity->functional_position ?? 'Tenaga Pengajar';
@@ -38,10 +45,11 @@ class IdentityEligibilityAction
         // 2. SINTA Score (Leader only usually)
         if ($role === 'leader') {
             $minSinta = $rules['min_sinta_score'] ?? null;
-            if ($minSinta && ($identity->sinta_score_v3_overall ?? 0) < $minSinta) {
+            $currentSinta = $identity->sinta_score_v3_overall ?? 0;
+            if ($minSinta && $currentSinta < $minSinta) {
                 return [
                     'is_eligible' => false,
-                    'reason' => 'Skor SINTA Anda ('.($identity->sinta_score_v3_overall ?? 0).") kurang dari batas minimal ($minSinta).",
+                    'reason' => "Skor SINTA Anda ($currentSinta) kurang dari batas minimal ($minSinta).",
                 ];
             }
         }
@@ -49,24 +57,25 @@ class IdentityEligibilityAction
         // 3. Scopus Score (H-Index) (Leader only usually)
         if ($role === 'leader') {
             $minScopus = $rules['min_scopus_score'] ?? null;
-            if ($minScopus && ($identity->scopus_h_index ?? 0) < $minScopus) {
+            $currentScopus = $identity->scopus_h_index ?? 0;
+            if ($minScopus && $currentScopus < $minScopus) {
                 return [
                     'is_eligible' => false,
-                    'reason' => 'Skor Scopus (H-Index) Anda ('.($identity->scopus_h_index ?? 0).") kurang dari batas minimal ($minScopus).",
+                    'reason' => "Skor Scopus (H-Index) Anda ($currentScopus) kurang dari batas minimal ($minScopus).",
                 ];
             }
         }
 
         // 4. Quota Check (Active proposals)
         $activeStatuses = [
-            ProposalStatus::DRAFT,
-            ProposalStatus::SUBMITTED,
-            ProposalStatus::NEED_ASSIGNMENT,
-            ProposalStatus::APPROVED,
-            ProposalStatus::WAITING_REVIEWER,
-            ProposalStatus::UNDER_REVIEW,
-            ProposalStatus::REVIEWED,
-            ProposalStatus::REVISION_NEEDED,
+            ProposalStatus::DRAFT->value,
+            ProposalStatus::SUBMITTED->value,
+            ProposalStatus::NEED_ASSIGNMENT->value,
+            ProposalStatus::APPROVED->value,
+            ProposalStatus::WAITING_REVIEWER->value,
+            ProposalStatus::UNDER_REVIEW->value,
+            ProposalStatus::REVIEWED->value,
+            ProposalStatus::REVISION_NEEDED->value,
         ];
 
         if ($role === 'leader' && isset($rules['max_proposals_as_head'])) {
