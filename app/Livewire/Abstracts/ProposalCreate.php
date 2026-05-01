@@ -317,6 +317,13 @@ abstract class ProposalCreate extends Component
 
     public function saveDraft(): void
     {
+        \Log::info('saveDraft called', [
+            'user_id' => Auth::id(),
+            'title' => $this->form->title,
+            'current_step' => $this->currentStep,
+            'has_proposal' => $this->form->proposal ? 'yes' : 'no',
+        ]);
+
         try {
             // For draft, we only strictly require the title
             $this->validate([
