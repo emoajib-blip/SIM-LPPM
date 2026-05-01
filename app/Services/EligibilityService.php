@@ -142,9 +142,30 @@ class EligibilityService
      */
     public function getEligibleResearchSchemes(Identity $identity): Collection
     {
-        return ResearchScheme::query()
+        $eligibleSchemes = ResearchScheme::query()
             ->get()
             ->filter(fn ($scheme) => $this->canSubmitResearchProposal($identity, $scheme));
+
+        // Include schemes where user has submittable proposals (synchronization logic)
+        if ($identity->user) {
+            $submittableStatuses = [
+                \App\Enums\ProposalStatus::DRAFT,
+                \App\Enums\ProposalStatus::NEED_ASSIGNMENT,
+                \App\Enums\ProposalStatus::REVISION_NEEDED,
+            ];
+
+            $userSchemeIds = \App\Models\Proposal::where('submitter_id', $identity->user->id)
+                ->whereIn('status', $submittableStatuses)
+                ->whereNotNull('research_scheme_id')
+                ->pluck('research_scheme_id')
+                ->unique();
+
+            $additionalSchemes = ResearchScheme::whereIn('id', $userSchemeIds)->get();
+
+            $eligibleSchemes = $eligibleSchemes->merge($additionalSchemes)->unique('id');
+        }
+
+        return $eligibleSchemes;
     }
 
     /**
@@ -171,10 +192,31 @@ class EligibilityService
      */
     public function getEligibleCommunityServiceSchemes(Identity $identity): Collection
     {
-        return CommunityServiceScheme::query()
+        $eligibleSchemes = CommunityServiceScheme::query()
             ->where('is_active', true)
             ->get()
             ->filter(fn ($scheme) => $this->canSubmitCommunityServiceProposal($identity, $scheme));
+
+        // Include schemes where user has submittable proposals (synchronization logic)
+        if ($identity->user) {
+            $submittableStatuses = [
+                \App\Enums\ProposalStatus::DRAFT,
+                \App\Enums\ProposalStatus::NEED_ASSIGNMENT,
+                \App\Enums\ProposalStatus::REVISION_NEEDED,
+            ];
+
+            $userSchemeIds = \App\Models\Proposal::where('submitter_id', $identity->user->id)
+                ->whereIn('status', $submittableStatuses)
+                ->whereNotNull('community_service_scheme_id')
+                ->pluck('community_service_scheme_id')
+                ->unique();
+
+            $additionalSchemes = CommunityServiceScheme::whereIn('id', $userSchemeIds)->where('is_active', true)->get();
+
+            $eligibleSchemes = $eligibleSchemes->merge($additionalSchemes)->unique('id');
+        }
+
+        return $eligibleSchemes;
     }
 
     /**

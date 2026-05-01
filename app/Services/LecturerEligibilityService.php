@@ -120,17 +120,44 @@ class LecturerEligibilityService
         if ($user) {
             $eligibilityAction = app(\App\Actions\Proposal\IdentityEligibilityAction::class);
 
-            $researchSchemes = $researchSchemes->filter(function ($scheme) use ($user, $eligibilityAction) {
+            // Get schemes the user is currently eligible for
+            $eligibleResearchSchemes = $researchSchemes->filter(function ($scheme) use ($user, $eligibilityAction) {
                 $result = $eligibilityAction->execute($user, $scheme);
 
                 return $result['is_eligible'];
             });
 
-            $pkmSchemes = $pkmSchemes->filter(function ($scheme) use ($user, $eligibilityAction) {
+            $eligiblePkmSchemes = $pkmSchemes->filter(function ($scheme) use ($user, $eligibilityAction) {
                 $result = $eligibilityAction->execute($user, $scheme);
 
                 return $result['is_eligible'];
             });
+
+            // Get schemes where user has existing submittable proposals (synchronization logic)
+            $submittableStatuses = [
+                ProposalStatus::DRAFT,
+                ProposalStatus::NEED_ASSIGNMENT,
+                ProposalStatus::REVISION_NEEDED,
+            ];
+
+            $userResearchSchemeIds = Proposal::where('submitter_id', $user->id)
+                ->whereIn('status', $submittableStatuses)
+                ->whereNotNull('research_scheme_id')
+                ->pluck('research_scheme_id')
+                ->unique();
+
+            $userPkmSchemeIds = Proposal::where('submitter_id', $user->id)
+                ->whereIn('status', $submittableStatuses)
+                ->whereNotNull('community_service_scheme_id')
+                ->pluck('community_service_scheme_id')
+                ->unique();
+
+            $additionalResearchSchemes = $researchSchemes->whereIn('id', $userResearchSchemeIds);
+            $additionalPkmSchemes = $pkmSchemes->whereIn('id', $userPkmSchemeIds);
+
+            // Merge eligible schemes with schemes having user's submittable proposals
+            $researchSchemes = $eligibleResearchSchemes->merge($additionalResearchSchemes)->unique('id');
+            $pkmSchemes = $eligiblePkmSchemes->merge($additionalPkmSchemes)->unique('id');
         }
 
         return [
