@@ -70,74 +70,90 @@ class IdentityEligibilityAction
         ];
 
         if ($role === 'leader' && isset($rules['max_proposals_as_head'])) {
-            $headCount = Proposal::where('submitter_id', $user->id)
-                ->whereIn('status', $activeStatuses)
-                ->count();
+            $query = Proposal::where('submitter_id', $user->id)
+                ->whereIn('status', $activeStatuses);
+
+            if ($scheme instanceof \App\Models\ResearchScheme) {
+                $query->whereNotNull('research_scheme_id');
+            } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
+                $query->whereNotNull('community_service_scheme_id');
+            }
+
+            $headCount = $query->count();
 
             if ($headCount >= $rules['max_proposals_as_head']) {
                 return [
                     'is_eligible' => false,
-                    'reason' => 'Anda sudah mencapai batas maksimal usulan sebagai Ketua.',
+                    'reason' => 'Anda sudah mencapai batas maksimal usulan sebagai Ketua di skema ini.',
                 ];
             }
         }
 
-        // 4.1 Total Quota Check (across all schemes)
+        // 4.1 Total Quota Check (across all schemes of the same type)
         if ($role === 'leader' && isset($rules['max_total_proposals_as_head'])) {
-            $totalHeadCount = Proposal::where('submitter_id', $user->id)
-                ->whereIn('status', $activeStatuses)
-                ->count();
+            $query = Proposal::where('submitter_id', $user->id)
+                ->whereIn('status', $activeStatuses);
+
+            if ($scheme instanceof \App\Models\ResearchScheme) {
+                $query->whereNotNull('research_scheme_id');
+            } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
+                $query->whereNotNull('community_service_scheme_id');
+            }
+
+            $totalHeadCount = $query->count();
 
             if ($totalHeadCount >= $rules['max_total_proposals_as_head']) {
                 return [
                     'is_eligible' => false,
-                    'reason' => 'Anda sudah mencapai batas maksimal total usulan sebagai Ketua di semua skema.',
+                    'reason' => 'Anda sudah mencapai batas maksimal total usulan sebagai Ketua untuk kategori ini.',
                 ];
             }
         }
 
         if ($role === 'member' && isset($rules['max_proposals_as_member'])) {
-            // Use join/exists for efficiency if needed, but simple count for now
-            $memberCount = \Illuminate\Support\Facades\DB::table('proposal_user')
-                ->where('user_id', $user->id)
-                ->where('role', '!=', 'Ketua')
-                ->count();
+            $query = \Illuminate\Support\Facades\DB::table('proposal_user')
+                ->join('proposals', 'proposal_user.proposal_id', '=', 'proposals.id')
+                ->where('proposal_user.user_id', $user->id)
+                ->where('proposal_user.role', '!=', 'Ketua')
+                ->whereIn('proposals.status', $activeStatuses);
+
+            if ($scheme instanceof \App\Models\ResearchScheme) {
+                $query->whereNotNull('proposals.research_scheme_id');
+            } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
+                $query->whereNotNull('proposals.community_service_scheme_id');
+            }
+
+            $memberCount = $query->count();
 
             if ($memberCount >= $rules['max_proposals_as_member']) {
                 return [
                     'is_eligible' => false,
-                    'reason' => 'Dosen ini sudah mencapai batas maksimal keterlibatan sebagai Anggota.',
+                    'reason' => 'Dosen ini sudah mencapai batas maksimal keterlibatan sebagai Anggota di skema ini.',
                 ];
             }
         }
 
-        // 4.2 Total Member Quota Check (across all proposals)
+        // 4.2 Total Member Quota Check (across all proposals of the same type)
         if ($role === 'member' && isset($rules['max_total_proposals_as_member'])) {
-            $totalMemberCount = \Illuminate\Support\Facades\DB::table('proposal_user')
-                ->where('user_id', $user->id)
-                ->where('role', '!=', 'Ketua')
-                ->distinct('proposal_id')
-                ->count('proposal_id');
+            $query = \Illuminate\Support\Facades\DB::table('proposal_user')
+                ->join('proposals', 'proposal_user.proposal_id', '=', 'proposals.id')
+                ->where('proposal_user.user_id', $user->id)
+                ->where('proposal_user.role', '!=', 'Ketua')
+                ->whereIn('proposals.status', $activeStatuses);
+
+            if ($scheme instanceof \App\Models\ResearchScheme) {
+                $query->whereNotNull('proposals.research_scheme_id');
+            } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
+                $query->whereNotNull('proposals.community_service_scheme_id');
+            }
+
+            $totalMemberCount = $query->distinct('proposal_user.proposal_id')
+                ->count('proposal_user.proposal_id');
 
             if ($totalMemberCount >= $rules['max_total_proposals_as_member']) {
                 return [
                     'is_eligible' => false,
-                    'reason' => 'Dosen ini sudah mencapai batas maksimal total keterlibatan sebagai Anggota di semua proposal.',
-                ];
-            }
-        }
-
-        if ($role === 'member' && isset($rules['max_proposals_as_member'])) {
-            // Use join/exists for efficiency if needed, but simple count for now
-            $memberCount = \Illuminate\Support\Facades\DB::table('proposal_user')
-                ->where('user_id', $user->id)
-                ->where('role', '!=', 'Ketua')
-                ->count();
-
-            if ($memberCount >= $rules['max_proposals_as_member']) {
-                return [
-                    'is_eligible' => false,
-                    'reason' => "Dosen ini sudah mencapai batas maksimal ($memberCount) keterlibatan sebagai Anggota.",
+                    'reason' => 'Dosen ini sudah mencapai batas maksimal total keterlibatan sebagai Anggota untuk kategori ini.',
                 ];
             }
         }
