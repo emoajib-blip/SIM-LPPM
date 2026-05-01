@@ -55,7 +55,7 @@
                         <label class="form-label">Key <span class="text-danger">*</span></label>
                         <input type="text" wire:model="key" class="form-control"
                             placeholder="button_tooltip, access_denied, dll">
-                        <x-form-error field="key" />
+                        @error('key') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -63,7 +63,7 @@
                         <label class="form-label">Pesan <span class="text-danger">*</span></label>
                         <textarea wire:model="message" class="form-control" rows="3"
                             placeholder="Pesan dengan placeholder {limit}, {current}, dll"></textarea>
-                        <x-form-error field="message" />
+                        @error('message') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         <small class="form-hint">Gunakan placeholder: {limit}, {current}, {draft_count}</small>
                     </div>
                 </div>
