@@ -27,27 +27,30 @@
         @endphp
 
         @if ($isWithinSchedule && auth()->user()->activeHasRole('dosen'))
-            @if ($eligibility['eligible'] && $hasEligibleSchemes && $this->canCreateProposal['can_create'])
+            @php
+                $canCreate = $eligibility['eligible'] && $hasEligibleSchemes && ($this->canCreateProposal['can_create'] ?? false);
+                $isQuotaFull = $eligibility['eligible'] && $hasEligibleSchemes && !($this->canCreateProposal['can_create'] ?? false);
+                
+                $lockReason = '';
+                if (!$hasEligibleSchemes) {
+                    $lockReason = 'Anda tidak memenuhi syarat untuk skema pengabdian manapun.';
+                } elseif (!empty($eligibility['reasons'])) {
+                    $lockReason = implode(' ', $eligibility['reasons']);
+                }
+            @endphp
+
+            @if ($canCreate)
                 <a href="{{ route('community-service.proposal.create') }}" wire:navigate.hover class="btn btn-primary">
                     <x-lucide-plus class="icon" />
                     Usulan Pengabdian Baru
                 </a>
-            @elseif ($eligibility['eligible'] && $hasEligibleSchemes && !$this->canCreateProposal['can_create'])
-                <button type="button" class="btn btn-secondary" disabled
-                    title="{{ $this->quotaTooltip }}">
+            @elseif ($isQuotaFull)
+                <button type="button" class="btn btn-secondary" disabled title="{{ $this->quotaTooltip }}">
                     <x-lucide-plus class="icon" />
                     Kuota Terbatas
                 </button>
             @else
-                @php
-                    $reason = '';
-                    if (!$hasEligibleSchemes) {
-                        $reason = 'Anda tidak memenuhi syarat untuk skema pengabdian manapun.';
-                    } elseif (!empty($eligibility['reasons'])) {
-                        $reason = implode(' ', $eligibility['reasons']);
-                    }
-                @endphp
-                <button class="btn btn-secondary" disabled title="{{ $reason }}">
+                <button class="btn btn-secondary" disabled title="{{ $lockReason }}">
                     <x-lucide-lock class="icon" />
                     Usulan Dikunci
                 </button>
