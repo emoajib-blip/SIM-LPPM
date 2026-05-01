@@ -1005,7 +1005,7 @@ class ProposalForm extends Form
      */
     public function validateBudgetGroupPercentages(): void
     {
-        if (empty($this->budget_items)) {
+        if (empty($this->budget_items) || $this->isDraft) {
             return;
         }
 
