@@ -16,6 +16,11 @@
         $userSintaScore = $identity?->sinta_score_v3_overall ?? 0;
         $userFunctionalPosition = $identity?->functional_position ?? 'Tenaga Pengajar';
 
+        // Ensure we have valid data
+        if (!is_numeric($userSintaScore)) {
+            $userSintaScore = 0;
+        }
+
         // Get ALL scheme requirements for research (not just eligible ones)
         $researchSchemesAll = \App\Models\ResearchScheme::all();
         foreach ($researchSchemesAll as $scheme) {
@@ -297,7 +302,7 @@
                                                                  <strong>{{ $req['name'] }}:</strong>
                                                                  @php
                                                                      $issues = [];
-                                                                     if ($req['min_sinta'] !== null && $userSintaScore < $req['min_sinta']) {
+                                                                     if ($req['min_sinta'] !== null && is_numeric($userSintaScore) && $userSintaScore < $req['min_sinta']) {
                                                                          $issues[] = "SINTA minimal {$req['min_sinta']} (anda: {$userSintaScore})";
                                                                      }
                                                                      if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
@@ -309,7 +314,7 @@
                                                                  @if($meetsReq)
                                                                      <span class="text-success">✅ Memenuhi syarat</span>
                                                                  @else
-                                                                     <span class="text-danger">❌ {{ implode(', ', $issues) }}</span>
+                                                                     <span class="text-danger">❌ {{ implode(', ', array_filter($issues)) }}</span>
                                                                  @endif
                                                              </div>
                                                          @endforeach
@@ -324,7 +329,7 @@
                                                                  <strong>{{ $req['name'] }}:</strong>
                                                                  @php
                                                                      $issues = [];
-                                                                     if ($req['min_sinta'] !== null && $userSintaScore < $req['min_sinta']) {
+                                                                     if ($req['min_sinta'] !== null && is_numeric($userSintaScore) && $userSintaScore < $req['min_sinta']) {
                                                                          $issues[] = "SINTA minimal {$req['min_sinta']} (anda: {$userSintaScore})";
                                                                      }
                                                                      if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
@@ -336,13 +341,13 @@
                                                                  @if($meetsReq)
                                                                      <span class="text-success">✅ Memenuhi syarat</span>
                                                                  @else
-                                                                     <span class="text-danger">❌ {{ implode(', ', $issues) }}</span>
+                                                                     <span class="text-danger">❌ {{ implode(', ', array_filter($issues)) }}</span>
                                                                  @endif
                                                              </div>
                                                          @endforeach
                                                      </div>
                                                  @endif
-                                                             </div>
+                                             </div>
                                                          @endforeach
                                                      </div>
                                                  @endif
