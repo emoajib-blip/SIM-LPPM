@@ -134,6 +134,22 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
+                            <label class="form-label">Maks. Total Usulan (Ketua - Semua Skema)</label>
+                            <input type="number" wire:model="max_total_proposals_as_head" class="form-control"
+                                placeholder="Contoh: 1 untuk mencegah ketua di skema lain">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Maks. Total Usulan (Anggota - Semua Proposal)</label>
+                            <input type="number" wire:model="max_total_proposals_as_member" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
                             <label class="form-label">Minimal Anggota</label>
                             <input type="number" wire:model="min_members" class="form-control">
                         </div>

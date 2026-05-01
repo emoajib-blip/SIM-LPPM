@@ -41,6 +41,10 @@ class CommunityServiceSchemeManager extends Component
 
     public ?int $max_proposals_as_member = null;
 
+    public ?int $max_total_proposals_as_head = null;
+
+    public ?int $max_total_proposals_as_member = null;
+
     public ?int $min_members = null;
 
     public ?int $max_members = null;
@@ -91,6 +95,8 @@ class CommunityServiceSchemeManager extends Component
                 'min_students_involved' => $this->min_students_involved,
                 'max_proposals_as_head' => $this->max_proposals_as_head,
                 'max_proposals_as_member' => $this->max_proposals_as_member,
+                'max_total_proposals_as_head' => $this->max_total_proposals_as_head,
+                'max_total_proposals_as_member' => $this->max_total_proposals_as_member,
                 'min_members' => $this->min_members,
                 'max_members' => $this->max_members,
                 'require_cross_prodi' => $this->require_cross_prodi,
@@ -131,6 +137,8 @@ class CommunityServiceSchemeManager extends Component
         $this->min_students_involved = $rules['min_students_involved'] ?? null;
         $this->max_proposals_as_head = $rules['max_proposals_as_head'] ?? null;
         $this->max_proposals_as_member = $rules['max_proposals_as_member'] ?? null;
+        $this->max_total_proposals_as_head = $rules['max_total_proposals_as_head'] ?? null;
+        $this->max_total_proposals_as_member = $rules['max_total_proposals_as_member'] ?? null;
         $this->min_members = $rules['min_members'] ?? null;
         $this->max_members = $rules['max_members'] ?? null;
         $this->require_cross_prodi = $rules['require_cross_prodi'] ?? false;
@@ -163,6 +171,8 @@ class CommunityServiceSchemeManager extends Component
             'min_students_involved',
             'max_proposals_as_head',
             'max_proposals_as_member',
+            'max_total_proposals_as_head',
+            'max_total_proposals_as_member',
             'min_members',
             'max_members',
             'require_cross_prodi',

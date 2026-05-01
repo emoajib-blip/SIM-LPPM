@@ -76,7 +76,52 @@ class IdentityEligibilityAction
             if ($headCount >= $rules['max_proposals_as_head']) {
                 return [
                     'is_eligible' => false,
-                    'reason' => "Anda sudah mencapai batas maksimal ($headCount) usulan aktif sebagai Ketua.",
+                    'reason' => 'Anda sudah mencapai batas maksimal usulan sebagai Ketua.',
+                ];
+            }
+        }
+
+        // 4.1 Total Quota Check (across all schemes)
+        if ($role === 'leader' && isset($rules['max_total_proposals_as_head'])) {
+            $totalHeadCount = Proposal::where('submitter_id', $user->id)
+                ->whereIn('status', $activeStatuses)
+                ->count();
+
+            if ($totalHeadCount >= $rules['max_total_proposals_as_head']) {
+                return [
+                    'is_eligible' => false,
+                    'reason' => 'Anda sudah mencapai batas maksimal total usulan sebagai Ketua di semua skema.',
+                ];
+            }
+        }
+
+        if ($role === 'member' && isset($rules['max_proposals_as_member'])) {
+            // Use join/exists for efficiency if needed, but simple count for now
+            $memberCount = \Illuminate\Support\Facades\DB::table('proposal_user')
+                ->where('user_id', $user->id)
+                ->where('role', '!=', 'Ketua')
+                ->count();
+
+            if ($memberCount >= $rules['max_proposals_as_member']) {
+                return [
+                    'is_eligible' => false,
+                    'reason' => 'Dosen ini sudah mencapai batas maksimal keterlibatan sebagai Anggota.',
+                ];
+            }
+        }
+
+        // 4.2 Total Member Quota Check (across all proposals)
+        if ($role === 'member' && isset($rules['max_total_proposals_as_member'])) {
+            $totalMemberCount = \Illuminate\Support\Facades\DB::table('proposal_user')
+                ->where('user_id', $user->id)
+                ->where('role', '!=', 'Ketua')
+                ->distinct('proposal_id')
+                ->count('proposal_id');
+
+            if ($totalMemberCount >= $rules['max_total_proposals_as_member']) {
+                return [
+                    'is_eligible' => false,
+                    'reason' => 'Dosen ini sudah mencapai batas maksimal total keterlibatan sebagai Anggota di semua proposal.',
                 ];
             }
         }
