@@ -80,28 +80,6 @@
     // Simplified eligibility check to avoid complex operations
     $meetsResearchRequirements = true;
     $meetsPkmRequirements = true;
-        if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
-            $positions = implode(', ', $req['allowed_positions']);
-            $issues[] = "Jabatan: {$positions}";
-        }
-        if (!empty($issues)) {
-            $researchFailedReasons[$req['name']] = $issues;
-        }
-    }
-
-    foreach ($allPkmSchemeRequirements as $req) {
-        $issues = [];
-        if ($req['min_sinta'] !== null && $userSintaScore < $req['min_sinta']) {
-            $issues[] = "SINTA minimal {$req['min_sinta']}";
-        }
-        if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
-            $positions = implode(', ', $req['allowed_positions']);
-            $issues[] = "Jabatan: {$positions}";
-        }
-        if (!empty($issues)) {
-            $pkmFailedReasons[$req['name']] = $issues;
-        }
-    }
 @endphp
 
 @if ($user && $user->activeHasRole('dosen'))
