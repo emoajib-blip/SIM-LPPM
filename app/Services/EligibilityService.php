@@ -50,7 +50,7 @@ class EligibilityService
             }
         }
 
-        // Count current active proposals (including drafts)
+        // Count current active proposals (including drafts) of the SPECIFIC type
         $activeStatuses = [
             \App\Enums\ProposalStatus::DRAFT,
             \App\Enums\ProposalStatus::SUBMITTED,
@@ -62,15 +62,31 @@ class EligibilityService
             \App\Enums\ProposalStatus::REVISION_NEEDED,
         ];
 
-        $currentHeadCount = \App\Models\Proposal::where('submitter_id', $user->id)
-            ->whereIn('status', $activeStatuses)
-            ->count();
+        $headQuery = \App\Models\Proposal::where('submitter_id', $user->id)
+            ->whereIn('status', $activeStatuses);
 
-        $currentMemberCount = \Illuminate\Support\Facades\DB::table('proposal_user')
-            ->where('user_id', $user->id)
-            ->where('role', '!=', 'Ketua')
-            ->distinct('proposal_id')
-            ->count('proposal_id');
+        if ($type === 'research') {
+            $headQuery->whereNotNull('research_scheme_id');
+        } else {
+            $headQuery->whereNotNull('community_service_scheme_id');
+        }
+
+        $currentHeadCount = $headQuery->count();
+
+        $memberQuery = \Illuminate\Support\Facades\DB::table('proposal_user')
+            ->join('proposals', 'proposal_user.proposal_id', '=', 'proposals.id')
+            ->where('proposal_user.user_id', $user->id)
+            ->where('proposal_user.role', '!=', 'Ketua')
+            ->whereIn('proposals.status', $activeStatuses);
+
+        if ($type === 'research') {
+            $memberQuery->whereNotNull('proposals.research_scheme_id');
+        } else {
+            $memberQuery->whereNotNull('proposals.community_service_scheme_id');
+        }
+
+        $currentMemberCount = $memberQuery->distinct('proposal_user.proposal_id')
+            ->count('proposal_user.proposal_id');
 
         $quotaInfo = [
             'head_limit' => $totalHeadLimit,
