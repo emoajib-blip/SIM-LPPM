@@ -55,7 +55,7 @@ Sebagai Superadmin, Anda memiliki akses ke:
 
 ### 2.1 Langkah Login
 
-1. Buka browser: `https://sosiomen.web.id`
+1. Buka browser: `https://sim-lppm.itsnupekalongan.ac.id`
 2. Masukkan kredensial Superadmin:
    - **Email**: superadmin@itsnu-pkl.ac.id (atau sesuai setup)
    - **Password**: [password yang diberikan]

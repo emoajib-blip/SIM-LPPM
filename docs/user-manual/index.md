@@ -22,7 +22,7 @@ Selamat datang di pusat dokumentasi pengguna SIM LPPM ITSNU. Dokumen ini berisi 
 
 ### Login ke Sistem
 
-1. Buka browser dan akses: **https://sosiomen.web.id**
+1. Buka browser dan akses: **https://sim-lppm.itsnupekalongan.ac.id**
 2. Masukkan **Email** dan **Password** Anda
 3. Klik **Masuk**
 

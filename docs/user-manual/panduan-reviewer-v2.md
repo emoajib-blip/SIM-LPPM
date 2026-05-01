@@ -48,7 +48,7 @@ Reviewer adalah pakartanaman yang dipilih untuk menilai proposal penelitian dan 
 
 ### 2.1 Langkah Login
 
-1. Buka browser dan akses: `https://sosiomen.web.id`
+1. Buka browser dan akses: `https://sim-lppm.itsnupekalongan.ac.id`
 2. Masukkan kredensial:
    - **Email**: reviewer@itsnu-pkl.ac.id (contoh)
    - **Password**: [password yang diberikan]

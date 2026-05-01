@@ -63,7 +63,7 @@ Sebagai Admin LPPM, Anda memiliki akses ke:
 
 ### 2.1 Langkah Login
 
-1. Buka browser dan akses: `https://sosiomen.web.id`
+1. Buka browser dan akses: `https://sim-lppm.itsnupekalongan.ac.id`
 2. Masukkan kredensial Admin LPPM:
    - **Email**: admin@itsnu-pkl.ac.id (contoh)
    - **Password**: [password yang diberikan]

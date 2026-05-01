@@ -67,7 +67,7 @@ Menu ini dapat diakses oleh semua dosen yang memiliki akun pengguna dalam sistem
 
 2. **Akses URL**: Ketik alamat aplikasi di browser:
    ```
-   https://sosiomen.web.id
+   https://sim-lppm.itsnupekalongan.ac.id
    ```
 
 3. **Masukkan Kredensial**:

@@ -54,7 +54,7 @@ LPPM Proses Selanjutnya
 
 ### 2.1 Langkah Login
 
-1. Buka browser dan akses: `https://sosiomen.web.id`
+1. Buka browser dan akses: `https://sim-lppm.itsnupekalongan.ac.id`
 2. Masukkan kredensial Dekan:
    - **Email**: dekan@itsnu-pkl.ac.id (contoh)
    - **Password**: [password yang diberikan]

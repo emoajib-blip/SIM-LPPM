@@ -50,7 +50,7 @@ Sebagai Rector, Anda memiliki peran pengawasan strategis tertinggi terhadap selu
 
 ### 2.1 Langkah Login
 
-1. Buka browser: `https://sosiomen.web.id`
+1. Buka browser: `https://sim-lppm.itsnupekalongan.ac.id`
 2. Masukkan kredensial:
    - **Email**: rektor@itsnu-pkl.ac.id
    - **Password**: [password yang diberikan]
