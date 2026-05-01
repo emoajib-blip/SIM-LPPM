@@ -58,6 +58,10 @@ class Edit extends Component
 
     public int $scopus_h_index = 0;
 
+    public float $sinta_score_v3_overall = 0;
+
+    public string $functional_position = '';
+
     public int $gs_h_index = 0;
 
     public int $wos_h_index = 0;
@@ -102,6 +106,8 @@ class Edit extends Component
             $this->title_prefix = $user->identity->title_prefix ?? '';
             $this->title_suffix = $user->identity->title_suffix ?? '';
             $this->scopus_h_index = $user->identity->scopus_h_index ?? 0;
+            $this->sinta_score_v3_overall = $user->identity->sinta_score_v3_overall ?? 0;
+            $this->functional_position = $user->identity->functional_position ?? '';
             $this->gs_h_index = $user->identity->gs_h_index ?? 0;
             $this->wos_h_index = $user->identity->wos_h_index ?? 0;
             $this->type = $user->identity->type ?? '';
@@ -146,6 +152,8 @@ class Edit extends Component
             'title_prefix' => ['nullable', 'string', 'max:255'],
             'title_suffix' => ['nullable', 'string', 'max:255'],
             'scopus_h_index' => ['nullable', 'integer', 'min:0'],
+            'sinta_score_v3_overall' => ['nullable', 'numeric', 'min:0'],
+            'functional_position' => ['nullable', 'string', 'max:255'],
             'gs_h_index' => ['nullable', 'integer', 'min:0'],
             'wos_h_index' => ['nullable', 'integer', 'min:0'],
             'type' => [$isExempt ? 'nullable' : 'required', Rule::in('dosen', 'mahasiswa', 'reviewer')],
@@ -253,6 +261,8 @@ class Edit extends Component
                     'title_prefix' => $validated['title_prefix'],
                     'title_suffix' => $validated['title_suffix'],
                     'scopus_h_index' => $validated['scopus_h_index'],
+                    'sinta_score_v3_overall' => $validated['sinta_score_v3_overall'],
+                    'functional_position' => $validated['functional_position'],
                     'gs_h_index' => $validated['gs_h_index'],
                     'wos_h_index' => $validated['wos_h_index'],
                     'type' => $validated['type'],

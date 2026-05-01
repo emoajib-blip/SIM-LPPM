@@ -342,6 +342,38 @@
                     </div>
                 </div>
 
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="functional-position">Jabatan Fungsional</label>
+                        <select id="functional-position" class="form-select @error('functional_position') is-invalid @enderror"
+                            wire:model="functional_position">
+                            <option value="">Pilih jabatan...</option>
+                            <option value="Tenaga Pengajar">Tenaga Pengajar</option>
+                            <option value="Asisten Ahli">Asisten Ahli</option>
+                            <option value="Lektor">Lektor</option>
+                            <option value="Lektor Kepala">Lektor Kepala</option>
+                            <option value="Guru Besar">Guru Besar</option>
+                        </select>
+                        @error('functional_position')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="sinta-score">Skor SINTA Overall (Manual)</label>
+                        <input id="sinta-score" type="number" step="0.01"
+                            class="form-control @error('sinta_score_v3_overall') is-invalid @enderror"
+                            wire:model="sinta_score_v3_overall" placeholder="0.00">
+                        <div class="form-text">Gunakan titik (.) untuk desimal. Data ini digunakan untuk pengecekan
+                            kelayakan usulan.</div>
+                        @error('sinta_score_v3_overall')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="form-label" for="scopus-h">Scopus H-Index</label>

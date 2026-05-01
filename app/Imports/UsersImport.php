@@ -46,17 +46,21 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation
                     $studyProgramId = $studyProgram?->id;
                 }
 
-                Identity::create([
-                    'user_id' => $user->id,
-                    'identity_id' => $row['nidn'], // Assuming 'nidn' maps to 'identity_id'
-                    'type' => strtolower($row['type']),
-                    'sinta_id' => $row['sinta'] ?? null,
-                    'address' => $row['address'] ?? null,
-                    'birthdate' => $row['birthdate'] ?? null, // Ensure format is compatible
-                    'birthplace' => $row['birthplace'] ?? null,
-                    'institution_id' => $institutionId,
-                    'study_program_id' => $studyProgramId,
-                ]);
+                $identity = Identity::updateOrCreate(
+                    ['identity_id' => $row['nidn']],
+                    [
+                        'user_id' => $user->id,
+                        'type' => strtolower($row['type']),
+                        'sinta_id' => $row['sinta'] ?? null,
+                        'address' => $row['address'] ?? null,
+                        'birthdate' => $row['birthdate'] ?? null,
+                        'birthplace' => $row['birthplace'] ?? null,
+                        'institution_id' => $institutionId,
+                        'study_program_id' => $studyProgramId,
+                        'sinta_score_v3_overall' => $row['sinta_score'] ?? 0,
+                        'functional_position' => $row['jabfung'] ?? 'Tenaga Pengajar',
+                    ]
+                );
             }
         });
     }
@@ -77,6 +81,8 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation
             // ins and prodi must be exist in database
             'inst' => 'nullable|exists:institutions,name',
             'prodi' => 'nullable|exists:study_programs,name',
+            'sinta_score' => 'nullable|numeric',
+            'jabfung' => 'nullable|string',
         ];
     }
 
