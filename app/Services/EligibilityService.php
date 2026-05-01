@@ -52,14 +52,14 @@ class EligibilityService
 
         // Count current active proposals (including drafts) of the SPECIFIC type
         $activeStatuses = [
-            \App\Enums\ProposalStatus::DRAFT,
-            \App\Enums\ProposalStatus::SUBMITTED,
-            \App\Enums\ProposalStatus::NEED_ASSIGNMENT,
-            \App\Enums\ProposalStatus::APPROVED,
-            \App\Enums\ProposalStatus::WAITING_REVIEWER,
-            \App\Enums\ProposalStatus::UNDER_REVIEW,
-            \App\Enums\ProposalStatus::REVIEWED,
-            \App\Enums\ProposalStatus::REVISION_NEEDED,
+            'draft',
+            'submitted',
+            'need_assignment',
+            'approved',
+            'waiting_reviewer',
+            'under_review',
+            'reviewed',
+            'revision_needed',
         ];
 
         $headQuery = \App\Models\Proposal::where('submitter_id', $user->id)
