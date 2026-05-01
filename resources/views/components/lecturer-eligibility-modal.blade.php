@@ -5,6 +5,7 @@
     $userFunctionalPosition = null;
     $allResearchSchemeRequirements = [];
     $allPkmSchemeRequirements = [];
+    $hasSubmittableProposals = false;
 
     // Hanya cek jika yang login adalah dosen
     if ($user && $user->activeHasRole('dosen')) {
@@ -42,6 +43,17 @@
                 ];
             }
         }
+
+        // Check if user has submittable proposals (drafts, need assignment, revision needed)
+        $submittableStatuses = [
+            \App\Enums\ProposalStatus::DRAFT,
+            \App\Enums\ProposalStatus::NEED_ASSIGNMENT,
+            \App\Enums\ProposalStatus::REVISION_NEEDED,
+        ];
+
+        $hasSubmittableProposals = \App\Models\Proposal::where('submitter_id', $user->id)
+            ->whereIn('status', $submittableStatuses)
+            ->exists();
     }
 
     // Cek eligibilitas skema
@@ -251,7 +263,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @elseif (!empty($hasNoResearchSchemes) || !empty($hasNoPkmSchemes))
+                            @elseif ((!empty($hasNoResearchSchemes) || !empty($hasNoPkmSchemes)) && !$hasSubmittableProposals)
                                 <!-- Accordion Scheme Ineligible -->
                                 <div class="accordion" id="accordion-scheme-ineligible">
                                     <div class="accordion-item bg-warning-lt border-warning mb-3 rounded shadow-sm">
