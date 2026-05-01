@@ -4,11 +4,23 @@
     $scheduleInfo = ['research_open' => false, 'pkm_open' => false, 'research_schemes' => [], 'pkm_schemes' => []];
     $schemeEligible = true;
     $schemeReasons = [];
+    $hasSubmittableProposals = false;
 
     // Hanya cek jika yang login adalah dosen
     if ($user && $user->activeHasRole('dosen')) {
         $eligibility = app(\App\Services\LecturerEligibilityService::class)->checkEligibility($user);
         $scheduleInfo = app(\App\Services\LecturerEligibilityService::class)->getScheduleStatus($user);
+
+        // Check if user has submittable proposals (drafts, need assignment, revision needed)
+        $submittableStatuses = [
+            \App\Enums\ProposalStatus::DRAFT,
+            \App\Enums\ProposalStatus::NEED_ASSIGNMENT,
+            \App\Enums\ProposalStatus::REVISION_NEEDED,
+        ];
+
+        $hasSubmittableProposals = \App\Models\Proposal::where('submitter_id', $user->id)
+            ->whereIn('status', $submittableStatuses)
+            ->exists();
 
         // Cek eligibilitas skema
         $hasResearchSchemes = !empty($scheduleInfo['research_schemes']);
@@ -56,7 +68,7 @@
             </div>
         </div>
     </div>
-@elseif (!$schemeEligible)
+@elseif (!$schemeEligible && !$hasSubmittableProposals)
     <!-- Scheme Eligibility Alert -->
     <div class="card bg-warning-lt border-warning shadow-sm mb-4 overflow-hidden border-0 border-start border-4">
         <div class="card-body">
