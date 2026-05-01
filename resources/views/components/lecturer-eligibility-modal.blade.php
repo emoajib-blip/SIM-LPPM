@@ -316,9 +316,8 @@
                                                              </div>
                                                          @endforeach
                                                      </div>
-                                                 @endif
-
-                                                 @if(!empty($allPkmSchemeRequirements))
+                                                @endif
+                                                @if(!empty($allPkmSchemeRequirements))
                                                      <div class="mb-3">
                                                          <div class="fw-bold text-info mb-1">🤝 Pengabdian Masyarakat:</div>
                                                          @foreach($allPkmSchemeRequirements as $req)
@@ -339,37 +338,6 @@
                                                                      <span class="text-success">✅ Memenuhi syarat</span>
                                                                  @else
                                                                      <span class="text-danger">❌ {{ !empty($issues) ? implode(', ', $issues) : 'Tidak memenuhi syarat' }}</span>
-                                                                 @endif
-                                                             </div>
-                                                         @endforeach
-                                                     </div>
-                                                 @endif
-                                             </div>
-                                                         @endforeach
-                                                     </div>
-                                                 @endif
-
-                                                 @if(!empty($allPkmSchemeRequirements))
-                                                     <div class="mb-3">
-                                                         <div class="fw-bold text-info mb-1">Pengabdian - Persyaratan Skema:</div>
-                                                         @foreach($allPkmSchemeRequirements as $req)
-                                                             <div class="small ms-2 mb-1">
-                                                                 <strong>{{ $req['name'] }}:</strong>
-                                                                 @php
-                                                                     $issues = [];
-                                                                     if ($req['min_sinta'] !== null && $userSintaScore < $req['min_sinta']) {
-                                                                         $issues[] = "SINTA minimal {$req['min_sinta']} (anda: {$userSintaScore})";
-                                                                     }
-                                                                     if (!empty($req['allowed_positions']) && !in_array($userFunctionalPosition, $req['allowed_positions'])) {
-                                                                         $positions = implode(', ', $req['allowed_positions']);
-                                                                         $issues[] = "Jabatan: {$positions} (anda: {$userFunctionalPosition})";
-                                                                     }
-                                                                     $meetsReq = empty($issues);
-                                                                 @endphp
-                                                                 @if($meetsReq)
-                                                                     <span class="text-success">✅ Memenuhi syarat</span>
-                                                                 @else
-                                                                     <span class="text-danger">❌ {{ implode(', ', $issues) }}</span>
                                                                  @endif
                                                              </div>
                                                          @endforeach
