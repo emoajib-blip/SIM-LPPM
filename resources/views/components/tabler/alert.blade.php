@@ -46,7 +46,7 @@ Usage:
 @endphp
 
 @foreach ($alerts as $alertType => $alertMessage)
-    <div {{ $attributes->merge(['class' => "alert alert-{$alertType}" . ($dismissible ? ' alert-dismissible' : '')]) }}
+    <div wire:key="alert-{{ $alertType }}" {{ $attributes->merge(['class' => "alert alert-{$alertType}" . ($dismissible ? ' alert-dismissible' : '')]) }}
         role="alert">
         <div class="d-flex">
             <div class="alert-icon">

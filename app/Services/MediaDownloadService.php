@@ -47,6 +47,12 @@ class MediaDownloadService
                 return true;
             }
             $proposalId = $media->getCustomProperty('proposal_id');
+        } elseif ($model instanceof \App\Models\Research || $model instanceof \App\Models\CommunityService) {
+            // Explicit handling for Research/CommunityService - query proposal directly
+            $proposal = Proposal::where('detailable_id', $model->id)
+                ->where('detailable_type', get_class($model))
+                ->first();
+            $proposalId = $proposal?->id;
         } elseif (method_exists($model, 'proposal')) {
             try {
                 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
@@ -64,9 +70,6 @@ class MediaDownloadService
         }
 
         $proposal = Proposal::find($proposalId);
-        if (! $proposal) {
-            return false;
-        }
 
         // 4. Ownership check
         if ($proposal->submitter_id === $user->id) {

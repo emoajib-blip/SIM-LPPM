@@ -14,13 +14,13 @@
         </a>
         <div class="dropdown-menu">
             @foreach ($item['children'] ?? [] as $child)
-                @include('components.layouts.partials.menu.dropdown-item', ['item' => $child])
+                @include('components.layouts.partials.menu.dropdown-item', ['item' => $child, 'key' => $loop->index])
             @endforeach
         </div>
     </div>
 @else
     <a class="{{ $item['class'] ?? 'dropdown-item' }}{{ $isActive ? ' active' : '' }}" href="{{ $item['href'] ?? '#' }}"
-        @unless(($item['navigate'] ?? true) === false) wire:navigate.hover @endunless @foreach ($item['attributes'] ?? [] as $attribute => $value) {{ $attribute }}="{{ $value }}" @endforeach>
+        @unless(($item['navigate'] ?? true) === false) wire:navigate.hover @endunless @foreach ($item['attributes'] ?? [] as $attribute => $value) {{ $attribute }}="{{ $value }}" @endforeach wire:key="menu-item-{{ $item['label'] ?? $loop->index }}">
         @if (!empty($item['prefix_icon']))
             @include('components.layouts.partials.menu.icon', [
                 'name' => $item['prefix_icon'],

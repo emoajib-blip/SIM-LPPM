@@ -39,13 +39,17 @@ class ProposalService
     {
         \Illuminate\Support\Facades\Gate::authorize('delete', $proposal);
 
-        if ($proposal->status !== 'draft') {
+        if ($proposal->status !== ProposalStatus::DRAFT) {
             throw new \Exception('Hanya proposal dengan status draft yang dapat dihapus.');
         }
 
         DB::transaction(function () use ($proposal) {
             $proposal->teamMembers()->detach();
-            $proposal->detailable->delete();
+
+            if ($proposal->detailable) {
+                $proposal->detailable->delete();
+            }
+
             $proposal->delete();
         });
     }

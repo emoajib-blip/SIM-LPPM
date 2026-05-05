@@ -145,7 +145,7 @@
                                                         <div class="fw-bold small text-blue mb-1">Skema Tersedia:</div>
                                                         <div class="d-flex flex-wrap gap-1">
                                                             @foreach($eligibility['schedule']['research_schemes'] as $scheme)
-                                                                <span class="badge bg-blue-lt px-2 py-1"
+                                                                <span wire:key="research-scheme-{{ $loop->index }}" class="badge bg-blue-lt px-2 py-1"
                                                                     style="font-size: 10px;">{{ $scheme }}</span>
                                                             @endforeach
                                                         </div>
@@ -191,7 +191,7 @@
                                                         <div class="fw-bold small text-green mb-1">Skema Tersedia:</div>
                                                         <div class="d-flex flex-wrap gap-1">
                                                             @foreach($eligibility['schedule']['pkm_schemes'] as $scheme)
-                                                                <span class="badge bg-green-lt px-2 py-1"
+                                                                <span wire:key="pkm-scheme-{{ $loop->index }}" class="badge bg-green-lt px-2 py-1"
                                                                     style="font-size: 10px;">{{ $scheme }}</span>
                                                             @endforeach
                                                         </div>
@@ -273,8 +273,8 @@
                                                      <div class="mb-3">
                                                          <div class="fw-bold text-info mb-1">📚 Penelitian:</div>
                                                          @foreach($allResearchSchemeRequirements as $req)
-                                                             <div class="small ms-2 mb-1">
-                                                                 <strong>{{ $req['name'] ?? 'Unknown' }}:</strong>
+                                                              <div wire:key="research-req-{{ $loop->index }}" class="small ms-2 mb-1">
+                                                                  <strong>{{ $req['name'] ?? 'Unknown' }}:</strong>
                                                                  @php
                                                                      $issues = [];
                                                                      if (isset($req['min_sinta']) && $req['min_sinta'] !== null && is_numeric($userSintaScore) && $userSintaScore < $req['min_sinta']) {
@@ -298,9 +298,9 @@
                                                 @if(!empty($allPkmSchemeRequirements))
                                                      <div class="mb-3">
                                                          <div class="fw-bold text-info mb-1">🤝 Pengabdian Masyarakat:</div>
-                                                         @foreach($allPkmSchemeRequirements as $req)
-                                                             <div class="small ms-2 mb-1">
-                                                                 <strong>{{ $req['name'] ?? 'Unknown' }}:</strong>
+                                                          @foreach($allPkmSchemeRequirements as $req)
+                                                              <div wire:key="pkm-req-{{ $loop->index }}" class="small ms-2 mb-1">
+                                                                  <strong>{{ $req['name'] ?? 'Unknown' }}:</strong>
                                                                  @php
                                                                      $issues = [];
                                                                      if (isset($req['min_sinta']) && $req['min_sinta'] !== null && is_numeric($userSintaScore) && $userSintaScore < $req['min_sinta']) {
@@ -349,7 +349,7 @@
                                                 <p class="pt-3 text-secondary fw-bold mb-2">Alasan ketidaklayakan:</p>
                                                 <ul class="text-secondary mb-0 ps-3">
                                                     @foreach ($eligibility['reasons'] as $reason)
-                                                        <li class="mb-1 text-danger">{{ $reason }}</li>
+                                                        <li wire:key="reason-{{ $loop->index }}" class="mb-1 text-danger">{{ $reason }}</li>
                                                     @endforeach
                                                 </ul>
                                             </div>

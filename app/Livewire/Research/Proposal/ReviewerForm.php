@@ -50,6 +50,9 @@ class ReviewerForm extends Component
     {
         $this->proposalId = $proposalId;
 
+        // Eager load relationships to prevent N+1 queries
+        $this->proposal?->load(['reviewers.user', 'teamMembers.user']);
+
         // Load existing review data if available
         $myReview = $this->myReview;
         if ($myReview && $myReview->isCompleted()) {
@@ -152,7 +155,7 @@ class ReviewerForm extends Component
     }
 
     #[Computed]
-    public function proposal()
+    public function proposal(): ?Proposal
     {
         return Proposal::with([
             'reviewers.user.identity',
@@ -161,7 +164,7 @@ class ReviewerForm extends Component
     }
 
     #[Computed]
-    public function myReview()
+    public function myReview(): ?\App\Models\ProposalReviewer
     {
         return $this->proposal->reviewers
             ->where('user_id', Auth::id())
@@ -169,7 +172,7 @@ class ReviewerForm extends Component
     }
 
     #[Computed]
-    public function allReviews()
+    public function allReviews(): \Illuminate\Support\Collection
     {
         return $this->proposal->reviewers;
     }
@@ -235,7 +238,7 @@ class ReviewerForm extends Component
     }
 
     #[Computed]
-    public function deadline()
+    public function deadline(): ?string
     {
         return $this->myReview?->deadline_at;
     }
@@ -256,7 +259,7 @@ class ReviewerForm extends Component
      * Get previous round logs for the current reviewer (for showing history during re-review).
      */
     #[Computed]
-    public function previousRoundLogs()
+    public function previousRoundLogs(): \Illuminate\Support\Collection
     {
         $review = $this->myReview;
         if (! $review) {
@@ -271,7 +274,7 @@ class ReviewerForm extends Component
     /**
      * Get scores for history (by round)
      */
-    public function getScoresForRound(int $round)
+    public function getScoresForRound(int $round): \Illuminate\Support\Collection
     {
         $review = $this->myReview;
         if (! $review) {
@@ -288,7 +291,7 @@ class ReviewerForm extends Component
      * Get all review logs for this proposal (for showing complete history).
      */
     #[Computed]
-    public function allReviewLogs()
+    public function allReviewLogs(): \Illuminate\Support\Collection
     {
         return ReviewLog::forProposal($this->proposalId)
             ->with(['user', 'scores.criteria'])

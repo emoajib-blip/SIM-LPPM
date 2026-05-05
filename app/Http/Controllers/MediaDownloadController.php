@@ -29,15 +29,17 @@ class MediaDownloadController extends Controller
 
         // 3. Path Traversal & Existence Check for local disks
         $disk = \Illuminate\Support\Facades\Storage::disk($diskName);
-        $path = $disk->path($media->getPath());
+        // getPath() already returns full path, don't double-prepend disk root
+        $path = $media->getPath();
         if (str_contains($path, '..')) {
             abort(403, 'Invalid file path.');
         }
         $realPath = realpath($path);
 
-        // Security Barrier: Ensure path is restricted to authorized storage
-        $storagePath = realpath(storage_path());
-        if ($realPath === false || $storagePath === false || ! str_starts_with($realPath, $storagePath)) {
+        // Security Barrier: Ensure path is within the disk's root (not just storage_path)
+        $diskRoot = $disk->path('');
+
+        if ($realPath === false || $diskRoot === false || ! str_starts_with($realPath, $diskRoot)) {
             abort(403, 'Path traversal detected or illegal file path access.');
         }
 

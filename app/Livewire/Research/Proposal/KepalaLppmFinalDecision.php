@@ -37,9 +37,9 @@ class KepalaLppmFinalDecision extends Component
     }
 
     #[Computed]
-    public function proposal()
+    public function proposal(): ?Proposal
     {
-        return Proposal::find($this->proposalId);
+        return Proposal::with(['reviewers.user', 'teamMembers.user'])->find($this->proposalId);
     }
 
     #[Computed]
@@ -53,13 +53,13 @@ class KepalaLppmFinalDecision extends Component
     }
 
     #[Computed]
-    public function pendingReviewers()
+    public function pendingReviewers(): \Illuminate\Support\Collection
     {
         return $this->proposal->pendingReviewers()->get();
     }
 
     #[Computed]
-    public function reviewSummary()
+    public function reviewSummary(): \Illuminate\Support\Collection
     {
         return $this->proposal->reviewers()
             ->select('recommendation')

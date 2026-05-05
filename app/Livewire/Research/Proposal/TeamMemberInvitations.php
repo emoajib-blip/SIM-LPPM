@@ -30,13 +30,13 @@ class TeamMemberInvitations extends Component
     }
 
     #[Computed]
-    public function proposal()
+    public function proposal(): ?Proposal
     {
-        return Proposal::find($this->proposalId);
+        return Proposal::with(['teamMembers.user'])->find($this->proposalId);
     }
 
     #[Computed]
-    public function teamMembers()
+    public function teamMembers(): \Illuminate\Support\Collection
     {
         return $this->proposal->teamMembers()
             ->orderByPivot('created_at', 'desc')
@@ -44,19 +44,19 @@ class TeamMemberInvitations extends Component
     }
 
     #[Computed]
-    public function pendingInvitations()
+    public function pendingInvitations(): \Illuminate\Support\Collection
     {
         return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'pending');
     }
 
     #[Computed]
-    public function acceptedMembers()
+    public function acceptedMembers(): \Illuminate\Support\Collection
     {
         return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'accepted');
     }
 
     #[Computed]
-    public function rejectedMembers()
+    public function rejectedMembers(): \Illuminate\Support\Collection
     {
         return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'rejected');
     }

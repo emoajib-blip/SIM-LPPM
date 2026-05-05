@@ -54,6 +54,15 @@ class DatabaseSeeder extends Seeder
                 // 6. Proposals & Related Data (depends on users and master data)
                 ProposalSeeder::class, // Creates proposals with research/community service + all related data
                 // DailyNoteSeeder is now handled inside Research/CommunityService seeders for better date logic
+
+                // 7. Additional Seeders (if not already included in ProposalSeeder)
+                ActivityScheduleSeeder::class,
+                BudgetItemSeeder::class,
+                HistoricalDataSeeder::class,
+                PolicyInvolvementSeeder::class,
+                ProposalOutputSeeder::class,
+                QuotaMessageSeeder::class,
+                ResearchStageSeeder::class,
             ]);
         }
     }

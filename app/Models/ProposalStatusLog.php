@@ -68,7 +68,7 @@ class ProposalStatusLog extends Model
     /**
      * Scope to get logs for a specific proposal, ordered by date.
      */
-    public function scopeForProposal($query, $proposalId)
+    public function scopeForProposal($query, $proposalId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('proposal_id', $proposalId)
             ->orderBy('at', 'desc');
@@ -77,7 +77,7 @@ class ProposalStatusLog extends Model
     /**
      * Scope to get logs by a specific user.
      */
-    public function scopeByUser($query, $userId)
+    public function scopeByUser($query, $userId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('user_id', $userId);
     }
@@ -85,7 +85,7 @@ class ProposalStatusLog extends Model
     /**
      * Scope to get logs within a date range.
      */
-    public function scopeWithinDateRange($query, $startDate, $endDate = null)
+    public function scopeWithinDateRange($query, $startDate, $endDate = null): \Illuminate\Database\Eloquent\Builder
     {
         $query->where('at', '>=', $startDate);
 

@@ -118,7 +118,7 @@ class ReviewLog extends Model
     /**
      * Scope for specific proposal.
      */
-    public function scopeForProposal($query, string $proposalId)
+    public function scopeForProposal($query, string $proposalId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('proposal_id', $proposalId);
     }
@@ -126,7 +126,7 @@ class ReviewLog extends Model
     /**
      * Scope for specific reviewer.
      */
-    public function scopeForReviewer($query, string $userId)
+    public function scopeForReviewer($query, string $userId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('user_id', $userId);
     }
@@ -134,23 +134,27 @@ class ReviewLog extends Model
     /**
      * Scope for specific round.
      */
-    public function scopeForRound($query, int $round)
+    public function scopeForRound($query, int $round): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('round', $round);
     }
 
     /**
      * Scope for completed reviews.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ReviewLog>
      */
-    public function scopeCompleted($query)
+    public function scopeCompleted($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->whereNotNull('completed_at');
     }
 
     /**
      * Scope ordered by round descending (latest first).
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ReviewLog>
      */
-    public function scopeLatestRound($query)
+    public function scopeLatestRound($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->orderBy('round', 'desc');
     }

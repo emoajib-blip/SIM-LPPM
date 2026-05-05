@@ -137,20 +137,20 @@
                     <div>
                         <x-lucide-alert-circle class="icon alert-icon" />
                     </div>
-                    <div>
-                        <h4 class="alert-title">Terdapat kesalahan!</h4>
-                        <div class="text-secondary">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                        <div>
+                            <h4 class="alert-title">Terdapat kesalahan pada form!</h4>
+                            <div class="text-secondary">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li wire:key="error2-{{ $loop->index }}">{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
                     </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+            @endif
 
         <!-- Ringkasan & Kata Kunci -->
         <div class="card mb-3">

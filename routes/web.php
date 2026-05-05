@@ -23,15 +23,7 @@ use Laravel\Fortify\Features;
 Route::get('install', InstallerWizard::class)
     ->name('install');
 
-Route::get('/dev/migrate', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-
-        return 'Migrasi Berhasil: '.\Illuminate\Support\Facades\Artisan::output();
-    } catch (\Exception $e) {
-        return 'Error Migrasi: '.$e->getMessage();
-    }
-});
+// Route removed: /dev/migrate was a security risk - use CLI instead
 
 Route::get('/health-check', \App\Http\Controllers\HealthCheckController::class)->name('health.check');
 

@@ -36,7 +36,7 @@
                             <select class="form-select" wire:model.live="selectedYear">
                                 <option value="">Semua Tahun</option>
                                 @foreach ($this->availableYears as $year)
-                                    <option value="{{ $year }}">{{ $year }}</option>
+                                    <option value="{{ $year }}" wire:key="year-{{ $year }}">{{ $year }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -97,7 +97,7 @@
                             <td>
                                 <div class="d-flex flex-column gap-1">
                                     @foreach ($proposal->reviewers as $reviewer)
-                                        <div class="d-flex align-items-center gap-2">
+                                        <div class="d-flex align-items-center gap-2" wire:key="reviewer-{{ $reviewer->id }}">
                                             <x-tabler.badge color="success" class="fw-normal">
                                                 <x-lucide-check class="icon icon-sm" />
                                                 {{ $reviewer->user->name }}

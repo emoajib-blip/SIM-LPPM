@@ -104,7 +104,7 @@ class ProposalReviewer extends Model
      * Get the latest completed review log.
      */
     // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-    public function latestLog()
+    public function latestLog(): ?ReviewLog
     {
         return $this->logs()->whereNotNull('completed_at')->first();
     }
@@ -302,7 +302,7 @@ class ProposalReviewer extends Model
     /**
      * Scope for pending reviews.
      */
-    public function scopePending($query)
+    public function scopePending($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('status', ReviewStatus::PENDING);
     }
@@ -310,7 +310,7 @@ class ProposalReviewer extends Model
     /**
      * Scope for completed reviews.
      */
-    public function scopeCompleted($query)
+    public function scopeCompleted($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('status', ReviewStatus::COMPLETED);
     }
@@ -318,7 +318,7 @@ class ProposalReviewer extends Model
     /**
      * Scope for reviews requiring action.
      */
-    public function scopeRequiresAction($query)
+    public function scopeRequiresAction($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->whereIn('status', [ReviewStatus::PENDING, ReviewStatus::RE_REVIEW_REQUESTED]);
     }
@@ -326,7 +326,7 @@ class ProposalReviewer extends Model
     /**
      * Scope for overdue reviews.
      */
-    public function scopeOverdue($query)
+    public function scopeOverdue($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->whereNotNull('deadline_at')
             ->where('deadline_at', '<', now())
@@ -336,7 +336,7 @@ class ProposalReviewer extends Model
     /**
      * Scope for reviews with approaching deadline.
      */
-    public function scopeDeadlineApproaching($query, int $days = 3)
+    public function scopeDeadlineApproaching($query, int $days = 3): \Illuminate\Database\Eloquent\Builder
     {
         return $query->whereNotNull('deadline_at')
             ->where('deadline_at', '>=', now())
@@ -347,7 +347,7 @@ class ProposalReviewer extends Model
     /**
      * Scope for specific reviewer.
      */
-    public function scopeForReviewer($query, $userId)
+    public function scopeForReviewer($query, $userId): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('user_id', $userId);
     }
@@ -355,7 +355,7 @@ class ProposalReviewer extends Model
     /**
      * Scope for specific round.
      */
-    public function scopeForRound($query, int $round)
+    public function scopeForRound($query, int $round): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('round', $round);
     }
@@ -363,7 +363,7 @@ class ProposalReviewer extends Model
     /**
      * Scope for current (latest) round.
      */
-    public function scopeCurrentRound($query)
+    public function scopeCurrentRound($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->orderBy('round', 'desc');
     }

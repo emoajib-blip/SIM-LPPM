@@ -5,7 +5,7 @@
 @if ($layout === 'columns')
     <div class="dropdown-menu-columns">
         @foreach ($dropdown['columns'] ?? [] as $column)
-            <div class="dropdown-menu-column">
+            <div wire:key="column-{{ $loop->index }}" class="dropdown-menu-column">
                 @foreach ($column as $columnItem)
                     @include('components.layouts.partials.menu.dropdown-item', ['item' => $columnItem])
                 @endforeach

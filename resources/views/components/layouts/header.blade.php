@@ -111,10 +111,10 @@
                                                         => 'M16 7a4 4 0 1 0-8 0a4 4 0 0 0 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z',
                                                 };
                                             @endphp
-                                            <form method="POST" action="{{ route('role.switch') }}" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="role" value="{{ $role }}">
-                                                <button type="submit" class="w-100 text-start dropdown-item">
+                                                <form method="POST" action="{{ route('role.switch') }}" class="d-inline" wire:key="role-{{ $role }}">
+                                                 @csrf
+                                                 <input type="hidden" name="role" value="{{ $role }}">
+                                                 <button type="submit" class="w-100 text-start dropdown-item">
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div class="d-flex align-items-center">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="18"
@@ -208,7 +208,7 @@
                                         @endphp
 
                                         @if ($isDropdown)
-                                            <li class="nav-item dropdown{{ $isActive ? ' active' : '' }}">
+                                            <li wire:key="menu-{{ $menuItem['title'] ?? $loop->index }}" class="nav-item dropdown{{ $isActive ? ' active' : '' }}">
                                                 <a class="nav-link dropdown-toggle{{ $isActive ? ' active' : '' }}"
                                                     href="#" data-bs-toggle="dropdown"
                                                     data-bs-auto-close="{{ $menuItem['dropdown']['auto_close'] ?? 'outside' }}"
@@ -236,7 +236,7 @@
                                                 </div>
                                             </li>
                                         @else
-                                            <li class="nav-item{{ $isActive ? ' active' : '' }}">
+                                            <li wire:key="menu-simple-{{ $menuItem['title'] ?? $loop->index }}" class="nav-item{{ $isActive ? ' active' : '' }}">
                                                 <a class="nav-link{{ $isActive ? ' active' : '' }}"
                                                     href="{{ $menuItem['href'] ?? '#' }}"
                                                     @unless (($menuItem['navigate'] ?? true) === false) wire:navigate.hover @endunless>

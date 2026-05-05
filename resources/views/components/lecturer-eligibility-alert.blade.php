@@ -55,7 +55,7 @@
                         {{ $eligibility['period']['checked_year'] }}):
                         <ul class="mb-0 mt-2 p-0 ms-3" style="list-style-type: disc;">
                             @foreach ($eligibility['reasons'] as $reason)
-                                <li>{{ $reason }}</li>
+                                <li wire:key="eligibility-reason-{{ $loop->index }}">{{ $reason }}</li>
                             @endforeach
                         </ul>
                         <div class="mt-2 small">
@@ -84,7 +84,7 @@
                         Meskipun jadwal pengajuan dibuka, Anda tidak memenuhi syarat untuk skema berikut:
                         <ul class="mb-0 mt-2 p-0 ms-3" style="list-style-type: disc;">
                             @foreach ($schemeReasons as $reason)
-                                <li>{{ $reason }}</li>
+                                <li wire:key="scheme-reason-{{ $loop->index }}">{{ $reason }}</li>
                             @endforeach
                         </ul>
                         <div class="mt-2 small">

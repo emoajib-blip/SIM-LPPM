@@ -34,13 +34,13 @@ class ReviewerAssignment extends Component
     }
 
     #[Computed]
-    public function proposal()
+    public function proposal(): ?Proposal
     {
-        return Proposal::find($this->proposalId);
+        return Proposal::with(['reviewers.user', 'teamMembers.user'])->find($this->proposalId);
     }
 
     #[Computed]
-    public function availableReviewers()
+    public function availableReviewers(): \Illuminate\Support\Collection
     {
         return User::whereHas('roles', function ($query) {
             $query->whereIn('name', ['reviewer']);
@@ -50,7 +50,7 @@ class ReviewerAssignment extends Component
     }
 
     #[Computed]
-    public function currentReviewers()
+    public function currentReviewers(): \Illuminate\Support\Collection
     {
         return $this->proposal->reviewers()
             ->with('user')

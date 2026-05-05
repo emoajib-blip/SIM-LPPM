@@ -79,16 +79,16 @@ class IdentityEligibilityAction
         ];
 
         if ($role === 'leader' && isset($rules['max_proposals_as_head'])) {
-            $query = Proposal::where('submitter_id', $user->id)
-                ->whereIn('status', $activeStatuses);
+            $query = Proposal::query()->where('submitter_id', '=', $user->id)
+                ->whereIn('status', $activeStatuses, 'and', false);
 
             if ($scheme instanceof \App\Models\ResearchScheme) {
-                $query->whereNotNull('research_scheme_id');
+                $query->whereNotNull('research_scheme_id', 'and');
             } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
-                $query->whereNotNull('community_service_scheme_id');
+                $query->whereNotNull('community_service_scheme_id', 'and');
             }
 
-            $headCount = $query->count();
+            $headCount = $query->count('*');
 
             if ($headCount >= $rules['max_proposals_as_head']) {
                 return [
@@ -100,16 +100,16 @@ class IdentityEligibilityAction
 
         // 4.1 Total Quota Check (across all schemes of the same type)
         if ($role === 'leader' && isset($rules['max_total_proposals_as_head'])) {
-            $query = Proposal::where('submitter_id', $user->id)
-                ->whereIn('status', $activeStatuses);
+            $query = Proposal::query()->where('submitter_id', '=', $user->id)
+                ->whereIn('status', $activeStatuses, 'and', false);
 
             if ($scheme instanceof \App\Models\ResearchScheme) {
-                $query->whereNotNull('research_scheme_id');
+                $query->whereNotNull('research_scheme_id', 'and');
             } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
-                $query->whereNotNull('community_service_scheme_id');
+                $query->whereNotNull('community_service_scheme_id', 'and');
             }
 
-            $totalHeadCount = $query->count();
+            $totalHeadCount = $query->count('*');
 
             if ($totalHeadCount >= $rules['max_total_proposals_as_head']) {
                 return [
@@ -173,10 +173,10 @@ class IdentityEligibilityAction
             ($role === 'member' && in_array($blockRole, ['member', 'both']));
 
         if ($shouldBlock) {
-            $pendingCount = Proposal::where('submitter_id', $user->id)
+            $pendingCount = Proposal::query()->where('submitter_id', '=', $user->id)
                 ->where('start_year', '<', date('Y'))
-                ->whereNotIn('status', [ProposalStatus::COMPLETED, ProposalStatus::REJECTED])
-                ->count();
+                ->whereNotIn('status', [ProposalStatus::COMPLETED, ProposalStatus::REJECTED], 'and')
+                ->count('*');
 
             if ($pendingCount > 0) {
                 return [

@@ -49,7 +49,7 @@
                             <select class="form-select" wire:model.live="selectedYear">
                                 <option value="">Semua Tahun</option>
                                 @foreach ($this->availableYears as $year)
-                                    <option value="{{ $year }}">{{ $year }}</option>
+                                    <option value="{{ $year }}" wire:key="year-{{ $year }}">{{ $year }}</option>
                                 @endforeach
                             </select>
                         </div>

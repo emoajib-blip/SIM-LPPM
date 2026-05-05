@@ -113,7 +113,7 @@
                                 class="form-select @error('macroResearchGroupId') is-invalid @enderror">
                                 <option value="">Pilih Kelompok Makro Riset</option>
                                 @foreach ($this->macroResearchGroups as $group)
-                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                    <option value="{{ $group->id }}" wire:key="group-{{ $group->id }}">{{ $group->name }}</option>
                                 @endforeach
                             </select>
                             @error('macroResearchGroupId')
@@ -237,7 +237,7 @@
                 @else
                     <div class="divide-y">
                         @foreach ($completedReviewers as $reviewer)
-                            <div class="p-3">
+                            <div wire:key="comp-rev-{{ $reviewer->id }}" class="p-3">
                                 <div class="mb-3">
                                     <div class="d-flex align-items-center justify-content-between mb-2">
                                         <div class="d-flex align-items-center">
@@ -268,7 +268,7 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($reviewer->scores->where('round', $reviewer->round) as $s)
-                                                    <tr>
+                                                    <tr wire:key="score-{{ $s->id }}">
                                                         <td class="py-2 fw-bold" style="font-size: 10pt;">
                                                             {{ $s->criteria->criteria }}</td>
                                                         <td class="py-2 text-secondary italic"
@@ -336,7 +336,7 @@
                     <div class="p-0 card-body">
                         <div class="accordion" id="reviewHistoryAccordion">
                             @foreach ($proposal->reviewLogs->groupBy('round') as $round => $logs)
-                                <div class="border-0 border-bottom accordion-item">
+                                <div wire:key="round-{{ $round }}" class="border-0 border-bottom accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="py-2 accordion-button collapsed" type="button"
                                             data-bs-toggle="collapse"
@@ -352,7 +352,7 @@
                                         <div class="p-0 accordion-body">
                                             <div class="divide-y">
                                                 @foreach ($logs as $log)
-                                                    <div class="bg-body-tertiary p-3">
+                                                    <div wire:key="log-{{ $log->id }}" class="bg-body-tertiary p-3">
                                                         <div
                                                             class="d-flex align-items-center justify-content-between mb-2">
                                                             <div class="fw-bold small">
