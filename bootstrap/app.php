@@ -33,7 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\RecordActivity::class,
         ]);
 
-        $middleware->prepend(\App\Http\Middleware\InstallerMiddleware::class);
+        // $middleware->prepend(\App\Http\Middleware\InstallerMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->renderable(function (\Throwable $e, \Illuminate\Http\Request $request) {
