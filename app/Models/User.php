@@ -164,15 +164,15 @@ class User extends Authenticatable implements HasMedia
     public function profilePicture(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => {
+            get: function ($value) {
                 $mediaUrl = $this->getFirstMediaUrl('avatar');
                 \Log::debug('Profile picture accessor called', [
                     'user_id' => $this->id,
                     'media_url' => $mediaUrl,
                     'has_media' => $this->hasMedia('avatar'),
-                    'identity_picture' => $this->identity->profile_picture ?? null
+                    'identity_picture' => $this->identity->profile_picture ?? null,
                 ]);
-                
+
                 return $mediaUrl ?: ($this->identity->profile_picture
                     ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?s=128&d=identicon');
             },
