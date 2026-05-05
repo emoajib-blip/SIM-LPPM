@@ -61,6 +61,9 @@ class KepalaLppmFinalDecision extends Component
         return $this->proposal->pendingReviewers()->get();
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int|string, int>
+     */
     #[Computed]
     public function reviewSummary(): \Illuminate\Support\Collection
     {

@@ -29,7 +29,7 @@ use Livewire\Component;
  * @property-read bool $isOverdue
  * @property-read int|null $daysRemaining
  * @property-read \Illuminate\Support\Collection<int, \App\Models\ReviewLog> $previousRoundLogs
- * @property-read \Illuminate\Support\Collection<int, \App\Models\ReviewLog> $allReviewLogs
+ * @property-read \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewLog>> $allReviewLogs
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerForm extends Component
@@ -175,6 +175,9 @@ class ReviewerForm extends Component
      * @return \Illuminate\Support\Collection<int, \App\Models\ProposalReviewer>
      */
     #[Computed]
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\ReviewLog>
+     */
     public function allReviews(): \Illuminate\Support\Collection
     {
         return $this->proposal->reviewers;
@@ -261,10 +264,10 @@ class ReviewerForm extends Component
     /**
      * Get all review logs for this proposal (for showing complete history).
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewLog>
+     * @return \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewLog>>
      */
     #[Computed]
-    public function allReviewLogs(): \Illuminate\Database\Eloquent\Collection
+    public function allReviewLogs(): \Illuminate\Support\Collection
     {
         return ReviewLog::forProposal($this->proposalId)
             ->with(['user', 'scores.criteria'])
