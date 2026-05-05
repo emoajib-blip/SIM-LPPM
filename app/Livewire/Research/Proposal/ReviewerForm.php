@@ -51,24 +51,23 @@ class ReviewerForm extends Component
         $this->proposalId = $proposalId;
 
         // Eager load relationships to prevent N+1 queries
-        $this->proposal?->load(['teamMembers']);
+        try {
+            $this->proposal?->load(['teamMembers']);
+            \Log::info('ReviewerForm loaded teamMembers successfully for proposal '.$this->proposalId);
+        } catch (\Exception $e) {
+            \Log::error('Failed to load teamMembers in ReviewerForm for proposal '.$this->proposalId, [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+            ]);
+            throw $e;
+        }
 
         // Load existing review data if available
         $myReview = $this->myReview;
         if ($myReview && $myReview->isCompleted()) {
             $this->reviewNotes = $myReview->review_notes ?? '';
-            $this->recommendation = $myReview->recommendation ?? '';
 
-            // Load existing scores
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-            $existingScores = $myReview->scores()->where('round', $myReview->round)->get();
-            /** @var \App\Models\ReviewScore $score */
-            foreach ($existingScores as $score) {
-                $this->scores[$score->review_criteria_id] = [
-                    'score' => $score->score,
-                    'acuan' => $score->acuan,
-                ];
-            }
+            $this->recommendation = $myReview->recommendation ?? '';
         }
 
         // Initialize empty scores for active criteria if not exists
