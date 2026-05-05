@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
 
         $middleware->remove(\Illuminate\Http\Middleware\ValidatePathEncoding::class);
+        $middleware->remove(\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks::class);
 
         $middleware->alias([
             'role' => RoleMiddleware::class,
