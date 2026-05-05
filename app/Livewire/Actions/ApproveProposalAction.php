@@ -21,7 +21,7 @@ class ApproveProposalAction
         if (! in_array($decision, [ProposalStatus::COMPLETED->value, ProposalStatus::REJECTED->value])) {
             return [
                 'success' => false,
-                'message' => 'Keputusan harus "completed" atau "rejected".',
+                'message' => 'Keputusan harus "COMPLETED" atau "REJECTED".',
             ];
         }
 
@@ -49,7 +49,7 @@ class ApproveProposalAction
             [$proposal->submitter]
         );
 
-        $message = $decision === 'completed'
+        $message = $decision === 'COMPLETED'
             ? 'Proposal berhasil disetujui dan selesai.'
             : 'Proposal ditolak.';
 

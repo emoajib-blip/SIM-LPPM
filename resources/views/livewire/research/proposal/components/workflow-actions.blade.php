@@ -11,7 +11,7 @@
 
     <!-- Reviewer Form -->
     <div class="mb-3">
-        <!-- <livewire:research.proposal.reviewer-form :proposalId="$proposal->id" :key="'reviewer-form-' . $proposal->id" /> -->
+        <livewire:research.proposal.reviewer-form :proposalId="$proposal->id" :key="'reviewer-form-' . $proposal->id" />
     </div>
 
     <!-- Dekan Approval (Status: SUBMITTED) -->
