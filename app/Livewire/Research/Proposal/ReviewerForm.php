@@ -51,7 +51,7 @@ class ReviewerForm extends Component
         $this->proposalId = $proposalId;
 
         // Eager load relationships to prevent N+1 queries
-        $this->proposal?->load(['reviewers.user', 'teamMembers']);
+        $this->proposal?->load(['teamMembers']);
 
         // Load existing review data if available
         $myReview = $this->myReview;
