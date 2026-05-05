@@ -45,8 +45,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Force HTTPS if running behind an HTTPS proxy (Cloudflare)
+        $host = request()->getHost();
         if (request()->header('X-Forwarded-Proto') === 'https' || str_contains(config('app.url'), 'https://')) {
-            if (! in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1'])) {
+            if ($host && ! in_array($host, ['localhost', '127.0.0.1', '::1'])) {
                 URL::forceRootUrl(config('app.url'));
                 URL::forceScheme('https');
 

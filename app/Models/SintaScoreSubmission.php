@@ -39,25 +39,28 @@ class SintaScoreSubmission extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\SintaScoreSubmission>
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePending($query): \Illuminate\Database\Eloquent\Builder
+    public function scopePending($query)
     {
         return $query->where('status', 'pending');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\SintaScoreSubmission>
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeApproved($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeApproved($query)
     {
         return $query->where('status', 'approved');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\SintaScoreSubmission>
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeRejected($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeRejected($query)
     {
         return $query->where('status', 'rejected');
     }
