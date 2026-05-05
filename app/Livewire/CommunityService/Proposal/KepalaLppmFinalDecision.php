@@ -192,7 +192,7 @@ class KepalaLppmFinalDecision extends Component
 
         // Get recipients
         $recipients = collect()
-            ->push($proposal->user) // Submitter
+            ->push($proposal->submitter) // Submitter
             ->push($dekan) // Relevant Dekan
             ->push(User::role('admin lppm')->first()) // Admin LPPM
             ->merge($proposal->teamMembers) // Team Members

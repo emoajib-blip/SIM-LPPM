@@ -106,7 +106,10 @@ class ProposalReviewer extends Model
     // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function latestLog(): ?ReviewLog
     {
-        return $this->logs()->whereNotNull('completed_at')->first();
+        /** @var \App\Models\ReviewLog|null $log */
+        $log = $this->logs()->whereNotNull('completed_at')->first();
+
+        return $log;
     }
 
     /**
@@ -307,16 +310,6 @@ class ProposalReviewer extends Model
     public function scopePending($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('status', ReviewStatus::PENDING);
-    }
-
-    /**
-     * Scope for completed reviews.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
-     */
-    public function scopeCompleted($query): \Illuminate\Database\Eloquent\Builder
-    {
-        return $query->where('status', ReviewStatus::COMPLETED);
     }
 
     /**

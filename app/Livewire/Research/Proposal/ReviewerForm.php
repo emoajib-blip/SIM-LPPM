@@ -28,8 +28,8 @@ use Livewire\Component;
  * @property-read mixed $deadline
  * @property-read bool $isOverdue
  * @property-read int|null $daysRemaining
- * @property-read \Illuminate\Support\Collection|\App\Models\ReviewLog[] $previousRoundLogs
- * @property-read \Illuminate\Support\Collection|\App\Models\ReviewLog[] $allReviewLogs
+ * @property-read \Illuminate\Support\Collection<int, \App\Models\ReviewLog> $previousRoundLogs
+ * @property-read \Illuminate\Support\Collection<int, \App\Models\ReviewLog> $allReviewLogs
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerForm extends Component
@@ -171,6 +171,9 @@ class ReviewerForm extends Component
             ->first();
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\ProposalReviewer>
+     */
     #[Computed]
     public function allReviews(): \Illuminate\Support\Collection
     {
@@ -256,42 +259,12 @@ class ReviewerForm extends Component
     }
 
     /**
-     * Get previous round logs for the current reviewer (for showing history during re-review).
-     */
-    #[Computed]
-    public function previousRoundLogs(): \Illuminate\Support\Collection
-    {
-        $review = $this->myReview;
-        if (! $review) {
-            return collect();
-        }
-
-        return ReviewLog::where('proposal_reviewer_id', $review->id)
-            ->orderBy('round', 'desc')
-            ->get();
-    }
-
-    /**
-     * Get scores for history (by round)
-     */
-    public function getScoresForRound(int $round): \Illuminate\Support\Collection
-    {
-        $review = $this->myReview;
-        if (! $review) {
-            return collect();
-        }
-
-        return ReviewScore::where('proposal_reviewer_id', $review->id)
-            ->where('round', $round)
-            ->with('criteria')
-            ->get();
-    }
-
-    /**
      * Get all review logs for this proposal (for showing complete history).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewLog>
      */
     #[Computed]
-    public function allReviewLogs(): \Illuminate\Support\Collection
+    public function allReviewLogs(): \Illuminate\Database\Eloquent\Collection
     {
         return ReviewLog::forProposal($this->proposalId)
             ->with(['user', 'scores.criteria'])

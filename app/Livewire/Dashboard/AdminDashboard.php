@@ -292,7 +292,7 @@ class AdminDashboard extends Component
     public function syncFromProduction(): void
     {
         if (config('app.env') !== 'local') {
-            return;
+            abort(403, 'Fitur ini hanya untuk environment lokal');
         }
 
         try {
@@ -310,7 +310,7 @@ class AdminDashboard extends Component
     public function downloadDatabaseBackup(): mixed
     {
         if (config('app.env') === 'local') {
-            return;
+            return null;
         }
 
         $filename = 'backup_db_'.date('Y-m-d_His').'.sql';
@@ -326,7 +326,7 @@ class AdminDashboard extends Component
         if (! file_exists($path)) {
             $this->dispatch('swal', title: 'Gagal!', text: 'Gagal membuat file backup.', icon: 'error');
 
-            return;
+            return null;
         }
 
         return response()->download($path)->deleteFileAfterSend(true);

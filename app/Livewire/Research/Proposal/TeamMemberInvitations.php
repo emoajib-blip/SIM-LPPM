@@ -32,9 +32,12 @@ class TeamMemberInvitations extends Component
     #[Computed]
     public function proposal(): ?Proposal
     {
-        return Proposal::with(['teamMembers.user'])->find($this->proposalId);
+        return Proposal::with(['teamMembers'])->find($this->proposalId);
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     */
     #[Computed]
     public function teamMembers(): \Illuminate\Support\Collection
     {
@@ -43,18 +46,27 @@ class TeamMemberInvitations extends Component
             ->get();
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     */
     #[Computed]
     public function pendingInvitations(): \Illuminate\Support\Collection
     {
         return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'pending');
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     */
     #[Computed]
     public function acceptedMembers(): \Illuminate\Support\Collection
     {
         return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'accepted');
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     */
     #[Computed]
     public function rejectedMembers(): \Illuminate\Support\Collection
     {

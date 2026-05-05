@@ -39,6 +39,9 @@ class ReviewerAssignment extends Component
         return Proposal::with(['reviewers.user', 'teamMembers.user'])->find($this->proposalId);
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     */
     #[Computed]
     public function availableReviewers(): \Illuminate\Support\Collection
     {
@@ -49,6 +52,9 @@ class ReviewerAssignment extends Component
             ->get();
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\ProposalReviewer>
+     */
     #[Computed]
     public function currentReviewers(): \Illuminate\Support\Collection
     {

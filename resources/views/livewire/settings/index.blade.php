@@ -44,11 +44,16 @@
                                 <x-lucide-eye class="me-2 icon" />
                                 Audit Log
                             </button>
-                            <button wire:click="setActiveTab('feature-flags')"
-                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'feature-flags' ? 'active' : '' }}">
-                                <x-lucide-toggle-left class="me-2 icon" />
-                                Feature Flags
-                            </button>
+                             <button wire:click="setActiveTab('feature-flags')"
+                                 class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'feature-flags' ? 'active' : '' }}">
+                                 <x-lucide-toggle-left class="me-2 icon" />
+                                 Feature Flags
+                             </button>
+                             <button wire:click="setActiveTab('sync')"
+                                 class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'sync' ? 'active' : '' }}">
+                                 <x-lucide-refresh-ccw class="me-2 icon" />
+                                 Sinkronisasi Data
+                             </button>
                         </div>
                     @endrole
                 </div>
@@ -89,13 +94,19 @@
                             <p class="mb-4 card-subtitle">Pantau riwayat aktivitas login dan akses akun Anda untuk menjaga keamanan.</p>
                             <livewire:users.activity-log-list :user="auth()->user()" />
                         </div>
-                    @elseif ($activeTab === 'feature-flags')
-                        <div>
-                            <h2 class="mb-4">Feature Flags (Eksperimental)</h2>
-                            <p class="mb-4 card-subtitle">Aktifkan atau nonaktifkan fitur sistem yang belum diwajibkan secara institusional.</p>
-                            <livewire:settings.feature-flags />
-                        </div>
-                    @endif
+                     @elseif ($activeTab === 'feature-flags')
+                         <div>
+                             <h2 class="mb-4">Feature Flags (Eksperimental)</h2>
+                             <p class="mb-4 card-subtitle">Aktifkan atau nonaktifkan fitur sistem yang belum diwajibkan secara institusional.</p>
+                             <livewire:settings.feature-flags />
+                         </div>
+                     @elseif ($activeTab === 'sync')
+                         <div>
+                             <h2 class="mb-4">Sinkronisasi Data</h2>
+                             <p class="mb-4 card-subtitle">Sinkronkan data dari server produksi ke localhost untuk backup dan development.</p>
+                             <livewire:settings.data-sync />
+                         </div>
+                     @endif
                 </div>
             </div>
         </div>

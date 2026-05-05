@@ -117,6 +117,9 @@ class ReviewLog extends Model
 
     /**
      * Scope for specific proposal.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<ReviewLog>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<ReviewLog>
      */
     public function scopeForProposal($query, string $proposalId): \Illuminate\Database\Eloquent\Builder
     {
@@ -125,6 +128,9 @@ class ReviewLog extends Model
 
     /**
      * Scope for specific reviewer.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<ReviewLog>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<ReviewLog>
      */
     public function scopeForReviewer($query, string $userId): \Illuminate\Database\Eloquent\Builder
     {

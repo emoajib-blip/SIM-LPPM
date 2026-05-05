@@ -39,8 +39,8 @@ class SintaScoreSubmission extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>
      */
     public function scopePending($query)
     {
@@ -48,8 +48,8 @@ class SintaScoreSubmission extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>
      */
     public function scopeApproved($query)
     {
@@ -57,8 +57,8 @@ class SintaScoreSubmission extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>
      */
     public function scopeRejected($query)
     {

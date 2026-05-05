@@ -14,7 +14,7 @@ class SettingsIndex extends Component
      */
     public function setActiveTab(string $tab): void
     {
-        $adminOnlyTabs = ['appearance', 'audit'];
+        $adminOnlyTabs = ['appearance', 'audit', 'sync'];
 
         if (in_array($tab, $adminOnlyTabs) && ! Auth::user()->hasRole('admin lppm')) {
             return;

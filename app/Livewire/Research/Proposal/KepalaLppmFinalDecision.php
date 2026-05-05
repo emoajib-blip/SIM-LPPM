@@ -52,6 +52,9 @@ class KepalaLppmFinalDecision extends Component
         return $isKepalaLppm && $proposal->status === ProposalStatus::REVIEWED && $proposal->allReviewsCompleted();
     }
 
+    /**
+     * @return \Illuminate\Support\Collection<int, \App\Models\ProposalReviewer>
+     */
     #[Computed]
     public function pendingReviewers(): \Illuminate\Support\Collection
     {
@@ -192,7 +195,7 @@ class KepalaLppmFinalDecision extends Component
 
         // Get recipients
         $recipients = collect()
-            ->push($proposal->user) // Submitter
+            ->push($proposal->submitter) // Submitter
             ->push($dekan) // Relevant Dekan
             ->push(User::role('admin lppm')->first()) // Admin LPPM
             ->merge($proposal->teamMembers) // Team Members
