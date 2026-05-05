@@ -204,6 +204,12 @@ class ProfileForm extends Component
                 ->usingFileName($this->photo->getClientOriginalName())
                 ->toMediaCollection('avatar');
 
+            \Log::info('Profile photo uploaded for user '.$user->id, [
+                'filename' => $this->photo->getClientOriginalName(),
+                'media_url' => $user->getFirstMediaUrl('avatar'),
+                'has_media' => $user->hasMedia('avatar'),
+            ]);
+
             $this->reset('photo');
         }
 
