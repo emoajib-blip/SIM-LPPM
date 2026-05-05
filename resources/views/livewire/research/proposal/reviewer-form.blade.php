@@ -451,27 +451,28 @@
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </td>
-                                                    <td>
-                                                        <select wire:model.live="scores.{{ $criteria->id }}.score"
-                                                            class="form-select form-select-sm @error('scores.' . $criteria->id . '.score') is-invalid @enderror">
-                                                            <option value="">Pilih Skor</option>
-                                                            <option value="1">1 (Sangat Kurang)</option>
-                                                            <option value="2">2 (Kurang)</option>
-                                                            <option value="3">3 (Cukup Baik)</option>
-                                                            <option value="4">4 (Baik)</option>
-                                                            <option value="5">5 (Sangat Baik)</option>
-                                                        </select>
-                                                        @error('scores.' . $criteria->id . '.score')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </td>
-                                                    <td class="font-monospace text-end fw-bold">
-                                                        @php
-                                                            $score = $scores[$criteria->id]['score'] ?? 0;
-                                                            $val = is_numeric($score) ? $score * $criteria->weight : 0;
-                                                        @endphp
-                                                        {{ number_format($val, 0) }}
-                                                    </td>
+                                                     <td>
+                                                         <select wire:model.live="scores.{{ $criteria->id }}.score"
+                                                             class="form-select form-select-sm @error('scores.' . $criteria->id . '.score') is-invalid @enderror">
+                                                             <option value="">Pilih Skor</option>
+                                                             <option value="1">1 (Sangat Kurang)</option>
+                                                             <option value="2">2 (Kurang)</option>
+                                                             <option value="3">3 (Cukup Baik)</option>
+                                                             <option value="4">4 (Baik)</option>
+                                                             <option value="5">5 (Sangat Baik)</option>
+                                                         </select>
+                                                         @error('scores.' . $criteria->id . '.score')
+                                                             <div class="invalid-feedback">{{ $message }}</div>
+                                                         @enderror
+                                                     </td>
+                                                     <td class="font-monospace text-end fw-bold">
+                                                         @php
+                                                             $criteriaScores = $scores[$criteria->id] ?? [];
+                                                             $score = $criteriaScores['score'] ?? 0;
+                                                             $val = is_numeric($score) ? $score * $criteria->weight : 0;
+                                                         @endphp
+                                                         {{ number_format($val, 0) }}
+                                                     </td>
                                                 </tr>
                                             @endforeach
                                             <tr class="bg-surface-secondary">

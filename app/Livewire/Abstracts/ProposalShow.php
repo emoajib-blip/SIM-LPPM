@@ -49,7 +49,17 @@ abstract class ProposalShow extends Component
 
         $this->proposal = $proposal;
 
-        $this->form->setProposal($proposal);
+        try {
+            $this->form->setProposal($proposal);
+        } catch (\Throwable $e) {
+            \Log::error('Error in ProposalShow mount', [
+                'proposal_id' => $proposal->id,
+                'user_id' => \Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
     }
 
     abstract protected function getProposalType(): string;
