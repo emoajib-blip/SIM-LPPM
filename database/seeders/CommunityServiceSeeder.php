@@ -331,7 +331,7 @@ class CommunityServiceSeeder extends Seeder
             'proposal_id' => $proposal->id,
             'reporting_year' => date('Y'),
             'reporting_period' => 'semester_1',
-            'status' => 'submitted',
+            'status' => ProposalStatus::SUBMITTED,
             'summary_update' => fake()->paragraph(2),
             'submitted_by' => $submitter->id,
             'submitted_at' => Carbon::parse($completionDate)->addDays(10),
