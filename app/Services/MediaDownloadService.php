@@ -70,6 +70,9 @@ class MediaDownloadService
         }
 
         $proposal = Proposal::find($proposalId);
+        if (! $proposal) {
+            return false;
+        }
 
         // 4. Ownership check
         if ($proposal->submitter_id === $user->id) {

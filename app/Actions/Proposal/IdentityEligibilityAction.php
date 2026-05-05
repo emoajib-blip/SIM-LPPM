@@ -156,8 +156,7 @@ class IdentityEligibilityAction
                 $query->whereNotNull('proposals.community_service_scheme_id');
             }
 
-            $totalMemberCount = $query->distinct('proposal_user.proposal_id')
-                ->count('proposal_user.proposal_id');
+            $totalMemberCount = $query->distinct()->count('proposal_user.proposal_id');
 
             if ($totalMemberCount >= $rules['max_total_proposals_as_member']) {
                 return [
@@ -175,7 +174,7 @@ class IdentityEligibilityAction
         if ($shouldBlock) {
             $pendingCount = Proposal::query()->where('submitter_id', '=', $user->id)
                 ->where('start_year', '<', date('Y'))
-                ->whereNotIn('status', [ProposalStatus::COMPLETED, ProposalStatus::REJECTED], 'and')
+                ->whereNotIn('status', [ProposalStatus::COMPLETED->value, ProposalStatus::REJECTED->value])
                 ->count('*');
 
             if ($pendingCount > 0) {

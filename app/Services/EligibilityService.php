@@ -85,8 +85,7 @@ class EligibilityService
             $memberQuery->whereNotNull('proposals.community_service_scheme_id');
         }
 
-        $currentMemberCount = $memberQuery->distinct('proposal_user.proposal_id')
-            ->count('proposal_user.proposal_id');
+        $currentMemberCount = $memberQuery->distinct()->count('proposal_user.proposal_id');
 
         $quotaInfo = [
             'head_limit' => $totalHeadLimit,

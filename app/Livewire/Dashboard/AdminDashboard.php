@@ -211,20 +211,20 @@ class AdminDashboard extends Component
         $totalMonev = $activeProposals->count();
         $completedMonev = MonevReview::whereIn('proposal_id', $activeProposalIds)
             ->whereNotNull('reviewed_at')
-            ->distinct('proposal_id')
-            ->count();
+            ->distinct()
+            ->count('proposal_id');
 
         // If no new reviews, fallback to legacy ProposalMonev for backward compatibility
         if ($completedMonev === 0) {
-            $completedMonev = ProposalMonev::whereIn('proposal_id', $activeProposalIds)->distinct('proposal_id')->count();
+            $completedMonev = ProposalMonev::whereIn('proposal_id', $activeProposalIds)->distinct()->count('proposal_id');
         }
 
         // 3. Reporting Status (Progress & Final Report)
         $totalReports = $activeProposals->count();
         $submittedReports = ProgressReport::whereIn('proposal_id', $activeProposalIds)
             ->whereIn('status', [\App\Enums\ReportStatus::SUBMITTED, \App\Enums\ReportStatus::APPROVED, \App\Enums\ReportStatus::APPROVED_BY_DEKAN])
-            ->distinct('proposal_id')
-            ->count();
+            ->distinct()
+            ->count('proposal_id');
 
         // 4. Output Tracking (Luaran)
         // Target: Total outputs promised in funded proposals

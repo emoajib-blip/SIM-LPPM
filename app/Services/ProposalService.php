@@ -248,9 +248,7 @@ class ProposalService
 
         return Proposal::query()
             ->with($relations)
-            ->whereHas('detailable', function ($query) use ($detailableType) {
-                $query->where('detailable_type', $detailableType);
-            });
+            ->where('detailable_type', $detailableType);
     }
 
     protected function applyRoleFilter(Builder $query, string $role): void
