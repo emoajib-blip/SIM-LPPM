@@ -6,7 +6,7 @@
             @if ($photo)
                 <span class="avatar avatar-xl" style="background-image: url({{ $photo->temporaryUrl() }})"></span>
             @elseif (auth()->user()->profile_picture)
-                <span class="avatar avatar-xl" style="background-image: url({{ auth()->user()->profile_picture }})"></span>
+                <span class="avatar avatar-xl" wire:key="avatar-{{ auth()->user()->updated_at }}" style="background-image: url({{ auth()->user()->profile_picture }})"></span>
             @else
                 <span class="avatar avatar-xl">
                     {{ auth()->user()->initials() }}
