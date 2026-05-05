@@ -133,6 +133,8 @@ class ReviewLog extends Model
 
     /**
      * Scope for specific round.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ReviewLog>
      */
     public function scopeForRound($query, int $round): \Illuminate\Database\Eloquent\Builder
     {

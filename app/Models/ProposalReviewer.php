@@ -301,6 +301,8 @@ class ProposalReviewer extends Model
 
     /**
      * Scope for pending reviews.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
      */
     public function scopePending($query): \Illuminate\Database\Eloquent\Builder
     {
@@ -309,6 +311,8 @@ class ProposalReviewer extends Model
 
     /**
      * Scope for completed reviews.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
      */
     public function scopeCompleted($query): \Illuminate\Database\Eloquent\Builder
     {
@@ -317,6 +321,8 @@ class ProposalReviewer extends Model
 
     /**
      * Scope for reviews requiring action.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
      */
     public function scopeRequiresAction($query): \Illuminate\Database\Eloquent\Builder
     {
@@ -325,6 +331,8 @@ class ProposalReviewer extends Model
 
     /**
      * Scope for overdue reviews.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
      */
     public function scopeOverdue($query): \Illuminate\Database\Eloquent\Builder
     {
@@ -335,6 +343,8 @@ class ProposalReviewer extends Model
 
     /**
      * Scope for reviews with approaching deadline.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
      */
     public function scopeDeadlineApproaching($query, int $days = 3): \Illuminate\Database\Eloquent\Builder
     {
@@ -346,6 +356,8 @@ class ProposalReviewer extends Model
 
     /**
      * Scope for specific reviewer.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
      */
     public function scopeForReviewer($query, $userId): \Illuminate\Database\Eloquent\Builder
     {
@@ -354,6 +366,8 @@ class ProposalReviewer extends Model
 
     /**
      * Scope for specific round.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
      */
     public function scopeForRound($query, int $round): \Illuminate\Database\Eloquent\Builder
     {
@@ -362,6 +376,8 @@ class ProposalReviewer extends Model
 
     /**
      * Scope for current (latest) round.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
      */
     public function scopeCurrentRound($query): \Illuminate\Database\Eloquent\Builder
     {

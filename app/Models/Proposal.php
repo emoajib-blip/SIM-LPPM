@@ -526,6 +526,8 @@ class Proposal extends Model
 
     /**
      * Scope for academic year.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
      */
     public function scopeForAcademicYear($query, string $year): \Illuminate\Database\Eloquent\Builder
     {
@@ -534,6 +536,8 @@ class Proposal extends Model
 
     /**
      * Scope for semester.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
      */
     public function scopeForSemester($query, string $semester): \Illuminate\Database\Eloquent\Builder
     {

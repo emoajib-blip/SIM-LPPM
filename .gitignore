@@ -27,6 +27,7 @@ TestResults.xml
 /public/storage
 /storage/*.key
 /storage/pail
+/storage/backups/
 /vendor
 .env
 .env.backup

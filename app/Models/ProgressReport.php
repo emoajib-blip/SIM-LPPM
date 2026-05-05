@@ -124,16 +124,20 @@ class ProgressReport extends Model implements HasMedia
 
     /**
      * Scope a query to only include final reports.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProgressReport>
      */
-    public function scopeFinalReports($query)
+    public function scopeFinalReports($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('reporting_period', 'final');
     }
 
     /**
      * Scope a query to only include progress reports (exclude final).
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProgressReport>
      */
-    public function scopeProgressReports($query)
+    public function scopeProgressReports($query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->whereIn('reporting_period', ['semester_1', 'semester_2', 'annual']);
     }
