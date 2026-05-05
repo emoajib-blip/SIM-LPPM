@@ -50,7 +50,7 @@ class Show extends Component
         }
 
         // Eager load relationships to prevent N+1 queries
-        $proposal->load(['dailyNotes', 'progressReports', 'teamMembers.user', 'reviewers.user']);
+        $proposal->load(['dailyNotes', 'progressReports', 'teamMembers', 'reviewers.user']);
         $this->proposal = $proposal;
         $this->activity_date = date('Y-m-d');
     }

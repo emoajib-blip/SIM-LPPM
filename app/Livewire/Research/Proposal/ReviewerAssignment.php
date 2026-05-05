@@ -36,7 +36,7 @@ class ReviewerAssignment extends Component
     #[Computed]
     public function proposal(): ?Proposal
     {
-        return Proposal::with(['reviewers.user', 'teamMembers.user'])->find($this->proposalId);
+        return Proposal::with(['reviewers.user', 'teamMembers'])->find($this->proposalId);
     }
 
     /**
