@@ -133,9 +133,9 @@
                                                 </div>
                                                 <div class="small text-muted mb-2">
                                                     @if($eligibility['schedule']['research_dates']['start'])
-                                                        {{ \Carbon\Carbon::parse($eligibility['schedule']['research_dates']['start'])->format('d M') }}
+                                                        {{ $eligibility['schedule']['research_dates']['start'] ? \Carbon\Carbon::parse($eligibility['schedule']['research_dates']['start'])->format('d M') : '-' }}
                                                         -
-                                                        {{ \Carbon\Carbon::parse($eligibility['schedule']['research_dates']['end'])->format('d M Y') }}
+                                                        {{ $eligibility['schedule']['research_dates']['end'] ? \Carbon\Carbon::parse($eligibility['schedule']['research_dates']['end'])->format('d M Y') : '-' }}
                                                     @else
                                                         Jadwal belum dikonfigurasi
                                                     @endif
