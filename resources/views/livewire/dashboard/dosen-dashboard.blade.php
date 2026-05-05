@@ -169,8 +169,56 @@
                                     class="ti ti-user-plus"></i></span>
                         </div>
                         <div class="col">
-                            <div class="fw-bold">Reviewer</div>
-                            <div class="text-muted small">0 Penugasan Aktif</div>
+                            <div class="fw-bold">Penelitian Pending</div>
+                            <div class="text-muted small">{{ $stats['research_pending'] }} Menunggu Persetujuan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm border-0 shadow-sm" style="border-radius: 12px;">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-azure-lt text-azure avatar border-0 shadow-sm"><i
+                                    class="ti ti-check"></i></span>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold">Penelitian Disetujui</div>
+                            <div class="text-muted small">{{ $stats['research_approved'] }} Disetujui</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm border-0 shadow-sm" style="border-radius: 12px;">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-yellow-lt text-yellow avatar border-0 shadow-sm"><i
+                                    class="ti ti-user-plus"></i></span>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold">PKM Pending</div>
+                            <div class="text-muted small">{{ $stats['community_service_pending'] }} Menunggu Persetujuan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card card-sm border-0 shadow-sm" style="border-radius: 12px;">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-teal-lt text-teal avatar border-0 shadow-sm"><i
+                                    class="ti ti-check"></i></span>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold">PKM Disetujui</div>
+                            <div class="text-muted small">{{ $stats['community_service_approved'] }} Disetujui</div>
                         </div>
                     </div>
                 </div>
