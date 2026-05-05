@@ -9,8 +9,10 @@ use App\Models\Proposal;
 use App\Models\ProposalMonev;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Process;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -282,6 +284,52 @@ class AdminDashboard extends Component
             ->filter(fn ($p) => str_contains($p->detailable_type, 'CommunityService'))
             ->take(10)
             ->values();
+    }
+
+    /**
+     * Sinkronisasi data dari server produksi (Hanya di LOCAL)
+     */
+    public function syncFromProduction(): void
+    {
+        if (config('app.env') !== 'local') {
+            return;
+        }
+
+        try {
+            Artisan::call('app:sync-production', ['--force' => true]);
+            $this->loadAnalytics();
+            $this->dispatch('swal', title: 'Berhasil!', text: 'Data dari website berhasil ditarik ke laptop.', icon: 'success');
+        } catch (\Throwable $e) {
+            $this->dispatch('swal', title: 'Gagal!', text: 'Terjadi kesalahan saat sinkronisasi: '.$e->getMessage(), icon: 'error');
+        }
+    }
+
+    /**
+     * Download backup database (Hanya di PRODUCTION)
+     */
+    public function downloadDatabaseBackup(): mixed
+    {
+        if (config('app.env') === 'local') {
+            return;
+        }
+
+        $filename = 'backup_db_'.date('Y-m-d_His').'.sql';
+        $path = storage_path('app/'.$filename);
+
+        $dbName = config('database.connections.mysql.database');
+        $dbUser = config('database.connections.mysql.username');
+        $dbPass = config('database.connections.mysql.password');
+
+        $command = "mysqldump -u $dbUser -p$dbPass $dbName > $path";
+        Process::run($command);
+
+        if (! file_exists($path)) {
+            $this->dispatch('swal', title: 'Gagal!', text: 'Gagal membuat file backup.', icon: 'error');
+
+            return;
+        }
+
+        return response()->download($path)->deleteFileAfterSend(true);
     }
 
     public function render()

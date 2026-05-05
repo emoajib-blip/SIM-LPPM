@@ -23,6 +23,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <!-- END CUSTOM FONT -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -75,6 +76,20 @@
                 if (url) {
                     window.open(url, '_blank');
                 }
+            });
+
+            Livewire.on('swal', (event) => {
+                const data = Array.isArray(event) ? event[0] : event;
+                Swal.fire({
+                    title: data.title || 'Notification',
+                    text: data.text || '',
+                    icon: data.icon || 'info',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
             });
         });
     </script>
