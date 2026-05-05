@@ -69,6 +69,8 @@ class ProfileForm extends Component
      */
     public function mount(): void
     {
+        \Log::info('ProfileForm mounted for user '.Auth::id());
+
         $user = Auth::user();
 
         // Load basic user data
