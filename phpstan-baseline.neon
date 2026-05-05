@@ -2455,12 +2455,6 @@ parameters:
 			path: app/Livewire/CommunityService/Proposal/ReviewerForm.php
 
 		-
-			message: '#^Method App\\Livewire\\CommunityService\\Proposal\\ReviewerForm\:\:allReviewLogs\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/CommunityService/Proposal/ReviewerForm.php
-
-		-
 			message: '#^Method App\\Livewire\\CommunityService\\Proposal\\ReviewerForm\:\:allReviews\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -2510,12 +2504,6 @@ parameters:
 
 		-
 			message: '#^PHPDoc tag @property\-read for property App\\Livewire\\CommunityService\\Proposal\\ReviewerForm\:\:\$activeCriterias contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Livewire/CommunityService/Proposal/ReviewerForm.php
-
-		-
-			message: '#^PHPDoc tag @property\-read for property App\\Livewire\\CommunityService\\Proposal\\ReviewerForm\:\:\$allReviewLogs contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 1
 			path: app/Livewire/CommunityService/Proposal/ReviewerForm.php
@@ -5149,20 +5137,8 @@ parameters:
 			path: app/Livewire/Research/Proposal/Edit.php
 
 		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\KepalaLppmFinalDecision\:\:pendingReviewers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/KepalaLppmFinalDecision.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\KepalaLppmFinalDecision\:\:proposal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/KepalaLppmFinalDecision.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\KepalaLppmFinalDecision\:\:reviewSummary\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method App\\Livewire\\Research\\Proposal\\KepalaLppmFinalDecision\:\:reviewSummary\(\) should return Illuminate\\Support\\Collection\<int\|string, int\> but returns Illuminate\\Support\\Collection\<\(int\|string\), int\<0, max\>\>\.$#'
+			identifier: return.type
 			count: 1
 			path: app/Livewire/Research/Proposal/KepalaLppmFinalDecision.php
 
@@ -5191,24 +5167,6 @@ parameters:
 			path: app/Livewire/Research/Proposal/ReviewForm.php
 
 		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerAssignment\:\:availableReviewers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerAssignment.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerAssignment\:\:currentReviewers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerAssignment.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerAssignment\:\:proposal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerAssignment.php
-
-		-
 			message: '#^PHPDoc tag @property\-read for property App\\Livewire\\Research\\Proposal\\ReviewerAssignment\:\:\$availableReviewers contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 1
@@ -5222,48 +5180,6 @@ parameters:
 
 		-
 			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:activeCriterias\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:allReviewLogs\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:allReviews\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:deadline\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:getScoresForRound\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:myReview\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:previousRoundLogs\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:proposal\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/Livewire/Research/Proposal/ReviewerForm.php
@@ -5287,19 +5203,7 @@ parameters:
 			path: app/Livewire/Research/Proposal/ReviewerForm.php
 
 		-
-			message: '#^PHPDoc tag @property\-read for property App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:\$allReviewLogs contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
 			message: '#^PHPDoc tag @property\-read for property App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:\$allReviews contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Livewire/Research/Proposal/ReviewerForm.php
-
-		-
-			message: '#^PHPDoc tag @property\-read for property App\\Livewire\\Research\\Proposal\\ReviewerForm\:\:\$previousRoundLogs contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 1
 			path: app/Livewire/Research/Proposal/ReviewerForm.php
@@ -5387,36 +5291,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: app/Livewire/Research/Proposal/TeamMemberInvitation.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\TeamMemberInvitations\:\:acceptedMembers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/TeamMemberInvitations.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\TeamMemberInvitations\:\:pendingInvitations\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/TeamMemberInvitations.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\TeamMemberInvitations\:\:proposal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/TeamMemberInvitations.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\TeamMemberInvitations\:\:rejectedMembers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/TeamMemberInvitations.php
-
-		-
-			message: '#^Method App\\Livewire\\Research\\Proposal\\TeamMemberInvitations\:\:teamMembers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Research/Proposal/TeamMemberInvitations.php
 
 		-
 			message: '#^PHPDoc tag @property\-read for property App\\Livewire\\Research\\Proposal\\TeamMemberInvitations\:\:\$acceptedMembers contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
@@ -6793,20 +6667,8 @@ parameters:
 			path: app/Models/ProgressReport.php
 
 		-
-			message: '#^Method App\\Models\\ProgressReport\:\:scopeFinalReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProgressReport.php
-
-		-
 			message: '#^Method App\\Models\\ProgressReport\:\:scopeFinalReports\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ProgressReport.php
-
-		-
-			message: '#^Method App\\Models\\ProgressReport\:\:scopeProgressReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Models/ProgressReport.php
 
@@ -6831,30 +6693,6 @@ parameters:
 		-
 			message: '#^Class App\\Models\\Proposal has PHPDoc tag @property for property \$student_members with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Models/Proposal.php
-
-		-
-			message: '#^Method App\\Models\\Proposal\:\:scopeForAcademicYear\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/Proposal.php
-
-		-
-			message: '#^Method App\\Models\\Proposal\:\:scopeForAcademicYear\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Models/Proposal.php
-
-		-
-			message: '#^Method App\\Models\\Proposal\:\:scopeForSemester\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/Proposal.php
-
-		-
-			message: '#^Method App\\Models\\Proposal\:\:scopeForSemester\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: app/Models/Proposal.php
 
@@ -6895,12 +6733,6 @@ parameters:
 			path: app/Models/ProposalReviewer.php
 
 		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:latestLog\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
 			message: '#^Method App\\Models\\ProposalReviewer\:\:logs\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
 			identifier: missingType.generics
 			count: 1
@@ -6913,44 +6745,14 @@ parameters:
 			path: app/Models/ProposalReviewer.php
 
 		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeCompleted\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeCompleted\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeCurrentRound\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
 			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeCurrentRound\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/Models/ProposalReviewer.php
 
 		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeDeadlineApproaching\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
 			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeDeadlineApproaching\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeForReviewer\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Models/ProposalReviewer.php
 
@@ -6967,20 +6769,8 @@ parameters:
 			path: app/Models/ProposalReviewer.php
 
 		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeForRound\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
 			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeForRound\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeOverdue\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Models/ProposalReviewer.php
 
@@ -6991,20 +6781,8 @@ parameters:
 			path: app/Models/ProposalReviewer.php
 
 		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopePending\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
 			message: '#^Method App\\Models\\ProposalReviewer\:\:scopePending\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ProposalReviewer.php
-
-		-
-			message: '#^Method App\\Models\\ProposalReviewer\:\:scopeRequiresAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Models/ProposalReviewer.php
 
@@ -7045,12 +6823,6 @@ parameters:
 			path: app/Models/ProposalStatusLog.php
 
 		-
-			message: '#^Method App\\Models\\ProposalStatusLog\:\:scopeByUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProposalStatusLog.php
-
-		-
 			message: '#^Method App\\Models\\ProposalStatusLog\:\:scopeByUser\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7063,12 +6835,6 @@ parameters:
 			path: app/Models/ProposalStatusLog.php
 
 		-
-			message: '#^Method App\\Models\\ProposalStatusLog\:\:scopeForProposal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ProposalStatusLog.php
-
-		-
 			message: '#^Method App\\Models\\ProposalStatusLog\:\:scopeForProposal\(\) has parameter \$proposalId with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7077,12 +6843,6 @@ parameters:
 		-
 			message: '#^Method App\\Models\\ProposalStatusLog\:\:scopeForProposal\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ProposalStatusLog.php
-
-		-
-			message: '#^Method App\\Models\\ProposalStatusLog\:\:scopeWithinDateRange\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Models/ProposalStatusLog.php
 
@@ -7183,56 +6943,14 @@ parameters:
 			path: app/Models/ReviewLog.php
 
 		-
-			message: '#^Method App\\Models\\ReviewLog\:\:scopeCompleted\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ReviewLog.php
-
-		-
 			message: '#^Method App\\Models\\ReviewLog\:\:scopeCompleted\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/Models/ReviewLog.php
 
 		-
-			message: '#^Method App\\Models\\ReviewLog\:\:scopeForProposal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ReviewLog.php
-
-		-
-			message: '#^Method App\\Models\\ReviewLog\:\:scopeForProposal\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ReviewLog.php
-
-		-
-			message: '#^Method App\\Models\\ReviewLog\:\:scopeForReviewer\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ReviewLog.php
-
-		-
-			message: '#^Method App\\Models\\ReviewLog\:\:scopeForReviewer\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ReviewLog.php
-
-		-
-			message: '#^Method App\\Models\\ReviewLog\:\:scopeForRound\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/ReviewLog.php
-
-		-
 			message: '#^Method App\\Models\\ReviewLog\:\:scopeForRound\(\) has parameter \$query with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Models/ReviewLog.php
-
-		-
-			message: '#^Method App\\Models\\ReviewLog\:\:scopeLatestRound\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Models/ReviewLog.php
 
@@ -7365,42 +7083,6 @@ parameters:
 		-
 			message: '#^Method App\\Models\\SintaScoreSubmission\:\:identity\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
 			identifier: missingType.generics
-			count: 1
-			path: app/Models/SintaScoreSubmission.php
-
-		-
-			message: '#^Method App\\Models\\SintaScoreSubmission\:\:scopeApproved\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/SintaScoreSubmission.php
-
-		-
-			message: '#^Method App\\Models\\SintaScoreSubmission\:\:scopeApproved\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Models/SintaScoreSubmission.php
-
-		-
-			message: '#^Method App\\Models\\SintaScoreSubmission\:\:scopePending\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/SintaScoreSubmission.php
-
-		-
-			message: '#^Method App\\Models\\SintaScoreSubmission\:\:scopePending\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Models/SintaScoreSubmission.php
-
-		-
-			message: '#^Method App\\Models\\SintaScoreSubmission\:\:scopeRejected\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Models/SintaScoreSubmission.php
-
-		-
-			message: '#^Method App\\Models\\SintaScoreSubmission\:\:scopeRejected\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: app/Models/SintaScoreSubmission.php
 

@@ -530,20 +530,8 @@ class Proposal extends Model
      * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
      */
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     */
-    public function scopeForAcademicYear($query, string $year): \Illuminate\Database\Eloquent\Builder
-    {
-        return $query->where('start_year', $year);
-    }
-
-    /**
-     * Scope for semester.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
-     */
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder<Proposal>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<Proposal>
      */
     public function scopeForSemester($query, string $semester): \Illuminate\Database\Eloquent\Builder
     {

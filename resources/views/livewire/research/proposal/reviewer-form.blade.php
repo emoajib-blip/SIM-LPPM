@@ -148,7 +148,7 @@
                                             </small>
                                             @if ($review->completed_at)
                                                 <small class="text-muted italic">
-                                                    Diselesaikan pada: {{ $review->completed_at->format('d M Y H:i') }}
+                                                     Diselesaikan pada: {{ \Carbon\Carbon::parse($review->completed_at)->format('d M Y H:i') }}
                                                 </small>
                                             @endif
                                         </div>
@@ -296,7 +296,7 @@
                                                                 </small>
                                                                 @if ($log->completed_at)
                                                                     <small class="text-muted italic">
-                                                                        {{ $log->completed_at->format('d M Y H:i') }}
+                                                                         {{ \Carbon\Carbon::parse($log->completed_at)->format('d M Y H:i') }}
                                                                     </small>
                                                                 @endif
                                                             </div>
@@ -372,7 +372,7 @@
                                     <div class="text-secondary small">Batas Waktu:</div>
                                     <div class="fw-bold {{ $this->isOverdue ? 'text-danger' : 'text-body' }}">
                                         <x-lucide-calendar class="me-1 icon" />
-                                        {{ $this->deadline->format('d M Y') }}
+                                        {{ \Carbon\Carbon::parse($this->deadline)->format('d M Y') }}
                                         @if ($this->isOverdue)
                                             <span class="bg-danger-lt ms-1 badge">Terlambat!</span>
                                         @elseif($this->daysRemaining !== null)
