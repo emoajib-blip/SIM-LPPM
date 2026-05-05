@@ -449,15 +449,15 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($proposal->status->value === 'approved')
+                                                @if ($proposal->status === \App\Enums\ProposalStatus::APPROVED)
                                                     <x-tabler.badge color="success">Disetujui</x-tabler.badge>
-                                                @elseif($proposal->status->value === 'rejected')
+                                                @elseif($proposal->status === \App\Enums\ProposalStatus::REJECTED)
                                                     <x-tabler.badge color="danger">Ditolak</x-tabler.badge>
-                                                @elseif($proposal->status->value === 'submitted')
+                                                @elseif($proposal->status === \App\Enums\ProposalStatus::SUBMITTED)
                                                     <x-tabler.badge color="warning">Menunggu Review</x-tabler.badge>
-                                                @elseif($proposal->status->value === 'reviewed')
+                                                @elseif($proposal->status === \App\Enums\ProposalStatus::REVIEWED)
                                                     <x-tabler.badge color="info">Sudah Direview</x-tabler.badge>
-                                                @elseif($proposal->status->value === 'completed')
+                                                @elseif($proposal->status === \App\Enums\ProposalStatus::COMPLETED)
                                                     <x-tabler.badge color="success">Selesai</x-tabler.badge>
                                                 @else
                                                     <x-tabler.badge

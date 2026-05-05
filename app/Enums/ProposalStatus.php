@@ -4,16 +4,16 @@ namespace App\Enums;
 
 enum ProposalStatus: string
 {
-    case DRAFT = 'draft';
-    case SUBMITTED = 'submitted';
-    case NEED_ASSIGNMENT = 'need_assignment';
-    case APPROVED = 'approved';
-    case WAITING_REVIEWER = 'waiting_reviewer';
-    case UNDER_REVIEW = 'under_review';
-    case REVIEWED = 'reviewed';
-    case REVISION_NEEDED = 'revision_needed';
-    case COMPLETED = 'completed';
-    case REJECTED = 'rejected';
+    case DRAFT = 'DRAFT';
+    case SUBMITTED = 'SUBMITTED';
+    case NEED_ASSIGNMENT = 'NEED_ASSIGNMENT';
+    case APPROVED = 'APPROVED';
+    case WAITING_REVIEWER = 'WAITING_REVIEWER';
+    case UNDER_REVIEW = 'UNDER_REVIEW';
+    case REVIEWED = 'REVIEWED';
+    case REVISION_NEEDED = 'REVISION_NEEDED';
+    case COMPLETED = 'COMPLETED';
+    case REJECTED = 'REJECTED';
 
     /**
      * Mendapatkan label dalam bahasa Indonesia

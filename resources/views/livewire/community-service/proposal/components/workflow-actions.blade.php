@@ -16,7 +16,7 @@
     </div>
 
     <!-- Dekan Approval (Status: SUBMITTED) -->
-    @if (auth()->user()->hasRole(['dekan']) && $proposal->status->value === 'submitted')
+    @if (auth()->user()->hasRole(['dekan']) && $proposal->status === \App\Enums\ProposalStatus::SUBMITTED)
         <div class="mb-3 card">
             <div class="card-header">
                 <h3 class="card-title">Persetujuan Dekan</h3>
@@ -65,7 +65,7 @@
     @endif
 
     <!-- Kepala LPPM Initial Approval -->
-    @if (auth()->user()->hasRole(['kepala lppm']) && $proposal->status->value === 'approved')
+    @if (auth()->user()->hasRole(['kepala lppm']) && $proposal->status === \App\Enums\ProposalStatus::APPROVED)
         <div class="mb-3">
             <livewire:community-service.proposal.kepala-lppm-initial-approval :proposalId="$proposal->id"
                 :key="'initial-approval-' . $proposal->id" />
@@ -73,7 +73,7 @@
     @endif
 
     <!-- Kepala LPPM Final Decision -->
-    @if (auth()->user()->hasRole(['kepala lppm']) && $proposal->status->value === 'reviewed')
+    @if (auth()->user()->hasRole(['kepala lppm']) && $proposal->status === \App\Enums\ProposalStatus::REVIEWED)
         <div class="mb-3">
             <livewire:community-service.proposal.kepala-lppm-final-decision :proposalId="$proposal->id"
                 :key="'final-decision-' . $proposal->id" />
@@ -98,7 +98,7 @@
                         </p>
                     </div>
 
-                    @if ($proposal->status->value === 'draft')
+                    @if ($proposal->status === \App\Enums\ProposalStatus::DRAFT)
                         <livewire:community-service.proposal.submit-button :proposalId="$proposal->id"
                             :key="'submit-button-' . $proposal->id" />
                     @endif
