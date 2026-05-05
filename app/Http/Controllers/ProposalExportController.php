@@ -322,6 +322,13 @@ class ProposalExportController extends Controller
                 [
                     'signed_role' => $role,
                     'action' => $action,
+                    'variant' => 'final',
+                ],
+                [
+                    'signed_by' => $user->id,
+                    'signed_at' => $signedAt,
+                    'hash_alg' => 'sha256',
+                    'document_hash' => $hash,
                     'kid' => $kid,
                     'payload' => $payload,
                     'signature' => $this->signatureService->signPayload($payload, $kid),
