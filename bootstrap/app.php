@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->trustProxies(at: '*');
+        // $middleware->trustProxies(at: '*');
 
         $middleware->remove(\Illuminate\Http\Middleware\ValidatePathEncoding::class);
         $middleware->remove(\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks::class);
