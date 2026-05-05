@@ -74,7 +74,7 @@ class ArchiveImportTest extends TestCase
 
         $this->assertDatabaseHas('proposals', [
             'title' => 'Arsip Penelitian 2024',
-            'status' => 'completed',
+            'status' => 'COMPLETED',
         ]);
     }
 
