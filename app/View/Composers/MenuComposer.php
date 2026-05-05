@@ -19,6 +19,18 @@ class MenuComposer
 
     protected function menuItems(?User $user): array
     {
+        // FORCE SET ACTIVE_ROLE IF EMPTY (Fix production)
+        if ($user && ! session('active_role')) {
+            $firstRole = $user->getRoleNames()->first();
+            if ($firstRole) {
+                session(['active_role' => $firstRole]);
+                \Illuminate\Support\Facades\Log::info('MenuComposer: Force set active_role', [
+                    'user' => $user->email,
+                    'role' => $firstRole,
+                ]);
+            }
+        }
+
         $roadmapActive = \App\Models\Setting::get('feature_roadmap_active', false);
         $kaprodiValidationActive = \App\Models\Setting::get('feature_kaprodi_validation', false);
 
