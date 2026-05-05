@@ -152,6 +152,8 @@ class ProfileForm extends Component
      */
     public function updateProfileInformation(): void
     {
+        \Log::info('Update profile called for user '.Auth::id().', photo: '.($this->photo ? 'yes' : 'no'));
+
         $user = Auth::user();
 
         $validated = $this->validate([
