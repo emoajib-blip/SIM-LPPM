@@ -73,14 +73,7 @@ class InstallerMiddleware
             return true;
         }
 
-        // 2. Fallback for Cloud Run: Check if database is already provisioned
-        try {
-            // We check for a core table that should exist if installed
-            return \Illuminate\Support\Facades\Schema::hasTable('users') &&
-                \App\Models\User::exists();
-        } catch (\Exception) {
-            return false;
-        }
+        return false;
     }
 
     private function ensureInstallerKey(bool $force = false): void
