@@ -64,7 +64,7 @@ trait WithProposalWizard
             'form.new_partner.country' => 'required|string|max:255',
             'form.new_partner.type' => ['required', 'string', 'max:255', \Illuminate\Validation\Rule::in(\App\Constants\ProposalConstants::PARTNER_TYPES)],
             'form.new_partner.address' => 'nullable|string',
-            'form.new_partner_commitment_file' => ($isPkm ? 'required' : 'nullable').'|file|mimes:pdf|max:5120',
+            'form.new_partner_commitment_file' => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
         DB::transaction(function () {
