@@ -7,7 +7,7 @@ use App\Livewire\Abstracts\ProposalCreate;
 
 class Edit extends ProposalCreate
 {
-    public string $proposalApprovalMode = 'new';
+    public string $componentId = '';
 
     protected function getProposalType(): string
     {
@@ -84,7 +84,7 @@ class Edit extends ProposalCreate
                     }
                 },
             ],
-            'form.outputs.*.status' => 'required|string|max:255',
+            'form.outputs.*.status' => ['required', \Illuminate\Validation\Rule::in(ProposalConstants::OUTPUT_STATUSES)],
             'form.outputs.*.description' => 'required|string|max:2000',
         ];
     }

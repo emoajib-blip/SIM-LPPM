@@ -53,11 +53,8 @@ abstract class ProposalCreate extends Component
 
     public int $fileInputIteration = 0;
 
-    #[Computed]
-    public function proposalApprovalMode(): string
-    {
-        return \App\Models\Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
-    }
+    /** Approval mode: 'new', 'revision', or 'resubmission' */
+    public string $proposalApprovalMode = 'new';
 
     public string $author_name = '';
 
