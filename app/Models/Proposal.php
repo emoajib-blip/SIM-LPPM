@@ -615,7 +615,7 @@ class Proposal extends Model
         $researchTree = $roadmap['research_tree'] ?? null;
         if ($researchTree) {
             $treeArray = is_array($researchTree) ? $researchTree : array_map('trim', explode(',', $researchTree));
-            if (count($treeArray) > 0) {
+            if (is_array($treeArray) && $treeArray !== []) {
                 $totalChecks++;
                 $researchTree = array_map('strtolower', $treeArray);
 
@@ -639,12 +639,13 @@ class Proposal extends Model
         }
 
         $priorities = $roadmap['priorities'] ?? null;
-        if ($priorities !== null && is_array($priorities) && count($priorities) > 0) {
+        if (is_array($priorities) && $priorities !== []) {
             $totalChecks++;
             $currentYear = now()->year;
 
             foreach ($priorities as $priority) {
-                if (($priority['year'] ?? 0) == $currentYear) {
+                $priorityYear = $priority['year'] ?? 0;
+                if ($priorityYear == $currentYear) {
                     $themes = strtolower($priority['themes'] ?? '');
                     $proposalTitle = strtolower($this->title);
                     $proposalSummary = $this->summary !== null ? strtolower($this->summary) : '';

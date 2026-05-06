@@ -82,6 +82,7 @@ class Login extends Component
             $this->captcha = '';
             $this->math_answer = '';
             $this->generateMathQuestion();
+            $this->dispatch('resetTurnstile');
             throw $e;
         }
 

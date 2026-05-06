@@ -87,6 +87,14 @@
                                     function onTurnstileFinished(token) {
                                         @this.set('captcha', token);
                                     }
+
+                                    document.addEventListener('livewire:initialized', () => {
+                                        Livewire.on('resetTurnstile', () => {
+                                            if (typeof window.turnstile !== 'undefined') {
+                                                window.turnstile.reset();
+                                            }
+                                        });
+                                    });
                                 </script>
                             @else
                                 <div class="mb-4 bg-light p-3 rounded-3 border-dashed border-2">
