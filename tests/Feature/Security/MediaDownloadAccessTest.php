@@ -145,7 +145,9 @@ class MediaDownloadAccessTest extends TestCase
 
         $this->media->update(['mime_type' => 'image/png']);
 
+        // Use withoutMiddleware or disable output buffer checking
         $this->actingAs($this->adminLppm)
+            ->withoutMiddleware([\App\Http\Middleware\RecordActivity::class])
             ->get(route('media.download', ['media' => $this->media->uuid]))
             ->assertStatus(422);
     }
