@@ -31,7 +31,13 @@ class MasterDataService
 
     public function communityServiceSchemes(): Collection
     {
-        return $this->cache['community_service_schemes'] ??= CommunityServiceScheme::all();
+        try {
+            return $this->cache['community_service_schemes'] ??= CommunityServiceScheme::all();
+        } catch (\Exception $e) {
+            \Log::error('Failed to load community service schemes: '.$e->getMessage());
+
+            return collect(); // Return empty collection instead of crashing
+        }
     }
 
     public function focusAreas(?string $proposalType = null): Collection

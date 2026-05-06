@@ -6,6 +6,8 @@ use App\Livewire\Abstracts\ProposalCreate;
 
 class Edit extends ProposalCreate
 {
+    public string $proposalApprovalMode = 'new';
+
     public string $componentId = '';
 
     public function mount(?string $proposalId = null, ?\App\Models\Proposal $proposal = null): void

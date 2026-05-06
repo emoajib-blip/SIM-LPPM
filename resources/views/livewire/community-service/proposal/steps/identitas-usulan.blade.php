@@ -132,7 +132,7 @@
                 </div>
             </div>
 
-            @if(\App\Models\Setting::get('feature_roadmap_active', false))
+            @if(config('features.roadmap_active', false))
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label class="form-label d-flex align-items-center gap-2" for="study_program_roadmap">

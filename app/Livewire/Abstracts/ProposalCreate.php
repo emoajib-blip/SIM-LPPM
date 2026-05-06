@@ -53,6 +53,12 @@ abstract class ProposalCreate extends Component
 
     public int $fileInputIteration = 0;
 
+    #[Computed]
+    public function proposalApprovalMode(): string
+    {
+        return \App\Models\Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
+    }
+
     public string $author_name = '';
 
     public array $budgetValidationErrors = [];
