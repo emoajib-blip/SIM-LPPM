@@ -11,7 +11,7 @@ enum ReviewStatus: string
 {
     case PENDING = 'pending';
     case IN_PROGRESS = 'in_progress';
-    case COMPLETED = 'COMPLETED';
+    case COMPLETED = 'completed';
     case RE_REVIEW_REQUESTED = 're_review_requested';
 
     /**

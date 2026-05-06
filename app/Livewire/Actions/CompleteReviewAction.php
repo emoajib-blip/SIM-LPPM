@@ -37,7 +37,7 @@ class CompleteReviewAction
             ];
         }
 
-        $validRecommendations = ['APPROVED', 'REJECTED', 'REVISION_NEEDED'];
+        $validRecommendations = ['approved', 'rejected', 'revision_needed'];
         if (! in_array($recommendation, $validRecommendations)) {
             return [
                 'success' => false,

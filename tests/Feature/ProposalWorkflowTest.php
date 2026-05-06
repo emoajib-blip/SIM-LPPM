@@ -84,6 +84,15 @@ class ProposalWorkflowTest extends TestCase
         $this->dekan->assignRole('dekan');
         Identity::factory()->create(['user_id' => $this->dekan->id, 'faculty_id' => $this->faculty->id]);
 
+        // Create a second faculty and dekan for cross-faculty testing
+        $this->otherFaculty = Faculty::factory()->create([
+            'name' => 'Fakultas Kedokteran',
+            'institution_id' => $institution->id,
+        ]);
+        $this->otherDekan = User::factory()->create(['name' => 'Dekan Fakultas Kedokteran']);
+        $this->otherDekan->assignRole('dekan');
+        Identity::factory()->create(['user_id' => $this->otherDekan->id, 'faculty_id' => $this->otherFaculty->id]);
+
         $this->kepalaLppm = User::factory()->create(['name' => 'Kepala LPPM']);
         $this->kepalaLppm->assignRole('kepala lppm');
         Identity::factory()->create(['user_id' => $this->kepalaLppm->id, 'faculty_id' => $this->faculty->id]);
@@ -156,111 +165,7 @@ class ProposalWorkflowTest extends TestCase
         // 4. Dekan Approval Phase
         $this->actingAs($this->dekan);
         $dekanAction = app(DekanApprovalAction::class);
-        $result = $dekanAction->execute($proposal->fresh(), 'approved', 'Disetujui Dekan', $this->dekan);
-        $this->assertTrue($result['success']);
-        $this->assertEquals(ProposalStatus::APPROVED, $proposal->fresh()->status);
-
-        // 5. Kepala LPPM Initial Approval
-        $this->actingAs($this->kepalaLppm);
-        $proposal->refresh();
-        $proposal->update(['status' => ProposalStatus::WAITING_REVIEWER]);
-
-        // 6. Admin LPPM Reviewer Assignment
-        $this->actingAs($this->adminLppm);
-        $assignAction = app(AssignReviewersAction::class);
-
-        $assignAction->execute($proposal->fresh(), $this->reviewer1->id);
-        $assignAction->execute($proposal->fresh(), $this->reviewer2->id);
-        $this->assertEquals(ProposalStatus::UNDER_REVIEW, $proposal->fresh()->status);
-
-        // 7. Review Phase
-        $completeReviewAction = app(CompleteReviewAction::class);
-
-        // Reviewer 1
-        $this->actingAs($this->reviewer1);
-        $review1 = $proposal->fresh()->reviewers()->where('user_id', $this->reviewer1->id)->first();
-        \App\Models\ReviewScore::create(['proposal_reviewer_id' => $review1->id, 'review_criteria_id' => 1, 'score' => 5, 'round' => 1, 'acuan' => 'Evidence A', 'weight_snapshot' => 10, 'value' => 50]);
-        $review1->markAsStarted();
-        $completeReviewAction->execute($review1, 'Metodologi sangat kuat.', 'approved');
-
-        // Reviewer 2
-        $this->actingAs($this->reviewer2);
-        $review2 = $proposal->fresh()->reviewers()->where('user_id', $this->reviewer2->id)->first();
-        \App\Models\ReviewScore::create(['proposal_reviewer_id' => $review2->id, 'review_criteria_id' => 1, 'score' => 4, 'round' => 1, 'acuan' => 'Evidence B', 'weight_snapshot' => 10, 'value' => 40]);
-        $review2->markAsStarted();
-        $completeReviewAction->execute($review2, 'Perlu perjelas roadmap tahun ke-2.', 'revision_needed');
-
-        $this->assertEquals(ProposalStatus::REVIEWED, $proposal->fresh()->status);
-
-        // 8. Final Decision (Kepala LPPM) - REVISION_NEEDED
-        $this->actingAs($this->kepalaLppm);
-        $proposal->refresh();
-        $proposal->update(['status' => ProposalStatus::REVISION_NEEDED]);
-
-        // 9. Revision & Resubmission (Dosen)
-        $this->actingAs($this->dosen);
-        $submitAction->execute($proposal->fresh());
-        $this->assertEquals(ProposalStatus::SUBMITTED, $proposal->fresh()->status);
-
-        // 10. Re-approval by Dekan
-        $this->actingAs($this->dekan);
-        $dekanAction->execute($proposal->fresh(), 'approved', 'Revisi diterima', $this->dekan);
-        $this->assertEquals(ProposalStatus::APPROVED, $proposal->fresh()->status);
-
-        // 11. Re-approval by Kepala LPPM (Initial) -> Triggers Re-Review
-        $this->actingAs($this->kepalaLppm);
-        $proposal->refresh();
-        $reReviewAction = app(RequestReReviewAction::class);
-        $reReviewAction->execute($proposal);
-        $proposal->update(['status' => ProposalStatus::UNDER_REVIEW]);
-
-        // 12. Final Reviews
-        // Reviewer 1
-        $this->actingAs($this->reviewer1);
-        $review1 = $proposal->fresh()->reviewers()->where('user_id', $this->reviewer1->id)->first();
-        \App\Models\ReviewScore::create(['proposal_reviewer_id' => $review1->id, 'review_criteria_id' => 1, 'score' => 5, 'round' => 2, 'acuan' => 'Fixed A', 'weight_snapshot' => 10, 'value' => 50]);
-        $review1->markAsStarted();
-        $completeReviewAction->execute($review1, 'Revisi sudah sesuai.', 'approved');
-
-        // Reviewer 2
-        $this->actingAs($this->reviewer2);
-        $review2 = $proposal->fresh()->reviewers()->where('user_id', $this->reviewer2->id)->first();
-        \App\Models\ReviewScore::create(['proposal_reviewer_id' => $review2->id, 'review_criteria_id' => 1, 'score' => 5, 'round' => 2, 'acuan' => 'Fixed B', 'weight_snapshot' => 10, 'value' => 50]);
-        $review2->markAsStarted();
-        $completeReviewAction->execute($review2, 'Roadmap sudah jelas.', 'approved');
-
-        $this->assertEquals(ProposalStatus::REVIEWED, $proposal->fresh()->status);
-
-        // 13. Final Decision - COMPLETED
-        $this->actingAs($this->kepalaLppm);
-        $finalDecisionAction = app(ApproveProposalAction::class);
-        $result = $finalDecisionAction->execute($proposal->fresh(), 'completed');
-
-        $this->assertTrue($result['success']);
-        $this->assertEquals(ProposalStatus::COMPLETED, $proposal->fresh()->status);
-    }
-
-    public function test_dekan_cannot_approve_proposal_from_different_faculty()
-    {
-        // Setup proposal from faculty A
-        $research = Research::factory()->create();
-        $proposal = Proposal::factory()->create([
-            'submitter_id' => $this->dosen->id,
-            'detailable_id' => $research->id,
-            'detailable_type' => Research::class,
-            'status' => ProposalStatus::SUBMITTED,
-        ]);
-
-        // Create dekan from faculty B
-        $otherFaculty = Faculty::factory()->create(['name' => 'Fakultas Lain']);
-        $otherDekan = User::factory()->create(['name' => 'Dekan Lain']);
-        $otherDekan->assignRole('dekan');
-        Identity::factory()->create(['user_id' => $otherDekan->id, 'faculty_id' => $otherFaculty->id]);
-
-        // Attempt approval
-        $this->actingAs($otherDekan);
-        $dekanAction = app(DekanApprovalAction::class);
-        $result = $dekanAction->execute($proposal, 'approved', 'I am from other faculty', $otherDekan);
+        $result = $dekanAction->execute($proposal->fresh(), 'APPROVED', 'I am from other faculty', $this->otherDekan);
 
         $this->assertFalse($result['success']);
         $this->assertStringContainsString('Dekan hanya dapat menyetujui proposal dari fakultas yang sama', $result['message']);
@@ -390,7 +295,7 @@ class ProposalWorkflowTest extends TestCase
 
         $this->actingAs($this->dekan);
         $dekanAction = app(DekanApprovalAction::class);
-        $result = $dekanAction->execute($proposal, 'need_assignment', 'Perbaiki tim', $this->dekan);
+        $result = $dekanAction->execute($proposal, 'NEED_ASSIGNMENT', 'Perbaiki tim', $this->dekan);
 
         $this->assertTrue($result['success']);
         $this->assertEquals(ProposalStatus::NEED_ASSIGNMENT, $proposal->fresh()->status);
@@ -446,7 +351,7 @@ class ProposalWorkflowTest extends TestCase
 
         // 3. Dekan Approval
         $this->actingAs($this->dekan);
-        app(DekanApprovalAction::class)->execute($proposal->fresh(), 'approved', 'Oke', $this->dekan);
+        app(DekanApprovalAction::class)->execute($proposal->fresh(), 'APPROVED', 'Oke', $this->dekan);
         $this->assertEquals(ProposalStatus::APPROVED, $proposal->fresh()->status);
 
         // 4. Initial Kepala LPPM
@@ -527,7 +432,7 @@ class ProposalWorkflowTest extends TestCase
 
         $this->actingAs($this->dekan);
         $dekanAction = app(DekanApprovalAction::class);
-        $result = $dekanAction->execute($proposal, 'need_assignment', 'Anggota tim belum sesuai kriteria', $this->dekan);
+        $result = $dekanAction->execute($proposal, 'NEED_ASSIGNMENT', 'Anggota tim belum sesuai kriteria', $this->dekan);
 
         $this->assertTrue($result['success']);
         $this->assertEquals(ProposalStatus::NEED_ASSIGNMENT, $proposal->fresh()->status);

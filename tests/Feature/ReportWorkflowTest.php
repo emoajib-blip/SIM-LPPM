@@ -119,7 +119,7 @@ class ReportWorkflowTest extends TestCase
             'proposal_id' => $this->proposal->id,
             'reporting_year' => 2025,
             'reporting_period' => 'semester_1',
-            'status' => 'draft',
+            'status' => \App\Enums\ReportStatus::DRAFT,
             'summary_update' => 'Initial summary',
         ]);
 

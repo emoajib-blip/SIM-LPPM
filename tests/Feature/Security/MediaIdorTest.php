@@ -45,7 +45,7 @@ class MediaIdorTest extends TestCase
             'proposal_id' => $proposal->id,
             'reporting_year' => now()->year,
             'reporting_period' => 'semester_1',
-            'status' => 'draft',
+            'status' => \App\Enums\ReportStatus::DRAFT,
             'summary_update' => 'Test summary',
         ]);
 

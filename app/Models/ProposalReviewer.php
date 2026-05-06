@@ -247,7 +247,7 @@ class ProposalReviewer extends Model
         }
 
         $this->update([
-            'status' => ReviewStatus::IN_PROGRESS,
+            'status' => ReviewStatus::IN_PROGRESS->value,
             'started_at' => now(),
         ]);
     }
@@ -258,7 +258,7 @@ class ProposalReviewer extends Model
     public function complete(string $reviewNotes, string $recommendation): void
     {
         $this->update([
-            'status' => ReviewStatus::COMPLETED,
+            'status' => ReviewStatus::COMPLETED->value,
             'review_notes' => $reviewNotes,
             'recommendation' => $recommendation,
             'completed_at' => now(),
@@ -273,7 +273,7 @@ class ProposalReviewer extends Model
         $currentRound = $this->round ?? 1;
 
         $this->update([
-            'status' => ReviewStatus::RE_REVIEW_REQUESTED,
+            'status' => ReviewStatus::RE_REVIEW_REQUESTED->value,
             'round' => $currentRound + 1,
             'review_notes' => null,
             'recommendation' => null,

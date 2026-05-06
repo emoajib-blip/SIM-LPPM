@@ -75,7 +75,15 @@ class Login extends Component
             }
         }
 
-        $this->validate($rules);
+        try {
+            $this->validate($rules);
+        } catch (ValidationException $e) {
+            // Reset CAPTCHA and math answer on validation failure to allow retry
+            $this->captcha = '';
+            $this->math_answer = '';
+            $this->generateMathQuestion();
+            throw $e;
+        }
 
         // Manual Honey Pot Check
         if (! empty($this->username_honeypot)) {

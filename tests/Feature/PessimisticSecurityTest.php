@@ -100,7 +100,7 @@ class PessimisticSecurityTest extends TestCase
 
         $this->assertFalse($result['success']);
         $this->assertStringContainsString('wajib mengisi skor penilaian', $result['message']);
-        $this->assertNotEquals(ReviewStatus::COMPLETED, $review->fresh()->status);
+        $this->assertNotEquals(ReviewStatus::COMPLETED->value, $review->fresh()->status);
     }
 
     /**

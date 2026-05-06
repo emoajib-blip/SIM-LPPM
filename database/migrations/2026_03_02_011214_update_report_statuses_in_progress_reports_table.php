@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('progress_reports', function (Blueprint $table) {
-            $table->enum('status', ['draft', 'submitted', 'approved_by_dekan', 'approved', 'rejected'])
-                ->default('draft')
+            $table->enum('status', ['DRAFT', 'SUBMITTED', 'approved_by_dekan', 'APPROVED', 'REJECTED'])
+                ->default('DRAFT')
                 ->comment('Status laporan')
                 ->change();
         });

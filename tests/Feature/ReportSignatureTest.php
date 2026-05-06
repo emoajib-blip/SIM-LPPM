@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ReportStatus;
 use App\Models\Faculty;
 use App\Models\Identity;
 use App\Models\ProgressReport;
@@ -71,7 +72,7 @@ class ReportSignatureTest extends TestCase
             'proposal_id' => $proposal->id,
             'reporting_period' => 'final',
             'reporting_year' => date('Y'),
-            'status' => 'approved',
+            'status' => ReportStatus::APPROVED->value,
             'summary_update' => 'Test summary',
         ]);
 
@@ -87,7 +88,7 @@ class ReportSignatureTest extends TestCase
             'document_id' => $report->id,
             'document_type' => get_class($report),
             'signed_role' => 'lecturer',
-            'action' => 'submitted',
+            'action' => 'SUBMITTED',
         ]);
 
         // Verify DocumentSignature created for dekan (since status is approved)
@@ -95,7 +96,7 @@ class ReportSignatureTest extends TestCase
             'document_id' => $report->id,
             'document_type' => get_class($report),
             'signed_role' => 'dekan',
-            'action' => 'approved',
+            'action' => 'APPROVED',
         ]);
 
         // Verify DocumentSignature created for kepala lppm (since status is approved)

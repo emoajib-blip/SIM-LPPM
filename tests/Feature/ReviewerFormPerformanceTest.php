@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ReviewStatus;
 use App\Livewire\Research\Proposal\ReviewerForm;
 use App\Models\Proposal;
 use App\Models\ProposalReviewer;
@@ -26,7 +27,7 @@ test('reviewer form is optimized', function () {
     $assignment = ProposalReviewer::create([
         'proposal_id' => $proposal->id,
         'user_id' => $reviewer->id,
-        'status' => 'completed',
+        'status' => ReviewStatus::COMPLETED->value,
         'round' => 10,
         'assigned_at' => now(),
         'started_at' => now(),

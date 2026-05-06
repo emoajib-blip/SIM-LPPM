@@ -37,7 +37,7 @@ class ReviewEvaluationSignatureTest extends TestCase
         $assignment = ProposalReviewer::create([
             'proposal_id' => $proposal->id,
             'user_id' => $reviewer->id,
-            'status' => ReviewStatus::COMPLETED,
+            'status' => ReviewStatus::COMPLETED->value,
             'review_notes' => 'Catatan review',
             'recommendation' => 'approved',
             'round' => 1,
@@ -73,7 +73,7 @@ class ReviewEvaluationSignatureTest extends TestCase
         $signature = DocumentSignature::query()
             ->where('document_type', $assignment->getMorphClass())
             ->where('document_id', (string) $assignment->id)
-            ->where('action', 'reviewed')
+            ->where('action', 'REVIEWED')
             ->where('signed_role', 'reviewer')
             ->first();
 

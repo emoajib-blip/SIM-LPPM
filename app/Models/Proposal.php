@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ProposalStatus;
+use App\Enums\ReviewStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -442,19 +443,10 @@ class Proposal extends Model
      */
     public function allReviewsCompleted(): bool
     {
-        $stats = $this->reviewers()
-            ->selectRaw('COUNT(*) as total, SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed',
-                ['COMPLETED'])
-            ->first();
+        $total = $this->reviewers()->count();
+        $completed = $this->reviewers()->where('status', ReviewStatus::COMPLETED)->count();
 
-        if (! $stats) {
-            return false;
-        }
-
-        $total = (int) ($stats->total ?? 0);
-        $completed = (int) ($stats->completed ?? 0);
-
-        return $total > 0 && $total === $completed;
+        return $total > 0 && $completed === $total;
     }
 
     /**
