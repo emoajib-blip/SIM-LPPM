@@ -94,7 +94,18 @@ class Login extends Component
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        // Try authentication by email first
+        $credentials = ['email' => $this->email, 'password' => $this->password];
+
+        // If input doesn't look like email, try to find user by identity_id
+        if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $identity = \App\Models\Identity::where('identity_id', $this->email)->first();
+            if ($identity && $identity->user) {
+                $credentials = ['email' => $identity->user->email, 'password' => $this->password];
+            }
+        }
+
+        if (! Auth::attempt($credentials, $this->remember)) {
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
@@ -167,6 +178,14 @@ class Login extends Component
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        // Use the actual email used for authentication
+        $email = $this->email;
+        if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $identity = \App\Models\Identity::where('identity_id', $this->email)->first();
+            if ($identity && $identity->user) {
+                $email = $identity->user->email;
+            }
+        }
+        return Str::transliterate(Str::lower($email).'|'.request()->ip());
     }
 }
