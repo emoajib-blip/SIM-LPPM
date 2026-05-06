@@ -7,6 +7,8 @@ use App\Livewire\Abstracts\ProposalCreate;
 
 class Edit extends ProposalCreate
 {
+    public string $proposalApprovalMode = 'new';
+
     public string $componentId = '';
 
     protected function getProposalType(): string
