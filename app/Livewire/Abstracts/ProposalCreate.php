@@ -522,19 +522,18 @@ abstract class ProposalCreate extends Component
 
     public function downloadPartnerCommitmentTemplate()
     {
-        $url = $this->partnerCommitmentTemplateUrl;
-        if (! $url) {
-            $this->toastError('Template belum tersedia.');
-
-            return;
-        }
-
         $setting = \App\Models\Setting::where('key', 'partner_commitment_template')->first();
         if ($setting && $setting->hasMedia('template')) {
-            return response()->download($setting->getFirstMedia('template')->getPath(), $setting->getFirstMedia('template')->file_name);
+            $media = $setting->getFirstMedia('template');
+            $path = $media->getPath();
+
+            // Check if physical file exists
+            if (file_exists($path)) {
+                return response()->download($path, $media->file_name);
+            }
         }
 
-        return redirect($url);
+        $this->toastError('Template belum tersedia.');
     }
 
     #[Computed]
@@ -547,11 +546,16 @@ abstract class ProposalCreate extends Component
     {
         $setting = \App\Models\Setting::where('key', 'proposal_approval_page_template')->first();
         if ($setting && $setting->hasMedia('template')) {
-            return response()->download($setting->getFirstMedia('template')->getPath(), $setting->getFirstMedia('template')->file_name);
+            $media = $setting->getFirstMedia('template');
+            $path = $media->getPath();
+
+            // Check if physical file exists
+            if (file_exists($path)) {
+                return response()->download($path, $media->file_name);
+            }
         }
 
         $this->toastError('Template belum tersedia.');
-
     }
 
     protected function getStepValidationRules(int $step): array
