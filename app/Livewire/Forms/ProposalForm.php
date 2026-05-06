@@ -163,6 +163,7 @@ class ProposalForm extends Form
         // Load common proposal fields
         $this->title = $proposal->title ?? '';
         $this->research_scheme_id = $proposal->research_scheme_id ?? '';
+        $this->community_service_scheme_id = $proposal->community_service_scheme_id ?? '';
         $this->focus_area_id = $proposal->focus_area_id ?? '';
         $this->theme_id = $proposal->theme_id ?? '';
         $this->topic_id = $proposal->topic_id ?? '';
@@ -472,6 +473,7 @@ class ProposalForm extends Form
             'submitter_id' => $submitterId,
             'detailable_id' => $communityService->id,
             'detailable_type' => CommunityService::class,
+            'community_service_scheme_id' => $this->community_service_scheme_id,
             'focus_area_id' => $this->focus_area_id,
             'theme_id' => $this->theme_id,
             'topic_id' => $this->topic_id,
@@ -608,6 +610,7 @@ class ProposalForm extends Form
             $this->proposal->update([
                 'title' => $this->title,
                 'research_scheme_id' => $this->research_scheme_id ?: null,
+                'community_service_scheme_id' => $this->community_service_scheme_id ?: null,
                 'focus_area_id' => $this->focus_area_id,
                 'theme_id' => $this->theme_id,
                 'topic_id' => $this->topic_id,

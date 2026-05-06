@@ -559,6 +559,7 @@ abstract class ProposalCreate extends Component
             1 => [
                 'form.title' => 'required|string|max:255',
                 'form.research_scheme_id' => $type === 'research' ? 'required|exists:research_schemes,id' : 'nullable|exists:research_schemes,id',
+                'form.community_service_scheme_id' => $type === 'community-service' ? 'required|exists:community_service_schemes,id' : 'nullable|exists:community_service_schemes,id',
                 'form.focus_area_id' => 'required|exists:focus_areas,id',
                 'form.theme_id' => 'required|exists:themes,id',
                 'form.topic_id' => 'required|exists:topics,id',
