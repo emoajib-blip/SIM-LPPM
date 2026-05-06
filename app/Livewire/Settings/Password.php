@@ -37,7 +37,6 @@ class Password extends Component
 
         Auth::user()->update([
             'password' => Hash::make($validated['password']),
-            'original_password' => $validated['password'],
         ]);
 
         \App\Models\ActivityLog::create([

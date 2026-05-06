@@ -92,13 +92,19 @@ abstract class ProposalCreate extends Component
                     $eligibilityService = app(LecturerEligibilityService::class);
                     $eligibility = $eligibilityService->checkEligibility($user);
                     if (! $eligibility['eligible']) {
-                        abort(403, 'Anda tidak memenuhi syarat untuk membuat proposal baru. '.implode(', ', $eligibility['reasons']));
+                        session()->flash('error', 'Anda tidak memenuhi syarat untuk membuat proposal baru. '.implode(', ', $eligibility['reasons']));
+                        $this->redirect(route($this->getIndexRoute()));
+
+                        return;
                     }
 
                     // Then check quota limits for creating new proposals
                     $quotaCheck = app(\App\Services\EligibilityService::class)->canCreateProposal($user, $this->getProposalType());
                     if (! $quotaCheck['can_create']) {
-                        abort(403, $quotaCheck['reason']);
+                        session()->flash('error', $quotaCheck['reason']);
+                        $this->redirect(route($this->getIndexRoute()));
+
+                        return;
                     }
                 }
 
@@ -112,7 +118,10 @@ abstract class ProposalCreate extends Component
             }
         } catch (\Exception $e) {
             \Log::error('Mount error: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            abort(500, 'Terjadi kesalahan saat memuat halaman. Silakan coba lagi.');
+            session()->flash('error', 'Terjadi kesalahan saat memuat halaman. Silakan coba lagi.');
+            $this->redirect(route($this->getIndexRoute()));
+
+            return;
         }
     }
 

@@ -20,7 +20,7 @@ class ProposalForm extends Form
 
     public string $title = '';
 
-    public string $research_scheme_id = '';
+    public ?string $research_scheme_id = null;
 
     public ?string $community_service_scheme_id = null;
 
