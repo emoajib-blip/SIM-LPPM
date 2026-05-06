@@ -22,7 +22,7 @@ class ProposalForm extends Form
 
     public string $research_scheme_id = '';
 
-    public string $community_service_scheme_id = '';
+    public ?string $community_service_scheme_id = null;
 
     #[Validate('nullable|exists:study_program_roadmaps,id')]
     public ?string $study_program_roadmap_id = null;
@@ -162,8 +162,8 @@ class ProposalForm extends Form
 
         // Load common proposal fields
         $this->title = $proposal->title ?? '';
-        $this->research_scheme_id = $proposal->research_scheme_id ?? '';
-        $this->community_service_scheme_id = $proposal->community_service_scheme_id ?? '';
+        $this->research_scheme_id = $proposal->research_scheme_id;
+        $this->community_service_scheme_id = $proposal->community_service_scheme_id;
         $this->focus_area_id = $proposal->focus_area_id ?? '';
         $this->theme_id = $proposal->theme_id ?? '';
         $this->topic_id = $proposal->topic_id ?? '';
@@ -713,6 +713,7 @@ class ProposalForm extends Form
 
         if ($isCommunityService) {
             $rules['research_scheme_id'] = 'nullable|exists:research_schemes,id';
+            $rules['community_service_scheme_id'] = 'required|exists:community_service_schemes,id';
             $rules['partner_id'] = 'nullable|exists:partners,id';
             $rules['partner_issue_summary'] = 'nullable|string|min:50';
             $rules['solution_offered'] = 'nullable|string|min:50';
