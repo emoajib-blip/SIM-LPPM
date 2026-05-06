@@ -43,10 +43,6 @@ class ProposalExportController extends Controller
             $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
             $filename = 'Proposal_'.$title.'.pdf';
 
-            while (ob_get_level() > 0) {
-                @ob_end_clean();
-            }
-
             // Since we use caching, we do NOT delete the file after sending
             return response()->download($pdfPath, $filename);
         } catch (\Exception $e) {
@@ -78,10 +74,6 @@ class ProposalExportController extends Controller
             $pdfBinary = file_get_contents($pdfPath);
 
             $this->upsertProposalSignatures($proposal, $pdfBinary);
-
-            while (ob_get_level() > 0) {
-                @ob_end_clean();
-            }
 
             // Return the cached file directly without deleting it
             return response()->file($pdfPath, [
@@ -144,12 +136,6 @@ class ProposalExportController extends Controller
 
             $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
             $filename = ucfirst($type).'_Report_'.$title.'.pdf';
-
-            if (! app()->environment('testing')) {
-                while (ob_get_level() > 0) {
-                    @ob_end_clean();
-                }
-            }
 
             if ($request->query('download') === 'true') {
                 return response()->download($pdfPath, $filename);
