@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -107,6 +108,12 @@ class Proposal extends Model
         'logbook_signed_at',
         'logbook_approved_at',
         'student_members',
+        'study_program_roadmap_id',
+        'bima_proposal_id',
+        'is_roadmap_validated_by_kaprodi',
+        'kaprodi_validation_notes',
+        'kaprodi_validated_at',
+        'kaprodi_id',
     ];
 
     /**
@@ -123,6 +130,8 @@ class Proposal extends Model
             'logbook_signed_at' => 'datetime',
             'logbook_approved_at' => 'datetime',
             'student_members' => 'array',
+            'is_roadmap_validated_by_kaprodi' => 'boolean',
+            'kaprodi_validated_at' => 'datetime',
         ];
     }
 
@@ -421,6 +430,37 @@ class Proposal extends Model
         return $this->morphMany(DocumentSignature::class, 'document', 'document_type', 'document_id');
     }
 
+    public function kaprodiApproval(): HasMany
+    {
+        return $this->hasMany(KaprodiApproval::class)->orderBy('created_at', 'desc');
+    }
+
+    public function latestKaprodiApproval(): HasOne
+    {
+        return $this->hasOne(KaprodiApproval::class)->latestOfMany();
+    }
+
+    public function hasApprovedKaprodi(): bool
+    {
+        return $this->kaprodiApproval()
+            ->where('status', \App\Enums\KaprodiStatus::APPROVED)
+            ->exists();
+    }
+
+    public function hasPendingKaprodiApproval(): bool
+    {
+        return $this->kaprodiApproval()
+            ->where('status', \App\Enums\KaprodiStatus::PENDING)
+            ->exists();
+    }
+
+    public function kaprodiApprovalStatus(): ?\App\Enums\KaprodiStatus
+    {
+        $latest = $this->latestKaprodiApproval;
+
+        return $latest instanceof KaprodiApproval ? $latest->status : null;
+    }
+
     /**
      * Check if all team members have accepted the invitation.
      */
@@ -546,5 +586,116 @@ class Proposal extends Model
     public function isValidatedByKaprodi(): bool
     {
         return (bool) $this->is_roadmap_validated_by_kaprodi;
+    }
+
+    /**
+     * Get the study program of the proposal's submitter.
+     */
+    public function getSubmitterStudyProgram(): ?StudyProgram
+    {
+        return $this->submitter->identity?->studyProgram;
+    }
+
+    /**
+     * Calculate alignment score between proposal and study program roadmap.
+     * Returns a value between 0 and 100.
+     */
+    public function getRoadmapAlignmentScore(): int
+    {
+        $studyProgram = $this->getSubmitterStudyProgram();
+
+        if (! $studyProgram || ! $studyProgram->research_roadmap) {
+            return 0;
+        }
+
+        $roadmap = $studyProgram->research_roadmap;
+        $score = 0;
+        $totalChecks = 0;
+
+        $researchTree = $roadmap['research_tree'] ?? null;
+        if ($researchTree) {
+            $treeArray = is_array($researchTree) ? $researchTree : array_map('trim', explode(',', $researchTree));
+            if (count($treeArray) > 0) {
+                $totalChecks++;
+                $researchTree = array_map('strtolower', $treeArray);
+
+                $proposalTitle = strtolower($this->title);
+                $proposalSummary = $this->summary !== null ? strtolower($this->summary) : '';
+                $proposalCategory = $this->focusArea?->name ?? '';
+                $proposalTheme = $this->theme?->name ?? '';
+                $proposalTopic = $this->topic?->name ?? '';
+
+                foreach ($researchTree as $tree) {
+                    if (str_contains($proposalTitle, $tree)
+                        || str_contains($proposalSummary, $tree)
+                        || str_contains(strtolower($proposalCategory), $tree)
+                        || str_contains(strtolower($proposalTheme), $tree)
+                        || str_contains(strtolower($proposalTopic), $tree)) {
+                        $score += 100;
+                        break;
+                    }
+                }
+            }
+        }
+
+        $priorities = $roadmap['priorities'] ?? null;
+        if ($priorities !== null && is_array($priorities) && count($priorities) > 0) {
+            $totalChecks++;
+            $currentYear = now()->year;
+
+            foreach ($priorities as $priority) {
+                if (($priority['year'] ?? 0) == $currentYear) {
+                    $themes = strtolower($priority['themes'] ?? '');
+                    $proposalTitle = strtolower($this->title);
+                    $proposalSummary = $this->summary !== null ? strtolower($this->summary) : '';
+
+                    $themeKeywords = array_map('trim', explode(',', $themes));
+                    foreach ($themeKeywords as $keyword) {
+                        if (str_contains($proposalTitle, $keyword)
+                            || str_contains($proposalSummary, $keyword)) {
+                            $score += 100;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        if ($totalChecks === 0) {
+            return 50;
+        }
+
+        return (int) round($score / $totalChecks);
+    }
+
+    /**
+     * Get alignment level label.
+     */
+    public function getRoadmapAlignmentLevel(): string
+    {
+        $score = $this->getRoadmapAlignmentScore();
+
+        return match (true) {
+            $score >= 80 => 'Sangat Sesuai',
+            $score >= 50 => 'Sesuai',
+            $score >= 20 => 'Kurang Sesuai',
+            default => 'Tidak Sesuai',
+        };
+    }
+
+    /**
+     * Get alignment level color for UI badges.
+     */
+    public function getRoadmapAlignmentColor(): string
+    {
+        $score = $this->getRoadmapAlignmentScore();
+
+        return match (true) {
+            $score >= 80 => 'success',
+            $score >= 50 => 'primary',
+            $score >= 20 => 'warning',
+            default => 'danger',
+        };
     }
 }

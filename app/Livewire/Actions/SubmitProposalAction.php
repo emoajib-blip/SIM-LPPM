@@ -49,6 +49,20 @@ class SubmitProposalAction
             ];
         }
 
+        // Check kaprodi approval (pre-gate before submission)
+        // Only enforced when feature_kaprodi_validation is enabled
+        if (\App\Models\Setting::get('feature_kaprodi_validation', false)) {
+            $kaprodiAction = app(\App\Actions\Kaprodi\KaprodiApprovalAction::class);
+            $kaprodiCheck = $kaprodiAction->canSubmit($proposal);
+
+            if (! $kaprodiCheck['can_submit']) {
+                return [
+                    'success' => false,
+                    'message' => $kaprodiCheck['reason'],
+                ];
+            }
+        }
+
         // Check lecturer eligibility
         if ($proposal->submitter->activeHasRole('dosen')) {
             $eligibilityService = app(LecturerEligibilityService::class);

@@ -15,9 +15,19 @@ class StudyProgram extends Model
     protected $fillable = [
         'institution_id',
         'faculty_id',
+        'kaprodi_user_id',
         'name',
         'code',
+        'research_roadmap',
+        'roadmap_status',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'research_roadmap' => 'array',
+        ];
+    }
 
     /**
      * Get the institution that owns the study program.
@@ -41,5 +51,10 @@ class StudyProgram extends Model
     public function identities(): HasMany
     {
         return $this->hasMany(Identity::class);
+    }
+
+    public function kaprodi(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'kaprodi_user_id');
     }
 }

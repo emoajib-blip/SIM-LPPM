@@ -31,7 +31,15 @@ class Faculty extends Model
         'dean_name',
         'dean_id',
         'dean_user_id',
+        'research_roadmap',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'research_roadmap' => 'array',
+        ];
+    }
 
     /**
      * Get the user who is the dean of this faculty.

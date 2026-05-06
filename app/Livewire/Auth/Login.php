@@ -186,6 +186,7 @@ class Login extends Component
                 $email = $identity->user->email;
             }
         }
+
         return Str::transliterate(Str::lower($email).'|'.request()->ip());
     }
 }
