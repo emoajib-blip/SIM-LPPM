@@ -117,8 +117,8 @@ class ReviewerAssignment extends Component
 
         return [
             'all' => Proposal::whereIn('status', $statuses)->count(),
-            'waiting_reviewer' => Proposal::where('status', ProposalStatus::WAITING_REVIEWER)->count(),
-            'under_review' => Proposal::where('status', ProposalStatus::UNDER_REVIEW)->count(),
+            'WAITING_REVIEWER' => Proposal::where('status', ProposalStatus::WAITING_REVIEWER)->count(),
+            'UNDER_REVIEW' => Proposal::where('status', ProposalStatus::UNDER_REVIEW)->count(),
             'research' => Proposal::whereIn('status', $statuses)
                 ->where('detailable_type', \App\Models\Research::class)
                 ->count(),

@@ -60,7 +60,7 @@ class TeamMemberInvitations extends Component
     public function rejectedMembers()
     {
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-        return $this->teamMembers->filter(fn ($member) => $member->pivot->getAttribute('status') === 'rejected');
+        return $this->teamMembers->filter(fn ($member) => $member->pivot->getAttribute('status') === 'REJECTED');
     }
 
     #[Computed]
@@ -119,7 +119,7 @@ class TeamMemberInvitations extends Component
         }
 
         $proposal->teamMembers()
-            ->updateExistingPivot($user->id, ['status' => 'rejected']);
+            ->updateExistingPivot($user->id, ['status' => 'REJECTED']);
 
         session()->flash('success', 'Undangan ditolak');
         $this->toastSuccess('Undangan ditolak');

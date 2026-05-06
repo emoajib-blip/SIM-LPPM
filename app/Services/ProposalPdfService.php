@@ -447,11 +447,11 @@ class ProposalPdfService
 
         $reportStatusVal = $report->status instanceof \BackedEnum ? $report->status->value : $report->status;
 
-        if (in_array($reportStatusVal, ['approved_by_dekan', 'approved', 'accepted'])) {
+        if (in_array($reportStatusVal, ['approved_by_dekan', 'APPROVED', 'accepted'])) {
             $deanSignedAt = $report->updated_at;
         }
 
-        if (in_array($reportStatusVal, ['approved', 'accepted'])) {
+        if (in_array($reportStatusVal, ['APPROVED', 'accepted'])) {
             $lppmSignedAt = $report->updated_at;
         }
 

@@ -38,7 +38,7 @@ class ReviewMonitoring extends Component
     public function proposals()
     {
         return Proposal::query()
-            ->whereIn('status', ['under_review', 'reviewed'])
+            ->whereIn('status', ['UNDER_REVIEW', 'REVIEWED'])
             ->with(['submitter', 'detailable', 'reviewers.user'])
             ->when($this->search, function ($query) {
                 $query->where('title', 'like', "%{$this->search}%");

@@ -114,9 +114,9 @@ class MonevReport extends Component
             ->when($this->selectedStatus !== 'all', function ($q) {
                 match ($this->selectedStatus) {
                     'pending' => $q->whereNull('reviewed_at'),
-                    'reviewed' => $q->whereNotNull('reviewed_at')->whereNull('finalized_by_lppm_at'),
+                    'REVIEWED' => $q->whereNotNull('reviewed_at')->whereNull('finalized_by_lppm_at'),
                     'verified' => $q->whereNotNull('finalized_by_lppm_at')->whereNull('approved_by_kepala_at'),
-                    'approved' => $q->whereNotNull('approved_by_kepala_at'),
+                    'APPROVED' => $q->whereNotNull('approved_by_kepala_at'),
                     default => null,
                 };
             })

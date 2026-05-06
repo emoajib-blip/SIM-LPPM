@@ -84,13 +84,13 @@ class DailyNoteExportController extends Controller
         $submitterSig = null;
         if ($proposal->logbook_signed_at || $request->query('signed') === 'true') {
             $signedAt = $proposal->logbook_signed_at ?? now();
-            $submitterSig = $this->upsertLogbookSignature($proposal, 'lecturer', 'submitted', $signedAt, $hash, $kid);
+            $submitterSig = $this->upsertLogbookSignature($proposal, 'lecturer', 'SUBMITTED', $signedAt, $hash, $kid);
         }
 
         // 3. Sign for LPPM (Approver)
         $lppmSig = null;
         if ($proposal->logbook_approved_at) {
-            $lppmSig = $this->upsertLogbookSignature($proposal, 'kepala_lppm', 'approved', $proposal->logbook_approved_at, $hash, $kid);
+            $lppmSig = $this->upsertLogbookSignature($proposal, 'kepala_lppm', 'APPROVED', $proposal->logbook_approved_at, $hash, $kid);
         }
 
         // 4. Re-render with QR codes

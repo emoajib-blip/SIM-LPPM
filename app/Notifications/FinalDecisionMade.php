@@ -16,7 +16,7 @@ class FinalDecisionMade extends Notification implements ShouldQueue
 
     public function __construct(
         public Proposal $proposal,
-        public string $decision, // 'approved', 'rejected', 'revision_needed'
+        public string $decision, // 'APPROVED', 'REJECTED', 'REVISION_NEEDED'
         public User $kepalaLppm
     ) {}
 
@@ -31,21 +31,21 @@ class FinalDecisionMade extends Notification implements ShouldQueue
         $proposalType = $isResearch ? 'Penelitian' : 'Pengabdian Masyarakat';
 
         $data = match ($this->decision) {
-            'approved' => [
+            'APPROVED' => [
                 'title' => 'Proposal Disetujui',
                 'message' => "Proposal '{$this->proposal->title}' telah disetujui dan selesai",
                 'body' => "Kepala LPPM telah menyetujui proposal {$proposalType} dengan judul '{$this->proposal->title}'. Selamat! Proposal Anda telah melalui semua tahap review dan mendapat persetujuan final. Selanjutnya, mohon untuk mulai melaksanakan kegiatan sesuai dengan jadwal yang telah direncanakan. Jangan lupa untuk melaporkan kemajuan kegiatan melalui sistem pelaporan yang tersedia. Terima kasih atas kontribusi Anda dalam mengembangkan penelitian dan pengabdian masyarakat di ITSNU.",
                 'icon' => 'award',
                 'emailSubject' => "[SIM LPPM] Keputusan Akhir: {$this->proposal->title} - Disetujui",
             ],
-            'rejected' => [
+            'REJECTED' => [
                 'title' => 'Proposal Ditolak',
                 'message' => "Proposal '{$this->proposal->title}' telah ditolak",
                 'body' => "Kepala LPPM meninjau proposal {$proposalType} dengan judul '{$this->proposal->title}' dan mengambil keputusan untuk menolaknya. Keputusan ini mempertimbangkan hasil review dari para reviewer dan kesesuaian dengan criteria yang ditetapkan. Mohon jangan menyerah dan silakan memperbaiki proposal Anda berdasarkan feedback yang diberikan. Anda dapat mengajukan kembali proposal yang telah direvisi di periode mendatang.",
                 'icon' => 'x-circle',
                 'emailSubject' => "[SIM LPPM] Keputusan Akhir: {$this->proposal->title} - Ditolak",
             ],
-            'revision_needed' => [
+            'REVISION_NEEDED' => [
                 'title' => 'Proposal Memerlukan Revisi',
                 'message' => "Proposal '{$this->proposal->title}' memerlukan perbaikan dan revisi",
                 'body' => "Kepala LPPM meninjau proposal {$proposalType} dengan judul '{$this->proposal->title}' dan meminta perbaikan/revisi sebelum dapat disetujui. Mohon untuk segera memperbaiki proposal sesuai dengan catatan dan rekomendasi yang diberikan. Setelah revisi selesai, silakan submit ulang proposal untuk direview kembali. Tim reviewer akan memeriksa apakah revisi telah sesuai dengan yang diharapkan.",
@@ -84,9 +84,9 @@ class FinalDecisionMade extends Notification implements ShouldQueue
         $url = route($isResearch ? 'research.proposal.show' : 'community-service.proposal.show', $this->proposal);
 
         $subject = match ($this->decision) {
-            'approved' => 'Proposal Disetujui - Selesai',
-            'rejected' => 'Proposal Ditolak',
-            'revision_needed' => 'Proposal Perlu Revisi',
+            'APPROVED' => 'Proposal Disetujui - Selesai',
+            'REJECTED' => 'Proposal Ditolak',
+            'REVISION_NEEDED' => 'Proposal Perlu Revisi',
             default => 'Keputusan Final untuk Proposal',
         };
 
@@ -95,13 +95,13 @@ class FinalDecisionMade extends Notification implements ShouldQueue
             ->greeting('Halo, '.$notifiable->name.'!')
             ->line("Keputusan final telah dibuat untuk proposal **{$this->proposal->title}**.");
 
-        if ($this->decision === 'approved') {
+        if ($this->decision === 'APPROVED') {
             $message->line('🎉 **Status:** Disetujui dan Selesai')
                 ->line('Selamat! Proposal Anda telah disetujui dan dapat dilanjutkan ke tahap implementasi.');
-        } elseif ($this->decision === 'rejected') {
+        } elseif ($this->decision === 'REJECTED') {
             $message->line('❌ **Status:** Ditolak')
                 ->line('Proposal Anda ditolak. Silakan hubungi admin untuk informasi lebih lanjut.');
-        } elseif ($this->decision === 'revision_needed') {
+        } elseif ($this->decision === 'REVISION_NEEDED') {
             $message->line('📝 **Status:** Perlu Revisi')
                 ->line('Proposal Anda memerlukan revisi. Silakan perbaiki sesuai dengan catatan reviewer.');
         }

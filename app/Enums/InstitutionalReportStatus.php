@@ -4,10 +4,10 @@ namespace App\Enums;
 
 enum InstitutionalReportStatus: string
 {
-    case DRAFT = 'draft';
-    case SUBMITTED = 'submitted';
-    case APPROVED = 'approved';
-    case REJECTED = 'rejected';
+    case DRAFT = 'DRAFT';
+    case SUBMITTED = 'SUBMITTED';
+    case APPROVED = 'APPROVED';
+    case REJECTED = 'REJECTED';
 
     public function label(): string
     {

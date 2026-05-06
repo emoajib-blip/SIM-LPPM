@@ -221,7 +221,7 @@ class ReviewerForm extends Component
         }
 
         // Jika rekomendasi sudah approved, tidak bisa edit
-        if ($review->recommendation === 'approved') {
+        if ($review->recommendation === 'APPROVED') {
             return false;
         }
 

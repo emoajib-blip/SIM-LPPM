@@ -135,7 +135,7 @@ class Index extends Component
 
         $involvement = PolicyInvolvement::findOrFail($id);
         $involvement->update([
-            'status' => 'rejected',
+            'status' => 'REJECTED',
             'verified_at' => now(),
             'verified_by' => auth()->id(),
         ]);

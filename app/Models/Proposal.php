@@ -444,7 +444,7 @@ class Proposal extends Model
     {
         $stats = $this->reviewers()
             ->selectRaw('COUNT(*) as total, SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed',
-                ['completed'])
+                ['COMPLETED'])
             ->first();
 
         if (! $stats) {
@@ -502,7 +502,7 @@ class Proposal extends Model
     public function getPendingReviewers(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->reviewers()
-            ->where('status', '!=', 'completed')
+            ->where('status', '!=', 'COMPLETED')
             ->get();
     }
 

@@ -57,7 +57,7 @@ class Show extends Component
             'budgetItems.budgetGroup',
             'budgetItems.budgetComponent',
             'reviewers' => function ($q) {
-                $q->where('status', 'completed')
+                $q->where('status', 'COMPLETED')
                     ->with(['user', 'scores.criteria']);
             },
             'reviewLogs.user',

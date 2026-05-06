@@ -108,7 +108,7 @@ class ProposalService
         if (isset($filters['status']) && $filters['status'] !== '') {
             $statusValue = (string) $filters['status'];
             // Validate status against ProposalStatus enum values
-            $allStatusValues = ['draft', 'submitted', 'need_assignment', 'approved', 'waiting_reviewer', 'under_review', 'reviewed', 'revision_needed', 'completed', 'rejected'];
+            $allStatusValues = ['DRAFT', 'SUBMITTED', 'NEED_ASSIGNMENT', 'APPROVED', 'WAITING_REVIEWER', 'UNDER_REVIEW', 'REVIEWED', 'REVISION_NEEDED', 'COMPLETED', 'REJECTED'];
             if (in_array($statusValue, $allStatusValues)) {
                 $query->where('status', $statusValue);
             }
@@ -173,7 +173,7 @@ class ProposalService
             ->pluck('count', 'status')
             ->toArray();
 
-        $allStatuses = ['draft', 'submitted', 'need_assignment', 'approved', 'waiting_reviewer', 'under_review', 'reviewed', 'revision_needed', 'completed', 'rejected'];
+        $allStatuses = ['DRAFT', 'SUBMITTED', 'NEED_ASSIGNMENT', 'APPROVED', 'WAITING_REVIEWER', 'UNDER_REVIEW', 'REVIEWED', 'REVISION_NEEDED', 'COMPLETED', 'REJECTED'];
         $emptyStats = array_fill_keys($allStatuses, 0);
 
         return [
@@ -193,7 +193,7 @@ class ProposalService
 
     public function validateProposalBeforeSubmit(Proposal $proposal): void
     {
-        if ($proposal->status !== 'draft') {
+        if ($proposal->status !== 'DRAFT') {
             throw new \Exception('Hanya proposal dengan status draft yang dapat disubmit.');
         }
 
@@ -215,7 +215,7 @@ class ProposalService
         $recipients = $notificationService->getUsersByRole('dekan');
 
         DB::transaction(function () use ($proposal, $notificationService, $submitter, $recipients) {
-            $proposal->update(['status' => 'submitted']);
+            $proposal->update(['status' => 'SUBMITTED']);
 
             $notificationService->notifyProposalSubmitted($proposal, $submitter, $recipients);
         });

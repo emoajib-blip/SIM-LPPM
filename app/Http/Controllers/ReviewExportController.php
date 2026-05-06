@@ -99,7 +99,7 @@ class ReviewExportController extends Controller
             ->where('document_type', $proposalReviewer->getMorphClass())
             ->where('document_id', (string) $proposalReviewer->id)
             ->where('variant', $variant)
-            ->where('action', 'reviewed')
+            ->where('action', 'REVIEWED')
             ->where('signed_role', 'reviewer')
             ->first();
 
@@ -109,7 +109,7 @@ class ReviewExportController extends Controller
                 'document_type' => $proposalReviewer->getMorphClass(),
                 'document_id' => (string) $proposalReviewer->id,
                 'variant' => $variant,
-                'action' => 'reviewed',
+                'action' => 'REVIEWED',
                 'signed_role' => 'reviewer',
                 'signed_by' => (string) $proposalReviewer->user_id,
                 'signed_at' => $signedAt,
@@ -146,7 +146,7 @@ class ReviewExportController extends Controller
             'doc_id' => (string) $proposalReviewer->id,
             'proposal_id' => (string) $proposalReviewer->proposal_id,
             'variant' => $variant,
-            'action' => 'reviewed',
+            'action' => 'REVIEWED',
             'signed_role' => 'reviewer',
             'signed_by' => (string) $proposalReviewer->user_id,
             'signed_at' => $signedAt->copy()->utc()->toIso8601ZuluString(),

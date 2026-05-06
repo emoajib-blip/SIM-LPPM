@@ -19,7 +19,7 @@ class DekanApprovalAction
     /**
      * Execute the Dekan approval action
      *
-     * @param  string  $decision  'approved' or 'need_assignment'
+     * @param  string  $decision  'APPROVED' or 'NEED_ASSIGNMENT'
      * @return array{success: bool, message: string}
      */
     public function execute(Proposal $proposal, string $decision, ?string $notes = null, ?User $dekan = null): array
@@ -33,7 +33,7 @@ class DekanApprovalAction
         }
 
         // Validate decision
-        if (! in_array($decision, ['approved', 'need_assignment'])) {
+        if (! in_array($decision, ['APPROVED', 'NEED_ASSIGNMENT'])) {
             return [
                 'success' => false,
                 'message' => 'Keputusan tidak valid.',
@@ -63,7 +63,7 @@ class DekanApprovalAction
         }
 
         try {
-            $newStatus = $decision === 'approved'
+            $newStatus = $decision === 'APPROVED'
                 ? ProposalStatus::APPROVED
                 : ProposalStatus::NEED_ASSIGNMENT;
 
@@ -93,7 +93,7 @@ class DekanApprovalAction
                 $this->sendNotifications($proposal, $decision, $dekan ?? Auth::user());
             });
 
-            $message = $decision === 'approved'
+            $message = $decision === 'APPROVED'
                 ? 'Proposal berhasil disetujui dan diteruskan ke Kepala LPPM.'
                 : 'Proposal dikembalikan ke pengusul untuk memperbaiki persetujuan anggota.';
 
@@ -121,7 +121,7 @@ class DekanApprovalAction
     {
         $recipients = collect();
 
-        if ($decision === 'approved') {
+        if ($decision === 'APPROVED') {
             // Notify: Submitter, Kepala LPPM, Team Members
             $recipients->push($proposal->submitter);
             $recipients->push(User::role('kepala lppm')->first());

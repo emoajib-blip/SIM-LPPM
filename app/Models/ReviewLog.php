@@ -95,9 +95,9 @@ class ReviewLog extends Model
     public function getRecommendationLabelAttribute(): string
     {
         return match ($this->recommendation) {
-            'approved' => 'Disetujui',
-            'rejected' => 'Ditolak',
-            'revision_needed' => 'Perlu Revisi',
+            'APPROVED' => 'Disetujui',
+            'REJECTED' => 'Ditolak',
+            'REVISION_NEEDED' => 'Perlu Revisi',
             default => '-',
         };
     }
@@ -108,9 +108,9 @@ class ReviewLog extends Model
     public function getRecommendationColorAttribute(): string
     {
         return match ($this->recommendation) {
-            'approved' => 'success',
-            'rejected' => 'danger',
-            'revision_needed' => 'warning',
+            'APPROVED' => 'success',
+            'REJECTED' => 'danger',
+            'REVISION_NEEDED' => 'warning',
             default => 'secondary',
         };
     }

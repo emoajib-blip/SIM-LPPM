@@ -119,7 +119,7 @@ class KepalaLppmFinalDecision extends Component
             return;
         }
 
-        if (! in_array($this->decision, ['completed', 'revision_needed', 'rejected'])) {
+        if (! in_array($this->decision, ['COMPLETED', 'REVISION_NEEDED', 'REJECTED'])) {
             $message = 'Keputusan tidak valid';
             session()->flash('error', $message);
             $this->toastError($message);
@@ -129,9 +129,9 @@ class KepalaLppmFinalDecision extends Component
 
         try {
             $newStatus = match ($this->decision) {
-                'completed' => ProposalStatus::COMPLETED,
-                'rejected' => ProposalStatus::REJECTED,
-                'revision_needed' => ProposalStatus::REVISION_NEEDED,
+                'COMPLETED' => ProposalStatus::COMPLETED,
+                'REJECTED' => ProposalStatus::REJECTED,
+                'REVISION_NEEDED' => ProposalStatus::REVISION_NEEDED,
             };
 
             // Validate transition
@@ -161,9 +161,9 @@ class KepalaLppmFinalDecision extends Component
 
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             $message = match ($this->decision) {
-                'completed' => 'Proposal berhasil disetujui dan selesai.',
-                'rejected' => 'Proposal telah ditolak.',
-                'revision_needed' => 'Proposal memerlukan perbaikan dan dikembalikan ke pengusul.',
+                'COMPLETED' => 'Proposal berhasil disetujui dan selesai.',
+                'REJECTED' => 'Proposal telah ditolak.',
+                'REVISION_NEEDED' => 'Proposal memerlukan perbaikan dan dikembalikan ke pengusul.',
                 default => 'Keputusan berhasil diproses.',
             };
 

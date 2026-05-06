@@ -46,15 +46,15 @@ class WeeklySummaryReport extends Notification implements ShouldQueue
         if ($this->role === 'dekan') {
             $message->line('📊 **Ringkasan Minggu Ini:**')
                 ->line("- Proposal Baru Masuk: {$this->data['new_proposals']}")
-                ->line("- Proposal Disetujui: {$this->data['approved']}")
-                ->line("- Proposal Ditolak: {$this->data['rejected']}")
+                ->line("- Proposal Disetujui: {$this->data['APPROVED']}")
+                ->line("- Proposal Ditolak: {$this->data['REJECTED']}")
                 ->line("- Menunggu Persetujuan: {$this->data['pending']}");
         } elseif ($this->role === 'kepala lppm') {
             $message->line('📊 **Ringkasan Minggu Ini:**')
                 ->line("- Total Proposal Aktif: {$this->data['total_active']}")
-                ->line("- Proposal Dalam Review: {$this->data['under_review']}")
-                ->line("- Review Selesai: {$this->data['reviewed']}")
-                ->line("- Proposal Selesai: {$this->data['completed']}");
+                ->line("- Proposal Dalam Review: {$this->data['UNDER_REVIEW']}")
+                ->line("- Review Selesai: {$this->data['REVIEWED']}")
+                ->line("- Proposal Selesai: {$this->data['COMPLETED']}");
         } elseif ($this->role === 'rektor') {
             $message->line('📊 **Ringkasan Mingguan Sistem:**')
                 ->line("- Total Proposal: {$this->data['total_proposals']}")

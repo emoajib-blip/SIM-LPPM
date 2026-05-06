@@ -16,7 +16,7 @@ class DekanApprovalDecision extends Notification implements ShouldQueue
 
     public function __construct(
         public Proposal $proposal,
-        public string $decision, // 'approved' or 'need_assignment'
+        public string $decision, // 'APPROVED' or 'NEED_ASSIGNMENT'
         public User $dekan
     ) {}
 
@@ -27,7 +27,7 @@ class DekanApprovalDecision extends Notification implements ShouldQueue
 
     public function toDatabase(object $notifiable): array
     {
-        $isApproved = $this->decision === 'approved';
+        $isApproved = $this->decision === 'APPROVED';
         $isResearch = $this->proposal->detailable instanceof Research;
         $proposalType = $isResearch ? 'Penelitian' : 'Pengabdian Masyarakat';
 
@@ -68,9 +68,9 @@ class DekanApprovalDecision extends Notification implements ShouldQueue
         $url = route($isResearch ? 'research.proposal.show' : 'community-service.proposal.show', $this->proposal);
 
         $subject = match ($this->decision) {
-            'approved' => 'Proposal Disetujui oleh Dekan',
-            'need_assignment' => 'Proposal Perlu Penugasan Reviewer',
-            'rejected' => 'Proposal Ditolak oleh Dekan',
+            'APPROVED' => 'Proposal Disetujui oleh Dekan',
+            'NEED_ASSIGNMENT' => 'Proposal Perlu Penugasan Reviewer',
+            'REJECTED' => 'Proposal Ditolak oleh Dekan',
             default => 'Keputusan Dekan untuk Proposal',
         };
 
@@ -79,13 +79,13 @@ class DekanApprovalDecision extends Notification implements ShouldQueue
             ->greeting('Halo, '.$notifiable->name.'!')
             ->line("Dekan telah membuat keputusan untuk proposal **{$this->proposal->title}**.");
 
-        if ($this->decision === 'approved') {
+        if ($this->decision === 'APPROVED') {
             $message->line('✅ **Status:** Disetujui')
                 ->line('Proposal Anda telah disetujui oleh Dekan dan akan dilanjutkan ke proses berikutnya.');
-        } elseif ($this->decision === 'need_assignment') {
+        } elseif ($this->decision === 'NEED_ASSIGNMENT') {
             $message->line('📋 **Status:** Perlu Penugasan Reviewer')
                 ->line('Proposal akan ditugaskan kepada reviewer untuk evaluasi lebih lanjut.');
-        } elseif ($this->decision === 'rejected') {
+        } elseif ($this->decision === 'REJECTED') {
             $message->line('❌ **Status:** Ditolak')
                 ->line('Proposal Anda ditolak oleh Dekan. Silakan hubungi admin untuk informasi lebih lanjut.');
         }

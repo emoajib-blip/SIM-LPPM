@@ -112,10 +112,10 @@ class DosenDashboard extends Component
         $this->stats = [
             'my_research' => $research->sum('count'),
             'my_community_service' => $communityService->sum('count'),
-            'research_pending' => $research->where('status', 'submitted')->sum('count'),
-            'community_service_pending' => $communityService->where('status', 'submitted')->sum('count'),
-            'research_approved' => $research->where('status', 'approved')->sum('count'),
-            'community_service_approved' => $communityService->where('status', 'approved')->sum('count'),
+            'research_pending' => $research->where('status', 'SUBMITTED')->sum('count'),
+            'community_service_pending' => $communityService->where('status', 'SUBMITTED')->sum('count'),
+            'research_approved' => $research->where('status', 'APPROVED')->sum('count'),
+            'community_service_approved' => $communityService->where('status', 'APPROVED')->sum('count'),
         ];
     }
 

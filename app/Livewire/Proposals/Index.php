@@ -80,10 +80,10 @@ class Index extends Component
     {
         $counts = [
             'all' => 0,
-            'submitted' => 0,
+            'SUBMITTED' => 0,
             'revisi' => 0,
-            'approved' => 0,
-            'rejected' => 0,
+            'APPROVED' => 0,
+            'REJECTED' => 0,
         ];
 
         foreach ($this->seedProposals() as $proposal) {
@@ -103,7 +103,7 @@ class Index extends Component
             [
                 'title' => 'Pengembangan Sistem Informasi Penelitian Terintegrasi',
                 'owner' => 'Dr. Lina Hartati',
-                'status' => 'submitted',
+                'status' => 'SUBMITTED',
                 'submitted_at' => '2025-09-02',
             ],
             [
@@ -115,13 +115,13 @@ class Index extends Component
             [
                 'title' => 'Optimalisasi Energi Terbarukan di Kampus Hijau',
                 'owner' => 'Dr. Maya Anggraini',
-                'status' => 'approved',
+                'status' => 'APPROVED',
                 'submitted_at' => '2025-07-19',
             ],
             [
                 'title' => 'Model Evaluasi Kinerja Reviewer Internal',
                 'owner' => 'Dr. Randi Nugraha',
-                'status' => 'rejected',
+                'status' => 'REJECTED',
                 'submitted_at' => '2025-07-05',
             ],
         ];
@@ -131,20 +131,20 @@ class Index extends Component
     {
         return [
             'all' => __('Semua'),
-            'submitted' => __('Terkirim'),
+            'SUBMITTED' => __('Terkirim'),
             'revisi' => __('Perlu Revisi'),
-            'approved' => __('Disetujui'),
-            'rejected' => __('Ditolak'),
+            'APPROVED' => __('Disetujui'),
+            'REJECTED' => __('Ditolak'),
         ];
     }
 
     protected function statusBadges(): array
     {
         return [
-            'submitted' => 'blue',
+            'SUBMITTED' => 'blue',
             'revisi' => 'yellow',
-            'approved' => 'green',
-            'rejected' => 'red',
+            'APPROVED' => 'green',
+            'REJECTED' => 'red',
         ];
     }
 }

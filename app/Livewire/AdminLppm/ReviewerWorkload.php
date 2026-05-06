@@ -26,7 +26,7 @@ class ReviewerWorkload extends Component
                     $query->where('status', 'pending');
                 },
                 'reviews as completed_count' => function ($query) {
-                    $query->where('status', 'completed');
+                    $query->where('status', 'COMPLETED');
                 },
             ])
             ->with(['identity.faculty'])

@@ -78,7 +78,7 @@ class ReportForm extends Form
             'summary_update' => $this->summaryUpdate ?: ($this->proposal->summary ?? 'Draft Report'),
             'reporting_year' => $this->reportingYear,
             'reporting_period' => $this->reportingPeriod,
-            'status' => 'draft',
+            'status' => 'DRAFT',
         ]);
 
         $this->saveKeywords();
@@ -484,7 +484,7 @@ class ReportForm extends Form
                 // Create NEW report if periods differ (or no existing)
                 $report = ProgressReport::create(array_merge($reportData, [
                     'proposal_id' => $this->proposal->id,
-                    'status' => 'draft',
+                    'status' => 'DRAFT',
                 ]));
             }
 
@@ -513,7 +513,7 @@ class ReportForm extends Form
 
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $report->update([
-            'status' => 'submitted',
+            'status' => 'SUBMITTED',
             'submitted_by' => Auth::id(),
             'submitted_at' => now(),
         ]);
@@ -785,7 +785,7 @@ class ReportForm extends Form
                 'summary_update' => $this->summaryUpdate ?: $this->proposal->summary,
                 'reporting_year' => $this->reportingYear,
                 'reporting_period' => $this->reportingPeriod,
-                'status' => 'draft',
+                'status' => 'DRAFT',
             ]);
             $this->saveKeywords();
         }

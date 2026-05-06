@@ -4,11 +4,11 @@ namespace App\Enums;
 
 enum ReportStatus: string
 {
-    case DRAFT = 'draft';
-    case SUBMITTED = 'submitted';
+    case DRAFT = 'DRAFT';
+    case SUBMITTED = 'SUBMITTED';
     case APPROVED_BY_DEKAN = 'approved_by_dekan';
-    case APPROVED = 'approved';
-    case REJECTED = 'rejected';
+    case APPROVED = 'APPROVED';
+    case REJECTED = 'REJECTED';
 
     /**
      * Get label in Indonesian

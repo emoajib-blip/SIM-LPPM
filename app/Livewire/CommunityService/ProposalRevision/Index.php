@@ -41,7 +41,7 @@ class Index extends Component
                 $q->where('submitter_id', $user->id)
                     ->where(function ($sq) {
                         $sq->whereHas('reviewers', function ($ssq) {
-                            $ssq->where('recommendation', 'revision_needed');
+                            $ssq->where('recommendation', 'REVISION_NEEDED');
                         })->orWhere('status', ProposalStatus::REVISION_NEEDED);
                     });
             });
@@ -49,17 +49,17 @@ class Index extends Component
             // Reviewer: proposal yang ditugaskan ke dia dengan review completed
             $query->whereHas('reviewers', function ($q) use ($user) {
                 $q->where('user_id', $user->id)
-                    ->whereIn('status', ['completed', 'pending']);
+                    ->whereIn('status', ['COMPLETED', 'pending']);
             });
         } elseif ($user->hasAnyRole(['kepala lppm', 'admin lppm', 'rektor'])) {
             // Kepala LPPM/Admin/Rektor: semua proposal yang sudah ada review completed
             $query->whereHas('reviewers', function ($q) {
-                $q->whereIn('status', ['completed', 'pending']);
+                $q->whereIn('status', ['COMPLETED', 'pending']);
             });
         }
 
         $query->whereHas('reviewers', function ($q) {
-            $q->whereIn('status', ['completed', 'pending']);
+            $q->whereIn('status', ['COMPLETED', 'pending']);
         });
 
         // Eager load relationships
@@ -68,7 +68,7 @@ class Index extends Component
             'detailable',
             'focusArea',
             'reviewers' => function ($q) {
-                $q->whereIn('status', ['completed', 'pending'])
+                $q->whereIn('status', ['COMPLETED', 'pending'])
                     ->with('user');
             },
         ]);
@@ -105,11 +105,11 @@ class Index extends Component
         } elseif ($user->hasRole('reviewer')) {
             $query->whereHas('reviewers', function ($q) use ($user) {
                 $q->where('user_id', $user->id)
-                    ->where('status', 'completed');
+                    ->where('status', 'COMPLETED');
             });
         } elseif ($user->hasAnyRole(['kepala lppm', 'admin lppm', 'rektor'])) {
             $query->whereHas('reviewers', function ($q) {
-                $q->where('status', 'completed');
+                $q->where('status', 'COMPLETED');
             });
         }
 

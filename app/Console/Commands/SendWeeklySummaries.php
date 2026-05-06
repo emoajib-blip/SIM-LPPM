@@ -45,15 +45,15 @@ class SendWeeklySummaries extends Command
 
         return array_merge($data, [
             'new_submissions' => Proposal::whereBetween('created_at', [$weekStart, $weekEnd])
-                ->where('status', '!=', 'draft')
+                ->where('status', '!=', 'DRAFT')
                 ->count(),
             'approved_count' => Proposal::whereBetween('updated_at', [$weekStart, $weekEnd])
-                ->where('status', 'approved')
+                ->where('status', 'APPROVED')
                 ->count(),
             'rejected_count' => Proposal::whereBetween('updated_at', [$weekStart, $weekEnd])
-                ->where('status', 'rejected')
+                ->where('status', 'REJECTED')
                 ->count(),
-            'total_pending' => Proposal::where('status', 'submitted')->count(),
+            'total_pending' => Proposal::where('status', 'SUBMITTED')->count(),
         ]);
     }
 
@@ -64,15 +64,15 @@ class SendWeeklySummaries extends Command
 
         return array_merge($data, [
             'proposals_assigned' => Proposal::whereBetween('updated_at', [$weekStart, $weekEnd])
-                ->where('status', 'under_review')
+                ->where('status', 'UNDER_REVIEW')
                 ->count(),
             'reviews_completed' => \App\Models\ProposalReviewer::whereBetween('updated_at', [$weekStart, $weekEnd])
-                ->where('status', 'completed')
+                ->where('status', 'COMPLETED')
                 ->count(),
             'final_decisions' => Proposal::whereBetween('updated_at', [$weekStart, $weekEnd])
-                ->whereIn('status', ['completed', 'rejected'])
+                ->whereIn('status', ['COMPLETED', 'REJECTED'])
                 ->count(),
-            'under_review' => Proposal::where('status', 'under_review')->count(),
+            'UNDER_REVIEW' => Proposal::where('status', 'UNDER_REVIEW')->count(),
         ]);
     }
 
@@ -84,14 +84,14 @@ class SendWeeklySummaries extends Command
         return array_merge($data, [
             'total_proposals' => Proposal::count(),
             'completed_this_week' => Proposal::whereBetween('updated_at', [$weekStart, $weekEnd])
-                ->where('status', 'completed')
+                ->where('status', 'COMPLETED')
                 ->count(),
             'total_research' => Proposal::where('detailable_type', \App\Models\Research::class)->count(),
             'total_community_service' => Proposal::where('detailable_type', \App\Models\CommunityService::class)->count(),
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             'avg_review_time' => round(
                 \App\Models\ProposalReviewer::whereBetween('updated_at', [$weekStart, $weekEnd])
-                    ->where('status', 'completed')
+                    ->where('status', 'COMPLETED')
                     ->selectRaw('AVG(DATEDIFF(updated_at, created_at)) as avg_days')
                     ->value('avg_days') ?? 0
             ),

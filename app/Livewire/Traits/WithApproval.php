@@ -32,8 +32,8 @@ trait WithApproval
 
         DB::transaction(function () use ($proposal) {
             $newStatus = match ($this->approvalDecision) {
-                'approved' => ProposalStatus::UNDER_REVIEW,
-                'rejected' => ProposalStatus::REJECTED,
+                'APPROVED' => ProposalStatus::UNDER_REVIEW,
+                'REJECTED' => ProposalStatus::REJECTED,
                 default => throw new \Exception('Keputusan persetujuan tidak valid.'),
             };
 
@@ -49,7 +49,7 @@ trait WithApproval
                 // Notify Submitter
                 $this->notificationService()->notifyDekanApprovalDecision(
                     $proposal,
-                    'approved',
+                    'APPROVED',
                     $dekan,
                     [$proposal->submitter]
                 );
@@ -57,7 +57,7 @@ trait WithApproval
                 if ($dekan) {
                     $this->notificationService()->notifyDekanApprovalDecision(
                         $proposal,
-                        'approved',
+                        'APPROVED',
                         $dekan,
                         [$dekan]
                     );
@@ -65,11 +65,11 @@ trait WithApproval
             }
         });
 
-        $message = $this->approvalDecision === 'approved'
+        $message = $this->approvalDecision === 'APPROVED'
             ? 'Proposal berhasil disetujui.'
             : 'Proposal telah ditolak.';
 
-        session()->flash($this->approvalDecision === 'approved' ? 'success' : 'error', $message);
+        session()->flash($this->approvalDecision === 'APPROVED' ? 'success' : 'error', $message);
         $this->toastSuccess($message);
         $this->cancelApproval();
     }
@@ -91,9 +91,9 @@ trait WithApproval
 
         DB::transaction(function () use ($proposal) {
             $newStatus = match ($this->approvalDecision) {
-                'approved' => ProposalStatus::APPROVED,
+                'APPROVED' => ProposalStatus::APPROVED,
                 'need_fix' => ProposalStatus::NEED_ASSIGNMENT,
-                'rejected' => ProposalStatus::REJECTED,
+                'REJECTED' => ProposalStatus::REJECTED,
                 default => throw new \Exception('Keputusan dekan tidak valid.'),
             };
 
@@ -137,16 +137,16 @@ trait WithApproval
         });
 
         $message = match ($this->approvalDecision) {
-            'approved' => 'Proposal berhasil disetujui dan diteruskan ke Kepala LPPM.',
+            'APPROVED' => 'Proposal berhasil disetujui dan diteruskan ke Kepala LPPM.',
             'need_fix' => 'Proposal dikembalikan ke pengusul untuk perbaikan.',
-            'rejected' => 'Proposal telah ditolak.',
+            'REJECTED' => 'Proposal telah ditolak.',
             default => 'Keputusan berhasil disimpan.',
         };
 
         $flashType = match ($this->approvalDecision) {
-            'approved' => 'success',
+            'APPROVED' => 'success',
             'need_fix' => 'warning',
-            'rejected' => 'error',
+            'REJECTED' => 'error',
             default => 'success',
         };
 

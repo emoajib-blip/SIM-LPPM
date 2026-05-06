@@ -76,12 +76,12 @@ class Index extends Component
     {
         $stats = [
             'all' => 0,
-            'draft' => 0,
-            'submitted' => 0,
-            'under_review' => 0,
-            'approved' => 0,
-            'rejected' => 0,
-            'completed' => 0,
+            'DRAFT' => 0,
+            'SUBMITTED' => 0,
+            'UNDER_REVIEW' => 0,
+            'APPROVED' => 0,
+            'REJECTED' => 0,
+            'COMPLETED' => 0,
         ];
 
         Proposal::where('detailable_type', CommunityService::class)
