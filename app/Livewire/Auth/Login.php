@@ -55,62 +55,61 @@ class Login extends Component
      */
     public function login(): void
     {
-        try {
-            $rules = [
-                'email' => 'required|string',
-                'password' => 'required|string',
-            ];
+        $rules = [
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ];
 
-            if (! app()->environment('testing')) {
-                if (config('turnstile.site_key')) {
-                    $rules['captcha'] = ['required', new Turnstile];
-                } else {
-                    $rules['math_answer'] = [
-                        'required',
-                        function ($attribute, $value, $fail) {
-                            if ((int) $value !== ($this->n1 + $this->n2)) {
-                                $fail('Jawaban keamanan salah.');
-                            }
-                        },
-                    ];
-                }
+        if (! app()->environment('testing')) {
+            if (config('turnstile.site_key')) {
+                $rules['captcha'] = ['required', new Turnstile];
+            } else {
+                $rules['math_answer'] = [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        if ((int) $value !== ($this->n1 + $this->n2)) {
+                            $fail('Jawaban keamanan salah.');
+                        }
+                    },
+                ];
             }
-
-            $this->validate($rules);
-
-            // Manual Honey Pot Check
-            if (! empty($this->username_honeypot)) {
-                throw ValidationException::withMessages([
-                    'email' => __('auth.failed'),
-                ]);
-            }
-
-            $this->ensureIsNotRateLimited();
-
-            $user = $this->validateCredentials();
-
-            if (Features::canManageTwoFactorAuthentication() && $user->hasEnabledTwoFactorAuthentication()) {
-                Session::put([
-                    'login.id' => $user->getKey(),
-                    'login.remember' => $this->remember,
-                ]);
-
-                $this->redirect(route('two-factor.login'), navigate: false);
-
-                return;
-            }
-
-            Auth::login($user, $this->remember);
-
-            RateLimiter::clear($this->throttleKey());
-            Session::regenerate();
-
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: false);
-        } catch (ValidationException $e) {
-            $this->generateMathQuestion();
-            $this->math_answer = '';
-            throw $e;
         }
+
+        $this->validate($rules);
+
+        // Manual Honey Pot Check
+        if (! empty($this->username_honeypot)) {
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        $this->ensureIsNotRateLimited();
+
+        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+            RateLimiter::hit($this->throttleKey());
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        $user = Auth::user();
+
+        if (Features::canManageTwoFactorAuthentication() && $user->hasEnabledTwoFactorAuthentication()) {
+            Session::put([
+                'login.id' => $user->getKey(),
+                'login.remember' => $this->remember,
+            ]);
+
+            $this->redirect(route('two-factor.login'), navigate: true);
+
+            return;
+        }
+
+        RateLimiter::clear($this->throttleKey());
+        Session::regenerate();
+
+        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
 
     public function devLogin(string $roleName): void
@@ -132,34 +131,6 @@ class Login extends Component
         session(['active_role' => $roleName]);
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: false);
-    }
-
-    /**
-     * Validate the user's credentials.
-     */
-    protected function validateCredentials(): User
-    {
-        // Try to find user by email, username, or identity_id
-        $user = User::where('email', $this->email)
-            ->orWhere(function ($query) {
-                if (! empty($this->email)) {
-                    $query->where('username', $this->email);
-                }
-            })
-            ->orWhereHas('identity', function ($query) {
-                $query->where('identity_id', $this->email);
-            })
-            ->first();
-
-        if (! $user || ! Auth::getProvider()->validateCredentials($user, ['password' => $this->password])) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        return $user;
     }
 
     /**

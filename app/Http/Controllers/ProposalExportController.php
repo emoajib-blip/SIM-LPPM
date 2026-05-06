@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProposalStatus;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
 use App\Services\DocumentSignatureService;
@@ -265,8 +266,8 @@ class ProposalExportController extends Controller
         // Signatories mapping: role => [action, condition]
         $signatories = [
             'lecturer' => ['submitted', true],
-            'dekan' => ['approved', in_array($proposal->status->value, ['approved', 'waiting_reviewer', 'under_review', 'reviewed', 'completed'])],
-            'kepala_lppm' => ['finalized', in_array($proposal->status->value, ['waiting_reviewer', 'under_review', 'reviewed', 'completed'])],
+            'dekan' => ['approved', in_array($proposal->status->value, [ProposalStatus::APPROVED->value, ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
+            'kepala_lppm' => ['finalized', in_array($proposal->status->value, [ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
         ];
 
         /** @var \Illuminate\Support\Collection<string, \App\Models\DocumentSignature> $proposalSigs */

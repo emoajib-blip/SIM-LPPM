@@ -18,6 +18,9 @@ class ApproveProposalAction
      */
     public function execute(Proposal $proposal, string $decision): array
     {
+        // Normalize decision to uppercase to match enum values
+        $decision = strtoupper($decision);
+
         if (! in_array($decision, [ProposalStatus::COMPLETED->value, ProposalStatus::REJECTED->value])) {
             return [
                 'success' => false,
@@ -32,7 +35,7 @@ class ApproveProposalAction
             return [
                 'success' => false,
                 'message' => sprintf(
-                    'Tidak dapat memutuskan proposal. %d reviewer masih belum menyelesaikan review.',
+                    '%d reviewer masih belum menyelesaikan review.',
                     $pendingReviewers->count()
                 ),
             ];
