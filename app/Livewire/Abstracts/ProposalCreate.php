@@ -74,40 +74,45 @@ abstract class ProposalCreate extends Component
 
     public function mount(?string $proposalId = null, ?\App\Models\Proposal $proposal = null): void
     {
-        $user = Auth::user();
-        $this->author_name = ($user instanceof \App\Models\User) ? $user->name : '';
+        try {
+            $user = Auth::user();
+            $this->author_name = ($user instanceof \App\Models\User) ? $user->name : '';
 
-        // Handle route model binding (if passed as object) or ID string
-        $proposalToLoad = $proposal ?? ($proposalId ? \App\Models\Proposal::find($proposalId) : null);
+            // Handle route model binding (if passed as object) or ID string
+            $proposalToLoad = $proposal ?? ($proposalId ? \App\Models\Proposal::find($proposalId) : null);
 
-        if ($proposalToLoad) {
-            $this->authorize('update', $proposalToLoad);
+            if ($proposalToLoad) {
+                $this->authorize('update', $proposalToLoad);
 
-            $this->form->setProposal($proposalToLoad);
-        } else {
-            // Check eligibility for new proposals
-            if ($user instanceof \App\Models\User && $user->activeHasRole('dosen')) {
-                // First check general eligibility
-                $eligibilityService = app(LecturerEligibilityService::class);
-                $eligibility = $eligibilityService->checkEligibility($user);
-                if (! $eligibility['eligible']) {
-                    abort(403, 'Anda tidak memenuhi syarat untuk membuat proposal baru. '.implode(', ', $eligibility['reasons']));
+                $this->form->setProposal($proposalToLoad);
+            } else {
+                // Check eligibility for new proposals
+                if ($user instanceof \App\Models\User && $user->activeHasRole('dosen')) {
+                    // First check general eligibility
+                    $eligibilityService = app(LecturerEligibilityService::class);
+                    $eligibility = $eligibilityService->checkEligibility($user);
+                    if (! $eligibility['eligible']) {
+                        abort(403, 'Anda tidak memenuhi syarat untuk membuat proposal baru. '.implode(', ', $eligibility['reasons']));
+                    }
+
+                    // Then check quota limits for creating new proposals
+                    $quotaCheck = app(\App\Services\EligibilityService::class)->canCreateProposal($user, $this->getProposalType());
+                    if (! $quotaCheck['can_create']) {
+                        abort(403, $quotaCheck['reason']);
+                    }
                 }
 
-                // Then check quota limits for creating new proposals
-                $quotaCheck = app(\App\Services\EligibilityService::class)->canCreateProposal($user, $this->getProposalType());
-                if (! $quotaCheck['can_create']) {
-                    abort(403, $quotaCheck['reason']);
+                // Initial values for new proposals
+                $this->form->start_year = date('Y');
+
+                // Add initial empty budget row
+                if (empty($this->form->budget_items)) {
+                    $this->addBudgetItem();
                 }
             }
-
-            // Initial values for new proposals
-            $this->form->start_year = date('Y');
-
-            // Add initial empty budget row
-            if (empty($this->form->budget_items)) {
-                $this->addBudgetItem();
-            }
+        } catch (\Exception $e) {
+            \Log::error('Mount error: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            abort(500, 'Terjadi kesalahan saat memuat halaman. Silakan coba lagi.');
         }
     }
 
@@ -522,40 +527,56 @@ abstract class ProposalCreate extends Component
 
     public function downloadPartnerCommitmentTemplate()
     {
-        $setting = \App\Models\Setting::where('key', 'partner_commitment_template')->first();
-        if ($setting && $setting->hasMedia('template')) {
-            $media = $setting->getFirstMedia('template');
-            $path = $media->getPath();
+        try {
+            $setting = \App\Models\Setting::where('key', 'partner_commitment_template')->first();
+            if ($setting && $setting->hasMedia('template')) {
+                $media = $setting->getFirstMedia('template');
 
-            // Check if physical file exists
-            if (file_exists($path)) {
-                return response()->download($path, $media->file_name);
+                // Try to use URL redirect instead of direct download
+                $url = $media->getUrl();
+                if ($url) {
+                    return redirect($url);
+                }
             }
-        }
 
-        $this->toastError('Template belum tersedia.');
+            $this->toastError('Template belum tersedia. Silakan hubungi admin untuk mengunggah ulang template.');
+        } catch (\Exception $e) {
+            \Log::error('Download template error: '.$e->getMessage());
+            $this->toastError('Gagal mengunduh template. Silakan coba lagi.');
+        }
     }
 
     #[Computed]
     public function proposalApprovalPageTemplateUrl()
     {
-        return app(MasterDataService::class)->getTemplateUrl('proposal-approval-page');
+        try {
+            return app(MasterDataService::class)->getTemplateUrl('proposal-approval-page');
+        } catch (\Exception $e) {
+            \Log::error('Error getting template URL: '.$e->getMessage());
+
+            return null;
+        }
     }
 
     public function downloadProposalApprovalPageTemplate()
     {
-        $setting = \App\Models\Setting::where('key', 'proposal_approval_page_template')->first();
-        if ($setting && $setting->hasMedia('template')) {
-            $media = $setting->getFirstMedia('template');
-            $path = $media->getPath();
+        try {
+            $setting = \App\Models\Setting::where('key', 'proposal_approval_page_template')->first();
+            if ($setting && $setting->hasMedia('template')) {
+                $media = $setting->getFirstMedia('template');
 
-            // Check if physical file exists
-            if (file_exists($path)) {
-                return response()->download($path, $media->file_name);
+                // Try to use URL redirect instead of direct download
+                $url = $media->getUrl();
+                if ($url) {
+                    return redirect($url);
+                }
             }
-        }
 
-        $this->toastError('Template belum tersedia.');
+            $this->toastError('Template belum tersedia. Silakan hubungi admin untuk mengunggah ulang template.');
+        } catch (\Exception $e) {
+            \Log::error('Download template error: '.$e->getMessage());
+            $this->toastError('Gagal mengunduh template. Silakan coba lagi.');
+        }
     }
 
     protected function getStepValidationRules(int $step): array
@@ -702,7 +723,11 @@ abstract class ProposalCreate extends Component
 
     public function render()
     {
-        // dump("Rendering ProposalCreate, Auth check: " . (Auth::check() ? 'Yes' : 'No'));
-        return view($this->getProposalType() === 'research' ? 'livewire.research.proposal.create' : 'livewire.community-service.proposal.create');
+        try {
+            return view($this->getProposalType() === 'research' ? 'livewire.research.proposal.create' : 'livewire.community-service.proposal.create');
+        } catch (\Exception $e) {
+            \Log::error('Render error: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            abort(500, 'Terjadi kesalahan saat memuat halaman. Silakan coba lagi atau hubungi admin.');
+        }
     }
 }
