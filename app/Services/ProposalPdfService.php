@@ -5,11 +5,31 @@ namespace App\Services;
 use App\Models\Proposal;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use setasign\Fpdi\Fpdi;
 
 class ProposalPdfService
 {
+    /**
+     * Resolve media path to absolute filesystem path.
+     * Handles both absolute paths and relative paths from the media disk.
+     */
+    private function resolveMediaPath(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): string
+    {
+        $path = $media->getPath();
+
+        // If already absolute, return as-is
+        if (str_starts_with($path, '/')) {
+            return $path;
+        }
+
+        // Resolve relative path using the configured media disk
+        $diskName = config('media-library.disk_name', 'public');
+
+        return Storage::disk($diskName)->path($path);
+    }
+
     /**
      * Export the proposal to a combined PDF.
      * Uses caching to avoid regenerating the same PDF multiple times.
@@ -279,31 +299,37 @@ class ProposalPdfService
             $detailable = $proposal->detailable;
             /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $approvalFile */
             $approvalFile = $detailable->getFirstMedia('approval_file');
-            if ($approvalFile && file_exists($approvalFile->getPath()) && str_contains($approvalFile->mime_type ?? '', 'pdf')) {
-                Log::debug('Merging approval file to PDF', [
-                    'proposal_id' => $proposal->id,
-                    'file_path' => $approvalFile->getPath(),
-                    'mime_type' => $approvalFile->mime_type,
-                    'file_exists' => file_exists($approvalFile->getPath()),
-                ]);
-                try {
-                    $approvalPageCount = $pdf->setSourceFile($approvalFile->getPath());
-                    for ($i = 1; $i <= $approvalPageCount; $i++) {
-                        $templateId = $pdf->importPage($i);
-                        $size = $pdf->getTemplateSize($templateId);
-                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                        $pdf->useTemplate($templateId);
+            if ($approvalFile) {
+                $approvalPath = $this->resolveMediaPath($approvalFile);
+                $approvalExists = file_exists($approvalPath);
+                $isPdf = str_contains($approvalFile->mime_type ?? '', 'pdf');
+
+                if ($approvalExists && $isPdf) {
+                    Log::debug('Merging approval file to PDF', [
+                        'proposal_id' => $proposal->id,
+                        'file_path' => $approvalPath,
+                        'mime_type' => $approvalFile->mime_type,
+                        'file_exists' => $approvalExists,
+                    ]);
+                    try {
+                        $approvalPageCount = $pdf->setSourceFile($approvalPath);
+                        for ($i = 1; $i <= $approvalPageCount; $i++) {
+                            $templateId = $pdf->importPage($i);
+                            $size = $pdf->getTemplateSize($templateId);
+                            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                            $pdf->useTemplate($templateId);
+                        }
+                    } catch (\Throwable $e) {
+                        \Log::warning('FPDI Merge Fail (Approval File) for '.$proposal->id.': '.$e->getMessage());
                     }
-                } catch (\Throwable $e) {
-                    \Log::warning('FPDI Merge Fail (Approval File) for '.$proposal->id.': '.$e->getMessage());
+                } else {
+                    Log::warning('Approval file skipped', [
+                        'proposal_id' => $proposal->id,
+                        'reason' => ! $approvalExists ? 'file_not_found' : 'not_pdf_mime',
+                        'file_path' => $approvalPath,
+                        'mime_type' => $approvalFile->mime_type,
+                    ]);
                 }
-            } elseif ($approvalFile) {
-                Log::warning('Approval file skipped', [
-                    'proposal_id' => $proposal->id,
-                    'reason' => ! file_exists($approvalFile->getPath()) ? 'file_not_found' : 'not_pdf_mime',
-                    'file_path' => $approvalFile->getPath(),
-                    'mime_type' => $approvalFile->mime_type,
-                ]);
             }
         }
 
@@ -312,31 +338,37 @@ class ProposalPdfService
         $detailableSubstance = $proposal->detailable;
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
         $substanceFile = $detailableSubstance->getFirstMedia('substance_file');
-        if ($substanceFile && file_exists($substanceFile->getPath()) && str_contains($substanceFile->mime_type ?? '', 'pdf')) {
-            Log::debug('Merging substance file to PDF', [
-                'proposal_id' => $proposal->id,
-                'file_path' => $substanceFile->getPath(),
-                'mime_type' => $substanceFile->mime_type,
-                'file_exists' => file_exists($substanceFile->getPath()),
-            ]);
-            try {
-                $substancePageCount = $pdf->setSourceFile($substanceFile->getPath());
-                for ($i = 1; $i <= $substancePageCount; $i++) {
-                    $templateId = $pdf->importPage($i);
-                    $size = $pdf->getTemplateSize($templateId);
-                    $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                    $pdf->useTemplate($templateId);
+        if ($substanceFile) {
+            $substancePath = $this->resolveMediaPath($substanceFile);
+            $substanceExists = file_exists($substancePath);
+            $isPdf = str_contains($substanceFile->mime_type ?? '', 'pdf');
+
+            if ($substanceExists && $isPdf) {
+                Log::debug('Merging substance file to PDF', [
+                    'proposal_id' => $proposal->id,
+                    'file_path' => $substancePath,
+                    'mime_type' => $substanceFile->mime_type,
+                    'file_exists' => $substanceExists,
+                ]);
+                try {
+                    $substancePageCount = $pdf->setSourceFile($substancePath);
+                    for ($i = 1; $i <= $substancePageCount; $i++) {
+                        $templateId = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($templateId);
+                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                        $pdf->useTemplate($templateId);
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning('FPDI Merge Fail (Substance File) for '.$proposal->id.': '.$e->getMessage());
                 }
-            } catch (\Throwable $e) {
-                Log::warning('FPDI Merge Fail (Substance File) for '.$proposal->id.': '.$e->getMessage());
+            } else {
+                Log::warning('Substance file skipped', [
+                    'proposal_id' => $proposal->id,
+                    'reason' => ! $substanceExists ? 'file_not_found' : 'not_pdf_mime',
+                    'file_path' => $substancePath,
+                    'mime_type' => $substanceFile->mime_type,
+                ]);
             }
-        } elseif ($substanceFile) {
-            Log::warning('Substance file skipped', [
-                'proposal_id' => $proposal->id,
-                'reason' => ! file_exists($substanceFile->getPath()) ? 'file_not_found' : 'not_pdf_mime',
-                'file_path' => $substanceFile->getPath(),
-                'mime_type' => $substanceFile->mime_type,
-            ]);
         } else {
             Log::debug('No substance file found for proposal', ['proposal_id' => $proposal->id]);
         }
@@ -349,7 +381,7 @@ class ProposalPdfService
                 ->first();
 
             if ($commitmentLetter) {
-                $filePath = $commitmentLetter->getPath();
+                $filePath = $this->resolveMediaPath($commitmentLetter);
                 $fileExists = file_exists($filePath);
                 $isPdf = str_contains($commitmentLetter->mime_type ?? '', 'pdf');
 
@@ -610,52 +642,60 @@ class ProposalPdfService
         // 1.5. Add pages from the report's uploaded signature page (if exists)
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $signaturePage */
         $signaturePage = $report->getFirstMedia('signature_page');
-        if ($signaturePage && file_exists($signaturePage->getPath()) && str_contains($signaturePage->mime_type ?? '', 'pdf')) {
-            try {
-                $sigPageCount = $pdf->setSourceFile($signaturePage->getPath());
-                for ($i = 1; $i <= $sigPageCount; $i++) {
-                    $templateId = $pdf->importPage($i);
-                    $size = $pdf->getTemplateSize($templateId);
-                    $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                    $pdf->useTemplate($templateId);
+        if ($signaturePage) {
+            $signaturePath = $this->resolveMediaPath($signaturePage);
+            if (file_exists($signaturePath) && str_contains($signaturePage->mime_type ?? '', 'pdf')) {
+                try {
+                    $sigPageCount = $pdf->setSourceFile($signaturePath);
+                    for ($i = 1; $i <= $sigPageCount; $i++) {
+                        $templateId = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($templateId);
+                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                        $pdf->useTemplate($templateId);
+                    }
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Signature Page) for '.$report->id.': '.$e->getMessage());
                 }
-            } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Signature Page) for '.$report->id.': '.$e->getMessage());
             }
         }
 
         // 2. Add pages from the report's substance file
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
         $substanceFile = $report->getFirstMedia('substance_file');
-        // Validate MIME type is application/pdf before merging
-        if ($substanceFile && file_exists($substanceFile->getPath()) && str_contains($substanceFile->mime_type ?? '', 'pdf')) {
-            try {
-                $substancePageCount = $pdf->setSourceFile($substanceFile->getPath());
-                for ($i = 1; $i <= $substancePageCount; $i++) {
-                    $templateId = $pdf->importPage($i);
-                    $size = $pdf->getTemplateSize($templateId);
-                    $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                    $pdf->useTemplate($templateId);
+        if ($substanceFile) {
+            $reportSubstancePath = $this->resolveMediaPath($substanceFile);
+            if (file_exists($reportSubstancePath) && str_contains($substanceFile->mime_type ?? '', 'pdf')) {
+                try {
+                    $substancePageCount = $pdf->setSourceFile($reportSubstancePath);
+                    for ($i = 1; $i <= $substancePageCount; $i++) {
+                        $templateId = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($templateId);
+                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                        $pdf->useTemplate($templateId);
+                    }
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Substance) for '.$report->id.': '.$e->getMessage());
                 }
-            } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Substance) for '.$report->id.': '.$e->getMessage());
             }
         }
 
         // 3. Add pages from Realisasi Keterlibatan file
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $realizationFile */
         $realizationFile = $report->getFirstMedia('realization_file');
-        if ($realizationFile && file_exists($realizationFile->getPath()) && str_contains($realizationFile->mime_type ?? '', 'pdf')) {
-            try {
-                $realizationPageCount = $pdf->setSourceFile($realizationFile->getPath());
-                for ($i = 1; $i <= $realizationPageCount; $i++) {
-                    $templateId = $pdf->importPage($i);
-                    $size = $pdf->getTemplateSize($templateId);
-                    $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                    $pdf->useTemplate($templateId);
+        if ($realizationFile) {
+            $realizationPath = $this->resolveMediaPath($realizationFile);
+            if (file_exists($realizationPath) && str_contains($realizationFile->mime_type ?? '', 'pdf')) {
+                try {
+                    $realizationPageCount = $pdf->setSourceFile($realizationPath);
+                    for ($i = 1; $i <= $realizationPageCount; $i++) {
+                        $templateId = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($templateId);
+                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                        $pdf->useTemplate($templateId);
+                    }
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Realization File) for '.$report->id.': '.$e->getMessage());
                 }
-            } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Realization File) for '.$report->id.': '.$e->getMessage());
             }
         }
 
@@ -663,17 +703,20 @@ class ProposalPdfService
         if ($proposal->detailable_type === 'App\Models\CommunityService') {
             /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $presentationFile */
             $presentationFile = $report->getFirstMedia('presentation_file');
-            if ($presentationFile && file_exists($presentationFile->getPath()) && str_contains($presentationFile->mime_type ?? '', 'pdf')) {
-                try {
-                    $presentationPageCount = $pdf->setSourceFile($presentationFile->getPath());
-                    for ($i = 1; $i <= $presentationPageCount; $i++) {
-                        $templateId = $pdf->importPage($i);
-                        $size = $pdf->getTemplateSize($templateId);
-                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                        $pdf->useTemplate($templateId);
+            if ($presentationFile) {
+                $presentationPath = $this->resolveMediaPath($presentationFile);
+                if (file_exists($presentationPath) && str_contains($presentationFile->mime_type ?? '', 'pdf')) {
+                    try {
+                        $presentationPageCount = $pdf->setSourceFile($presentationPath);
+                        for ($i = 1; $i <= $presentationPageCount; $i++) {
+                            $templateId = $pdf->importPage($i);
+                            $size = $pdf->getTemplateSize($templateId);
+                            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                            $pdf->useTemplate($templateId);
+                        }
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Presentation File) for '.$report->id.': '.$e->getMessage());
                     }
-                } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Presentation File) for '.$report->id.': '.$e->getMessage());
                 }
             }
         }
@@ -687,17 +730,20 @@ class ProposalPdfService
             foreach ($collections as $collection) {
                 /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $outputMedia */
                 $outputMedia = $outputRecord->getFirstMedia($collection);
-                if ($outputMedia && file_exists($outputMedia->getPath()) && str_contains($outputMedia->mime_type ?? '', 'pdf')) {
-                    try {
-                        $outputPageCount = $pdf->setSourceFile($outputMedia->getPath());
-                        for ($i = 1; $i <= $outputPageCount; $i++) {
-                            $templateId = $pdf->importPage($i);
-                            $size = $pdf->getTemplateSize($templateId);
-                            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                            $pdf->useTemplate($templateId);
+                if ($outputMedia) {
+                    $outputPath = $this->resolveMediaPath($outputMedia);
+                    if (file_exists($outputPath) && str_contains($outputMedia->mime_type ?? '', 'pdf')) {
+                        try {
+                            $outputPageCount = $pdf->setSourceFile($outputPath);
+                            for ($i = 1; $i <= $outputPageCount; $i++) {
+                                $templateId = $pdf->importPage($i);
+                                $size = $pdf->getTemplateSize($templateId);
+                                $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                                $pdf->useTemplate($templateId);
+                            }
+                        } catch (\Throwable $e) {
+                            \Illuminate\Support\Facades\Log::warning("FPDI Merge Fail (Output File - {$collection}) for report ".$report->id.': '.$e->getMessage());
                         }
-                    } catch (\Throwable $e) {
-                        \Illuminate\Support\Facades\Log::warning("FPDI Merge Fail (Output File - {$collection}) for report ".$report->id.': '.$e->getMessage());
                     }
                 }
             }
