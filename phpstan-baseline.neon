@@ -8339,3 +8339,88 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/helpers.php
+
+		# Kaprodi & Roadmap feature - generic type annotations (pre-existing)
+		-
+			message: '#^Method App\\Actions\\Kaprodi\\KaprodiApprovalAction\:\:getKaprodiForProposal\(\) should return App\\Models\\User\\|null but returns Illuminate\\Database\\Eloquent\\Model\\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Actions/Kaprodi/KaprodiApprovalAction.php
+
+		-
+			message: '#^Method App\\Actions\\Kaprodi\\KaprodiApprovalAction\:\:canSubmit\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Kaprodi/KaprodiApprovalAction.php
+
+		-
+			message: '#^Property App\\Livewire\\Settings\\Tabs\\StudyProgramManager\:\:\$researchRoadmap type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Livewire/Settings/Tabs/StudyProgramManager.php
+
+		-
+			message: '#^Class App\\Models\\KaprodiApproval uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/KaprodiApproval.php
+
+		-
+			message: '#^Method App\\Models\\KaprodiApproval\:\:proposal\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/KaprodiApproval.php
+
+		-
+			message: '#^Method App\\Models\\KaprodiApproval\:\:kaprodi\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/KaprodiApproval.php
+
+		-
+			message: '#^Method App\\Models\\Proposal\:\:kaprodiApproval\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Proposal.php
+
+		-
+			message: '#^Method App\\Models\\Proposal\:\:latestKaprodiApproval\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Proposal.php
+
+		-
+			message: '#^Method App\\Models\\Proposal\:\:kaprodiApprovalStatus\(\) should return App\\Enums\\KaprodiStatus\\|null but returns string\\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Proposal.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Models/Proposal.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 3
+			path: app/Models/Proposal.php
+
+		-
+			message: '#^Method App\\Models\\StudyProgram\:\:kaprodi\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/StudyProgram.php
+
+		-
+			message: '#^Method App\\Notifications\\RoadmapValidationDecision\:\:via\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Notifications/RoadmapValidationDecision.php
+
+		-
+			message: '#^Method App\\Notifications\\RoadmapValidationDecision\:\:toDatabase\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Notifications/RoadmapValidationDecision.php

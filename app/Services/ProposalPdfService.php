@@ -27,6 +27,7 @@ class ProposalPdfService
         // Calculate latest timestamp including media
         $latestTimestamp = $proposal->updated_at->timestamp;
 
+        // Check detailable media collections
         $collections = ['substance_file', 'approval_file'];
         foreach ($collections as $col) {
             /** @var \Illuminate\Database\Eloquent\Model&\Spatie\MediaLibrary\HasMedia $detailable */
@@ -46,6 +47,14 @@ class ProposalPdfService
                 $latestTimestamp = max($latestTimestamp, $commitment->updated_at->timestamp);
             }
         }
+
+        // Debug: Log timestamp calculation for cache invalidation
+        Log::debug('PDF Cache Timestamp Calculation', [
+            'proposal_id' => $proposal->id,
+            'base_timestamp' => $proposal->updated_at->timestamp,
+            'final_timestamp' => $latestTimestamp,
+            'cache_file' => $isPreview ? 'preview' : 'export',
+        ]);
 
         $cacheFileName = sprintf(
             '%sproposal_%s_%s.pdf',
@@ -271,6 +280,12 @@ class ProposalPdfService
             /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $approvalFile */
             $approvalFile = $detailable->getFirstMedia('approval_file');
             if ($approvalFile && file_exists($approvalFile->getPath()) && str_contains($approvalFile->mime_type ?? '', 'pdf')) {
+                Log::debug('Merging approval file to PDF', [
+                    'proposal_id' => $proposal->id,
+                    'file_path' => $approvalFile->getPath(),
+                    'mime_type' => $approvalFile->mime_type,
+                    'file_exists' => file_exists($approvalFile->getPath()),
+                ]);
                 try {
                     $approvalPageCount = $pdf->setSourceFile($approvalFile->getPath());
                     for ($i = 1; $i <= $approvalPageCount; $i++) {
@@ -282,6 +297,13 @@ class ProposalPdfService
                 } catch (\Throwable $e) {
                     \Log::warning('FPDI Merge Fail (Approval File) for '.$proposal->id.': '.$e->getMessage());
                 }
+            } elseif ($approvalFile) {
+                Log::warning('Approval file skipped', [
+                    'proposal_id' => $proposal->id,
+                    'reason' => ! file_exists($approvalFile->getPath()) ? 'file_not_found' : 'not_pdf_mime',
+                    'file_path' => $approvalFile->getPath(),
+                    'mime_type' => $approvalFile->mime_type,
+                ]);
             }
         }
 
@@ -291,6 +313,12 @@ class ProposalPdfService
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
         $substanceFile = $detailableSubstance->getFirstMedia('substance_file');
         if ($substanceFile && file_exists($substanceFile->getPath()) && str_contains($substanceFile->mime_type ?? '', 'pdf')) {
+            Log::debug('Merging substance file to PDF', [
+                'proposal_id' => $proposal->id,
+                'file_path' => $substanceFile->getPath(),
+                'mime_type' => $substanceFile->mime_type,
+                'file_exists' => file_exists($substanceFile->getPath()),
+            ]);
             try {
                 $substancePageCount = $pdf->setSourceFile($substanceFile->getPath());
                 for ($i = 1; $i <= $substancePageCount; $i++) {
@@ -302,8 +330,15 @@ class ProposalPdfService
             } catch (\Throwable $e) {
                 Log::warning('FPDI Merge Fail (Substance File) for '.$proposal->id.': '.$e->getMessage());
             }
-        } elseif ($substanceFile && file_exists($substanceFile->getPath())) {
-            Log::warning('Proposal PDF Export: Skipping non-PDF substance file for proposal '.$proposal->id.' (MIME: '.$substanceFile->mime_type.')');
+        } elseif ($substanceFile) {
+            Log::warning('Substance file skipped', [
+                'proposal_id' => $proposal->id,
+                'reason' => ! file_exists($substanceFile->getPath()) ? 'file_not_found' : 'not_pdf_mime',
+                'file_path' => $substanceFile->getPath(),
+                'mime_type' => $substanceFile->mime_type,
+            ]);
+        } else {
+            Log::debug('No substance file found for proposal', ['proposal_id' => $proposal->id]);
         }
 
         // 4. Add pages from partner commitment letters
@@ -313,18 +348,57 @@ class ProposalPdfService
                 ->where('custom_properties.proposal_id', $proposal->id)
                 ->first();
 
-            if ($commitmentLetter && file_exists($commitmentLetter->getPath()) && str_contains($commitmentLetter->mime_type ?? '', 'pdf')) {
-                try {
-                    $commitmentPageCount = $pdf->setSourceFile($commitmentLetter->getPath());
-                    for ($i = 1; $i <= $commitmentPageCount; $i++) {
-                        $templateId = $pdf->importPage($i);
-                        $size = $pdf->getTemplateSize($templateId);
-                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                        $pdf->useTemplate($templateId);
+            if ($commitmentLetter) {
+                $filePath = $commitmentLetter->getPath();
+                $fileExists = file_exists($filePath);
+                $isPdf = str_contains($commitmentLetter->mime_type ?? '', 'pdf');
+
+                Log::debug('Checking commitment letter for PDF merge', [
+                    'partner_id' => $partner->id,
+                    'partner_name' => $partner->name,
+                    'proposal_id' => $proposal->id,
+                    'file_path' => $filePath,
+                    'file_exists' => $fileExists,
+                    'mime_type' => $commitmentLetter->mime_type,
+                    'is_pdf' => $isPdf,
+                    'custom_properties' => $commitmentLetter->custom_properties,
+                ]);
+
+                if ($fileExists && $isPdf) {
+                    try {
+                        $commitmentPageCount = $pdf->setSourceFile($filePath);
+                        for ($i = 1; $i <= $commitmentPageCount; $i++) {
+                            $templateId = $pdf->importPage($i);
+                            $size = $pdf->getTemplateSize($templateId);
+                            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                            $pdf->useTemplate($templateId);
+                        }
+                        Log::info('Successfully merged commitment letter', [
+                            'partner_id' => $partner->id,
+                            'proposal_id' => $proposal->id,
+                            'pages_merged' => $commitmentPageCount,
+                        ]);
+                    } catch (\Throwable $e) {
+                        Log::warning('FPDI Merge Fail (Partner Commitment Letter) for partner '.$partner->id.' in proposal '.$proposal->id.': '.$e->getMessage(), [
+                            'exception' => $e,
+                            'file_path' => $filePath,
+                        ]);
                     }
-                } catch (\Throwable $e) {
-                    Log::warning('FPDI Merge Fail (Partner Commitment Letter) for partner '.$partner->id.' in proposal '.$proposal->id.': '.$e->getMessage());
+                } else {
+                    Log::warning('Commitment letter skipped', [
+                        'partner_id' => $partner->id,
+                        'proposal_id' => $proposal->id,
+                        'reason' => ! $fileExists ? 'file_not_found' : 'not_pdf_mime',
+                        'file_path' => $filePath,
+                        'mime_type' => $commitmentLetter->mime_type,
+                    ]);
                 }
+            } else {
+                Log::debug('No commitment letter found for partner in this proposal', [
+                    'partner_id' => $partner->id,
+                    'partner_name' => $partner->name,
+                    'proposal_id' => $proposal->id,
+                ]);
             }
         }
 
