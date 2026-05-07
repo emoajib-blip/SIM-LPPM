@@ -227,7 +227,7 @@
 </div>
 
 <!-- Modal: Tambah Mitra -->
-<x-tabler.modal id="modal-partner" title="Tambah Mitra Kerjasama" size="lg">
+<x-tabler.modal id="modal-partner" title="Tambah Mitra Kerjasama" size="lg" :wireIgnore="false">
     {{-- Tab Toggle --}}
     <div class="mb-3">
         <div class="btn-group w-100" role="group">
@@ -402,7 +402,7 @@
 
 {{-- Modal: Upload Surat Kesediaan Mitra --}}
 <x-tabler.modal id="modal-upload-kesediaan" title="Upload Surat Kesediaan Mitra" onHide="resetCommitmentUpload"
-    component-id="{{ $this->getId() }}">
+    component-id="{{ $this->getId() }}" :wireIgnore="false">
     @if($commitmentUploadPartnerId)
         @php $uploadTarget = $this->partners->find($commitmentUploadPartnerId); @endphp
         <div class="mb-3">
