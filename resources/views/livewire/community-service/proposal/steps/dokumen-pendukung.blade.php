@@ -199,14 +199,46 @@
                                                     Belum
                                                 </span>
                                             @endif
-                                            {{-- Direct Upload --}}
-                                            <div wire:key="upload-{{ $partnerId }}">
-                                                <input type="file" 
-                                                    wire:model="commitmentUploadFile" 
-                                                    wire:change="uploadCommitmentLetter('{{ $partnerId }}')"
-                                                    class="form-control form-control-sm"
-                                                    style="width: 180px;"
-                                                    accept=".pdf">
+                                            <div
+                                                x-data="{ uploading: false, progress: 0 }"
+                                                wire:key="upload-{{ $partnerId }}"
+                                            >
+                                                <input
+                                                    type="file"
+                                                    x-ref="fileInput"
+                                                    accept=".pdf"
+                                                    class="d-none"
+                                                    x-on:change="
+                                                        const file = $refs.fileInput.files[0];
+                                                        if (!file) return;
+                                                        uploading = true;
+                                                        progress = 0;
+                                                        $wire.upload('commitmentUploadFile', file,
+                                                            (successResponse) => {
+                                                                $wire.uploadCommitmentLetter('{{ $partnerId }}');
+                                                                uploading = false;
+                                                                progress = 0;
+                                                                $refs.fileInput.value = '';
+                                                            },
+                                                            (errorResponse) => { uploading = false; },
+                                                            (event) => { progress = event.detail.progress; }
+                                                        );
+                                                    "
+                                                >
+                                                <button type="button"
+                                                    x-on:click="$refs.fileInput.click()"
+                                                    x-show="!uploading"
+                                                    class="btn btn-sm btn-outline-secondary"
+                                                    title="Upload Surat Kesediaan">
+                                                    <x-lucide-upload class="icon" />
+                                                </button>
+                                                <button type="button"
+                                                    x-show="uploading"
+                                                    class="btn btn-sm btn-outline-secondary disabled"
+                                                    disabled>
+                                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                                    <span x-text="Math.round(progress) + '%'"></span>
+                                                </button>
                                             </div>
                                         </div>
                                     </td>
