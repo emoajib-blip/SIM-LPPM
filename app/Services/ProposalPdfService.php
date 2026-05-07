@@ -12,22 +12,52 @@ use setasign\Fpdi\Fpdi;
 class ProposalPdfService
 {
     /**
-     * Resolve media path to absolute filesystem path.
-     * Handles both absolute paths and relative paths from the media disk.
+     * Get a local PDF path for a media file, downloading from S3 if necessary.
+     * Returns null if the file cannot be accessed or is not a PDF.
+     *
+     * @param  array<int, string>  $tempFiles
+     *
+     * For S3 disks: downloads to a temp file and registers automatic cleanup.
+     * For local disks: resolves to the absolute filesystem path.
      */
-    private function resolveMediaPath(\Spatie\MediaLibrary\MediaCollections\Models\Media $media): string
+    private function getLocalPdfPath(\Spatie\MediaLibrary\MediaCollections\Models\Media $media, array &$tempFiles): ?string
     {
-        $path = $media->getPath();
-
-        // If already absolute, return as-is
-        if (str_starts_with($path, '/')) {
-            return $path;
-        }
-
-        // Resolve relative path using the configured media disk
         $diskName = config('media-library.disk_name', 'public');
 
-        return Storage::disk($diskName)->path($path);
+        // S3/Cloud: download to temp file
+        if (in_array($diskName, ['s3', 's3_public'])) {
+            try {
+                $tempFile = tempnam(sys_get_temp_dir(), 'pdf_merge_').'.pdf';
+                $content = Storage::disk($diskName)->get($media->getPath());
+                file_put_contents($tempFile, $content);
+
+                // Track for cleanup
+                $tempFiles[] = $tempFile;
+
+                // Fallback cleanup in case of script crash
+                register_shutdown_function(fn () => @unlink($tempFile));
+
+                Log::debug('Downloaded S3 media to temp for PDF merge', [
+                    'media_id' => $media->id,
+                    'temp_path' => $tempFile,
+                    'file_size' => strlen($content),
+                ]);
+
+                return $tempFile;
+            } catch (\Throwable $e) {
+                Log::warning('Failed to download S3 media for PDF merge', [
+                    'media_id' => $media->id,
+                    'error' => $e->getMessage(),
+                ]);
+
+                return null;
+            }
+        }
+
+        // Local disk: resolve path
+        $path = $media->getPath();
+
+        return str_starts_with($path, '/') ? $path : Storage::disk($diskName)->path($path);
     }
 
     /**
@@ -285,6 +315,9 @@ class ProposalPdfService
         // 2. Prepare FPDI for merging
         $pdf = new Fpdi;
 
+        // Track temp files for cleanup (S3 downloads)
+        $tempFiles = [];
+
         // Add pages from the generated info PDF
         $pageCount = $pdf->setSourceFile($tempInfoPath);
         for ($i = 1; $i <= $pageCount; $i++) {
@@ -300,16 +333,14 @@ class ProposalPdfService
             /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $approvalFile */
             $approvalFile = $detailable->getFirstMedia('approval_file');
             if ($approvalFile) {
-                $approvalPath = $this->resolveMediaPath($approvalFile);
-                $approvalExists = file_exists($approvalPath);
+                $approvalPath = $this->getLocalPdfPath($approvalFile, $tempFiles);
                 $isPdf = str_contains($approvalFile->mime_type ?? '', 'pdf');
 
-                if ($approvalExists && $isPdf) {
+                if ($approvalPath !== null && $isPdf) {
                     Log::debug('Merging approval file to PDF', [
                         'proposal_id' => $proposal->id,
                         'file_path' => $approvalPath,
                         'mime_type' => $approvalFile->mime_type,
-                        'file_exists' => $approvalExists,
                     ]);
                     try {
                         $approvalPageCount = $pdf->setSourceFile($approvalPath);
@@ -325,7 +356,7 @@ class ProposalPdfService
                 } else {
                     Log::warning('Approval file skipped', [
                         'proposal_id' => $proposal->id,
-                        'reason' => ! $approvalExists ? 'file_not_found' : 'not_pdf_mime',
+                        'reason' => $approvalPath === null ? 'file_not_accessible' : 'not_pdf_mime',
                         'file_path' => $approvalPath,
                         'mime_type' => $approvalFile->mime_type,
                     ]);
@@ -339,16 +370,14 @@ class ProposalPdfService
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
         $substanceFile = $detailableSubstance->getFirstMedia('substance_file');
         if ($substanceFile) {
-            $substancePath = $this->resolveMediaPath($substanceFile);
-            $substanceExists = file_exists($substancePath);
+            $substancePath = $this->getLocalPdfPath($substanceFile, $tempFiles);
             $isPdf = str_contains($substanceFile->mime_type ?? '', 'pdf');
 
-            if ($substanceExists && $isPdf) {
+            if ($substancePath !== null && $isPdf) {
                 Log::debug('Merging substance file to PDF', [
                     'proposal_id' => $proposal->id,
                     'file_path' => $substancePath,
                     'mime_type' => $substanceFile->mime_type,
-                    'file_exists' => $substanceExists,
                 ]);
                 try {
                     $substancePageCount = $pdf->setSourceFile($substancePath);
@@ -364,7 +393,7 @@ class ProposalPdfService
             } else {
                 Log::warning('Substance file skipped', [
                     'proposal_id' => $proposal->id,
-                    'reason' => ! $substanceExists ? 'file_not_found' : 'not_pdf_mime',
+                    'reason' => $substancePath === null ? 'file_not_accessible' : 'not_pdf_mime',
                     'file_path' => $substancePath,
                     'mime_type' => $substanceFile->mime_type,
                 ]);
@@ -381,8 +410,7 @@ class ProposalPdfService
                 ->first();
 
             if ($commitmentLetter) {
-                $filePath = $this->resolveMediaPath($commitmentLetter);
-                $fileExists = file_exists($filePath);
+                $filePath = $this->getLocalPdfPath($commitmentLetter, $tempFiles);
                 $isPdf = str_contains($commitmentLetter->mime_type ?? '', 'pdf');
 
                 Log::debug('Checking commitment letter for PDF merge', [
@@ -390,13 +418,13 @@ class ProposalPdfService
                     'partner_name' => $partner->name,
                     'proposal_id' => $proposal->id,
                     'file_path' => $filePath,
-                    'file_exists' => $fileExists,
+                    'file_accessible' => $filePath !== null,
                     'mime_type' => $commitmentLetter->mime_type,
                     'is_pdf' => $isPdf,
                     'custom_properties' => $commitmentLetter->custom_properties,
                 ]);
 
-                if ($fileExists && $isPdf) {
+                if ($filePath !== null && $isPdf) {
                     try {
                         $commitmentPageCount = $pdf->setSourceFile($filePath);
                         for ($i = 1; $i <= $commitmentPageCount; $i++) {
@@ -420,7 +448,7 @@ class ProposalPdfService
                     Log::warning('Commitment letter skipped', [
                         'partner_id' => $partner->id,
                         'proposal_id' => $proposal->id,
-                        'reason' => ! $fileExists ? 'file_not_found' : 'not_pdf_mime',
+                        'reason' => $filePath === null ? 'file_not_accessible' : 'not_pdf_mime',
                         'file_path' => $filePath,
                         'mime_type' => $commitmentLetter->mime_type,
                     ]);
@@ -438,6 +466,11 @@ class ProposalPdfService
 
         // Cleanup temporary info PDF
         @unlink($tempInfoPath);
+
+        // Cleanup temp files from S3 downloads
+        foreach ($tempFiles as $tempFile) {
+            @unlink($tempFile);
+        }
 
         return $cachePath;
     }
@@ -631,6 +664,10 @@ class ProposalPdfService
         file_put_contents($tempInfoPath, $infoPdfContent);
 
         $pdf = new Fpdi;
+
+        // Track temp files for cleanup (S3 downloads)
+        $tempFiles = [];
+
         $pageCount = $pdf->setSourceFile($tempInfoPath);
         for ($i = 1; $i <= $pageCount; $i++) {
             $templateId = $pdf->importPage($i);
@@ -643,8 +680,8 @@ class ProposalPdfService
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $signaturePage */
         $signaturePage = $report->getFirstMedia('signature_page');
         if ($signaturePage) {
-            $signaturePath = $this->resolveMediaPath($signaturePage);
-            if (file_exists($signaturePath) && str_contains($signaturePage->mime_type ?? '', 'pdf')) {
+            $signaturePath = $this->getLocalPdfPath($signaturePage, $tempFiles);
+            if ($signaturePath !== null && str_contains($signaturePage->mime_type ?? '', 'pdf')) {
                 try {
                     $sigPageCount = $pdf->setSourceFile($signaturePath);
                     for ($i = 1; $i <= $sigPageCount; $i++) {
@@ -663,8 +700,8 @@ class ProposalPdfService
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
         $substanceFile = $report->getFirstMedia('substance_file');
         if ($substanceFile) {
-            $reportSubstancePath = $this->resolveMediaPath($substanceFile);
-            if (file_exists($reportSubstancePath) && str_contains($substanceFile->mime_type ?? '', 'pdf')) {
+            $reportSubstancePath = $this->getLocalPdfPath($substanceFile, $tempFiles);
+            if ($reportSubstancePath !== null && str_contains($substanceFile->mime_type ?? '', 'pdf')) {
                 try {
                     $substancePageCount = $pdf->setSourceFile($reportSubstancePath);
                     for ($i = 1; $i <= $substancePageCount; $i++) {
@@ -683,8 +720,8 @@ class ProposalPdfService
         /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $realizationFile */
         $realizationFile = $report->getFirstMedia('realization_file');
         if ($realizationFile) {
-            $realizationPath = $this->resolveMediaPath($realizationFile);
-            if (file_exists($realizationPath) && str_contains($realizationFile->mime_type ?? '', 'pdf')) {
+            $realizationPath = $this->getLocalPdfPath($realizationFile, $tempFiles);
+            if ($realizationPath !== null && str_contains($realizationFile->mime_type ?? '', 'pdf')) {
                 try {
                     $realizationPageCount = $pdf->setSourceFile($realizationPath);
                     for ($i = 1; $i <= $realizationPageCount; $i++) {
@@ -704,8 +741,8 @@ class ProposalPdfService
             /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $presentationFile */
             $presentationFile = $report->getFirstMedia('presentation_file');
             if ($presentationFile) {
-                $presentationPath = $this->resolveMediaPath($presentationFile);
-                if (file_exists($presentationPath) && str_contains($presentationFile->mime_type ?? '', 'pdf')) {
+                $presentationPath = $this->getLocalPdfPath($presentationFile, $tempFiles);
+                if ($presentationPath !== null && str_contains($presentationFile->mime_type ?? '', 'pdf')) {
                     try {
                         $presentationPageCount = $pdf->setSourceFile($presentationPath);
                         for ($i = 1; $i <= $presentationPageCount; $i++) {
@@ -731,8 +768,8 @@ class ProposalPdfService
                 /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $outputMedia */
                 $outputMedia = $outputRecord->getFirstMedia($collection);
                 if ($outputMedia) {
-                    $outputPath = $this->resolveMediaPath($outputMedia);
-                    if (file_exists($outputPath) && str_contains($outputMedia->mime_type ?? '', 'pdf')) {
+                    $outputPath = $this->getLocalPdfPath($outputMedia, $tempFiles);
+                    if ($outputPath !== null && str_contains($outputMedia->mime_type ?? '', 'pdf')) {
                         try {
                             $outputPageCount = $pdf->setSourceFile($outputPath);
                             for ($i = 1; $i <= $outputPageCount; $i++) {
@@ -816,6 +853,11 @@ class ProposalPdfService
 
         $pdf->Output('F', $cachePath);
         @unlink($tempInfoPath);
+
+        // Cleanup temp files from S3 downloads
+        foreach ($tempFiles as $tempFile) {
+            @unlink($tempFile);
+        }
 
         return $cachePath;
     }
