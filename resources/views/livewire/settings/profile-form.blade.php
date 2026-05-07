@@ -14,10 +14,11 @@
             @endif
         </div>
         <div class="col-auto">
-            <input type="file" class="d-none" wire:model.live="photo" x-ref="photo" accept="image/*">
+            <input type="file" class="d-none" wire:model="photo" x-ref="photo" accept="image/*">
 
-            <button type="button" class="btn btn-primary" x-on:click.prevent="$refs.photo.click()">
-                Ubah Foto
+            <button type="button" class="btn btn-primary" x-on:click.prevent="$refs.photo.click()" wire:loading.attr="disabled" wire:target="photo">
+                <span wire:loading.remove wire:target="photo">Ubah Foto</span>
+                <span wire:loading wire:target="photo">Mengunggah...</span>
             </button>
         </div>
         @if (auth()->user()->getFirstMedia('avatar') || auth()->user()->identity?->profile_picture)
@@ -286,7 +287,7 @@
                 Batal
             </button>
             <button type="submit" class="btn btn-primary" wire:click="updateProfileInformation"
-                wire:loading.attr="disabled">
+                wire:loading.attr="disabled" wire:target="updateProfileInformation, photo">
                 <span wire:loading.remove>Simpan Perubahan</span>
                 <span wire:loading>Menyimpan...</span>
             </button>
