@@ -38,9 +38,12 @@ class ProposalPdfService
                 register_shutdown_function(fn () => @unlink($tempFile));
 
                 Log::debug('Downloaded S3 media to temp for PDF merge', [
+                    's3_path' => $media->getPath(),
+                    'file_name' => $media->file_name,
                     'media_id' => $media->id,
                     'temp_path' => $tempFile,
                     'file_size' => strlen($content),
+                    'md5' => md5($content),
                 ]);
 
                 return $tempFile;
