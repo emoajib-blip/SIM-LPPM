@@ -190,11 +190,32 @@
                                                     Belum
                                                 </span>
                                             @endif
-                                            <button type="button"
-                                                wire:click="prepareCommitmentUpload('{{ $partnerId }}')"
-                                                class="btn btn-sm btn-outline-secondary" title="Upload / Ganti Surat Kesediaan">
-                                                <x-lucide-upload class="icon" />
-                                            </button>
+                                            {{-- Direct Upload Button --}}
+                                            <div x-data="{ uploading: false }">
+                                                <input type="file"
+                                                    x-ref="commitmentFile{{ $partnerId }}"
+                                                    class="d-none"
+                                                    accept=".pdf"
+                                                    x-on:change="
+                                                        uploading = true;
+                                                        $wire.upload('commitmentUploadFile', $refs.commitmentFile{{ $partnerId }}.files[0],
+                                                            () => { $wire.uploadCommitmentLetter('{{ $partnerId }}'); uploading = false; },
+                                                            () => { uploading = false; },
+                                                            () => { uploading = false; }
+                                                        );
+                                                    "
+                                                    wire:loading.attr="disabled">
+                                                <button type="button"
+                                                    x-on:click="$refs.commitmentFile{{ $partnerId }}.click()"
+                                                    x-show="!uploading"
+                                                    class="btn btn-sm btn-outline-secondary" title="Upload Surat Kesediaan">
+                                                    <x-lucide-upload class="icon" />
+                                                </button>
+                                                <span x-show="uploading" class="btn btn-sm btn-outline-secondary disabled">
+                                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                                    Uploading...
+                                                </span>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>

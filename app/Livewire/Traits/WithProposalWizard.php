@@ -150,13 +150,15 @@ trait WithProposalWizard
     /**
      * Simpan Surat Kesediaan Mitra ke koleksi `commitment_letter` di model Partner.
      */
-    public function uploadCommitmentLetter(): void
+    public function uploadCommitmentLetter(?string $partnerId = null): void
     {
+        $targetPartnerId = $partnerId ?? $this->commitmentUploadPartnerId;
+
         $this->validate([
             'commitmentUploadFile' => 'required|file|mimes:pdf|max:5120',
         ]);
 
-        $partner = \App\Models\Partner::find($this->commitmentUploadPartnerId);
+        $partner = \App\Models\Partner::find($targetPartnerId);
         if (! $partner) {
             $this->addError('commitmentUploadFile', 'Mitra tidak ditemukan.');
 
