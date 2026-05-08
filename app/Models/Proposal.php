@@ -126,6 +126,7 @@ class Proposal extends Model
         return [
             'sbk_value' => 'decimal:2',
             'duration_in_years' => 'integer',
+            'start_year' => 'integer',
             'status' => ProposalStatus::class,
             'logbook_signed_at' => 'datetime',
             'logbook_approved_at' => 'datetime',

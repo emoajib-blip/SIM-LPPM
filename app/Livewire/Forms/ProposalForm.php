@@ -58,7 +58,7 @@ class ProposalForm extends Form
     public string $duration_in_years = '1';
 
     #[Validate('required|integer|min:2020|max:2050')]
-    public string $start_year = '';
+    public string $start_year = '2026';
 
     #[Validate('required|string|min:100')]
     public string $summary = '';
