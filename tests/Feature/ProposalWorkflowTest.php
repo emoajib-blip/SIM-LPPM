@@ -344,6 +344,9 @@ class ProposalWorkflowTest extends TestCase
 
         $proposal->teamMembers()->attach($this->dosen->id, ['role' => 'ketua', 'status' => 'accepted']);
 
+        $anggota = User::factory()->create()->assignRole('dosen');
+        $proposal->teamMembers()->attach($anggota->id, ['role' => 'anggota', 'status' => 'accepted']);
+
         // 2. Submission
         $this->actingAs($this->dosen);
         app(SubmitProposalAction::class)->execute($proposal);
@@ -493,5 +496,131 @@ class ProposalWorkflowTest extends TestCase
         $this->expectExceptionMessage('This action is unauthorized.');
 
         $proposalService->deleteProposal($proposal);
+    }
+
+    /* ============================================
+     * STEP 2 TESTS: Edge Cases & Validations
+     * ============================================ */
+
+    public function test_cannot_submit_with_rejected_team_member()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::DRAFT,
+        ]);
+
+        // Add team member with rejected status
+        $anggota = User::factory()->create()->assignRole('dosen');
+        $proposal->teamMembers()->attach($this->dosen->id, ['role' => 'ketua', 'status' => 'accepted']);
+        $proposal->teamMembers()->attach($anggota->id, ['role' => 'anggota', 'status' => 'rejected']);
+
+        $this->actingAs($this->dosen);
+        $result = app(SubmitProposalAction::class)->execute($proposal);
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('belum menerima undangan', $result['message']);
+        $this->assertEquals(ProposalStatus::DRAFT, $proposal->fresh()->status);
+    }
+
+    public function test_cannot_submit_with_pending_team_member()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::DRAFT,
+        ]);
+
+        // Add team member with pending status
+        $anggota = User::factory()->create()->assignRole('dosen');
+        $proposal->teamMembers()->attach($this->dosen->id, ['role' => 'ketua', 'status' => 'accepted']);
+        $proposal->teamMembers()->attach($anggota->id, ['role' => 'anggota', 'status' => 'pending']);
+
+        $this->actingAs($this->dosen);
+        $result = app(SubmitProposalAction::class)->execute($proposal);
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('belum menerima undangan', $result['message']);
+        $this->assertEquals(ProposalStatus::DRAFT, $proposal->fresh()->status);
+    }
+
+    public function test_cannot_submit_from_approved_status()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::APPROVED,
+        ]);
+
+        $this->actingAs($this->dosen);
+        $result = app(SubmitProposalAction::class)->execute($proposal);
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('tidak dapat diajukan', $result['message']);
+    }
+
+    public function test_cannot_submit_by_non_owner()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::DRAFT,
+        ]);
+
+        // Try to submit as different user (admin lppm)
+        $this->actingAs($this->adminLppm);
+        $result = app(SubmitProposalAction::class)->execute($proposal);
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('tidak memiliki akses', $result['message']);
+        $this->assertEquals(ProposalStatus::DRAFT, $proposal->fresh()->status);
+    }
+
+    public function test_reviewer_conflict_of_interest_submitter()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::WAITING_REVIEWER,
+        ]);
+
+        $this->actingAs($this->adminLppm);
+        // Try to assign submitter as reviewer - should fail due to conflict of interest
+        $result = app(AssignReviewersAction::class)->execute($proposal, $this->dosen->id);
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('coi', strtolower($result['message']));
+    }
+
+    public function test_reviewer_conflict_of_interest_team_member()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::WAITING_REVIEWER,
+        ]);
+
+        // Add team member
+        $anggota = User::factory()->create()->assignRole('dosen');
+        $proposal->teamMembers()->attach($anggota->id, ['role' => 'anggota', 'status' => 'accepted']);
+
+        $this->actingAs($this->adminLppm);
+        // Try to assign team member as reviewer - should fail due to conflict of interest
+        $result = app(AssignReviewersAction::class)->execute($proposal, $anggota->id);
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('coi', strtolower($result['message']));
     }
 }
