@@ -535,7 +535,7 @@ class Proposal extends Model
     public function getPendingReviewers(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->reviewers()
-            ->where('status', '!=', 'COMPLETED')
+            ->where('status', '!=', \App\Enums\ReviewStatus::COMPLETED->value)
             ->get();
     }
 

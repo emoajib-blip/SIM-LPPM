@@ -95,19 +95,13 @@ if (! function_exists('active_has_any_role')) {
 
 if (! function_exists('active_has_all_roles')) {
     /**
-     * Check if the active role matches all of the given roles.
+     * Check if the active role matches any of the given roles.
      */
     function active_has_all_roles(array $roles): bool
     {
         $activeRole = active_role();
 
-        foreach ($roles as $role) {
-            if ($activeRole !== $role) {
-                return false;
-            }
-        }
-
-        return true;
+        return in_array($activeRole, $roles);
     }
 }
 

@@ -117,8 +117,8 @@ abstract class ProposalShow extends Component
     {
         $user = Auth::user();
 
-        // Only submitter of a draft proposal can edit
-        if ($this->proposal->status !== \App\Enums\ProposalStatus::DRAFT
+        // Allow editing for draft or revision_needed proposals by submitter
+        if (! in_array($this->proposal->status, [\App\Enums\ProposalStatus::DRAFT, \App\Enums\ProposalStatus::REVISION_NEEDED])
             || $this->proposal->submitter_id !== $user->id) {
             return false;
         }

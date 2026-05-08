@@ -26,7 +26,7 @@ trait WithApproval
         $proposal = $this->getProposal();
 
         $this->validate([
-            'approvalDecision' => 'required|in:approved,rejected',
+            'approvalDecision' => 'required|in:APPROVED,REJECTED',
             'approvalNotes' => 'required|string',
         ]);
 
@@ -45,21 +45,32 @@ trait WithApproval
             $proposal->update(['status' => $newStatus->value]);
 
             if ($newStatus === ProposalStatus::UNDER_REVIEW) {
-                $dekan = $proposal->submitter->identity->faculty->deanUser;
-                // Notify Submitter
-                $this->notificationService()->notifyDekanApprovalDecision(
-                    $proposal,
-                    'APPROVED',
-                    $dekan,
-                    [$proposal->submitter]
-                );
+                $dean = null;
+                $submitter = $proposal->submitter;
+                $faculty = null;
 
-                if ($dekan) {
+                if ($submitter && $submitter->identity) {
+                    $faculty = $submitter->identity->faculty;
+                }
+
+                if ($faculty) {
+                    $dean = $faculty->deanUser()->first();
+                }
+
+                if ($dean) {
+                    // Notify Submitter
                     $this->notificationService()->notifyDekanApprovalDecision(
                         $proposal,
-                        'APPROVED',
-                        $dekan,
-                        [$dekan]
+                        $newStatus->value,
+                        $dean,
+                        [$proposal->submitter]
+                    );
+
+                    $this->notificationService()->notifyDekanApprovalDecision(
+                        $proposal,
+                        $newStatus->value,
+                        $dean,
+                        [$dean]
                     );
                 }
             }
@@ -85,7 +96,7 @@ trait WithApproval
         $proposal = $this->getProposal();
 
         $this->validate([
-            'approvalDecision' => 'required|in:approved,need_fix,rejected',
+            'approvalDecision' => 'required|in:APPROVED,need_fix,REJECTED',
             'approvalNotes' => 'nullable|string',
         ]);
 
@@ -108,7 +119,7 @@ trait WithApproval
                 // Notify Submitter (Dosen) about Dean's approval
                 $this->notificationService()->notifyDekanApprovalDecision(
                     $proposal,
-                    $this->approvalDecision,
+                    $newStatus->value,
                     \Illuminate\Support\Facades\Auth::user(),
                     [$proposal->submitter]
                 );
@@ -120,7 +131,7 @@ trait WithApproval
                 foreach ($kepalaLppmUsers as $kepalaLppm) {
                     $this->notificationService()->notifyDekanApprovalDecision(
                         $proposal,
-                        $this->approvalDecision,
+                        $newStatus->value,
                         \Illuminate\Support\Facades\Auth::user(),
                         [$kepalaLppm]
                     );
@@ -129,7 +140,7 @@ trait WithApproval
                 // If rejected or need_fix, notify the submitter directly
                 $this->notificationService()->notifyDekanApprovalDecision(
                     $proposal,
-                    $this->approvalDecision,
+                    $newStatus->value,
                     \Illuminate\Support\Facades\Auth::user(),
                     [$proposal->submitter]
                 );
@@ -138,7 +149,7 @@ trait WithApproval
 
         $message = match ($this->approvalDecision) {
             'APPROVED' => 'Proposal berhasil disetujui dan diteruskan ke Kepala LPPM.',
-            'need_fix' => 'Proposal dikembalikan ke pengusul untuk perbaikan.',
+            'need_fix' => 'Proposal dikembalikan ke pengusul untuk diperbaiki.',
             'REJECTED' => 'Proposal telah ditolak.',
             default => 'Keputusan berhasil disimpan.',
         };

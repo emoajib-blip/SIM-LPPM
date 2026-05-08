@@ -23,7 +23,7 @@ class Show extends ProposalShow
 
     protected function getReviewRoute(string $proposalId): string
     {
-        return route('research.proposal.review', $proposalId);
+        return route('review.research');
     }
 
     protected function getViewName(): string

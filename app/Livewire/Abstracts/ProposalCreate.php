@@ -152,6 +152,11 @@ abstract class ProposalCreate extends Component
                 return true;
             }
 
+            // Allow editing if proposal needs revision
+            if ($proposal->status === \App\Enums\ProposalStatus::REVISION_NEEDED) {
+                return true;
+            }
+
             // Allow editing if proposal is completed (final report phase)
             // BUT the final report is not yet fully approved
             if ($proposal->status === \App\Enums\ProposalStatus::COMPLETED) {

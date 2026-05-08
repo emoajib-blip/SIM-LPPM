@@ -193,7 +193,7 @@ class ProposalService
 
     public function validateProposalBeforeSubmit(Proposal $proposal): void
     {
-        if ($proposal->status !== 'DRAFT') {
+        if ($proposal->status !== \App\Enums\ProposalStatus::DRAFT) {
             throw new \Exception('Hanya proposal dengan status draft yang dapat disubmit.');
         }
 
@@ -215,7 +215,7 @@ class ProposalService
         $recipients = $notificationService->getUsersByRole('dekan');
 
         DB::transaction(function () use ($proposal, $notificationService, $submitter, $recipients) {
-            $proposal->update(['status' => 'SUBMITTED']);
+            $proposal->update(['status' => \App\Enums\ProposalStatus::SUBMITTED->value]);
 
             $notificationService->notifyProposalSubmitted($proposal, $submitter, $recipients);
         });

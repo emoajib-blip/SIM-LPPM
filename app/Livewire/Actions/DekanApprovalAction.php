@@ -119,6 +119,9 @@ class DekanApprovalAction
      */
     protected function sendNotifications(Proposal $proposal, string $decision, User $dekan): void
     {
+        // Eager load team members to prevent N+1 lazy loading
+        $proposal->load('teamMembers');
+
         $recipients = collect();
 
         if ($decision === 'APPROVED') {

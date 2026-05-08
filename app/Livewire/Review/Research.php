@@ -39,7 +39,7 @@ class Research extends Component
     #[Computed]
     public function proposals()
     {
-        $query = Proposal::where('detailable_type', 'App\Models\Research')
+        $query = Proposal::where('detailable_type', \App\Models\Research::class)
             ->whereHas('reviewers', function ($query) {
                 $query->where('user_id', Auth::id());
             })
@@ -79,7 +79,7 @@ class Research extends Component
     #[Computed]
     public function availableYears(): array
     {
-        return Proposal::where('detailable_type', 'App\Models\Research')
+        return Proposal::where('detailable_type', \App\Models\Research::class)
             ->whereHas('reviewers', function ($query) {
                 $query->where('user_id', Auth::id());
             })

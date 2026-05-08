@@ -18,6 +18,15 @@ class ApproveProposalAction
      */
     public function execute(Proposal $proposal, string $decision): array
     {
+        // Authorization check - only kepala lppm can approve/reject
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (! $user || ! $user->hasRole('kepala lppm')) {
+            return [
+                'success' => false,
+                'message' => 'Anda tidak memiliki akses untuk melakukan keputusan ini.',
+            ];
+        }
+
         // Normalize decision to uppercase to match enum values
         $decision = strtoupper($decision);
 

@@ -104,9 +104,12 @@ class CompleteReviewAction
      */
     protected function sendNotifications($proposal, User $reviewer, ProposalReviewer $review): void
     {
+        // Eager load team members to prevent N+1 lazy loading
+        $proposal->load('teamMembers');
+
         $recipients = collect()
             ->push($proposal->submitter) // Submitter
-            ->merge($proposal->teamMembers) // Team Members
+            ->merge($proposal->teamMembers) // Team Members (now eager loaded)
             ->filter(fn ($user) => $user && $user->id !== $reviewer->id) // Exclude reviewer
             ->unique('id')
             ->values();
@@ -124,6 +127,9 @@ class CompleteReviewAction
      */
     protected function sendAllReviewsCompletedNotification($proposal): void
     {
+        // Eager load team members to prevent N+1 lazy loading
+        $proposal->load('teamMembers');
+
         $recipients = collect()
             ->push($proposal->submitter) // Submitter
             ->merge(User::role('kepala lppm')->get()) // All Kepala LPPM
@@ -132,7 +138,7 @@ class CompleteReviewAction
             ->merge(User::role('dekan')->whereHas('identity', function ($query) use ($proposal) {
                 $query->where('faculty_id', $proposal->submitter?->identity?->faculty_id);
             })->get()) // Relevant Dekan(s) by identity (backup)
-            ->merge($proposal->teamMembers) // Team Members
+            ->merge($proposal->teamMembers) // Team Members (now eager loaded)
             ->filter()
             ->unique('id')
             ->values();

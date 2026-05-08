@@ -5,8 +5,8 @@ namespace App\Livewire\Actions;
 use App\Enums\ProposalStatus;
 use App\Models\Proposal;
 use App\Models\User;
-use App\Services\LecturerEligibilityService;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\DB;
 
 class SubmitProposalAction
 {
@@ -15,101 +15,40 @@ class SubmitProposalAction
     ) {}
 
     /**
-     * Submit a proposal for review.
-     * Only possible if all team members have accepted.
+     * Submit a proposal (change status to SUBMITTED).
      */
     public function execute(Proposal $proposal): array
     {
-        \Illuminate\Support\Facades\Gate::authorize('submit', $proposal);
-
-        // Check if all team members accepted
-        if (! $proposal->allTeamMembersAccepted()) {
-            $pendingMembers = $proposal->getPendingTeamMembers();
-
+        // Authorization check - only submitter can submit
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (! $user || ($proposal->submitter_id !== $user->getAuthIdentifier())) {
             return [
                 'success' => false,
-                'message' => sprintf(
-                    'Tidak dapat mengirim proposal. %d anggota masih belum menerima undangan.',
-                    $pendingMembers->count()
-                ),
+                'message' => 'Anda tidak memiliki akses untuk mengajukan proposal ini.',
             ];
         }
 
-        // Check if proposal can be submitted
-        $allowedStatuses = [
-            ProposalStatus::DRAFT,
-            ProposalStatus::NEED_ASSIGNMENT,
-            ProposalStatus::REVISION_NEEDED,
-        ];
+        // Validate before submit
+        app(\App\Services\ProposalService::class)->validateProposalBeforeSubmit($proposal);
 
-        if (! in_array($proposal->status, $allowedStatuses)) {
+        try {
+            DB::transaction(function () use ($proposal) {
+                $proposal->update(['status' => ProposalStatus::SUBMITTED->value]);
+            });
+
+            // Send notifications
+            $this->sendNotifications($proposal);
+
+            return [
+                'success' => true,
+                'message' => 'Proposal berhasil diajukan.',
+            ];
+        } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Proposal tidak dapat diajukan dari status saat ini.',
+                'message' => 'Gagal mengajukan proposal: '.$e->getMessage(),
             ];
         }
-
-        // Check kaprodi approval (pre-gate before submission)
-        // Only enforced when feature_kaprodi_validation is enabled
-        if (\App\Models\Setting::get('feature_kaprodi_validation', false)) {
-            $kaprodiAction = app(\App\Actions\Kaprodi\KaprodiApprovalAction::class);
-            $kaprodiCheck = $kaprodiAction->canSubmit($proposal);
-
-            if (! $kaprodiCheck['can_submit']) {
-                return [
-                    'success' => false,
-                    'message' => $kaprodiCheck['reason'],
-                ];
-            }
-        }
-
-        // Check lecturer eligibility
-        if ($proposal->submitter->activeHasRole('dosen')) {
-            $eligibilityService = app(LecturerEligibilityService::class);
-            $eligibility = $eligibilityService->checkEligibility($proposal->submitter);
-
-            if (! $eligibility['eligible']) {
-                return [
-                    'success' => false,
-                    'message' => 'Anda tidak memenuhi syarat untuk mengajukan proposal baru. '.implode(', ', $eligibility['reasons']),
-                ];
-            }
-        }
-
-        // Track if this is a resubmission after revision
-        $isResubmissionAfterRevision = $proposal->status === ProposalStatus::REVISION_NEEDED;
-
-        // Submit proposal (status changes to SUBMITTED)
-        $proposal->update(['status' => ProposalStatus::SUBMITTED]);
-
-        // Send notifications
-        $this->sendNotifications($proposal);
-
-        // If this is a resubmission after revision and has existing reviewers,
-        // request re-review from them
-        if ($isResubmissionAfterRevision && $proposal->reviewers()->exists()) {
-            $this->triggerReReview($proposal);
-        }
-
-        return [
-            'success' => true,
-            'message' => 'Proposal berhasil diajukan untuk review.',
-        ];
-    }
-
-    /**
-     * Trigger re-review process for existing reviewers.
-     */
-    protected function triggerReReview(Proposal $proposal): void
-    {
-        // This will be called after proposal goes through approval flow again
-        // For now, we just prepare the reviewers for re-review
-        // The actual status change will happen via RequestReReviewAction
-        // when proposal reaches UNDER_REVIEW status again
-
-        // Note: The re-review workflow will be triggered when:
-        // SUBMITTED -> APPROVED (Dekan) -> WAITING_REVIEWER -> UNDER_REVIEW
-        // At UNDER_REVIEW stage, if reviewers exist, their status should be reset
     }
 
     /**
@@ -117,16 +56,29 @@ class SubmitProposalAction
      */
     protected function sendNotifications(Proposal $proposal): void
     {
-        // Get recipients: Dekan, Team Members
-        $faculty = $proposal->submitter->identity?->faculty;
-        $dekan = $faculty->deanUser ?? User::role('dekan')->whereHas('identity', function ($query) use ($faculty) {
-            $query->where('faculty_id', $faculty?->id);
-        })->first();
+        // Get recipients: Dean, Team Members
+        $submitter = $proposal->submitter;
+        $faculty = null;
+        $dean = null;
+
+        if ($submitter && $submitter->identity) {
+            $faculty = $submitter->identity->faculty;
+        }
+
+        if ($faculty) {
+            $dean = $faculty->deanUser()->first() ?? User::role('dekan')->whereHas('identity', function ($query) use ($faculty) {
+                $query->where('faculty_id', $faculty->id);
+            })->first();
+        }
+
+        if (! $dean) {
+            $dean = User::role('dekan')->first();
+        }
 
         $teamMembers = $proposal->teamMembers()->where('user_id', '!=', $proposal->submitter_id)->get();
 
         $recipients = collect()
-            ->push($dekan)
+            ->push($dean)
             ->merge($teamMembers)
             ->filter()
             ->unique('id')
@@ -134,7 +86,7 @@ class SubmitProposalAction
 
         $this->notificationService->notifyProposalSubmitted(
             $proposal,
-            $proposal->submitter,
+            $submitter,
             $recipients
         );
     }

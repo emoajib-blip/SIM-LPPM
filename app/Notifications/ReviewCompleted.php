@@ -37,6 +37,8 @@ class ReviewCompleted extends Notification implements ShouldQueue
                 'message' => "Semua reviewer telah menyelesaikan review untuk proposal '{$this->proposal->title}'",
                 'body' => "Semua reviewer telah menyelesaikan proses review untuk proposal {$proposalType} dengan judul '{$this->proposal->title}'. Review dari setiap reviewer telah diterima dan dicatat dalam sistem. Proposal ini sekarang menunggu keputusan akhir dari Kepala LPPM. Keputusan final akan mempertimbangkan seluruh hasil review dan rekomendasi dari reviewer. Mohon menunggu informasi selanjutnya melalui sistem notifikasi.",
                 'proposal_id' => $this->proposal->id,
+                'reviewer_id' => $this->reviewer->id,
+                'reviewer_name' => $this->reviewer->name,
                 'proposal_type' => $isResearch ? 'research' : 'community_service',
                 'link' => route($isResearch ? 'research.proposal.show' : 'community-service.proposal.show', $this->proposal),
                 'icon' => 'check-square',
