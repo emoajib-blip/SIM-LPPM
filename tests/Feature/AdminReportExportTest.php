@@ -7,6 +7,7 @@ use Database\Seeders\InstitutionSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class AdminReportExportTest extends TestCase
@@ -16,6 +17,9 @@ class AdminReportExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Clear permission cache before each test
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
         // Setup roles
         $this->seed(RoleSeeder::class);
