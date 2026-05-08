@@ -57,6 +57,20 @@ CLAUDE.md
 /database/*.sqlite-journal
 build/phpstan/
 
+# AI / IDE agent artifacts
+/.opencode/
+/.kilo/
+/.kilocode/
+/.agent_cache/
+/.agents/
+/output_external_reviewer/
+/phpstan_*.txt
+/migration*.txt
+/test_results.txt
+
+# One-off SQL scripts
+/*.sql
+
 # Deployments
 /sosiomen_deploy/
 /sosiomen_deploy.zip
