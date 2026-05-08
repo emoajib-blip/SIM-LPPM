@@ -1,1 +1,0 @@
-UPDATE proposals SET status = 'DRAFT' WHERE status IS NULL;
