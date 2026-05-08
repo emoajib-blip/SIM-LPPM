@@ -75,3 +75,4 @@ build/phpstan/
 /sosiomen_deploy/
 /sosiomen_deploy.zip
 /vendor_deploy.zip
+.user.ini
