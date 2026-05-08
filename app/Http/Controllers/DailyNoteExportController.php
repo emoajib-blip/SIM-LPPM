@@ -45,10 +45,10 @@ class DailyNoteExportController extends Controller
 
         $submitterIdentity = $proposal->submitter->identity;
         $submitterFullName = format_name($submitterIdentity?->title_prefix, $proposal->submitter->name, $submitterIdentity?->title_suffix);
-        $submitterNidn = $submitterIdentity?->identity_id ?? '-';
-        $facultyName = $submitterIdentity?->faculty?->name ?? '.......................';
-        $prodiName = $submitterIdentity?->studyProgram?->name ?? '.......................';
-        $institutionName = $submitterIdentity?->institution?->name ?? 'ITSNU Pekalongan';
+        $submitterNidn = $submitterIdentity->identity_id ?? '-';
+        $facultyName = $submitterIdentity?->faculty->name ?? '.......................';
+        $prodiName = $submitterIdentity?->studyProgram->name ?? '.......................';
+        $institutionName = $submitterIdentity?->institution->name ?? 'ITSNU Pekalongan';
         $academicYear = $proposal->start_year.'/'.($proposal->start_year + 1);
 
         $logbookApprovalMode = \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital';

@@ -799,9 +799,9 @@ class ProposalPdfService
             // Prepare submitter information for daily notes view
             $submitterIdentity = $proposal->submitter->identity;
             $submitterFullName = format_name($submitterIdentity?->title_prefix, $proposal->submitter->name, $submitterIdentity?->title_suffix);
-            $facultyName = $submitterIdentity?->faculty?->name ?? '-';
-            $prodiName = $submitterIdentity?->studyProgram?->name ?? '-';
-            $institutionName = $submitterIdentity?->institution?->name ?? 'ITSNU Pekalongan';
+            $facultyName = $submitterIdentity?->faculty->name ?? '-';
+            $prodiName = $submitterIdentity?->studyProgram->name ?? '-';
+            $institutionName = $submitterIdentity?->institution->name ?? 'ITSNU Pekalongan';
             $academicYear = $proposal->start_year.'/'.($proposal->start_year + 1);
 
             // Get QR URLs for daily notes signatures

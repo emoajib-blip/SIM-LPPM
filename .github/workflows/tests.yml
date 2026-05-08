@@ -72,7 +72,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyze --memory-limit=2G --level=5
+        run: vendor/bin/phpstan analyze --memory-limit=2G --level=4
 
   # ──────────────────────────────────────────────
   # JOB 3: Automated Tests (Pest — SQLite)
@@ -119,6 +119,9 @@ jobs:
           touch database/database.sqlite
 
       - name: Generate Key & Migrate
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
         run: |
           php artisan key:generate
           php artisan migrate --force

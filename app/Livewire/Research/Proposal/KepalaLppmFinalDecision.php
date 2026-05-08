@@ -62,7 +62,7 @@ class KepalaLppmFinalDecision extends Component
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int|string, int>
+     * @return \Illuminate\Support\Collection<(int|string), int<0, max>>
      */
     #[Computed]
     public function reviewSummary(): \Illuminate\Support\Collection

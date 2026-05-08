@@ -171,7 +171,10 @@ class KaprodiApprovalAction
             return null;
         }
 
-        return $studyProgram->kaprodi;
+        /** @var \App\Models\User|null $kaprodi */
+        $kaprodi = $studyProgram->kaprodi;
+
+        return $kaprodi;
     }
 
     /**

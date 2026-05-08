@@ -459,7 +459,14 @@ class Proposal extends Model
     {
         $latest = $this->latestKaprodiApproval;
 
-        return $latest instanceof KaprodiApproval ? $latest->status : null;
+        if (! $latest instanceof KaprodiApproval) {
+            return null;
+        }
+
+        /** @var \App\Enums\KaprodiStatus $status */
+        $status = $latest->status;
+
+        return $status;
     }
 
     /**
@@ -616,15 +623,15 @@ class Proposal extends Model
         $researchTree = $roadmap['research_tree'] ?? null;
         if ($researchTree) {
             $treeArray = is_array($researchTree) ? $researchTree : array_map('trim', explode(',', $researchTree));
-            if (is_array($treeArray) && $treeArray !== []) {
+            if ($treeArray !== []) {
                 $totalChecks++;
                 $researchTree = array_map('strtolower', $treeArray);
 
                 $proposalTitle = strtolower($this->title);
                 $proposalSummary = $this->summary !== null ? strtolower($this->summary) : '';
-                $proposalCategory = $this->focusArea?->name ?? '';
-                $proposalTheme = $this->theme?->name ?? '';
-                $proposalTopic = $this->topic?->name ?? '';
+                $proposalCategory = $this->focusArea->name ?? '';
+                $proposalTheme = $this->theme->name ?? '';
+                $proposalTopic = $this->topic->name ?? '';
 
                 foreach ($researchTree as $tree) {
                     if (str_contains($proposalTitle, $tree)
