@@ -76,9 +76,9 @@ class ReviewHistory extends Component
 
         return [
             'total' => (clone $baseQuery)->count(),
-            'APPROVED' => (clone $baseQuery)->where('recommendation', 'APPROVED')->count(),
-            'REVISION_NEEDED' => (clone $baseQuery)->where('recommendation', 'REVISION_NEEDED')->count(),
-            'REJECTED' => (clone $baseQuery)->where('recommendation', 'REJECTED')->count(),
+            'approved' => (clone $baseQuery)->where('recommendation', 'approved')->count(),
+            'revision_needed' => (clone $baseQuery)->where('recommendation', 'revision_needed')->count(),
+            'rejected' => (clone $baseQuery)->where('recommendation', 'rejected')->count(),
         ];
     }
 

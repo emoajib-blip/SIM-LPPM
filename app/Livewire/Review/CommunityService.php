@@ -98,7 +98,7 @@ class CommunityService extends Component
             'pending' => (clone $baseQuery)->whereHas('reviewers', function ($q) {
                 $q->where('user_id', Auth::id())->where('status', \App\Enums\ReviewStatus::PENDING);
             })->count(),
-            'COMPLETED' => (clone $baseQuery)->whereHas('reviewers', function ($q) {
+            'completed' => (clone $baseQuery)->whereHas('reviewers', function ($q) {
                 $q->where('user_id', Auth::id())->where('status', \App\Enums\ReviewStatus::COMPLETED);
             })->count(),
             're_review' => (clone $baseQuery)->whereHas('reviewers', function ($q) {
