@@ -1,110 +1,185 @@
 #!/bin/bash
+# sync-from-prod.sh — Tarik data dari server produksi ke localhost
+# Usage: bash sync-from-prod.sh [db|files|all]
+#
+# Konfigurasi via environment variable (diset di .env atau export):
+#   SYNC_SSH_HOST, SYNC_SSH_USER, SYNC_SSH_PORT, SYNC_SSH_KEY_PATH
+#   SYNC_REMOTE_PATH, SYNC_REMOTE_DB, SYNC_REMOTE_DB_USER, SYNC_REMOTE_DB_PASSWORD
+#   SYNC_REMOTE_DB_CONNECTION (mysql|pgsql)
+#   DB_DATABASE, DB_USERNAME, DB_PASSWORD (local database)
 
-# ==============================================================================
-# SIM-LPPM SYNC SCRIPT (PRODUCTION -> LOCAL)
-# ==============================================================================
-# Script ini digunakan untuk mensinkronisasi data dari server produksi ke 
-# lingkungan lokal (backup) secara aman dan efisien.
-# ==============================================================================
+set -e
 
-# --- 1. KONFIGURASI SERVER PRODUKSI ---
-REMOTE_USER="simlppmi"
-REMOTE_HOST="sim-lppm.itsnupekalongan.ac.id"
-REMOTE_PATH="/home/simlppmi/sim-lppm"
-REMOTE_DB="simlppmi_sim_lppm"
+SYNC_TYPE="${1:-all}"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SYNC_DIR="${SCRIPT_DIR}/storage/app/sync"
 
-# --- 2. KONFIGURASI LOKAL (Ditemukan Otomatis) ---
-# Membaca konfigurasi dari file .env jika ada
-if [ -f .env ]; then
-    DB_DATABASE=$(grep DB_DATABASE .env | cut -d '=' -f2)
-    DB_USERNAME=$(grep DB_USERNAME .env | cut -d '=' -f2)
-    DB_PASSWORD=$(grep DB_PASSWORD .env | cut -d '=' -f2)
-    DB_CONNECTION=$(grep DB_CONNECTION .env | cut -d '=' -f2)
-fi
+echo "============================================"
+echo "  Sinkronisasi Data dari Produksi"
+echo "  Tipe: ${SYNC_TYPE}"
+echo "  Waktu: $(date)"
+echo "============================================"
+echo ""
 
-# Fallback ke default jika .env tidak lengkap
-DB_DATABASE=${DB_DATABASE:-sim_lppm}
-DB_USERNAME=${DB_USERNAME:-root}
-DB_PASSWORD=${DB_PASSWORD:-}
-DB_CONNECTION=${DB_CONNECTION:-mysql}
-
-# --- 3. VALIDASI & KONFIRMASI ---
-echo "--------------------------------------------------------"
-echo "🚀 SIM-LPPM Sync: [Production] -> [Localhost]"
-echo "--------------------------------------------------------"
-echo "Remote: $REMOTE_USER@$REMOTE_HOST ($REMOTE_DB)"
-echo "Local : $DB_CONNECTION://$DB_USERNAME@localhost/$DB_DATABASE"
-echo "--------------------------------------------------------"
-
-if [ "$DB_CONNECTION" == "sqlite" ]; then
-    echo "⚠️  PERINGATAN: Local menggunakan SQLite. Sinkronisasi otomatis dari MySQL server ke SQLite lokal membutuhkan tool tambahan."
-    echo "Script ini hanya akan melakukan sinkronisasi file (storage)."
-fi
-
-read -p "⚠️  PERHATIAN: Data lokal Anda akan ditimpa! Lanjutkan? (y/n) " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "❌ Sinkronisasi dibatalkan."
+# Validasi konfigurasi SSH
+if [[ -z "${SYNC_SSH_HOST}" || -z "${SYNC_SSH_USER}" ]]; then
+    echo "❌ ERROR: Konfigurasi SSH tidak lengkap."
+    echo "   Pastikan SYNC_SSH_HOST dan SYNC_SSH_USER sudah diisi di .env"
     exit 1
 fi
 
-# --- 4. DETEKSI LINGKUNGAN (DOCKER VS NATIVE) ---
-DOCKER_CONTAINER=$(docker ps --format '{{.Names}}' | grep "mariadb" | head -n 1)
-USE_DOCKER=false
-
-if [ ! -z "$DOCKER_CONTAINER" ]; then
-    echo "🐳 Lingkungan Docker terdeteksi ($DOCKER_CONTAINER)."
-    USE_DOCKER=true
+SSH_CMD="ssh -p ${SYNC_SSH_PORT:-22}"
+if [[ -n "${SYNC_SSH_KEY_PATH}" ]]; then
+    SSH_CMD="${SSH_CMD} -i ${SYNC_SSH_KEY_PATH}"
 fi
+SSH_DEST="${SYNC_SSH_USER}@${SYNC_SSH_HOST}"
+SSH_FULL="${SSH_CMD} ${SSH_DEST}"
 
-# --- 5. SINKRONISASI DATABASE ---
-if [ "$DB_CONNECTION" != "sqlite" ]; then
-    echo "📥 1/4 Membuat cadangan database di server..."
-    TEMP_SQL="prod_dump_$(date +%F).sql"
-    
-    # Dump di server
-    ssh $REMOTE_USER@$REMOTE_HOST "mysqldump -u $REMOTE_USER -p $REMOTE_DB > $REMOTE_PATH/prod_dump_temp.sql"
-    
-    echo "🚚 2/4 Mendownload database ke lokal..."
-    scp $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH/prod_dump_temp.sql ./$TEMP_SQL
-    
-    echo "💾 3/4 Memasukkan data ke Database Lokal..."
-    if [ "$USE_DOCKER" = true ]; then
-        docker exec -i $DOCKER_CONTAINER mariadb -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE < ./$TEMP_SQL
+echo "🔌 Menguji koneksi SSH ke ${SSH_DEST}..."
+if ! ${SSH_FULL} "echo OK" 2>/dev/null; then
+    echo "❌ Gagal terkoneksi ke server produksi."
+    echo "   Periksa: host, user, port, dan SSH key."
+    exit 1
+fi
+echo "✅ Koneksi SSH berhasil!"
+echo ""
+
+mkdir -p "${SYNC_DIR}"
+
+# ──────────────────────────────────────────────
+# 1. Sinkronisasi Database
+# ──────────────────────────────────────────────
+sync_db() {
+    echo "📦 Sinkronisasi Database..."
+    REMOTE_DB_CONN="${SYNC_REMOTE_DB_CONNECTION:-mysql}"
+    REMOTE_DB_NAME="${SYNC_REMOTE_DB}"
+    REMOTE_DB_USER="${SYNC_REMOTE_DB_USER}"
+    REMOTE_DB_PASS="${SYNC_REMOTE_DB_PASSWORD}"
+
+    if [[ -z "${REMOTE_DB_NAME}" || -z "${REMOTE_DB_USER}" ]]; then
+        echo "⚠️  Konfigurasi database remote tidak lengkap. Lewati sinkronisasi DB."
+        return 1
+    fi
+
+    DUMP_FILE="${SYNC_DIR}/${REMOTE_DB_NAME}_${TIMESTAMP}.sql"
+    COMPRESSED_FILE="${DUMP_FILE}.gz"
+
+    echo "   Mengekspor database ${REMOTE_DB_NAME} dari produksi..."
+
+    if [[ "${REMOTE_DB_CONN}" == "pgsql" ]]; then
+        DUMP_CMD="PGPASSWORD='${REMOTE_DB_PASS}' pg_dump -U ${REMOTE_DB_USER} -h localhost ${REMOTE_DB_NAME} --no-owner"
     else
-        # Coba cari binary mysql di path umum jika tidak di Docker
-        MYSQL_BIN=$(which mysql)
-        if [ -z "$MYSQL_BIN" ] && [ -f "/Applications/XAMPP/xamppfiles/bin/mysql" ]; then
-            MYSQL_BIN="/Applications/XAMPP/xamppfiles/bin/mysql"
-        fi
-        
-        if [ ! -z "$MYSQL_BIN" ]; then
-            $MYSQL_BIN -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE < ./$TEMP_SQL
+        if [[ -n "${REMOTE_DB_PASS}" ]]; then
+            DUMP_CMD="mysqldump -u ${REMOTE_DB_USER} -p'${REMOTE_DB_PASS}' ${REMOTE_DB_NAME}"
         else
-            echo "❌ Error: mysql binary tidak ditemukan. Silakan install mysql client atau gunakan Docker."
+            DUMP_CMD="mysqldump -u ${REMOTE_DB_USER} ${REMOTE_DB_NAME}"
         fi
     fi
-    
-    # Cleanup temp files
-    rm ./$TEMP_SQL
-    ssh $REMOTE_USER@$REMOTE_HOST "rm $REMOTE_PATH/prod_dump_temp.sql"
-else
-    echo "⏭️  Melewati sinkronisasi database (SQLite detected)."
-fi
 
-# --- 6. SINKRONISASI FILE (STORAGE) ---
-echo "📂 4/4 Sinkronisasi file dokumen/upload (rsync)..."
-mkdir -p storage/app/public
-rsync -avz --progress -e ssh $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH/storage/app/public/ ./storage/app/public/
+    echo "   Mendownload dump file..."
+    ${SSH_FULL} "${DUMP_CMD}" | gzip > "${COMPRESSED_FILE}"
 
-# --- 7. FINALISASI ---
-echo "🧹 Membersihkan cache aplikasi..."
-if [ "$USE_DOCKER" = true ]; then
-    docker exec -it sim-lppm-app php artisan optimize:clear
-else
-    php artisan optimize:clear
-fi
+    if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+        echo "✅ Database berhasil diunduh: ${COMPRESSED_FILE}"
+        ls -lh "${COMPRESSED_FILE}"
 
-echo "--------------------------------------------------------"
-echo "✅ SELESAI! Localhost Anda sekarang selaras dengan Production."
-echo "--------------------------------------------------------"
+        # Coba import ke database lokal jika tipe DB sama
+        LOCAL_DB_CONN="${DB_CONNECTION:-pgsql}"
+        if [[ "${LOCAL_DB_CONN}" == "${REMOTE_DB_CONN}" ]]; then
+            echo "   Mengimpor ke database lokal (${LOCAL_DB_CONN})..."
+            LOCAL_DB_NAME="${DB_DATABASE:-sim_lppm}"
+            LOCAL_DB_USER="${DB_USERNAME:-postgres}"
+            LOCAL_DB_PASS="${DB_PASSWORD:-}"
+
+            if [[ "${LOCAL_DB_CONN}" == "pgsql" ]]; then
+                gunzip -c "${COMPRESSED_FILE}" | PGPASSWORD="${LOCAL_DB_PASS}" psql -U "${LOCAL_DB_USER}" -h localhost "${LOCAL_DB_NAME}" 2>&1
+            else
+                gunzip -c "${COMPRESSED_FILE}" | mysql -u "${LOCAL_DB_USER}" "${LOCAL_DB_NAME}" 2>&1
+            fi
+
+            if [[ $? -eq 0 ]]; then
+                echo "✅ Database lokal berhasil diperbarui!"
+            else
+                echo "⚠️  Gagal mengimpor ke database lokal. Dump tersimpan di: ${COMPRESSED_FILE}"
+            fi
+        else
+            echo "⚠️  Tipe DB lokal (${LOCAL_DB_CONN}) ≠ remote (${REMOTE_DB_CONN})."
+            echo "   Dump tersimpan di: ${COMPRESSED_FILE}. Import manual diperlukan."
+        fi
+    else
+        echo "❌ Gagal mengekspor database dari produksi."
+        return 1
+    fi
+}
+
+# ──────────────────────────────────────────────
+# 2. Sinkronisasi Storage (File Upload)
+# ──────────────────────────────────────────────
+sync_files() {
+    echo ""
+    echo "📁 Sinkronisasi File Storage..."
+
+    if [[ -z "${REMOTE_PATH}" ]]; then
+        echo "⚠️  SYNC_REMOTE_PATH tidak dikonfigurasi. Lewati sinkronisasi file."
+        return 1
+    fi
+
+    LOCAL_STORAGE="${SCRIPT_DIR}/storage/app"
+    REMOTE_STORAGE="${REMOTE_PATH}/storage/app"
+
+    RSYNC_ARGS=(-avz --progress)
+    SSH_ARGS=(-p "${SYNC_SSH_PORT:-22}")
+    if [[ -n "${SYNC_SSH_KEY_PATH}" ]]; then
+        SSH_ARGS+=(-i "${SYNC_SSH_KEY_PATH}")
+    fi
+    RSYNC_ARGS+=(-e "ssh ${SSH_ARGS[*]}")
+    RSYNC_ARGS+=("${SYNC_SSH_USER}@${SYNC_SSH_HOST}:${REMOTE_STORAGE}/" "${LOCAL_STORAGE}/")
+
+    echo "   Menyalin file dari produksi..."
+    rsync "${RSYNC_ARGS[@]}"
+
+    if [[ $? -eq 0 ]]; then
+        echo "✅ File storage berhasil disinkronkan!"
+    else
+        echo "❌ Gagal sinkronisasi file storage."
+        return 1
+    fi
+}
+
+# ──────────────────────────────────────────────
+# 3. Bersihkan Cache Lokal
+# ──────────────────────────────────────────────
+clear_cache() {
+    echo ""
+    echo "🧹 Membersihkan cache lokal..."
+    php artisan optimize:clear 2>/dev/null || true
+    echo "✅ Cache lokal dibersihkan."
+}
+
+# ──────────────────────────────────────────────
+# Eksekusi berdasarkan tipe
+# ──────────────────────────────────────────────
+case "${SYNC_TYPE}" in
+    db)
+        sync_db
+        ;;
+    files)
+        sync_files
+        ;;
+    all)
+        sync_db || true
+        sync_files || true
+        clear_cache
+        ;;
+    *)
+        echo "Penggunaan: bash sync-from-prod.sh [db|files|all]"
+        exit 1
+        ;;
+esac
+
+echo ""
+echo "============================================"
+echo "  ✅ Sinkronisasi selesai!"
+echo "  Waktu: $(date)"
+echo "============================================"

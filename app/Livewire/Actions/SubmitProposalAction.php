@@ -28,8 +28,58 @@ class SubmitProposalAction
             ];
         }
 
-        // Validate before submit
-        app(\App\Services\ProposalService::class)->validateProposalBeforeSubmit($proposal);
+        // Check if proposal can be submitted from current status
+        $allowedStatuses = [
+            ProposalStatus::DRAFT,
+            ProposalStatus::NEED_ASSIGNMENT,
+            ProposalStatus::REVISION_NEEDED,
+        ];
+
+        if (! in_array($proposal->status, $allowedStatuses)) {
+            return [
+                'success' => false,
+                'message' => 'Proposal tidak dapat diajukan dari status saat ini.',
+            ];
+        }
+
+        // Check if all team members accepted
+        if (! $proposal->allTeamMembersAccepted()) {
+            $pendingMembers = $proposal->getPendingTeamMembers();
+
+            return [
+                'success' => false,
+                'message' => sprintf(
+                    'Tidak dapat mengirim proposal. %d anggota masih belum menerima undangan.',
+                    $pendingMembers->count()
+                ),
+            ];
+        }
+
+        // Check kaprodi approval (pre-gate before submission)
+        if (\App\Models\Setting::get('feature_kaprodi_validation', false)) {
+            $kaprodiAction = app(\App\Actions\Kaprodi\KaprodiApprovalAction::class);
+            $kaprodiCheck = $kaprodiAction->canSubmit($proposal);
+
+            if (! $kaprodiCheck['can_submit']) {
+                return [
+                    'success' => false,
+                    'message' => $kaprodiCheck['reason'],
+                ];
+            }
+        }
+
+        // Check lecturer eligibility
+        if ($proposal->submitter->activeHasRole('dosen')) {
+            $eligibilityService = app(\App\Services\LecturerEligibilityService::class);
+            $eligibility = $eligibilityService->checkEligibility($proposal->submitter);
+
+            if (! $eligibility['eligible']) {
+                return [
+                    'success' => false,
+                    'message' => 'Anda tidak memenuhi syarat untuk mengajukan proposal baru. '.implode(', ', $eligibility['reasons']),
+                ];
+            }
+        }
 
         try {
             DB::transaction(function () use ($proposal) {

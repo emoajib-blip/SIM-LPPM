@@ -191,10 +191,14 @@ class ProposalService
             ->toArray();
     }
 
-    public function validateProposalBeforeSubmit(Proposal $proposal): void
+    public function validateProposalBeforeSubmit(Proposal $proposal, bool $strictTeamValidation = true): void
     {
         if ($proposal->status !== \App\Enums\ProposalStatus::DRAFT) {
             throw new \Exception('Hanya proposal dengan status draft yang dapat disubmit.');
+        }
+
+        if (! $strictTeamValidation) {
+            return;
         }
 
         if ($proposal->teamMembers()->where('status', '!=', 'accepted')->exists()) {
