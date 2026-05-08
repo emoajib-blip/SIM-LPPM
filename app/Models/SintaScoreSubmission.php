@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -39,28 +40,28 @@ class SintaScoreSubmission extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>
+     * @param  Builder<SintaScoreSubmission>  $query
+     * @return Builder<SintaScoreSubmission>
      */
-    public function scopePending($query): \Illuminate\Database\Eloquent\Builder
+    public function scopePending($query): Builder
     {
         return $query->where('status', 'pending');
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>
+     * @param  Builder<SintaScoreSubmission>  $query
+     * @return Builder<SintaScoreSubmission>
      */
-    public function scopeApproved($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeApproved($query): Builder
     {
         return $query->where('status', 'APPROVED');
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<SintaScoreSubmission>
+     * @param  Builder<SintaScoreSubmission>  $query
+     * @return Builder<SintaScoreSubmission>
      */
-    public function scopeRejected($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeRejected($query): Builder
     {
         return $query->where('status', 'REJECTED');
     }

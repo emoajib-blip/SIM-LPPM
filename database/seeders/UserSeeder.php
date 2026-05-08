@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Faculty;
+use App\Models\Institution;
+use App\Models\StudyProgram;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -16,11 +19,11 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // ensure no duplicate emails before we start creating users
-        $this->assertUnique(\App\Models\User::class, 'email');
+        $this->assertUnique(User::class, 'email');
         // Get institutions and study programs
-        $institution = \App\Models\Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
-            ?? \App\Models\Institution::first();
-        $studyProgram = \App\Models\StudyProgram::first();
+        $institution = Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
+            ?? Institution::first();
+        $studyProgram = StudyProgram::first();
 
         if (! $institution) {
             $this->command->warn('Tidak ada institusi yang ditemukan. Silakan jalankan InstitutionSeeder terlebih dahulu.');
@@ -33,7 +36,7 @@ class UserSeeder extends Seeder
 
         // If no faculty exists, create a default one
         if ($faculties->isEmpty()) {
-            $faculty = \App\Models\Faculty::create([
+            $faculty = Faculty::create([
                 'institution_id' => $institution->id,
                 'name' => 'Fakultas Sains dan Teknologi',
                 'code' => 'SAINTEK',
@@ -66,11 +69,11 @@ class UserSeeder extends Seeder
                 $userIndex++;
 
                 // Get a random study program from this faculty
-                $studyProgram = \App\Models\StudyProgram::where('faculty_id', $faculty->id)->inRandomOrder()->first();
+                $studyProgram = StudyProgram::where('faculty_id', $faculty->id)->inRandomOrder()->first();
 
                 $email = str($role->name)->slug().($count > 1 ? $i + 1 : '').'@email.com';
 
-                $user = \App\Models\User::firstOrCreate(
+                $user = User::firstOrCreate(
                     ['email' => $email],
                     [
                         'name' => str($role->name)->title().' User'.($count > 1 ? ' '.($i + 1) : ''),
@@ -108,10 +111,10 @@ class UserSeeder extends Seeder
         }
 
         $this->command->info('Users seeded successfully!');
-        $this->command->info('Total users created: '.\App\Models\User::count());
+        $this->command->info('Total users created: '.User::count());
         $this->command->info('Faculties used: '.$faculties->pluck('name')->implode(', '));
 
         // sanity check again after seeding
-        $this->assertUnique(\App\Models\User::class, 'email');
+        $this->assertUnique(User::class, 'email');
     }
 }

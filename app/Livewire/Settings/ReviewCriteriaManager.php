@@ -106,7 +106,7 @@ class ReviewCriteriaManager extends Component
 
     public function delete(int $id): void
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
         if (! $user || ! $user->hasAnyRole(['superadmin', 'admin lppm'])) {
             abort(403, 'Unauthorized action.');
         }

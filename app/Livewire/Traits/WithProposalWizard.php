@@ -2,7 +2,12 @@
 
 namespace App\Livewire\Traits;
 
+use App\Constants\ProposalConstants;
+use App\Models\Partner;
+use App\Services\BudgetValidationService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 trait WithProposalWizard
 {
@@ -62,13 +67,13 @@ trait WithProposalWizard
             'form.new_partner.email' => 'nullable|email|max:255',
             'form.new_partner.institution' => 'required|string|max:255',
             'form.new_partner.country' => 'required|string|max:255',
-            'form.new_partner.type' => ['required', 'string', 'max:255', \Illuminate\Validation\Rule::in(\App\Constants\ProposalConstants::PARTNER_TYPES)],
+            'form.new_partner.type' => ['required', 'string', 'max:255', Rule::in(ProposalConstants::PARTNER_TYPES)],
             'form.new_partner.address' => 'nullable|string',
             'form.new_partner_commitment_file' => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
         DB::transaction(function () {
-            $partner = \App\Models\Partner::create([
+            $partner = Partner::create([
                 'name' => $this->form->new_partner['name'],
                 'email' => $this->form->new_partner['email'],
                 'institution' => $this->form->new_partner['institution'],
@@ -111,7 +116,7 @@ trait WithProposalWizard
     public function addExistingPartner(string $partnerId): void
     {
         // Validasi partner ID ada di database
-        $partner = \App\Models\Partner::find($partnerId);
+        $partner = Partner::find($partnerId);
         if (! $partner) {
             $this->addError('existing_partner_id', 'Mitra tidak ditemukan.');
 
@@ -158,7 +163,7 @@ trait WithProposalWizard
             'commitmentUploadFile' => 'required|file|mimes:pdf|max:5120',
         ]);
 
-        $partner = \App\Models\Partner::find($targetPartnerId);
+        $partner = Partner::find($targetPartnerId);
         if (! $partner) {
             $this->addError('commitmentUploadFile', 'Mitra tidak ditemukan.');
 
@@ -204,14 +209,14 @@ trait WithProposalWizard
                     ? (int) $this->form->research_scheme_id
                     : (int) $this->form->community_service_scheme_id;
 
-                app(\App\Services\BudgetValidationService::class)->validateBudgetGroupPercentages(
+                app(BudgetValidationService::class)->validateBudgetGroupPercentages(
                     $this->form->budget_items,
                     $this->getProposalTypeForValidation(),
                     (int) date('Y'),
                     $schemeId
                 );
 
-                app(\App\Services\BudgetValidationService::class)->validateBudgetCap(
+                app(BudgetValidationService::class)->validateBudgetCap(
                     $this->form->budget_items,
                     $this->getProposalTypeForValidation(),
                     (int) date('Y'),
@@ -220,7 +225,7 @@ trait WithProposalWizard
             }
 
             $this->budgetValidationErrors = [];
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->budgetValidationErrors = $e->errors()['budget_items'] ?? [];
         }
     }

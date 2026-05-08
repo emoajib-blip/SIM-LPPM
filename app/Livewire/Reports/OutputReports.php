@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Reports;
 
+use App\Enums\ProposalStatus;
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Traits\WithInstitutionalApproval;
 use App\Models\AdditionalOutput;
+use App\Models\Faculty;
 use App\Models\MandatoryOutput;
 use App\Models\Proposal;
+use App\Models\ResearchScheme;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
@@ -230,8 +233,8 @@ class OutputReports extends Component
             'proposals' => $this->getProposalsWithOutputs(),
             'statistics' => $this->getStatistics(),
             'periods' => $this->availablePeriods(),
-            'allSchemes' => \App\Models\ResearchScheme::orderBy('name')->get(),
-            'allFaculties' => \App\Models\Faculty::orderBy('name')->get(),
+            'allSchemes' => ResearchScheme::orderBy('name')->get(),
+            'allFaculties' => Faculty::orderBy('name')->get(),
             'institutionalReport' => $this->getInstitutionalReport('output', (int) $this->period),
         ]);
     }
@@ -281,8 +284,8 @@ class OutputReports extends Component
             ->where('detailable_type', $detailableType)
             ->where('start_year', $this->period)
             ->whereIn('status', [
-                \App\Enums\ProposalStatus::APPROVED->value,
-                \App\Enums\ProposalStatus::COMPLETED->value,
+                ProposalStatus::APPROVED->value,
+                ProposalStatus::COMPLETED->value,
             ])
             ->count();
 

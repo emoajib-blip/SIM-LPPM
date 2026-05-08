@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use App\Livewire\Concerns\HasToast;
+use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as PasswordRule;
@@ -39,7 +40,7 @@ class Password extends Component
             'password' => Hash::make($validated['password']),
         ]);
 
-        \App\Models\ActivityLog::create([
+        ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'password_update',
             'description' => 'User memperbarui kata sandi',

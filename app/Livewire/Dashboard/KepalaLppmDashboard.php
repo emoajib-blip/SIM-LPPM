@@ -2,6 +2,10 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Enums\ReportStatus;
+use App\Models\AdditionalOutput;
+use App\Models\MandatoryOutput;
+use App\Models\ProgressReport;
 use App\Models\Proposal;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -118,15 +122,15 @@ class KepalaLppmDashboard extends Component
             'community_service_completed' => $communityService->where('status', 'COMPLETED')->sum('count'),
             'pending_initial_approval' => $raw->where('status', 'APPROVED')->sum('count'),
             'pending_final_decision' => $researchPending + $communityServicePending,
-            'final_report_pending' => \App\Models\ProgressReport::query()
+            'final_report_pending' => ProgressReport::query()
                 ->where('reporting_period', 'final')
-                ->where('status', \App\Enums\ReportStatus::APPROVED_BY_DEKAN)
+                ->where('status', ReportStatus::APPROVED_BY_DEKAN)
                 ->whereYear('created_at', $yearFilter)
                 ->count(),
-            'total_outputs' => \App\Models\MandatoryOutput::whereHas('progressReport', function ($q) use ($yearFilter) {
+            'total_outputs' => MandatoryOutput::whereHas('progressReport', function ($q) use ($yearFilter) {
                 $q->whereYear('created_at', $yearFilter);
             })->count() +
-                \App\Models\AdditionalOutput::whereHas('progressReport', function ($q) use ($yearFilter) {
+                AdditionalOutput::whereHas('progressReport', function ($q) use ($yearFilter) {
                     $q->whereYear('created_at', $yearFilter);
                 })->count(),
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\CommunityServiceFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,13 +18,13 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string|null $partner_id
  * @property string|null $partner_issue_summary
  * @property string|null $solution_offered
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \App\Models\MacroResearchGroup|null $macroResearchGroup
- * @property-read \App\Models\Partner|null $partner
+ * @property-read Proposal|null $proposal
+ * @property-read MacroResearchGroup|null $macroResearchGroup
+ * @property-read Partner|null $partner
  */
 class CommunityService extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\CommunityServiceFactory> */
+    /** @use HasFactory<CommunityServiceFactory> */
     use HasFactory, HasUuids, InteractsWithMedia, SoftDeletes;
 
     /**

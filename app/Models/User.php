@@ -4,14 +4,18 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\MediaLibrary\HasMedia;
@@ -25,20 +29,20 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property string $password
  * @property string|null $original_password
- * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property-read \App\Models\Identity|null $identity
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $submittedProposals
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $proposals
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResearchStage[] $researchStages
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalReviewer[] $reviews
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MonevReview[] $monevReviews
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PolicyInvolvement[] $policyInvolvements
- * @property-read \Illuminate\Database\Eloquent\Relations\Pivot $pivot
+ * @property Carbon|null $email_verified_at
+ * @property-read Identity|null $identity
+ * @property-read \Illuminate\Database\Eloquent\Collection|Proposal[] $submittedProposals
+ * @property-read \Illuminate\Database\Eloquent\Collection|Proposal[] $proposals
+ * @property-read \Illuminate\Database\Eloquent\Collection|ResearchStage[] $researchStages
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProposalReviewer[] $reviews
+ * @property-read \Illuminate\Database\Eloquent\Collection|MonevReview[] $monevReviews
+ * @property-read \Illuminate\Database\Eloquent\Collection|PolicyInvolvement[] $policyInvolvements
+ * @property-read Pivot $pivot
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class User extends Authenticatable implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, HasUuids, InteractsWithMedia, Notifiable, TwoFactorAuthenticatable;
 
     /**
@@ -229,7 +233,7 @@ class User extends Authenticatable implements HasMedia
      */
     public function currentActiveRoleMatches($role): bool
     {
-        if (is_array($role) || $role instanceof \Illuminate\Support\Collection) {
+        if (is_array($role) || $role instanceof Collection) {
             return $this->activeHasAnyRole(is_array($role) ? $role : $role->toArray());
         }
 

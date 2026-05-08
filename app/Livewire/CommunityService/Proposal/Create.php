@@ -4,18 +4,21 @@ namespace App\Livewire\CommunityService\Proposal;
 
 use App\Constants\ProposalConstants;
 use App\Livewire\Abstracts\ProposalCreate;
+use App\Models\Proposal;
+use Illuminate\Validation\Rule;
+use Spatie\MediaLibrary\HasMedia;
 
 /**
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class Create extends ProposalCreate
 {
-    public function mount(?string $proposalId = null, ?\App\Models\Proposal $proposal = null): void
+    public function mount(?string $proposalId = null, ?Proposal $proposal = null): void
     {
         parent::mount($proposalId, $proposal);
 
         // If new proposal, add one default mandatory output
-        if (! ($proposal ?? ($proposalId ? \App\Models\Proposal::find($proposalId) : null))) {
+        if (! ($proposal ?? ($proposalId ? Proposal::find($proposalId) : null))) {
             if (empty($this->form->outputs)) {
                 $this->form->outputs[] = [
                     'year' => 1,
@@ -69,7 +72,7 @@ class Create extends ProposalCreate
     {
         // Check if file already exists (edit mode)
         $detailable = $this->form->proposal?->detailable;
-        $hasFile = $detailable instanceof \Spatie\MediaLibrary\HasMedia &&
+        $hasFile = $detailable instanceof HasMedia &&
             $detailable->hasMedia('substance_file');
 
         return [
@@ -87,8 +90,8 @@ class Create extends ProposalCreate
                 },
             ],
             'form.outputs.*.year' => 'required|integer|min:1|max:10',
-            'form.outputs.*.category' => ['required', \Illuminate\Validation\Rule::in(ProposalConstants::OUTPUT_CATEGORIES)],
-            'form.outputs.*.group' => ['required', \Illuminate\Validation\Rule::in(ProposalConstants::PKM_OUTPUT_GROUPS)],
+            'form.outputs.*.category' => ['required', Rule::in(ProposalConstants::OUTPUT_CATEGORIES)],
+            'form.outputs.*.group' => ['required', Rule::in(ProposalConstants::PKM_OUTPUT_GROUPS)],
             'form.outputs.*.type' => [
                 'required',
                 'string',
@@ -103,7 +106,7 @@ class Create extends ProposalCreate
                     }
                 },
             ],
-            'form.outputs.*.status' => ['required', \Illuminate\Validation\Rule::in(ProposalConstants::OUTPUT_STATUSES)],
+            'form.outputs.*.status' => ['required', Rule::in(ProposalConstants::OUTPUT_STATUSES)],
             'form.outputs.*.description' => 'required|string|max:2000',
         ];
     }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Database\Factories\ResearchFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,14 +23,14 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string|null $methodology
  * @property array|null $roadmap_data
  * @property string|null $substance_file
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \App\Models\MacroResearchGroup|null $macroResearchGroup
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TktLevel[] $tktLevels
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TktIndicator[] $tktIndicators
+ * @property-read Proposal|null $proposal
+ * @property-read MacroResearchGroup|null $macroResearchGroup
+ * @property-read Collection|TktLevel[] $tktLevels
+ * @property-read Collection|TktIndicator[] $tktIndicators
  */
 class Research extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\ResearchFactory> */
+    /** @use HasFactory<ResearchFactory> */
     use HasFactory, HasUuids, InteractsWithMedia, SoftDeletes;
 
     /**

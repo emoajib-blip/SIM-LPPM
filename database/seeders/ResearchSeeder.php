@@ -8,11 +8,25 @@ use App\Models\BudgetComponent;
 use App\Models\BudgetGroup;
 use App\Models\BudgetItem;
 use App\Models\DailyNote;
+use App\Models\FocusArea;
+use App\Models\Keyword;
+use App\Models\MacroResearchGroup;
 use App\Models\MandatoryOutput;
+use App\Models\NationalPriority;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Models\ProposalOutput;
+use App\Models\ProposalReviewer;
 use App\Models\ProposalStatusLog;
 use App\Models\Research;
+use App\Models\ResearchScheme;
+use App\Models\ReviewCriteria;
+use App\Models\ReviewLog;
+use App\Models\ReviewScore;
+use App\Models\ScienceCluster;
+use App\Models\Theme;
+use App\Models\TktLevel;
+use App\Models\Topic;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -41,12 +55,12 @@ class ResearchSeeder extends Seeder
             return;
         }
 
-        $keywords = \App\Models\Keyword::all();
-        $researchSchemes = \App\Models\ResearchScheme::all();
-        $focusAreas = \App\Models\FocusArea::all();
-        $themes = \App\Models\Theme::all();
-        $topics = \App\Models\Topic::all();
-        $nationalPriorities = \App\Models\NationalPriority::all();
+        $keywords = Keyword::all();
+        $researchSchemes = ResearchScheme::all();
+        $focusAreas = FocusArea::all();
+        $themes = Theme::all();
+        $topics = Topic::all();
+        $nationalPriorities = NationalPriority::all();
 
         if ($keywords->isEmpty() || $researchSchemes->isEmpty() || $focusAreas->isEmpty()) {
             $this->command->warn('Master data tidak lengkap untuk membuat proposal');
@@ -118,21 +132,21 @@ class ResearchSeeder extends Seeder
                 $theme = $themes->where('focus_area_id', $focusArea->id)->first() ?? $themes->random();
                 $topic = $topics->where('theme_id', $theme->id)->first() ?? $topics->random();
 
-                $cluster3 = \App\Models\ScienceCluster::where('level', 3)->inRandomOrder()->first();
-                $cluster2 = $cluster3 ? \App\Models\ScienceCluster::find($cluster3->parent_id) : null;
-                $cluster1 = $cluster2 ? \App\Models\ScienceCluster::find($cluster2->parent_id) : null;
+                $cluster3 = ScienceCluster::where('level', 3)->inRandomOrder()->first();
+                $cluster2 = $cluster3 ? ScienceCluster::find($cluster3->parent_id) : null;
+                $cluster1 = $cluster2 ? ScienceCluster::find($cluster2->parent_id) : null;
 
                 // Base Date: 10 days ago
                 $baseCreatedAt = Carbon::now()->subDays(10)->addHours(rand(1, 23));
 
                 $research = Research::factory()->create([
-                    'macro_research_group_id' => \App\Models\MacroResearchGroup::inRandomOrder()->first()?->id,
+                    'macro_research_group_id' => MacroResearchGroup::inRandomOrder()->first()?->id,
                     'created_at' => $baseCreatedAt,
                     'updated_at' => $baseCreatedAt,
                 ]);
 
                 // Attach TKT Level
-                $tktLevel = \App\Models\TktLevel::where('level', $tktTarget)->first();
+                $tktLevel = TktLevel::where('level', $tktTarget)->first();
                 if ($tktLevel) {
                     $research->tktLevels()->attach($tktLevel->id, ['percentage' => 100]);
                 }
@@ -194,7 +208,7 @@ class ResearchSeeder extends Seeder
                 }
 
                 // Targets
-                $mandatoryTarget = \App\Models\ProposalOutput::factory()->create([
+                $mandatoryTarget = ProposalOutput::factory()->create([
                     'proposal_id' => $proposal->id,
                     'category' => 'Wajib',
                     'type' => $scheme->strata === 'Terapan' ? 'Purwarupa/Prototipe' : 'Jurnal Nasional Sinta 1-2',
@@ -202,7 +216,7 @@ class ResearchSeeder extends Seeder
                     'output_year' => $proposal->duration_in_years,
                 ]);
 
-                $additionalTarget = \App\Models\ProposalOutput::factory()->create([
+                $additionalTarget = ProposalOutput::factory()->create([
                     'proposal_id' => $proposal->id,
                     'category' => 'Tambahan',
                     'type' => 'Prosiding Seminar Internasional',
@@ -299,7 +313,7 @@ class ResearchSeeder extends Seeder
         $currentRound = ($status === ProposalStatus::COMPLETED) ? 2 : 1;
 
         $reviewers = $reviewerUsers->random(min(2, $reviewerUsers->count()));
-        $criterias = \App\Models\ReviewCriteria::where('type', 'research')->where('is_active', true)->get();
+        $criterias = ReviewCriteria::where('type', 'research')->where('is_active', true)->get();
 
         // Find assignment date from logs
         $assignedAt = $proposal->statusLogs()->where('status_after', ProposalStatus::UNDER_REVIEW)->value('at')
@@ -318,7 +332,7 @@ class ResearchSeeder extends Seeder
             $notes = $isCompleted ? fake()->paragraph(2) : null;
             $completedAt = $isCompleted ? Carbon::parse($assignedAt)->addDays(3) : null;
 
-            $assignment = \App\Models\ProposalReviewer::create([
+            $assignment = ProposalReviewer::create([
                 'proposal_id' => $proposal->id,
                 'user_id' => $reviewer->id,
                 'status' => $isCompleted ? 'completed' : 'pending',
@@ -354,7 +368,7 @@ class ResearchSeeder extends Seeder
             $val = $score * $criteria->weight;
             $totalScore += $val;
 
-            \App\Models\ReviewScore::create([
+            ReviewScore::create([
                 'proposal_reviewer_id' => $assignment->id,
                 'review_criteria_id' => $criteria->id,
                 'acuan' => fake()->sentence(10),
@@ -365,7 +379,7 @@ class ResearchSeeder extends Seeder
             ]);
         }
 
-        \App\Models\ReviewLog::create([
+        ReviewLog::create([
             'proposal_reviewer_id' => $assignment->id,
             'proposal_id' => $assignment->proposal_id,
             'user_id' => $assignment->user_id,

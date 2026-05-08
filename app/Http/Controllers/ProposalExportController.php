@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProposalStatus;
+use App\Models\DocumentSignature;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Models\ProposalStatusLog;
+use App\Models\User;
 use App\Services\DocumentSignatureService;
 use App\Services\ProposalPdfService;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -20,9 +27,9 @@ class ProposalExportController extends Controller
     /**
      * Download the combined proposal PDF.
      */
-    public function download(\Illuminate\Http\Request $request, Proposal $proposal)
+    public function download(Request $request, Proposal $proposal)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $isMember = $proposal->teamMembers()->where('users.id', $user->id)->exists();
@@ -55,9 +62,9 @@ class ProposalExportController extends Controller
     /**
      * Preview the combined proposal PDF in browser.
      */
-    public function preview(\Illuminate\Http\Request $request, Proposal $proposal)
+    public function preview(Request $request, Proposal $proposal)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $isMember = $proposal->teamMembers()->where('users.id', $user->id)->exists();
@@ -90,9 +97,9 @@ class ProposalExportController extends Controller
     /**
      * Download the report (Progress/Final) PDF.
      */
-    public function downloadReport(\Illuminate\Http\Request $request, Proposal $proposal)
+    public function downloadReport(Request $request, Proposal $proposal)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $isMember = $proposal->teamMembers()->where('users.id', $user->id)->exists();
@@ -128,7 +135,7 @@ class ProposalExportController extends Controller
         }
 
         try {
-            /** @var \App\Models\ProgressReport $report */
+            /** @var ProgressReport $report */
             $pdfPath = $this->pdfService->exportReport($proposal, $report, $request->has('preview'));
             $pdfBinary = file_get_contents($pdfPath);
 
@@ -178,11 +185,11 @@ class ProposalExportController extends Controller
             ],
         ];
 
-        /** @var \Illuminate\Support\Collection<string, \App\Models\DocumentSignature> $reportSigs */
+        /** @var Collection<string, DocumentSignature> $reportSigs */
         $reportSigs = $report->signatures()
             ->get()
-            ->keyBy(function (\Illuminate\Database\Eloquent\Model $s) {
-                /** @var \App\Models\DocumentSignature $s */
+            ->keyBy(function (Model $s) {
+                /** @var DocumentSignature $s */
                 return (string) "{$s->action}|{$s->signed_role}";
             });
 
@@ -196,7 +203,7 @@ class ProposalExportController extends Controller
             $user = [
                 'lecturer' => $proposal->submitter,
                 'dekan' => $proposal->submitter->identity?->faculty?->deanUser,
-                'kepala_lppm' => \App\Models\User::role('kepala lppm')->first(),
+                'kepala_lppm' => User::role('kepala lppm')->first(),
             ][$role] ?? null;
 
             if (! $user) {
@@ -215,7 +222,7 @@ class ProposalExportController extends Controller
                 'action' => $action,
                 'signed_role' => $role,
                 'signed_by' => (string) $user->id,
-                'signed_at' => \Carbon\Carbon::parse($signedAt)->copy()->utc()->toIso8601ZuluString(),
+                'signed_at' => Carbon::parse($signedAt)->copy()->utc()->toIso8601ZuluString(),
                 'pdf_hash_alg' => 'SHA-256',
                 'pdf_hash' => $hash,
                 'kid' => $kid,
@@ -256,11 +263,11 @@ class ProposalExportController extends Controller
             'kepala_lppm' => ['finalized', in_array($proposal->status->value, [ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
         ];
 
-        /** @var \Illuminate\Support\Collection<string, \App\Models\DocumentSignature> $proposalSigs */
+        /** @var Collection<string, DocumentSignature> $proposalSigs */
         $proposalSigs = $proposal->signatures()
             ->get()
-            ->keyBy(function (\Illuminate\Database\Eloquent\Model $s) {
-                /** @var \App\Models\DocumentSignature $s */
+            ->keyBy(function (Model $s) {
+                /** @var DocumentSignature $s */
                 return (string) "{$s->action}|{$s->signed_role}";
             });
 
@@ -274,7 +281,7 @@ class ProposalExportController extends Controller
             $user = [
                 'lecturer' => $proposal->submitter,
                 'dekan' => $proposal->submitter->identity?->faculty?->deanUser,
-                'kepala_lppm' => \App\Models\User::role('kepala lppm')->first(),
+                'kepala_lppm' => User::role('kepala lppm')->first(),
             ][$role] ?? null;
 
             if (! $user) {
@@ -286,8 +293,8 @@ class ProposalExportController extends Controller
             $nonce = $signatureRecord?->payload['nonce'] ?? Str::random(32);
             $signedAt = [
                 'lecturer' => $proposal->created_at,
-                'dekan' => \App\Models\ProposalStatusLog::where('proposal_id', $proposal->id)->where('status_after', \App\Enums\ProposalStatus::APPROVED)->value('at') ?? now(),
-                'kepala_lppm' => \App\Models\ProposalStatusLog::where('proposal_id', $proposal->id)->whereIn('status_after', [\App\Enums\ProposalStatus::WAITING_REVIEWER, \App\Enums\ProposalStatus::UNDER_REVIEW])->value('at') ?? now(),
+                'dekan' => ProposalStatusLog::where('proposal_id', $proposal->id)->where('status_after', ProposalStatus::APPROVED)->value('at') ?? now(),
+                'kepala_lppm' => ProposalStatusLog::where('proposal_id', $proposal->id)->whereIn('status_after', [ProposalStatus::WAITING_REVIEWER, ProposalStatus::UNDER_REVIEW])->value('at') ?? now(),
             ][$role] ?? $proposal->updated_at ?? now();
 
             $payload = [
@@ -298,7 +305,7 @@ class ProposalExportController extends Controller
                 'action' => $action,
                 'signed_role' => $role,
                 'signed_by' => (string) $user->id,
-                'signed_at' => \Carbon\Carbon::parse($signedAt)->copy()->utc()->toIso8601ZuluString(),
+                'signed_at' => Carbon::parse($signedAt)->copy()->utc()->toIso8601ZuluString(),
                 'pdf_hash_alg' => 'SHA-256',
                 'pdf_hash' => $hash,
                 'kid' => $kid,

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\FocusArea;
+use App\Models\Theme;
 use Illuminate\Database\Seeder;
 
 class ThemeSeeder extends Seeder
@@ -11,7 +13,7 @@ class ThemeSeeder extends Seeder
      */
     public function run(): void
     {
-        $focusAreas = \App\Models\FocusArea::all();
+        $focusAreas = FocusArea::all();
 
         if ($focusAreas->isEmpty()) {
             return;
@@ -44,7 +46,7 @@ class ThemeSeeder extends Seeder
         foreach ($focusAreas as $focusArea) {
             if (isset($themesData[$focusArea->name])) {
                 foreach ($themesData[$focusArea->name] as $themeName) {
-                    \App\Models\Theme::firstOrCreate(
+                    Theme::firstOrCreate(
                         ['focus_area_id' => $focusArea->id, 'name' => $themeName],
                         ['focus_area_id' => $focusArea->id, 'name' => $themeName]
                     );
@@ -52,7 +54,7 @@ class ThemeSeeder extends Seeder
             } else {
                 // Create default themes for other focus areas
                 $defaultThemeName = 'General '.$focusArea->name;
-                \App\Models\Theme::firstOrCreate(
+                Theme::firstOrCreate(
                     ['focus_area_id' => $focusArea->id, 'name' => $defaultThemeName],
                     ['focus_area_id' => $focusArea->id, 'name' => $defaultThemeName]
                 );

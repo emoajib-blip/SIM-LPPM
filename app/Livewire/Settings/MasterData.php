@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Settings;
 
+use App\Models\Setting;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -19,7 +20,7 @@ class MasterData extends Component
     public function mount(): void
     {
         $user = auth()->user();
-        $roadmapActive = \App\Models\Setting::get('feature_roadmap_active', false);
+        $roadmapActive = Setting::get('feature_roadmap_active', false);
 
         // Jika fitur roadmap nonaktif, Dekan & Kaprodi dilarang akses (kecuali mereka juga admin)
         if (! $roadmapActive && ($user->hasRole('dekan') || $user->hasRole('kaprodi'))) {

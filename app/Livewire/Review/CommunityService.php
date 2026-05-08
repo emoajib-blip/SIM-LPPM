@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Review;
 
+use App\Enums\ReviewStatus;
 use App\Models\Proposal;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -96,13 +97,13 @@ class CommunityService extends Component
         return [
             'all' => (clone $baseQuery)->count(),
             'pending' => (clone $baseQuery)->whereHas('reviewers', function ($q) {
-                $q->where('user_id', Auth::id())->where('status', \App\Enums\ReviewStatus::PENDING);
+                $q->where('user_id', Auth::id())->where('status', ReviewStatus::PENDING);
             })->count(),
             'completed' => (clone $baseQuery)->whereHas('reviewers', function ($q) {
-                $q->where('user_id', Auth::id())->where('status', \App\Enums\ReviewStatus::COMPLETED);
+                $q->where('user_id', Auth::id())->where('status', ReviewStatus::COMPLETED);
             })->count(),
             're_review' => (clone $baseQuery)->whereHas('reviewers', function ($q) {
-                $q->where('user_id', Auth::id())->where('status', \App\Enums\ReviewStatus::RE_REVIEW_REQUESTED);
+                $q->where('user_id', Auth::id())->where('status', ReviewStatus::RE_REVIEW_REQUESTED);
             })->count(),
         ];
     }

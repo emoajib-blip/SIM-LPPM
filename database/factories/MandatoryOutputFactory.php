@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\MandatoryOutput;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MandatoryOutput>
+ * @extends Factory<MandatoryOutput>
  */
 class MandatoryOutputFactory extends Factory
 {

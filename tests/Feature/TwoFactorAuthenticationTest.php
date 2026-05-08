@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -33,7 +34,7 @@ it('stores valid recovery code and logs user in', function () {
         'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1', 'recovery-code-2'])),
     ])->save();
 
-    $token = \Illuminate\Support\Str::random(40);
+    $token = Str::random(40);
     session(['login.id' => $user->id, 'login.remember' => false, '_token' => $token]);
 
     $response = $this->post('two-factor-challenge', [
@@ -52,7 +53,7 @@ it('stores valid recovery code and logs user in with remember me', function () {
         'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1', 'recovery-code-2'])),
     ])->save();
 
-    $token = \Illuminate\Support\Str::random(40);
+    $token = Str::random(40);
     session(['login.id' => $user->id, 'login.remember' => true, '_token' => $token]);
 
     $response = $this->post('two-factor-challenge', [
@@ -70,7 +71,7 @@ it('rejects invalid two-factor code', function () {
         'two_factor_secret' => encrypt('JBSWY3DPEHPK3PXP'),
     ])->save();
 
-    $token = \Illuminate\Support\Str::random(40);
+    $token = Str::random(40);
     session(['login.id' => $user->id, 'login.remember' => false, '_token' => $token]);
 
     $response = $this->post('two-factor-challenge', [
@@ -90,7 +91,7 @@ it('rejects invalid recovery code', function () {
         'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1', 'recovery-code-2'])),
     ])->save();
 
-    $token = \Illuminate\Support\Str::random(40);
+    $token = Str::random(40);
     session(['login.id' => $user->id, 'login.remember' => false, '_token' => $token]);
 
     $response = $this->post('two-factor-challenge', [

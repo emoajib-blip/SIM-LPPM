@@ -2,10 +2,14 @@
 
 namespace App\Livewire\Actions;
 
+use App\Actions\Kaprodi\KaprodiApprovalAction;
 use App\Enums\ProposalStatus;
 use App\Models\Proposal;
+use App\Models\Setting;
 use App\Models\User;
+use App\Services\LecturerEligibilityService;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SubmitProposalAction
@@ -20,7 +24,7 @@ class SubmitProposalAction
     public function execute(Proposal $proposal): array
     {
         // Authorization check - only submitter can submit
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
         if (! $user || ($proposal->submitter_id !== $user->getAuthIdentifier())) {
             return [
                 'success' => false,
@@ -56,8 +60,8 @@ class SubmitProposalAction
         }
 
         // Check kaprodi approval (pre-gate before submission)
-        if (\App\Models\Setting::get('feature_kaprodi_validation', false)) {
-            $kaprodiAction = app(\App\Actions\Kaprodi\KaprodiApprovalAction::class);
+        if (Setting::get('feature_kaprodi_validation', false)) {
+            $kaprodiAction = app(KaprodiApprovalAction::class);
             $kaprodiCheck = $kaprodiAction->canSubmit($proposal);
 
             if (! $kaprodiCheck['can_submit']) {
@@ -70,7 +74,7 @@ class SubmitProposalAction
 
         // Check lecturer eligibility
         if ($proposal->submitter->activeHasRole('dosen')) {
-            $eligibilityService = app(\App\Services\LecturerEligibilityService::class);
+            $eligibilityService = app(LecturerEligibilityService::class);
             $eligibility = $eligibilityService->checkEligibility($proposal->submitter);
 
             if (! $eligibility['eligible']) {

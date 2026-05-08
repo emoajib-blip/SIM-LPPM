@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * @property int $id
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $description
  * @property bool $is_active_for_research
  * @property bool $is_active_for_community_service
- * @property-read \Illuminate\Database\Eloquent\Relations\Pivot $pivot
+ * @property-read Pivot $pivot
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class TktLevel extends Model

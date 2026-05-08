@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ProposalService
 {
@@ -29,7 +30,7 @@ class ProposalService
 
     public function updateProposal(Proposal $proposal, ProposalForm $form, bool $validate = true): void
     {
-        \Illuminate\Support\Facades\Gate::authorize('update', $proposal);
+        Gate::authorize('update', $proposal);
 
         $form->proposal = $proposal;
         $form->update($validate);
@@ -37,7 +38,7 @@ class ProposalService
 
     public function deleteProposal(Proposal $proposal): void
     {
-        \Illuminate\Support\Facades\Gate::authorize('delete', $proposal);
+        Gate::authorize('delete', $proposal);
 
         if ($proposal->status !== ProposalStatus::DRAFT) {
             throw new \Exception('Hanya proposal dengan status draft yang dapat dihapus.');
@@ -193,7 +194,7 @@ class ProposalService
 
     public function validateProposalBeforeSubmit(Proposal $proposal, bool $strictTeamValidation = true): void
     {
-        if ($proposal->status !== \App\Enums\ProposalStatus::DRAFT) {
+        if ($proposal->status !== ProposalStatus::DRAFT) {
             throw new \Exception('Hanya proposal dengan status draft yang dapat disubmit.');
         }
 
@@ -219,7 +220,7 @@ class ProposalService
         $recipients = $notificationService->getUsersByRole('dekan');
 
         DB::transaction(function () use ($proposal, $notificationService, $submitter, $recipients) {
-            $proposal->update(['status' => \App\Enums\ProposalStatus::SUBMITTED->value]);
+            $proposal->update(['status' => ProposalStatus::SUBMITTED->value]);
 
             $notificationService->notifyProposalSubmitted($proposal, $submitter, $recipients);
         });

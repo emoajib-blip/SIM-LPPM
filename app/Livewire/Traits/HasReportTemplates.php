@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Traits;
 
+use App\Models\Research;
 use App\Models\Setting;
 use App\Services\MasterDataService;
 use Livewire\Attributes\Computed;
@@ -16,7 +17,7 @@ trait HasReportTemplates
     #[Computed]
     public function templateUrl(): ?string
     {
-        $proposalType = $this->proposal->detailable_type === \App\Models\Research::class ? 'research' : 'community-service';
+        $proposalType = $this->proposal->detailable_type === Research::class ? 'research' : 'community-service';
         $reportType = $this->getReportType(); // 'progress' or 'final'
 
         $type = "{$proposalType}-{$reportType}";
@@ -68,7 +69,7 @@ trait HasReportTemplates
 
     public function downloadReportApprovalPageTemplate()
     {
-        $setting = \App\Models\Setting::where('key', 'report_approval_page_template')->first();
+        $setting = Setting::where('key', 'report_approval_page_template')->first();
         if ($setting && $setting->hasMedia('template')) {
             return response()->download($setting->getFirstMedia('template')->getPath(), $setting->getFirstMedia('template')->file_name);
         }

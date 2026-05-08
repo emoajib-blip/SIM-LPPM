@@ -13,6 +13,8 @@ use App\Models\ResearchScheme;
 use App\Models\ScienceCluster;
 use App\Models\Theme;
 use App\Models\Topic;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -25,8 +27,8 @@ class PublicDataTest extends TestCase
         parent::setUp();
 
         // Seed roles and base data
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
 
         // Setup common data
         $institution = Institution::first();

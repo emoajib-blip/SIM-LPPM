@@ -2,13 +2,16 @@
 
 namespace App\Livewire\Settings;
 
+use App\Actions\HandleHybridInstitution;
 use App\Livewire\Concerns\HasToast;
+use App\Models\ActivityLog;
 use App\Models\Faculty;
 use App\Models\Institution;
 use App\Models\StudyProgram;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -225,7 +228,7 @@ class ProfileForm extends Component
         }
 
         // Handle hybrid institution
-        $finalInstitutionId = app(\App\Actions\HandleHybridInstitution::class)->execute($validated['institution_id']);
+        $finalInstitutionId = app(HandleHybridInstitution::class)->execute($validated['institution_id']);
         $finalInstitutionName = is_numeric($validated['institution_id']) ? null : $validated['institution_id'];
 
         // Update or create identity
@@ -254,7 +257,7 @@ class ProfileForm extends Component
             $identityData
         );
 
-        \App\Models\ActivityLog::create([
+        ActivityLog::create([
             'user_id' => $user->id,
             'activity' => 'profile_update',
             'description' => 'User memperbarui informasi profil/identitas',
@@ -279,8 +282,8 @@ class ProfileForm extends Component
         $user->clearMediaCollection('avatar');
 
         if ($user->identity && $user->identity->profile_picture) {
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($user->identity->profile_picture)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->identity->profile_picture);
+            if (Storage::disk('public')->exists($user->identity->profile_picture)) {
+                Storage::disk('public')->delete($user->identity->profile_picture);
             }
 
             $user->identity->update(['profile_picture' => null]);

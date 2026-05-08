@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\DocumentSignature;
 use App\Models\Proposal;
+use App\Models\Setting;
+use App\Models\User;
 use App\Services\DocumentSignatureService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -22,9 +26,9 @@ class DailyNoteExportController extends Controller
     /**
      * Download the daily notes PDF.
      */
-    public function download(Proposal $proposal, \Illuminate\Http\Request $request)
+    public function download(Proposal $proposal, Request $request)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $isMember = $proposal->teamMembers()->where('users.id', $user->id)->exists();
@@ -51,7 +55,7 @@ class DailyNoteExportController extends Controller
         $institutionName = $submitterIdentity?->institution->name ?? 'ITSNU Pekalongan';
         $academicYear = $proposal->start_year.'/'.($proposal->start_year + 1);
 
-        $logbookApprovalMode = \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital';
+        $logbookApprovalMode = Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital';
 
         // 1. Render for hash
         $pdf = Pdf::loadView('pdf.daily-notes', [
@@ -133,11 +137,11 @@ class DailyNoteExportController extends Controller
     {
         $user = match ($role) {
             'lecturer' => $proposal->submitter,
-            'kepala_lppm' => \App\Models\User::role('kepala lppm')->first(),
+            'kepala_lppm' => User::role('kepala lppm')->first(),
             default => null,
         };
 
-        /** @var \App\Models\DocumentSignature|null $signatureRecord */
+        /** @var DocumentSignature|null $signatureRecord */
         $signatureRecord = $proposal->signatures()
             ->where('signed_role', $role)
             ->where('action', $action)
@@ -154,14 +158,14 @@ class DailyNoteExportController extends Controller
             'action' => $action,
             'signed_role' => $role,
             'signed_by' => (string) ($user->id ?? ''),
-            'signed_at' => \Carbon\Carbon::parse($signedAt)->copy()->utc()->toIso8601ZuluString(),
+            'signed_at' => Carbon::parse($signedAt)->copy()->utc()->toIso8601ZuluString(),
             'pdf_hash_alg' => 'SHA-256',
             'pdf_hash' => $hash,
             'kid' => $kid,
             'nonce' => $nonce,
         ];
 
-        /** @var \App\Models\DocumentSignature $signature */
+        /** @var DocumentSignature $signature */
         $signature = $proposal->signatures()->updateOrCreate(
             [
                 'signed_role' => $role,

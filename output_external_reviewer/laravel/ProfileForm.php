@@ -4,6 +4,7 @@ namespace App\Livewire\Reviewer;
 
 use App\Actions\HandleHybridInstitution;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class ProfileForm extends Component
@@ -18,7 +19,7 @@ class ProfileForm extends Component
      */
     public function updatedInstitutionInput($value): void
     {
-        $this->isNewInstitution = ! \Illuminate\Support\Str::isUuid($value) && ! empty($value);
+        $this->isNewInstitution = ! Str::isUuid($value) && ! empty($value);
     }
 
     public function save(HandleHybridInstitution $action): void

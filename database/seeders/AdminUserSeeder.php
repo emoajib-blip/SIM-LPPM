@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Institution;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -17,8 +18,8 @@ class AdminUserSeeder extends Seeder
         $customAdmin = cache('installer_admin_config');
 
         // Get institution
-        $institution = \App\Models\Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
-            ?? \App\Models\Institution::first();
+        $institution = Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
+            ?? Institution::first();
 
         if (! $institution) {
             $this->command->warn('Tidak ada institusi yang ditemukan. Silakan jalankan InstitutionSeeder terlebih dahulu.');

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\NationalPriority;
 use Illuminate\Database\Seeder;
 
 class NationalPrioritySeeder extends Seeder
@@ -51,7 +52,7 @@ class NationalPrioritySeeder extends Seeder
         ];
 
         foreach ($priorities as $priority) {
-            \App\Models\NationalPriority::updateOrCreate(
+            NationalPriority::updateOrCreate(
                 ['name' => $priority['name']],
                 $priority
             );

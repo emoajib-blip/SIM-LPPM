@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Theme;
+use App\Models\Topic;
 use Illuminate\Database\Seeder;
 
 class TopicSeeder extends Seeder
@@ -11,7 +13,7 @@ class TopicSeeder extends Seeder
      */
     public function run(): void
     {
-        $themes = \App\Models\Theme::all();
+        $themes = Theme::all();
 
         if ($themes->isEmpty()) {
             return;
@@ -39,7 +41,7 @@ class TopicSeeder extends Seeder
                 $topicCount = rand(2, 3);
                 for ($i = 0; $i < $topicCount; $i++) {
                     $topicName = fake()->randomElement($topics);
-                    \App\Models\Topic::firstOrCreate(
+                    Topic::firstOrCreate(
                         ['theme_id' => $theme->id, 'name' => $topicName],
                         ['theme_id' => $theme->id, 'name' => $topicName]
                     );

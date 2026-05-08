@@ -5,6 +5,7 @@ namespace App\Livewire\Actions;
 use App\Enums\ProposalStatus;
 use App\Models\Proposal;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\Auth;
 
 class ApproveProposalAction
 {
@@ -19,7 +20,7 @@ class ApproveProposalAction
     public function execute(Proposal $proposal, string $decision): array
     {
         // Authorization check - only kepala lppm can approve/reject
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
         if (! $user || ! $user->hasRole('kepala lppm')) {
             return [
                 'success' => false,
@@ -57,7 +58,7 @@ class ApproveProposalAction
         $this->notificationService->notifyFinalDecision(
             $proposal,
             $decision,
-            \Illuminate\Support\Facades\Auth::user(),
+            Auth::user(),
             [$proposal->submitter]
         );
 

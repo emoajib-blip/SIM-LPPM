@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\KaprodiStatus;
 use App\Enums\ProposalStatus;
 use App\Enums\ReviewStatus;
+use Database\Factories\ProposalFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,41 +39,41 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $start_year
  * @property string|null $summary
  * @property string|null $asta_cita
- * @property \App\Enums\ProposalStatus $status
+ * @property ProposalStatus $status
  * @property array|null $student_members
- * @property-read \App\Models\User $submitter
- * @property-read \Illuminate\Database\Eloquent\Model|\App\Models\Research|\App\Models\CommunityService $detailable
- * @property-read \App\Models\ResearchScheme|null $researchScheme
- * @property-read \App\Models\CommunityServiceScheme|null $communityServiceScheme
- * @property-read \App\Models\FocusArea|null $focusArea
- * @property-read \App\Models\Theme|null $theme
- * @property-read \App\Models\Topic|null $topic
- * @property-read \App\Models\NationalPriority|null $nationalPriority
- * @property-read \App\Models\ScienceCluster|null $clusterLevel1
- * @property-read \App\Models\ScienceCluster|null $clusterLevel2
- * @property-read \App\Models\ScienceCluster|null $clusterLevel3
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Sdg[] $sdgs
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MasterIku[] $targetedIkus
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalMonev[] $monevs
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $teamMembers
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Keyword[] $keywords
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalOutput[] $outputs
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BudgetItem[] $budgetItems
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Partner[] $partners
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ActivitySchedule[] $activitySchedules
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResearchStage[] $researchStages
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalReviewer[] $reviewers
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProgressReport[] $progressReports
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DailyNote[] $dailyNotes
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalStatusLog[] $statusLogs
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewLog[] $reviewLogs
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalActivity[] $activities
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentSignature[] $signatures
- * @property-read \App\Models\User $user
+ * @property-read User $submitter
+ * @property-read Model|Research|CommunityService $detailable
+ * @property-read ResearchScheme|null $researchScheme
+ * @property-read CommunityServiceScheme|null $communityServiceScheme
+ * @property-read FocusArea|null $focusArea
+ * @property-read Theme|null $theme
+ * @property-read Topic|null $topic
+ * @property-read NationalPriority|null $nationalPriority
+ * @property-read ScienceCluster|null $clusterLevel1
+ * @property-read ScienceCluster|null $clusterLevel2
+ * @property-read ScienceCluster|null $clusterLevel3
+ * @property-read Collection|Sdg[] $sdgs
+ * @property-read Collection|MasterIku[] $targetedIkus
+ * @property-read Collection|ProposalMonev[] $monevs
+ * @property-read Collection|User[] $teamMembers
+ * @property-read Collection|Keyword[] $keywords
+ * @property-read Collection|ProposalOutput[] $outputs
+ * @property-read Collection|BudgetItem[] $budgetItems
+ * @property-read Collection|Partner[] $partners
+ * @property-read Collection|ActivitySchedule[] $activitySchedules
+ * @property-read Collection|ResearchStage[] $researchStages
+ * @property-read Collection|ProposalReviewer[] $reviewers
+ * @property-read Collection|ProgressReport[] $progressReports
+ * @property-read Collection|DailyNote[] $dailyNotes
+ * @property-read Collection|ProposalStatusLog[] $statusLogs
+ * @property-read Collection|ReviewLog[] $reviewLogs
+ * @property-read Collection|ProposalActivity[] $activities
+ * @property-read Collection|DocumentSignature[] $signatures
+ * @property-read User $user
  */
 class Proposal extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProposalFactory> */
+    /** @use HasFactory<ProposalFactory> */
     use HasFactory, HasUuids, SoftDeletes;
 
     public ?string $notes = null;
@@ -444,18 +448,18 @@ class Proposal extends Model
     public function hasApprovedKaprodi(): bool
     {
         return $this->kaprodiApproval()
-            ->where('status', \App\Enums\KaprodiStatus::APPROVED)
+            ->where('status', KaprodiStatus::APPROVED)
             ->exists();
     }
 
     public function hasPendingKaprodiApproval(): bool
     {
         return $this->kaprodiApproval()
-            ->where('status', \App\Enums\KaprodiStatus::PENDING)
+            ->where('status', KaprodiStatus::PENDING)
             ->exists();
     }
 
-    public function kaprodiApprovalStatus(): ?\App\Enums\KaprodiStatus
+    public function kaprodiApprovalStatus(): ?KaprodiStatus
     {
         $latest = $this->latestKaprodiApproval;
 
@@ -463,7 +467,7 @@ class Proposal extends Model
             return null;
         }
 
-        /** @var \App\Enums\KaprodiStatus $status */
+        /** @var KaprodiStatus $status */
         $status = $latest->status;
 
         return $status;
@@ -525,9 +529,9 @@ class Proposal extends Model
     /**
      * Get all pending team members (anggota who haven't accepted).
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, User>
+     * @return Collection<int, User>
      */
-    public function getPendingTeamMembers(): \Illuminate\Database\Eloquent\Collection
+    public function getPendingTeamMembers(): Collection
     {
         return $this->teamMembers()
             ->wherePivot('status', '!=', 'accepted')
@@ -537,12 +541,12 @@ class Proposal extends Model
     /**
      * Get all pending reviewers (who haven't completed their review).
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, ProposalReviewer>
+     * @return Collection<int, ProposalReviewer>
      */
-    public function getPendingReviewers(): \Illuminate\Database\Eloquent\Collection
+    public function getPendingReviewers(): Collection
     {
         return $this->reviewers()
-            ->where('status', '!=', \App\Enums\ReviewStatus::COMPLETED->value)
+            ->where('status', '!=', ReviewStatus::COMPLETED->value)
             ->get();
     }
 
@@ -567,13 +571,13 @@ class Proposal extends Model
     /**
      * Scope for academic year.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
+     * @return Builder<Proposal>
      */
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<Proposal>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<Proposal>
+     * @param  Builder<Proposal>  $query
+     * @return Builder<Proposal>
      */
-    public function scopeForSemester($query, string $semester): \Illuminate\Database\Eloquent\Builder
+    public function scopeForSemester($query, string $semester): Builder
     {
         return $query->where('semester', $semester);
     }

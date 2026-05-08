@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\ReportStatus;
+use Database\Factories\ProgressReportFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -20,16 +25,16 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string|null $reporting_period
  * @property string|null $status
  * @property string|null $submitted_by
- * @property \Illuminate\Support\Carbon|null $submitted_at
- * @property-read \App\Models\Proposal $proposal
- * @property-read \App\Models\User|null $submitter
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Keyword[] $keywords
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MandatoryOutput[] $mandatoryOutputs
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AdditionalOutput[] $additionalOutputs
+ * @property Carbon|null $submitted_at
+ * @property-read Proposal $proposal
+ * @property-read User|null $submitter
+ * @property-read Collection|Keyword[] $keywords
+ * @property-read Collection|MandatoryOutput[] $mandatoryOutputs
+ * @property-read Collection|AdditionalOutput[] $additionalOutputs
  */
 class ProgressReport extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\ProgressReportFactory> */
+    /** @use HasFactory<ProgressReportFactory> */
     use HasFactory, HasUuids, InteractsWithMedia;
 
     /**
@@ -60,7 +65,7 @@ class ProgressReport extends Model implements HasMedia
     protected function casts(): array
     {
         return [
-            'status' => \App\Enums\ReportStatus::class,
+            'status' => ReportStatus::class,
             'submitted_at' => 'datetime',
         ];
     }
@@ -125,9 +130,9 @@ class ProgressReport extends Model implements HasMedia
     /**
      * Scope a query to only include final reports.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProgressReport>
+     * @return Builder<ProgressReport>
      */
-    public function scopeFinalReports($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeFinalReports($query): Builder
     {
         return $query->where('reporting_period', 'final');
     }
@@ -135,9 +140,9 @@ class ProgressReport extends Model implements HasMedia
     /**
      * Scope a query to only include progress reports (exclude final).
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProgressReport>
+     * @return Builder<ProgressReport>
      */
-    public function scopeProgressReports($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeProgressReports($query): Builder
     {
         return $query->whereIn('reporting_period', ['semester_1', 'semester_2', 'annual']);
     }

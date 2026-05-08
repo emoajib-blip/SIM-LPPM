@@ -6,6 +6,7 @@ use App\Enums\ProposalStatus;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 trait WithApproval
@@ -120,7 +121,7 @@ trait WithApproval
                 $this->notificationService()->notifyDekanApprovalDecision(
                     $proposal,
                     $newStatus->value,
-                    \Illuminate\Support\Facades\Auth::user(),
+                    Auth::user(),
                     [$proposal->submitter]
                 );
 
@@ -132,7 +133,7 @@ trait WithApproval
                     $this->notificationService()->notifyDekanApprovalDecision(
                         $proposal,
                         $newStatus->value,
-                        \Illuminate\Support\Facades\Auth::user(),
+                        Auth::user(),
                         [$kepalaLppm]
                     );
                 }
@@ -141,7 +142,7 @@ trait WithApproval
                 $this->notificationService()->notifyDekanApprovalDecision(
                     $proposal,
                     $newStatus->value,
-                    \Illuminate\Support\Facades\Auth::user(),
+                    Auth::user(),
                     [$proposal->submitter]
                 );
             }

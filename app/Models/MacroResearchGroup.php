@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,8 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $name
  * @property string|null $description
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Research[] $research
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CommunityService[] $communityServices
+ * @property-read Collection|Research[] $research
+ * @property-read Collection|CommunityService[] $communityServices
  */
 class MacroResearchGroup extends Model
 {

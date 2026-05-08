@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\FocusArea;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FocusArea>
+ * @extends Factory<FocusArea>
  */
 class FocusAreaFactory extends Factory
 {

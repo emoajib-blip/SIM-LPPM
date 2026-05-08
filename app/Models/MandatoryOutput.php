@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Database\Factories\MandatoryOutputFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -43,15 +45,15 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string|null $implementation_location
  * @property string|null $media_name
  * @property string|null $media_url
- * @property \Illuminate\Support\Carbon|null $publication_date
+ * @property Carbon|null $publication_date
  * @property string|null $video_url
  * @property string|null $platform
  * @property bool $is_verified
- * @property \Illuminate\Support\Carbon|null $verified_at
+ * @property Carbon|null $verified_at
  * @property string|null $verified_by
  * @property string|null $rank
- * @property-read \App\Models\ProgressReport $progressReport
- * @property-read \App\Models\ProposalOutput $proposalOutput
+ * @property-read ProgressReport $progressReport
+ * @property-read ProposalOutput $proposalOutput
  *
  * Virtual properties used in IKU Verification
  * @property string $model_type
@@ -63,7 +65,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class MandatoryOutput extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\MandatoryOutputFactory> */
+    /** @use HasFactory<MandatoryOutputFactory> */
     use HasFactory, HasUuids, InteractsWithMedia;
 
     /**

@@ -11,10 +11,11 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
- * @implements \Maatwebsite\Excel\Concerns\WithMapping<\App\Models\Proposal>
+ * @implements WithMapping<Proposal>
  */
 class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
@@ -31,7 +32,7 @@ class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, With
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
+     * @return Builder<Proposal>
      */
     public function query(): Builder
     {
@@ -61,7 +62,7 @@ class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, With
     }
 
     /**
-     * @param  \App\Models\Proposal  $proposal
+     * @param  Proposal  $proposal
      * @return array<int, mixed>
      */
     public function map($proposal): array
@@ -95,7 +96,7 @@ class ArchiveDataExport implements FromQuery, ShouldAutoSize, WithHeadings, With
     public function styles(Worksheet $sheet)
     {
         return [
-            1 => ['font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']], 'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF4C6EF5']]],
+            1 => ['font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']], 'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF4C6EF5']]],
         ];
     }
 }

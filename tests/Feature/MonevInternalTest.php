@@ -3,14 +3,18 @@
 namespace Tests\Feature;
 
 use App\Enums\ProposalStatus;
+use App\Livewire\AdminLppm\Monev\MonevIndex;
 use App\Models\Proposal;
 use App\Models\ProposalMonev;
 use App\Models\Research;
 use App\Models\User;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class MonevInternalTest extends TestCase
@@ -27,14 +31,14 @@ class MonevInternalTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
 
         $this->adminLppm = User::factory()->create(['name' => 'Admin LPPM']);
         $this->adminLppm->assignRole('admin lppm');
 
         // Dynamically create and assign the required permission for the test
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'module_monev']);
+        Permission::firstOrCreate(['name' => 'module_monev']);
         $this->adminLppm->givePermissionTo('module_monev');
 
         $this->dosen = User::factory()->create(['name' => 'Dosen Pengusul']);
@@ -60,14 +64,14 @@ class MonevInternalTest extends TestCase
         $this->actingAs($this->dosen);
         $this->get('/admin-lppm/monev')->assertStatus(403);
 
-        Livewire::test(\App\Livewire\AdminLppm\Monev\MonevIndex::class)
+        Livewire::test(MonevIndex::class)
             ->assertForbidden();
 
         // 3. Admin LPPM -> 200 OK
         $this->actingAs($this->adminLppm);
         $this->get('/admin-lppm/monev')->assertStatus(200);
 
-        Livewire::test(\App\Livewire\AdminLppm\Monev\MonevIndex::class)
+        Livewire::test(MonevIndex::class)
             ->assertOk();
     }
 
@@ -84,7 +88,7 @@ class MonevInternalTest extends TestCase
             'status' => ProposalStatus::DRAFT,
         ]);
 
-        $component = Livewire::test(\App\Livewire\AdminLppm\Monev\MonevIndex::class);
+        $component = Livewire::test(MonevIndex::class);
 
         // Assert COMPLETED proposal is visible
         $component->assertSee($this->completedProposal->title);
@@ -97,7 +101,7 @@ class MonevInternalTest extends TestCase
     {
         $this->actingAs($this->adminLppm);
 
-        $component = Livewire::test(\App\Livewire\AdminLppm\Monev\MonevIndex::class)
+        $component = Livewire::test(MonevIndex::class)
             ->call('selectProposal', $this->completedProposal->id)
             ->call('addMonev');
 
@@ -138,7 +142,7 @@ class MonevInternalTest extends TestCase
     {
         $this->actingAs($this->adminLppm);
 
-        $component = Livewire::test(\App\Livewire\AdminLppm\Monev\MonevIndex::class)
+        $component = Livewire::test(MonevIndex::class)
             ->call('selectProposal', $this->completedProposal->id)
             ->call('addMonev');
 

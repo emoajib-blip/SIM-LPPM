@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ActivityLog;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,7 +12,7 @@ class RecordActivity
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -28,7 +29,7 @@ class RecordActivity
             // Record significant activities (ignore assets, livewire messages, etc. if needed)
             // For now, record all GET requests as "page_view"
             if ($request->isMethod('GET') && ! $request->expectsJson() && ! str_contains($request->url(), '/livewire/')) {
-                \App\Models\ActivityLog::create([
+                ActivityLog::create([
                     'user_id' => $user->id,
                     'activity' => 'page_view',
                     'description' => 'Membuka halaman',

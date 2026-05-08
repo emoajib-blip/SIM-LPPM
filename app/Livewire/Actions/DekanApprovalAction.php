@@ -4,6 +4,7 @@ namespace App\Livewire\Actions;
 
 use App\Enums\ProposalStatus;
 use App\Models\Proposal;
+use App\Models\Setting;
 use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
@@ -53,8 +54,8 @@ class DekanApprovalAction
         }
 
         // Validate roadmap validation by Kaprodi if feature is active
-        $isRoadmapFeatureActive = \App\Models\Setting::get('feature_roadmap_active', false);
-        $isKaprodiValidationActive = \App\Models\Setting::get('feature_kaprodi_validation', false);
+        $isRoadmapFeatureActive = Setting::get('feature_roadmap_active', false);
+        $isKaprodiValidationActive = Setting::get('feature_kaprodi_validation', false);
         if ($isRoadmapFeatureActive && $isKaprodiValidationActive && ! $proposal->is_roadmap_validated_by_kaprodi) {
             return [
                 'success' => false,

@@ -2,11 +2,15 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Enums\ReportStatus;
+use App\Models\AdditionalOutput;
 use App\Models\BudgetItem;
+use App\Models\MandatoryOutput;
 use App\Models\MonevReview;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
 use App\Models\ProposalMonev;
+use App\Models\ProposalOutput;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
@@ -224,18 +228,18 @@ class AdminDashboard extends Component
         // 3. Reporting Status (Progress & Final Report)
         $totalReports = $activeProposals->count();
         $submittedReports = ProgressReport::whereIn('proposal_id', $activeProposalIds)
-            ->whereIn('status', [\App\Enums\ReportStatus::SUBMITTED, \App\Enums\ReportStatus::APPROVED, \App\Enums\ReportStatus::APPROVED_BY_DEKAN])
+            ->whereIn('status', [ReportStatus::SUBMITTED, ReportStatus::APPROVED, ReportStatus::APPROVED_BY_DEKAN])
             ->distinct()
             ->count('proposal_id');
 
         // 4. Output Tracking (Luaran)
         // Target: Total outputs promised in funded proposals
-        $targetOutputs = \App\Models\ProposalOutput::whereIn('proposal_id', $activeProposalIds)->count();
+        $targetOutputs = ProposalOutput::whereIn('proposal_id', $activeProposalIds)->count();
 
         // Achieved: Total outputs uploaded for funded proposals (via progress reports)
         $progressReportIds = ProgressReport::whereIn('proposal_id', $activeProposalIds)->pluck('id');
-        $achievedOutputs = \App\Models\MandatoryOutput::whereIn('progress_report_id', $progressReportIds)->count()
-            + \App\Models\AdditionalOutput::whereIn('progress_report_id', $progressReportIds)->count();
+        $achievedOutputs = MandatoryOutput::whereIn('progress_report_id', $progressReportIds)->count()
+            + AdditionalOutput::whereIn('progress_report_id', $progressReportIds)->count();
 
         $this->processStats = [
             'draft_total' => $totalDraft,

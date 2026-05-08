@@ -3,10 +3,12 @@
 namespace Database\Factories;
 
 use App\Constants\ProposalConstants;
+use App\Models\Proposal;
+use App\Models\ProposalOutput;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProposalOutput>
+ * @extends Factory<ProposalOutput>
  */
 class ProposalOutputFactory extends Factory
 {
@@ -21,7 +23,7 @@ class ProposalOutputFactory extends Factory
         $types = ProposalConstants::RESEARCH_OUTPUT_TYPES[$group] ?? ['Lainnya'];
 
         return [
-            'proposal_id' => \App\Models\Proposal::factory(),
+            'proposal_id' => Proposal::factory(),
             'output_year' => fake()->numberBetween(1, 3),
             'category' => fake()->randomElement(ProposalConstants::OUTPUT_CATEGORIES),
             'group' => $group,

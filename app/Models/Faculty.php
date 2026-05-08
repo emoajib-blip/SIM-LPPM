@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,10 +16,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $dean_name
  * @property string|null $dean_id
  * @property string|null $dean_user_id
- * @property-read \App\Models\User|null $deanUser
- * @property-read \App\Models\Institution $institution
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\StudyProgram[] $studyPrograms
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Identity[] $identities
+ * @property-read User|null $deanUser
+ * @property-read Institution $institution
+ * @property-read Collection|StudyProgram[] $studyPrograms
+ * @property-read Collection|Identity[] $identities
  */
 class Faculty extends Model
 {

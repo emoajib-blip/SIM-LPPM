@@ -3,12 +3,14 @@
 use App\Actions\Kaprodi\KaprodiApprovalAction;
 use App\Enums\KaprodiStatus;
 use App\Enums\ProposalStatus;
+use App\Livewire\Actions\SubmitProposalAction;
 use App\Models\Faculty;
 use App\Models\Identity;
 use App\Models\Institution;
 use App\Models\Proposal;
 use App\Models\Research;
 use App\Models\ResearchScheme;
+use App\Models\Setting;
 use App\Models\StudyProgram;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
@@ -202,7 +204,7 @@ it('prevents kaprodi from approving proposals from other study programs', functi
 });
 
 it('blocks proposal submission without kaprodi approval when feature is active', function () {
-    \App\Models\Setting::set('feature_kaprodi_validation', true, 'boolean');
+    Setting::set('feature_kaprodi_validation', true, 'boolean');
 
     $scenario = createKaprodiScenario();
     $dosen = $scenario['dosen'];
@@ -231,7 +233,7 @@ it('blocks proposal submission without kaprodi approval when feature is active',
 });
 
 it('allows proposal submission after kaprodi approval', function () {
-    \App\Models\Setting::set('feature_kaprodi_validation', true, 'boolean');
+    Setting::set('feature_kaprodi_validation', true, 'boolean');
 
     $scenario = createKaprodiScenario();
     $kaprodi = $scenario['kaprodi'];
@@ -395,7 +397,7 @@ it('prevents duplicate kaprodi approval requests', function () {
 });
 
 it('integrates kaprodi check with SubmitProposalAction when feature is active', function () {
-    \App\Models\Setting::set('feature_kaprodi_validation', true, 'boolean');
+    Setting::set('feature_kaprodi_validation', true, 'boolean');
 
     $scenario = createKaprodiScenario();
     $dosen = $scenario['dosen'];
@@ -416,7 +418,7 @@ it('integrates kaprodi check with SubmitProposalAction when feature is active', 
         'tasks' => 'Principal Investigator',
     ]);
 
-    $submitAction = app(\App\Livewire\Actions\SubmitProposalAction::class);
+    $submitAction = app(SubmitProposalAction::class);
     $this->actingAs($dosen);
 
     $result = $submitAction->execute($proposal);
@@ -425,7 +427,7 @@ it('integrates kaprodi check with SubmitProposalAction when feature is active', 
 });
 
 it('allows submission when kaprodi validation feature is disabled', function () {
-    \App\Models\Setting::set('feature_kaprodi_validation', false, 'boolean');
+    Setting::set('feature_kaprodi_validation', false, 'boolean');
 
     $scenario = createKaprodiScenario();
     $dosen = $scenario['dosen'];
@@ -446,7 +448,7 @@ it('allows submission when kaprodi validation feature is disabled', function () 
         'tasks' => 'Principal Investigator',
     ]);
 
-    $submitAction = app(\App\Livewire\Actions\SubmitProposalAction::class);
+    $submitAction = app(SubmitProposalAction::class);
     $this->actingAs($dosen);
 
     $result = $submitAction->execute($proposal);

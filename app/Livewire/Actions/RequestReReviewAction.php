@@ -4,6 +4,7 @@ namespace App\Livewire\Actions;
 
 use App\Enums\ReviewStatus;
 use App\Models\Proposal;
+use App\Models\ProposalReviewer;
 use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\DB;
@@ -74,7 +75,7 @@ class RequestReReviewAction
         // Get all reviewers for this proposal
         $reviewers = $proposal->reviewers()->with('user')->get();
 
-        /** @var \App\Models\ProposalReviewer $reviewerRecord */
+        /** @var ProposalReviewer $reviewerRecord */
         foreach ($reviewers as $reviewerRecord) {
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 

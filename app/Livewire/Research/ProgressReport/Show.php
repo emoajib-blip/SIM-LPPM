@@ -7,10 +7,15 @@ namespace App\Livewire\Research\ProgressReport;
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Forms\ReportForm;
 use App\Livewire\Traits\HasFileUploads;
+use App\Livewire\Traits\HasReportTemplates;
 use App\Livewire\Traits\ReportAccess;
 use App\Livewire\Traits\ReportAuthorization;
+use App\Models\AdditionalOutput;
 use App\Models\Keyword;
+use App\Models\MandatoryOutput;
 use App\Models\Proposal;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -18,8 +23,8 @@ use Livewire\WithFileUploads;
 
 class Show extends Component
 {
-    use \App\Livewire\Traits\HasReportTemplates;
     use HasFileUploads;
+    use HasReportTemplates;
     use HasToast;
     use ReportAccess;
     use ReportAuthorization;
@@ -74,7 +79,7 @@ class Show extends Component
      */
     public function updatedTempMandatoryFiles(mixed $value, string $key): void
     {
-        if ($value instanceof \Illuminate\Http\UploadedFile) {
+        if ($value instanceof UploadedFile) {
             $this->validateMandatoryFile((int) $key);
 
             $this->form->tempMandatoryFiles[(int) $key] = $value;
@@ -97,7 +102,7 @@ class Show extends Component
      */
     public function updatedTempAdditionalFiles(mixed $value, string $key): void
     {
-        if ($value instanceof \Illuminate\Http\UploadedFile) {
+        if ($value instanceof UploadedFile) {
             $this->validateAdditionalFile((int) $key);
 
             $this->form->tempAdditionalFiles[(int) $key] = $value;
@@ -120,7 +125,7 @@ class Show extends Component
      */
     public function updatedTempAdditionalCerts(mixed $value, string $key): void
     {
-        if ($value instanceof \Illuminate\Http\UploadedFile) {
+        if ($value instanceof UploadedFile) {
             $this->validateAdditionalCert((int) $key);
 
             $this->form->tempAdditionalCerts[(int) $key] = $value;
@@ -308,13 +313,13 @@ class Show extends Component
      * Get mandatory output model for editing
      */
     #[Computed]
-    public function mandatoryOutput(): ?\App\Models\MandatoryOutput
+    public function mandatoryOutput(): ?MandatoryOutput
     {
         if (! $this->progressReport || ! $this->form->editingMandatoryId) {
             return null;
         }
 
-        return \App\Models\MandatoryOutput::where('progress_report_id', $this->progressReport->id)
+        return MandatoryOutput::where('progress_report_id', $this->progressReport->id)
             ->where('proposal_output_id', $this->form->editingMandatoryId)
             ->first();
     }
@@ -323,13 +328,13 @@ class Show extends Component
      * Get additional output model for editing
      */
     #[Computed]
-    public function additionalOutput(): ?\App\Models\AdditionalOutput
+    public function additionalOutput(): ?AdditionalOutput
     {
         if (! $this->progressReport || ! $this->form->editingAdditionalId) {
             return null;
         }
 
-        return \App\Models\AdditionalOutput::where('progress_report_id', $this->progressReport->id)
+        return AdditionalOutput::where('progress_report_id', $this->progressReport->id)
             ->where('proposal_output_id', $this->form->editingAdditionalId)
             ->first();
     }
@@ -337,7 +342,7 @@ class Show extends Component
     /**
      * Get all keywords for the view
      */
-    public function getAllKeywords(): \Illuminate\Database\Eloquent\Collection
+    public function getAllKeywords(): Collection
     {
         return Keyword::orderBy('name')->get();
     }

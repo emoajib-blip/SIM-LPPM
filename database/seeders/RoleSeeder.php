@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RoleSeeder extends Seeder
 {
@@ -31,7 +34,7 @@ class RoleSeeder extends Seeder
         foreach ($roles as $roleName) {
             Role::firstOrCreate(
                 ['name' => $roleName, 'guard_name' => 'web'],
-                ['id' => \Illuminate\Support\Str::uuid(), 'name' => $roleName, 'guard_name' => 'web']
+                ['id' => Str::uuid(), 'name' => $roleName, 'guard_name' => 'web']
             );
         }
 
@@ -56,9 +59,9 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($mappings as $permissionName => $roleNames) {
-            $permission = \App\Models\Permission::firstOrCreate(
+            $permission = Permission::firstOrCreate(
                 ['name' => $permissionName, 'guard_name' => 'web'],
-                ['id' => \Illuminate\Support\Str::uuid()->toString(), 'name' => $permissionName, 'guard_name' => 'web']
+                ['id' => Str::uuid()->toString(), 'name' => $permissionName, 'guard_name' => 'web']
             );
 
             foreach ($roleNames as $roleName) {
@@ -69,7 +72,7 @@ class RoleSeeder extends Seeder
             }
         }
 
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         $this->assertUnique(Role::class, 'name');
     }

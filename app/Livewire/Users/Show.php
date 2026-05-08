@@ -2,14 +2,17 @@
 
 namespace App\Livewire\Users;
 
+use App\Models\Proposal;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 /**
- * @property-read \App\Models\User $user
+ * @property-read User $user
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 #[Layout('components.layouts.app', ['title' => 'User Details', 'pageTitle' => '', 'pageSubtitle' => 'User profile and metadata overview'])]
@@ -51,16 +54,16 @@ class Show extends Component
             ->findOrFail($this->userId);
     }
 
-    use \Livewire\WithPagination;
+    use WithPagination;
 
     #[Computed]
     public function researches()
     {
-        $submitted = \App\Models\Proposal::select('proposals.*', \Illuminate\Support\Facades\DB::raw("'Ketua' as user_role"))
+        $submitted = Proposal::select('proposals.*', DB::raw("'Ketua' as user_role"))
             ->where('submitter_id', $this->userId)
             ->where('detailable_type', 'App\Models\Research');
 
-        $participated = \App\Models\Proposal::select('proposals.*', 'proposal_user.role as user_role')
+        $participated = Proposal::select('proposals.*', 'proposal_user.role as user_role')
             ->join('proposal_user', 'proposals.id', '=', 'proposal_user.proposal_id')
             ->where('proposal_user.user_id', $this->userId)
             ->where('detailable_type', 'App\Models\Research');
@@ -74,11 +77,11 @@ class Show extends Component
     #[Computed]
     public function communityServices()
     {
-        $submitted = \App\Models\Proposal::select('proposals.*', \Illuminate\Support\Facades\DB::raw("'Ketua' as user_role"))
+        $submitted = Proposal::select('proposals.*', DB::raw("'Ketua' as user_role"))
             ->where('submitter_id', $this->userId)
             ->where('detailable_type', 'App\Models\CommunityService');
 
-        $participated = \App\Models\Proposal::select('proposals.*', 'proposal_user.role as user_role')
+        $participated = Proposal::select('proposals.*', 'proposal_user.role as user_role')
             ->join('proposal_user', 'proposals.id', '=', 'proposal_user.proposal_id')
             ->where('proposal_user.user_id', $this->userId)
             ->where('detailable_type', 'App\Models\CommunityService');

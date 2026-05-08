@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ResearchScheme;
 use Illuminate\Database\Seeder;
 
 class ResearchSchemeSeeder extends Seeder
@@ -90,7 +91,7 @@ class ResearchSchemeSeeder extends Seeder
         ];
 
         foreach ($schemes as $scheme) {
-            \App\Models\ResearchScheme::updateOrCreate(
+            ResearchScheme::updateOrCreate(
                 ['name' => $scheme['name']],
                 $scheme
             );

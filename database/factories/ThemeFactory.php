@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\FocusArea;
+use App\Models\Theme;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Theme>
+ * @extends Factory<Theme>
  */
 class ThemeFactory extends Factory
 {
@@ -17,7 +19,7 @@ class ThemeFactory extends Factory
     public function definition(): array
     {
         return [
-            'focus_area_id' => \App\Models\FocusArea::factory(),
+            'focus_area_id' => FocusArea::factory(),
             'name' => fake()->randomElement([
                 'Smart City',
                 'E-Government',

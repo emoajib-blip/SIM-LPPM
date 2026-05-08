@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -20,15 +22,15 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property array|null $borang_data
  * @property string $academic_year
  * @property string $semester
- * @property \Illuminate\Support\Carbon|null $reviewed_at
- * @property \Illuminate\Support\Carbon|null $finalized_by_lppm_at
+ * @property Carbon|null $reviewed_at
+ * @property Carbon|null $finalized_by_lppm_at
  * @property string|null $finalized_by_lppm_by
- * @property \Illuminate\Support\Carbon|null $approved_by_kepala_at
+ * @property Carbon|null $approved_by_kepala_at
  * @property string|null $approved_by_kepala_by
- * @property \Illuminate\Support\Carbon|null $reported_to_rektor_at
- * @property-read \App\Models\Proposal $proposal
- * @property-read \App\Models\User $reviewer
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentSignature[] $signatures
+ * @property Carbon|null $reported_to_rektor_at
+ * @property-read Proposal $proposal
+ * @property-read User $reviewer
+ * @property-read Collection|DocumentSignature[] $signatures
  */
 class MonevReview extends Model implements HasMedia
 {

@@ -5,16 +5,18 @@ namespace App\Livewire\Research\Proposal;
 use App\Livewire\Actions\AssignReviewersAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\ProposalReviewer;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $availableReviewers
- * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $currentReviewers
+ * @property-read Proposal|null $proposal
+ * @property-read Collection|User[] $availableReviewers
+ * @property-read Collection|ProposalReviewer[] $currentReviewers
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerAssignment extends Component
@@ -40,10 +42,10 @@ class ReviewerAssignment extends Component
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     * @return Collection<int, User>
      */
     #[Computed]
-    public function availableReviewers(): \Illuminate\Support\Collection
+    public function availableReviewers(): Collection
     {
         return User::whereHas('roles', function ($query) {
             $query->whereIn('name', ['reviewer']);
@@ -53,10 +55,10 @@ class ReviewerAssignment extends Component
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\ProposalReviewer>
+     * @return Collection<int, ProposalReviewer>
      */
     #[Computed]
-    public function currentReviewers(): \Illuminate\Support\Collection
+    public function currentReviewers(): Collection
     {
         return $this->proposal->reviewers()
             ->with('user')
@@ -88,7 +90,7 @@ class ReviewerAssignment extends Component
             ->where('user_id', $reviewerId)
             ->first();
 
-        if ($reviewer instanceof \App\Models\ProposalReviewer) {
+        if ($reviewer instanceof ProposalReviewer) {
             $reviewer->delete();
             session()->flash('success', 'Reviewer berhasil dihapus');
             $this->toastSuccess('Reviewer berhasil dihapus');

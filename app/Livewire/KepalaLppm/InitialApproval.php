@@ -3,7 +3,9 @@
 namespace App\Livewire\KepalaLppm;
 
 use App\Enums\ProposalStatus;
+use App\Models\CommunityService;
 use App\Models\Proposal;
+use App\Models\Research;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -52,8 +54,8 @@ class InitialApproval extends Component
             })
             ->when($this->typeFilter !== 'all', function ($query) {
                 $detailableType = $this->typeFilter === 'research'
-                    ? \App\Models\Research::class
-                    : \App\Models\CommunityService::class;
+                    ? Research::class
+                    : CommunityService::class;
                 $query->where('detailable_type', $detailableType);
             })
             ->when($this->yearFilter, function ($query) {
@@ -69,10 +71,10 @@ class InitialApproval extends Component
         return [
             'all' => Proposal::where('status', ProposalStatus::APPROVED)->count(),
             'research' => Proposal::where('status', ProposalStatus::APPROVED)
-                ->where('detailable_type', \App\Models\Research::class)
+                ->where('detailable_type', Research::class)
                 ->count(),
             'community_service' => Proposal::where('status', ProposalStatus::APPROVED)
-                ->where('detailable_type', \App\Models\CommunityService::class)
+                ->where('detailable_type', CommunityService::class)
                 ->count(),
         ];
     }

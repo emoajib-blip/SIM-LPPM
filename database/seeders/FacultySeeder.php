@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Faculty;
+use App\Models\Institution;
 use Illuminate\Database\Seeder;
 
 class FacultySeeder extends Seeder
@@ -11,8 +13,8 @@ class FacultySeeder extends Seeder
      */
     public function run(): void
     {
-        $institution = \App\Models\Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
-            ?? \App\Models\Institution::first();
+        $institution = Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
+            ?? Institution::first();
 
         if (! $institution) {
             return;
@@ -23,7 +25,7 @@ class FacultySeeder extends Seeder
 
         if ($customFaculties && is_array($customFaculties)) {
             foreach ($customFaculties as $faculty) {
-                \App\Models\Faculty::updateOrCreate(
+                Faculty::updateOrCreate(
                     ['code' => $faculty['code']],
                     [
                         'institution_id' => $institution->id,
@@ -43,7 +45,7 @@ class FacultySeeder extends Seeder
         ];
 
         foreach ($faculties as $faculty) {
-            \App\Models\Faculty::updateOrCreate(
+            Faculty::updateOrCreate(
                 ['code' => $faculty['code']],
                 [
                     'institution_id' => $institution->id,

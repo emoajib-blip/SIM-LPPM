@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\Identity;
+use App\Models\Setting;
 use App\Models\User;
 use App\Rules\Turnstile;
 use Illuminate\Auth\Events\Lockout;
@@ -41,7 +43,7 @@ class Login extends Component
     public function mount(): void
     {
         $this->generateMathQuestion();
-        $this->loginTitle = \App\Models\Setting::where('key', 'login_title')->value('value') ?? 'Login to your account';
+        $this->loginTitle = Setting::where('key', 'login_title')->value('value') ?? 'Login to your account';
     }
 
     public function generateMathQuestion(): void
@@ -100,7 +102,7 @@ class Login extends Component
 
         // If input doesn't look like email, try to find user by identity_id
         if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $identity = \App\Models\Identity::where('identity_id', $this->email)->first();
+            $identity = Identity::where('identity_id', $this->email)->first();
             if ($identity && $identity->user) {
                 $credentials = ['email' => $identity->user->email, 'password' => $this->password];
             }
@@ -182,7 +184,7 @@ class Login extends Component
         // Use the actual email used for authentication
         $email = $this->email;
         if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $identity = \App\Models\Identity::where('identity_id', $this->email)->first();
+            $identity = Identity::where('identity_id', $this->email)->first();
             if ($identity && $identity->user) {
                 $email = $identity->user->email;
             }

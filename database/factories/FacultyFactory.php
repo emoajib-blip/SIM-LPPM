@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Faculty;
+use App\Models\Institution;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Faculty>
+ * @extends Factory<Faculty>
  */
 class FacultyFactory extends Factory
 {
@@ -17,7 +19,7 @@ class FacultyFactory extends Factory
     public function definition(): array
     {
         return [
-            'institution_id' => \App\Models\Institution::factory(),
+            'institution_id' => Institution::factory(),
             'name' => fake()->unique()->words(3, true),
             'code' => fake()->unique()->lexify('?????'),
         ];

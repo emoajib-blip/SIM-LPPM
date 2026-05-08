@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,8 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string|null $unit
  * @property string|null $description
- * @property-read \App\Models\BudgetGroup $budgetGroup
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BudgetItem[] $budgetItems
+ * @property-read BudgetGroup $budgetGroup
+ * @property-read Collection|BudgetItem[] $budgetItems
  */
 class BudgetComponent extends Model
 {

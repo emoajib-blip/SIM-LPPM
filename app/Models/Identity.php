@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $wos_id
  * @property string|null $type
  * @property string|null $address
- * @property \Illuminate\Support\Carbon|null $birthdate
+ * @property Carbon|null $birthdate
  * @property string|null $birthplace
  * @property int|null $institution_id
  * @property string|null $institution_name
@@ -55,10 +56,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $garuda_citations
  * @property int|null $garuda_cited_documents
  * @property bool $is_active
- * @property-read \App\Models\User $user
- * @property-read \App\Models\Institution|null $institution
- * @property-read \App\Models\StudyProgram|null $studyProgram
- * @property-read \App\Models\Faculty|null $faculty
+ * @property-read User $user
+ * @property-read Institution|null $institution
+ * @property-read StudyProgram|null $studyProgram
+ * @property-read Faculty|null $faculty
  */
 class Identity extends Model
 {

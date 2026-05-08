@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\BudgetGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BudgetGroup>
+ * @extends Factory<BudgetGroup>
  */
 class BudgetGroupFactory extends Factory
 {

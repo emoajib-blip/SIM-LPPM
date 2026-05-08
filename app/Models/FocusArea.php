@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Database\Factories\FocusAreaFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,13 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property bool $is_active_for_research
  * @property bool $is_active_for_community_service
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Theme[] $themes
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $proposals
+ * @property-read Collection|Theme[] $themes
+ * @property-read Collection|Proposal[] $proposals
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class FocusArea extends Model
 {
-    /** @use HasFactory<\Database\Factories\FocusAreaFactory> */
+    /** @use HasFactory<FocusAreaFactory> */
     use HasFactory;
 
     protected $fillable = [

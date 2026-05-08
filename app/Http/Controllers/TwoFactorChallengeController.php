@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +40,7 @@ class TwoFactorChallengeController extends Controller
         $remember = $request->session()->get('login.remember', false);
 
         // Prevent array injection vulnerability returning a Collection
-        $user = \App\Models\User::where('id', $userId)->first();
+        $user = User::where('id', $userId)->first();
 
         if (! $user) {
             RateLimiter::hit($this->throttleKey());
@@ -112,7 +114,7 @@ class TwoFactorChallengeController extends Controller
                 $secret,
                 $code
             );
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        } catch (DecryptException $e) {
             // If decryption fails, the two-factor secret is corrupted or invalid
             return false;
         }
@@ -148,7 +150,7 @@ class TwoFactorChallengeController extends Controller
             }
 
             return false;
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        } catch (DecryptException $e) {
             // If decryption fails, the two-factor data is corrupted or invalid
             return false;
         }

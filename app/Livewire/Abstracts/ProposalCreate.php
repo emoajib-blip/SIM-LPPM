@@ -2,38 +2,57 @@
 
 namespace App\Livewire\Abstracts;
 
+use App\Actions\Proposal\IdentityEligibilityAction;
+use App\Constants\ProposalConstants;
+use App\Enums\ProposalStatus;
+use App\Enums\ReportStatus;
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Forms\ProposalForm;
+use App\Livewire\Research\Proposal\Components\TktMeasurement;
+use App\Livewire\Traits\HasReportTemplates;
 use App\Livewire\Traits\WithProposalWizard;
 use App\Livewire\Traits\WithStepWizard;
+use App\Models\CommunityServiceScheme;
+use App\Models\NationalPriority;
+use App\Models\ProgressReport;
+use App\Models\Proposal;
+use App\Models\ResearchScheme;
+use App\Models\Setting;
+use App\Models\StudyProgramRoadmap;
+use App\Models\TktLevel;
+use App\Models\Topic;
+use App\Models\User;
 use App\Services\BudgetValidationService;
+use App\Services\EligibilityService;
 use App\Services\LecturerEligibilityService;
 use App\Services\MasterDataService;
 use App\Services\ProposalService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 /**
- * @property-read \Illuminate\Support\Collection $schemes
- * @property-read \Illuminate\Support\Collection $communityServiceSchemes
- * @property-read \Illuminate\Support\Collection $focusAreas
- * @property-read \Illuminate\Support\Collection $themes
- * @property-read \Illuminate\Support\Collection $topics
- * @property-read \Illuminate\Support\Collection $nationalPriorities
- * @property-read \Illuminate\Support\Collection $scienceClusters
- * @property-read \Illuminate\Support\Collection $clusterLevel1Options
- * @property-read \Illuminate\Support\Collection $clusterLevel2Options
- * @property-read \Illuminate\Support\Collection $clusterLevel3Options
- * @property-read \Illuminate\Support\Collection $macroResearchGroups
- * @property-read \Illuminate\Support\Collection $partners
- * @property-read \Illuminate\Support\Collection $masterIkus
- * @property-read \Illuminate\Support\Collection $sdgs
- * @property-read \Illuminate\Support\Collection $budgetGroups
- * @property-read \Illuminate\Support\Collection $budgetComponents
- * @property-read \Illuminate\Support\Collection $tktTypes
+ * @property-read Collection $schemes
+ * @property-read Collection $communityServiceSchemes
+ * @property-read Collection $focusAreas
+ * @property-read Collection $themes
+ * @property-read Collection $topics
+ * @property-read Collection $nationalPriorities
+ * @property-read Collection $scienceClusters
+ * @property-read Collection $clusterLevel1Options
+ * @property-read Collection $clusterLevel2Options
+ * @property-read Collection $clusterLevel3Options
+ * @property-read Collection $macroResearchGroups
+ * @property-read Collection $partners
+ * @property-read Collection $masterIkus
+ * @property-read Collection $sdgs
+ * @property-read Collection $budgetGroups
+ * @property-read Collection $budgetComponents
+ * @property-read Collection $tktTypes
  * @property-read string|null $templateUrl
  * @property-read string|null $partnerCommitmentTemplateUrl
  * @property-read string|null $proposalApprovalPageTemplateUrl
@@ -41,7 +60,7 @@ use Livewire\WithFileUploads;
  */
 abstract class ProposalCreate extends Component
 {
-    use \App\Livewire\Traits\HasReportTemplates;
+    use HasReportTemplates;
     use HasToast;
     use WithFileUploads;
     use WithProposalWizard;
@@ -72,14 +91,14 @@ abstract class ProposalCreate extends Component
     /** File surat kesediaan yang akan diupload */
     public $commitmentUploadFile = null;
 
-    public function mount(?string $proposalId = null, ?\App\Models\Proposal $proposal = null): void
+    public function mount(?string $proposalId = null, ?Proposal $proposal = null): void
     {
         try {
             $user = Auth::user();
-            $this->author_name = ($user instanceof \App\Models\User) ? $user->name : '';
+            $this->author_name = ($user instanceof User) ? $user->name : '';
 
             // Handle route model binding (if passed as object) or ID string
-            $proposalToLoad = $proposal ?? ($proposalId ? \App\Models\Proposal::find($proposalId) : null);
+            $proposalToLoad = $proposal ?? ($proposalId ? Proposal::find($proposalId) : null);
 
             if ($proposalToLoad) {
                 $this->authorize('update', $proposalToLoad);
@@ -87,7 +106,7 @@ abstract class ProposalCreate extends Component
                 $this->form->setProposal($proposalToLoad);
             } else {
                 // Check eligibility for new proposals
-                if ($user instanceof \App\Models\User && $user->activeHasRole('dosen')) {
+                if ($user instanceof User && $user->activeHasRole('dosen')) {
                     // First check general eligibility
                     $eligibilityService = app(LecturerEligibilityService::class);
                     $eligibility = $eligibilityService->checkEligibility($user);
@@ -99,7 +118,7 @@ abstract class ProposalCreate extends Component
                     }
 
                     // Then check quota limits for creating new proposals
-                    $quotaCheck = app(\App\Services\EligibilityService::class)->canCreateProposal($user, $this->getProposalType());
+                    $quotaCheck = app(EligibilityService::class)->canCreateProposal($user, $this->getProposalType());
                     if (! $quotaCheck['can_create']) {
                         session()->flash('error', $quotaCheck['reason']);
                         $this->redirect(route($this->getIndexRoute()));
@@ -125,18 +144,18 @@ abstract class ProposalCreate extends Component
         }
     }
 
-    protected function canEditProposal(\App\Models\Proposal $proposal): bool
+    protected function canEditProposal(Proposal $proposal): bool
     {
         $user = Auth::user();
 
-        if ($user instanceof \App\Models\User && $user->hasRole(['admin lppm'])) {
+        if ($user instanceof User && $user->hasRole(['admin lppm'])) {
             return true;
         }
 
         if ($proposal->submitter_id === $user->getAuthIdentifier()) {
-            if ($proposal->status === \App\Enums\ProposalStatus::DRAFT) {
+            if ($proposal->status === ProposalStatus::DRAFT) {
                 // Dosen: enforce submission schedule window
-                if ($user instanceof \App\Models\User && $user->activeHasRole('dosen')) {
+                if ($user instanceof User && $user->activeHasRole('dosen')) {
                     $eligibilityService = app(LecturerEligibilityService::class);
                     $schedule = $eligibilityService->getScheduleStatus();
                     $type = $this->getProposalType();
@@ -153,16 +172,16 @@ abstract class ProposalCreate extends Component
             }
 
             // Allow editing if proposal needs revision
-            if ($proposal->status === \App\Enums\ProposalStatus::REVISION_NEEDED) {
+            if ($proposal->status === ProposalStatus::REVISION_NEEDED) {
                 return true;
             }
 
             // Allow editing if proposal is completed (final report phase)
             // BUT the final report is not yet fully approved
-            if ($proposal->status === \App\Enums\ProposalStatus::COMPLETED) {
-                /** @var \App\Models\ProgressReport|null $finalReport */
+            if ($proposal->status === ProposalStatus::COMPLETED) {
+                /** @var ProgressReport|null $finalReport */
                 $finalReport = $proposal->progressReports()->where('reporting_period', 'final')->latest()->first();
-                if (! $finalReport || $finalReport->status !== \App\Enums\ReportStatus::APPROVED) {
+                if (! $finalReport || $finalReport->status !== ReportStatus::APPROVED) {
                     return true;
                 }
             }
@@ -194,8 +213,8 @@ abstract class ProposalCreate extends Component
                 },
             ],
             'form.outputs.*.year' => 'required|integer|min:1|max:10',
-            'form.outputs.*.category' => ['required', \Illuminate\Validation\Rule::in(\App\Constants\ProposalConstants::OUTPUT_CATEGORIES)],
-            'form.outputs.*.group' => ['required', \Illuminate\Validation\Rule::in(\App\Constants\ProposalConstants::RESEARCH_OUTPUT_GROUPS)],
+            'form.outputs.*.category' => ['required', Rule::in(ProposalConstants::OUTPUT_CATEGORIES)],
+            'form.outputs.*.group' => ['required', Rule::in(ProposalConstants::RESEARCH_OUTPUT_GROUPS)],
             'form.outputs.*.type' => [
                 'required',
                 'string',
@@ -203,14 +222,14 @@ abstract class ProposalCreate extends Component
                     // Validate type matches group
                     $index = (int) explode('.', $attribute)[2];
                     $group = $this->form->outputs[$index]['group'] ?? null;
-                    if ($group && isset(\App\Constants\ProposalConstants::RESEARCH_OUTPUT_TYPES[$group])) {
-                        if (! in_array($value, \App\Constants\ProposalConstants::RESEARCH_OUTPUT_TYPES[$group])) {
+                    if ($group && isset(ProposalConstants::RESEARCH_OUTPUT_TYPES[$group])) {
+                        if (! in_array($value, ProposalConstants::RESEARCH_OUTPUT_TYPES[$group])) {
                             $fail('Luaran baris '.($index + 1).' tidak valid untuk kategori yang dipilih.');
                         }
                     }
                 },
             ],
-            'form.outputs.*.status' => ['required', \Illuminate\Validation\Rule::in(\App\Constants\ProposalConstants::OUTPUT_STATUSES)],
+            'form.outputs.*.status' => ['required', Rule::in(ProposalConstants::OUTPUT_STATUSES)],
             'form.outputs.*.description' => 'required|string|max:2000',
         ];
     }
@@ -420,10 +439,10 @@ abstract class ProposalCreate extends Component
     /**
      * Get available topics.
      *
-     * @return \Illuminate\Support\Collection<int, \App\Models\Topic>
+     * @return Collection<int, Topic>
      */
     #[Computed]
-    public function topics(): \Illuminate\Support\Collection
+    public function topics(): Collection
     {
         return app(MasterDataService::class)->topics(
             $this->form->focus_area_id ? (int) $this->form->focus_area_id : null,
@@ -435,10 +454,10 @@ abstract class ProposalCreate extends Component
     /**
      * Get national priorities.
      *
-     * @return \Illuminate\Support\Collection<int, \App\Models\NationalPriority>
+     * @return Collection<int, NationalPriority>
      */
     #[Computed]
-    public function nationalPriorities(): \Illuminate\Support\Collection
+    public function nationalPriorities(): Collection
     {
         return app(MasterDataService::class)->nationalPriorities();
     }
@@ -446,14 +465,14 @@ abstract class ProposalCreate extends Component
     /**
      * Get study program roadmaps.
      *
-     * @return \Illuminate\Support\Collection<int, \App\Models\StudyProgramRoadmap>
+     * @return Collection<int, StudyProgramRoadmap>
      */
     #[Computed]
-    public function studyProgramRoadmaps(): \Illuminate\Support\Collection
+    public function studyProgramRoadmaps(): Collection
     {
         $user = Auth::user();
         if ($user && $user->identity && $user->identity->study_program_id) {
-            return \App\Models\StudyProgramRoadmap::where('is_active', true)
+            return StudyProgramRoadmap::where('is_active', true)
                 ->where('study_program_id', $user->identity->study_program_id)
                 ->get();
         }
@@ -542,7 +561,7 @@ abstract class ProposalCreate extends Component
     public function downloadPartnerCommitmentTemplate()
     {
         try {
-            $setting = \App\Models\Setting::where('key', 'partner_commitment_template')->first();
+            $setting = Setting::where('key', 'partner_commitment_template')->first();
             if ($setting && $setting->hasMedia('template')) {
                 $media = $setting->getFirstMedia('template');
 
@@ -575,7 +594,7 @@ abstract class ProposalCreate extends Component
     public function downloadProposalApprovalPageTemplate()
     {
         try {
-            $setting = \App\Models\Setting::where('key', 'proposal_approval_page_template')->first();
+            $setting = Setting::where('key', 'proposal_approval_page_template')->first();
             if ($setting && $setting->hasMedia('template')) {
                 $media = $setting->getFirstMedia('template');
 
@@ -605,7 +624,7 @@ abstract class ProposalCreate extends Component
                 'form.focus_area_id' => 'required|exists:focus_areas,id',
                 'form.theme_id' => 'required|exists:themes,id',
                 'form.topic_id' => 'required|exists:topics,id',
-                'form.study_program_roadmap_id' => \App\Models\Setting::get('feature_roadmap_active', false) ? 'required|exists:study_program_roadmaps,id' : 'nullable',
+                'form.study_program_roadmap_id' => Setting::get('feature_roadmap_active', false) ? 'required|exists:study_program_roadmaps,id' : 'nullable',
                 'form.keywords' => 'required|array|min:1|max:5',
                 'form.sdg_ids' => 'required|array|min:1',
                 'form.targeted_iku_ids' => 'required|array|min:1',
@@ -619,7 +638,7 @@ abstract class ProposalCreate extends Component
                 'form.summary' => 'required|string|min:100',
                 'form.asta_cita' => 'nullable|string',
                 'form.author_tasks' => 'required|string',
-                'form.tkt_type' => $type === 'research' ? ['required', 'string', 'max:255', \Illuminate\Validation\Rule::in(app(\App\Services\MasterDataService::class)->tktTypes()->toArray())] : 'nullable',
+                'form.tkt_type' => $type === 'research' ? ['required', 'string', 'max:255', Rule::in(app(MasterDataService::class)->tktTypes()->toArray())] : 'nullable',
                 'form.tkt_results' => $type === 'research' ? [
                     'nullable',
                     'array',
@@ -631,7 +650,7 @@ abstract class ProposalCreate extends Component
                         // 1. Calculate achieved level
                         $achievedLevel = 0;
                         // Get level models to map IDs to integer levels
-                        $levels = \App\Models\TktLevel::whereIn('id', array_keys($value))->get();
+                        $levels = TktLevel::whereIn('id', array_keys($value))->get();
 
                         foreach ($levels as $level) {
                             $data = $value[$level->id] ?? null;
@@ -643,9 +662,9 @@ abstract class ProposalCreate extends Component
 
                         // 2. Get required range for the scheme if selected
                         if ($this->form->research_scheme_id) {
-                            $scheme = \App\Models\ResearchScheme::find($this->form->research_scheme_id);
+                            $scheme = ResearchScheme::find($this->form->research_scheme_id);
                             if ($scheme && $scheme->strata) {
-                                $range = \App\Livewire\Research\Proposal\Components\TktMeasurement::getTktRangeForStrata($scheme->strata);
+                                $range = TktMeasurement::getTktRangeForStrata($scheme->strata);
 
                                 // If range exists (not PKM), validate
                                 if ($range) {
@@ -671,14 +690,14 @@ abstract class ProposalCreate extends Component
                         }
 
                         $scheme = $this->getProposalType() === 'research'
-                        ? \App\Models\ResearchScheme::find($schemeId)
-                        : \App\Models\CommunityServiceScheme::find($schemeId);
+                        ? ResearchScheme::find($schemeId)
+                        : CommunityServiceScheme::find($schemeId);
 
                         if (! $scheme) {
                             return;
                         }
 
-                        $result = app(\App\Actions\Proposal\IdentityEligibilityAction::class)->execute(Auth::user(), $scheme);
+                        $result = app(IdentityEligibilityAction::class)->execute(Auth::user(), $scheme);
                         if (! $result['is_eligible']) {
                             $fail($result['reason']);
                         }

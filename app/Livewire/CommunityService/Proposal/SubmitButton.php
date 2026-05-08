@@ -6,17 +6,19 @@ use App\Enums\ProposalStatus;
 use App\Livewire\Actions\SubmitProposalAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\User;
 use App\Services\LecturerEligibilityService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
+ * @property-read Proposal|null $proposal
  * @property-read bool $canSubmit
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $pendingMembers
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $rejectedMembers
+ * @property-read Collection|User[] $pendingMembers
+ * @property-read Collection|User[] $rejectedMembers
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class SubmitButton extends Component

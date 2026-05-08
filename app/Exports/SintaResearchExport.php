@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Enums\ProposalStatus;
+use App\Models\Institution;
 use App\Models\Proposal;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -22,7 +23,7 @@ class SintaResearchExport implements FromCollection, ShouldAutoSize, WithHeading
     public function __construct(
         protected ?string $year = null
     ) {
-        $institution = \App\Models\Institution::first();
+        $institution = Institution::first();
         $this->institutionName = $institution->name ?? 'Institut Teknologi dan Sains Nahdlatul Ulama Pekalongan';
         $this->institutionCode = $institution->code ?? '062004';
     }

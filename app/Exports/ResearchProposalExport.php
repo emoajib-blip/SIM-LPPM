@@ -3,12 +3,14 @@
 namespace App\Exports;
 
 use App\Models\Proposal;
+use App\Models\Research;
+use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
 /**
- * @implements \Maatwebsite\Excel\Concerns\WithMapping<\App\Models\Proposal>
+ * @implements WithMapping<Proposal>
  */
 class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
 {
@@ -20,11 +22,11 @@ class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Proposal>
+     * @return Builder<Proposal>
      */
-    public function query(): \Illuminate\Database\Eloquent\Builder
+    public function query(): Builder
     {
-        return Proposal::where('detailable_type', \App\Models\Research::class)
+        return Proposal::where('detailable_type', Research::class)
             ->whereYear('created_at', $this->year)
             ->with([
                 'submitter',
@@ -83,7 +85,7 @@ class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
     }
 
     /**
-     * @param  \App\Models\Proposal  $proposal
+     * @param  Proposal  $proposal
      * @return array<int, mixed>
      */
     public function map($proposal): array

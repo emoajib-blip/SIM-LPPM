@@ -7,7 +7,9 @@ use App\Models\Identity;
 use App\Models\Proposal;
 use App\Models\Research;
 use App\Models\ResearchScheme;
+use App\Models\Setting;
 use App\Models\User;
+use App\Services\EligibilityService;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -32,11 +34,11 @@ it('hides scheme eligibility alert when user has submittable draft proposals', f
         ],
     ]);
 
-    \App\Models\Setting::updateOrCreate(
+    Setting::updateOrCreate(
         ['key' => 'research_proposal_start_date'],
         ['value' => now()->subDay()->toDateString()]
     );
-    \App\Models\Setting::updateOrCreate(
+    Setting::updateOrCreate(
         ['key' => 'research_proposal_end_date'],
         ['value' => now()->addDay()->toDateString()]
     );
@@ -76,11 +78,11 @@ it('shows scheme eligibility alert when user has no submittable proposals', func
         'sinta_score_v3_overall' => 0.5,
     ]);
 
-    \App\Models\Setting::updateOrCreate(
+    Setting::updateOrCreate(
         ['key' => 'research_proposal_start_date'],
         ['value' => now()->subDay()->toDateString()]
     );
-    \App\Models\Setting::updateOrCreate(
+    Setting::updateOrCreate(
         ['key' => 'research_proposal_end_date'],
         ['value' => now()->addDay()->toDateString()]
     );
@@ -109,16 +111,16 @@ it('keeps scheme eligibility strict for new proposal creation', function () {
         ],
     ]);
 
-    \App\Models\Setting::updateOrCreate(
+    Setting::updateOrCreate(
         ['key' => 'research_proposal_start_date'],
         ['value' => now()->subDay()->toDateString()]
     );
-    \App\Models\Setting::updateOrCreate(
+    Setting::updateOrCreate(
         ['key' => 'research_proposal_end_date'],
         ['value' => now()->addDay()->toDateString()]
     );
 
-    $eligibilityService = app(\App\Services\EligibilityService::class);
+    $eligibilityService = app(EligibilityService::class);
     $canSubmit = $eligibilityService->canSubmitResearchProposal($identity, $researchScheme);
 
     expect($canSubmit)->toBeFalse();
@@ -143,10 +145,10 @@ it('hides alert for NEED_ASSIGNMENT and REVISION_NEEDED statuses', function () {
         'eligibility_rules' => ['min_sinta_score' => 3.0],
     ]);
 
-    \App\Models\Setting::updateOrCreate(['key' => 'research_proposal_start_date'], ['value' => now()->subDay()->toDateString()]);
-    \App\Models\Setting::updateOrCreate(['key' => 'research_proposal_end_date'], ['value' => now()->addDay()->toDateString()]);
-    \App\Models\Setting::updateOrCreate(['key' => 'community_service_proposal_start_date'], ['value' => now()->subDay()->toDateString()]);
-    \App\Models\Setting::updateOrCreate(['key' => 'community_service_proposal_end_date'], ['value' => now()->addDay()->toDateString()]);
+    Setting::updateOrCreate(['key' => 'research_proposal_start_date'], ['value' => now()->subDay()->toDateString()]);
+    Setting::updateOrCreate(['key' => 'research_proposal_end_date'], ['value' => now()->addDay()->toDateString()]);
+    Setting::updateOrCreate(['key' => 'community_service_proposal_start_date'], ['value' => now()->subDay()->toDateString()]);
+    Setting::updateOrCreate(['key' => 'community_service_proposal_end_date'], ['value' => now()->addDay()->toDateString()]);
 
     $research = Research::factory()->create();
     Proposal::factory()->create([

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\QuotaMessage;
 use Illuminate\Database\Seeder;
 
 class QuotaMessageSeeder extends Seeder
@@ -35,7 +36,7 @@ class QuotaMessageSeeder extends Seeder
         ];
 
         foreach ($messages as $message) {
-            \App\Models\QuotaMessage::updateOrCreate(
+            QuotaMessage::updateOrCreate(
                 ['key' => $message['key']],
                 ['message' => $message['message']]
             );

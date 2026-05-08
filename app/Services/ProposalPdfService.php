@@ -2,12 +2,29 @@
 
 namespace App\Services;
 
+use App\Enums\ProposalStatus;
+use App\Models\CommunityService;
+use App\Models\DailyNote;
+use App\Models\DocumentSignature;
+use App\Models\Faculty;
+use App\Models\Identity;
+use App\Models\Institution;
+use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Models\ProposalStatusLog;
+use App\Models\Research;
+use App\Models\Setting;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use setasign\Fpdi\Fpdi;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProposalPdfService
 {
@@ -20,7 +37,7 @@ class ProposalPdfService
      * For S3 disks: downloads to a temp file and registers automatic cleanup.
      * For local disks: resolves to the absolute filesystem path.
      */
-    private function getLocalPdfPath(\Spatie\MediaLibrary\MediaCollections\Models\Media $media, array &$tempFiles): ?string
+    private function getLocalPdfPath(Media $media, array &$tempFiles): ?string
     {
         $diskName = config('media-library.disk_name', 'public');
 
@@ -83,7 +100,7 @@ class ProposalPdfService
         // Check detailable media collections
         $collections = ['substance_file', 'approval_file'];
         foreach ($collections as $col) {
-            /** @var \Illuminate\Database\Eloquent\Model&\Spatie\MediaLibrary\HasMedia $detailable */
+            /** @var Model&HasMedia $detailable */
             $detailable = $proposal->detailable;
             $media = $detailable->getMedia($col)->first();
             if ($media) {
@@ -127,14 +144,14 @@ class ProposalPdfService
             @unlink($oldPdf);
         }
 
-        /** @var \App\Models\Faculty|null $faculty */
+        /** @var Faculty|null $faculty */
         $faculty = $proposal->submitter->identity?->faculty?->load('deanUser.identity');
         $deanName = '..........................';
         $deanId = '..........................';
 
         if ($faculty?->deanUser) {
             // Dynamic: use linked user data
-            /** @var \App\Models\Identity $identity */
+            /** @var Identity $identity */
             $identity = $faculty->deanUser->identity;
             $name = $faculty->deanUser->name;
             $prefix = $identity->title_prefix;
@@ -159,7 +176,7 @@ class ProposalPdfService
         }
 
         if ($deanName === '..........................') {
-            $candidate = \App\Models\User::whereHas('roles', function ($q) {
+            $candidate = User::whereHas('roles', function ($q) {
                 $q->where('name', 'dekan');
             })
                 ->whereHas('identity', function ($q) use ($faculty) {
@@ -169,7 +186,7 @@ class ProposalPdfService
                 ->first();
 
             if ($candidate) {
-                /** @var \App\Models\Identity $idn */
+                /** @var Identity $idn */
                 $idn = $candidate->identity;
                 $nm = $candidate->name;
                 $px = $idn->title_prefix;
@@ -186,13 +203,13 @@ class ProposalPdfService
         }
 
         // Fetch LPPM Head details based on institution
-        /** @var \App\Models\Institution|null $institution */
+        /** @var Institution|null $institution */
         $institution = $proposal->submitter->identity?->institution?->load('lppmHeadUser.identity');
         $lppmHeadName = '..........................';
         $lppmHeadId = '..........................';
 
         if ($institution?->lppmHeadUser) {
-            /** @var \App\Models\Identity $identity */
+            /** @var Identity $identity */
             $identity = $institution->lppmHeadUser->identity;
             $fullName = $institution->lppmHeadUser->name;
             $prefix = $identity->title_prefix;
@@ -208,12 +225,12 @@ class ProposalPdfService
             $lppmHeadName = $fullName;
             $lppmHeadId = $identity->identity_id ?? '';
         } else {
-            $lppmHeadName = $institution->lppm_head_name ?: (\App\Models\Setting::where('key', 'lppm_head_name')->first()->value ?? $lppmHeadName);
-            $lppmHeadId = $institution->lppm_head_id ?: (\App\Models\Setting::where('key', 'lppm_head_id')->first()->value ?? $lppmHeadId);
+            $lppmHeadName = $institution->lppm_head_name ?: (Setting::where('key', 'lppm_head_name')->first()->value ?? $lppmHeadName);
+            $lppmHeadId = $institution->lppm_head_id ?: (Setting::where('key', 'lppm_head_id')->first()->value ?? $lppmHeadId);
         }
 
         if ($lppmHeadName === '..........................') {
-            $candidate = \App\Models\User::whereHas('roles', function ($q) {
+            $candidate = User::whereHas('roles', function ($q) {
                 $q->where('name', 'kepala lppm');
             })
                 ->whereHas('identity', function ($q) use ($institution) {
@@ -223,7 +240,7 @@ class ProposalPdfService
                 ->first();
 
             if ($candidate) {
-                /** @var \App\Models\Identity $idn */
+                /** @var Identity $idn */
                 $idn = $candidate->identity;
                 $nm = $candidate->name;
                 $px = $idn->title_prefix;
@@ -239,30 +256,30 @@ class ProposalPdfService
             }
         } else {
             // Ultimate fallback
-            $lppmHeadName = \App\Models\Setting::where('key', 'lppm_head_name')->first()->value ?? $lppmHeadName;
-            $lppmHeadId = \App\Models\Setting::where('key', 'lppm_head_id')->first()->value ?? $lppmHeadId;
+            $lppmHeadName = Setting::where('key', 'lppm_head_name')->first()->value ?? $lppmHeadName;
+            $lppmHeadId = Setting::where('key', 'lppm_head_id')->first()->value ?? $lppmHeadId;
         }
 
         // Fetch approval logs for signatures
-        $deanLog = \App\Models\ProposalStatusLog::where('proposal_id', $proposal->id)
-            ->where('status_after', \App\Enums\ProposalStatus::APPROVED)
+        $deanLog = ProposalStatusLog::where('proposal_id', $proposal->id)
+            ->where('status_after', ProposalStatus::APPROVED)
             ->latest('at')
             ->first();
 
-        $lppmLog = \App\Models\ProposalStatusLog::where('proposal_id', $proposal->id)
-            ->whereIn('status_after', [\App\Enums\ProposalStatus::UNDER_REVIEW, \App\Enums\ProposalStatus::WAITING_REVIEWER])
+        $lppmLog = ProposalStatusLog::where('proposal_id', $proposal->id)
+            ->whereIn('status_after', [ProposalStatus::UNDER_REVIEW, ProposalStatus::WAITING_REVIEWER])
             ->latest('at')
             ->first();
 
-        $submissionLog = \App\Models\ProposalStatusLog::where('proposal_id', $proposal->id)
-            ->where('status_after', \App\Enums\ProposalStatus::SUBMITTED)
+        $submissionLog = ProposalStatusLog::where('proposal_id', $proposal->id)
+            ->where('status_after', ProposalStatus::SUBMITTED)
             ->latest('at')
             ->first();
 
         $lecturerSignedAt = $submissionLog->at ?? $proposal->created_at;
 
         // Pre-fetch approval mode once (reused for Blade view & FPDI merge)
-        $approvalMode = \App\Models\Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
+        $approvalMode = Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
 
         // 1. Generate the basic info PDF using DomPDF
         $infoPdfContent = Pdf::loadView('pdf.proposal-export', [
@@ -331,9 +348,9 @@ class ProposalPdfService
         }
 
         if ($approvalMode === 'upload' || $approvalMode === 'both') {
-            /** @var \App\Models\Research|\App\Models\CommunityService $detailable */
+            /** @var Research|CommunityService $detailable */
             $detailable = $proposal->detailable;
-            /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $approvalFile */
+            /** @var ?Media $approvalFile */
             $approvalFile = $detailable->getFirstMedia('approval_file');
             if ($approvalFile) {
                 $approvalPath = $this->getLocalPdfPath($approvalFile, $tempFiles);
@@ -368,9 +385,9 @@ class ProposalPdfService
         }
 
         // 3. Add pages from the substance file if it exists
-        /** @var \App\Models\Research|\App\Models\CommunityService $detailableSubstance */
+        /** @var Research|CommunityService $detailableSubstance */
         $detailableSubstance = $proposal->detailable;
-        /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
+        /** @var ?Media $substanceFile */
         $substanceFile = $detailableSubstance->getFirstMedia('substance_file');
         if ($substanceFile) {
             $substancePath = $this->getLocalPdfPath($substanceFile, $tempFiles);
@@ -407,7 +424,7 @@ class ProposalPdfService
 
         // 4. Add pages from partner commitment letters
         foreach ($proposal->partners as $partner) {
-            /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $commitmentLetter */
+            /** @var ?Media $commitmentLetter */
             $commitmentLetter = $partner->getMedia('commitment_letter')
                 ->where('custom_properties.proposal_id', $proposal->id)
                 ->first();
@@ -481,7 +498,7 @@ class ProposalPdfService
     /**
      * Export a report to PDF.
      */
-    public function exportReport(Proposal $proposal, \App\Models\ProgressReport $report, bool $isPreview = false): string
+    public function exportReport(Proposal $proposal, ProgressReport $report, bool $isPreview = false): string
     {
         // 0. Cache Check
         $cacheDir = storage_path('app/public/pdf_cache/reports');
@@ -532,12 +549,12 @@ class ProposalPdfService
         }
 
         // Signatures setup (Same as export)
-        /** @var \App\Models\Faculty|null $faculty */
+        /** @var Faculty|null $faculty */
         $faculty = $proposal->submitter->identity?->faculty?->load('deanUser.identity');
         $deanName = '..........................';
         $deanId = '..........................';
         if ($faculty?->deanUser) {
-            /** @var \App\Models\Identity $identity */
+            /** @var Identity $identity */
             $identity = $faculty->deanUser->identity;
             $deanName = format_name($identity->title_prefix, $faculty->deanUser->name, $identity->title_suffix);
             $deanId = $identity->identity_id ?? '';
@@ -546,25 +563,25 @@ class ProposalPdfService
             $deanId = $faculty->dean_id ?: $deanId;
         }
 
-        /** @var \App\Models\Institution|null $institution */
+        /** @var Institution|null $institution */
         $institution = $proposal->submitter->identity?->institution?->load('lppmHeadUser.identity');
         $lppmHeadName = '..........................';
         $lppmHeadId = '..........................';
         if ($institution?->lppmHeadUser) {
-            /** @var \App\Models\Identity $identity */
+            /** @var Identity $identity */
             $identity = $institution->lppmHeadUser->identity;
             $lppmHeadName = format_name($identity->title_prefix, $institution->lppmHeadUser->name, $identity->title_suffix);
             $lppmHeadId = $identity->identity_id ?? '';
         } elseif ($institution) {
-            $lppmHeadName = $institution->lppm_head_name ?: (\App\Models\Setting::where('key', 'lppm_head_name')->first()->value ?? $lppmHeadName);
-            $lppmHeadId = $institution->lppm_head_id ?: (\App\Models\Setting::where('key', 'lppm_head_id')->first()->value ?? $lppmHeadId);
+            $lppmHeadName = $institution->lppm_head_name ?: (Setting::where('key', 'lppm_head_name')->first()->value ?? $lppmHeadName);
+            $lppmHeadId = $institution->lppm_head_id ?: (Setting::where('key', 'lppm_head_id')->first()->value ?? $lppmHeadId);
         } else {
-            $lppmHeadName = \App\Models\Setting::where('key', 'lppm_head_name')->first()->value ?? $lppmHeadName;
-            $lppmHeadId = \App\Models\Setting::where('key', 'lppm_head_id')->first()->value ?? $lppmHeadId;
+            $lppmHeadName = Setting::where('key', 'lppm_head_name')->first()->value ?? $lppmHeadName;
+            $lppmHeadId = Setting::where('key', 'lppm_head_id')->first()->value ?? $lppmHeadId;
         }
 
         if ($institution && $lppmHeadName === '..........................') {
-            $candidate = \App\Models\User::whereHas('roles', function ($q) {
+            $candidate = User::whereHas('roles', function ($q) {
                 $q->where('name', 'kepala lppm');
             })
                 ->whereHas('identity', function ($q) use ($institution) {
@@ -574,7 +591,7 @@ class ProposalPdfService
                 ->first();
 
             if ($candidate) {
-                /** @var \App\Models\Identity $idn */
+                /** @var Identity $idn */
                 $idn = $candidate->identity;
                 $lppmHeadName = format_name($idn->title_prefix, $candidate->name, $idn->title_suffix);
                 $lppmHeadId = $idn->identity_id ?? '';
@@ -600,24 +617,24 @@ class ProposalPdfService
         $lecturerSignedAt = $report->submitted_at ?? ($report->created_at ?? now());
 
         // Fetch digital signatures for QR codes
-        /** @var \Illuminate\Support\Collection<string, \App\Models\DocumentSignature> $reportSigs */
+        /** @var Collection<string, DocumentSignature> $reportSigs */
         $reportSigs = $report->signatures()
             ->get()
-            ->keyBy(function (\Illuminate\Database\Eloquent\Model $s) {
-                /** @var \App\Models\DocumentSignature $s */
+            ->keyBy(function (Model $s) {
+                /** @var DocumentSignature $s */
                 return "{$s->action}|{$s->signed_role}";
             });
 
         $qrLecturerUrl = isset($reportSigs['submitted|lecturer'])
-            ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['submitted|lecturer']->id])
-            : \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => Str::uuid()]); // Fallback for legacy
+            ? URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['submitted|lecturer']->id])
+            : URL::signedRoute('signatures.verify', ['documentSignature' => Str::uuid()]); // Fallback for legacy
 
         $qrDeanUrl = isset($reportSigs['approved|dekan'])
-            ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['approved|dekan']->id])
+            ? URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['approved|dekan']->id])
             : null;
 
         $qrLppmUrl = isset($reportSigs['finalized|kepala_lppm'])
-            ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['finalized|kepala_lppm']->id])
+            ? URL::signedRoute('signatures.verify', ['documentSignature' => $reportSigs['finalized|kepala_lppm']->id])
             : null;
 
         // Generate report content PDF
@@ -638,7 +655,7 @@ class ProposalPdfService
             'dean_id' => $deanId,
             'lppm_head_name' => $lppmHeadName,
             'lppm_head_id' => $lppmHeadId,
-            'report_approval_mode' => \App\Models\Setting::where('key', 'report_approval_mode')->value('value') ?? 'digital',
+            'report_approval_mode' => Setting::where('key', 'report_approval_mode')->value('value') ?? 'digital',
             'dean_signed_at' => $deanSignedAt,
             'lppm_signed_at' => $lppmSignedAt,
             'lecturer_signed_at' => $lecturerSignedAt,
@@ -680,7 +697,7 @@ class ProposalPdfService
         }
 
         // 1.5. Add pages from the report's uploaded signature page (if exists)
-        /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $signaturePage */
+        /** @var ?Media $signaturePage */
         $signaturePage = $report->getFirstMedia('signature_page');
         if ($signaturePage) {
             $signaturePath = $this->getLocalPdfPath($signaturePage, $tempFiles);
@@ -694,13 +711,13 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Signature Page) for '.$report->id.': '.$e->getMessage());
+                    Log::warning('FPDI Merge Fail (Report Signature Page) for '.$report->id.': '.$e->getMessage());
                 }
             }
         }
 
         // 2. Add pages from the report's substance file
-        /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $substanceFile */
+        /** @var ?Media $substanceFile */
         $substanceFile = $report->getFirstMedia('substance_file');
         if ($substanceFile) {
             $reportSubstancePath = $this->getLocalPdfPath($substanceFile, $tempFiles);
@@ -714,13 +731,13 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Report Substance) for '.$report->id.': '.$e->getMessage());
+                    Log::warning('FPDI Merge Fail (Report Substance) for '.$report->id.': '.$e->getMessage());
                 }
             }
         }
 
         // 3. Add pages from Realisasi Keterlibatan file
-        /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $realizationFile */
+        /** @var ?Media $realizationFile */
         $realizationFile = $report->getFirstMedia('realization_file');
         if ($realizationFile) {
             $realizationPath = $this->getLocalPdfPath($realizationFile, $tempFiles);
@@ -734,14 +751,14 @@ class ProposalPdfService
                         $pdf->useTemplate($templateId);
                     }
                 } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Realization File) for '.$report->id.': '.$e->getMessage());
+                    Log::warning('FPDI Merge Fail (Realization File) for '.$report->id.': '.$e->getMessage());
                 }
             }
         }
 
         // 4. Add pages from Presentation file (Community Service only)
         if ($proposal->detailable_type === 'App\Models\CommunityService') {
-            /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $presentationFile */
+            /** @var ?Media $presentationFile */
             $presentationFile = $report->getFirstMedia('presentation_file');
             if ($presentationFile) {
                 $presentationPath = $this->getLocalPdfPath($presentationFile, $tempFiles);
@@ -755,7 +772,7 @@ class ProposalPdfService
                             $pdf->useTemplate($templateId);
                         }
                     } catch (\Throwable $e) {
-                        \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Presentation File) for '.$report->id.': '.$e->getMessage());
+                        Log::warning('FPDI Merge Fail (Presentation File) for '.$report->id.': '.$e->getMessage());
                     }
                 }
             }
@@ -768,7 +785,7 @@ class ProposalPdfService
             $collections = ['journal_article', 'book_document', 'publication_certificate', 'output_file'];
 
             foreach ($collections as $collection) {
-                /** @var ?\Spatie\MediaLibrary\MediaCollections\Models\Media $outputMedia */
+                /** @var ?Media $outputMedia */
                 $outputMedia = $outputRecord->getFirstMedia($collection);
                 if ($outputMedia) {
                     $outputPath = $this->getLocalPdfPath($outputMedia, $tempFiles);
@@ -782,7 +799,7 @@ class ProposalPdfService
                                 $pdf->useTemplate($templateId);
                             }
                         } catch (\Throwable $e) {
-                            \Illuminate\Support\Facades\Log::warning("FPDI Merge Fail (Output File - {$collection}) for report ".$report->id.': '.$e->getMessage());
+                            Log::warning("FPDI Merge Fail (Output File - {$collection}) for report ".$report->id.': '.$e->getMessage());
                         }
                     }
                 }
@@ -790,7 +807,7 @@ class ProposalPdfService
         }
 
         // Add pages from Daily Notes
-        $dailyNotes = \App\Models\DailyNote::where('proposal_id', $proposal->id)
+        $dailyNotes = DailyNote::where('proposal_id', $proposal->id)
             ->with(['budgetGroup', 'media'])
             ->orderBy('activity_date', 'asc')
             ->get();
@@ -808,17 +825,17 @@ class ProposalPdfService
             $logbookSigs = $proposal->signatures()
                 ->where('variant', 'logbook')
                 ->get()
-                ->keyBy(function (\Illuminate\Database\Eloquent\Model $s) {
-                    /** @var \App\Models\DocumentSignature $s */
+                ->keyBy(function (Model $s) {
+                    /** @var DocumentSignature $s */
                     return "{$s->action}|{$s->signed_role}";
                 });
 
             $qrUrlSubmitter = isset($logbookSigs['submitted|lecturer'])
-                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $logbookSigs['submitted|lecturer']->id])
+                ? URL::signedRoute('signatures.verify', ['documentSignature' => $logbookSigs['submitted|lecturer']->id])
                 : null;
 
             $qrUrlLppm = isset($logbookSigs['approved|kepala_lppm'])
-                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $logbookSigs['approved|kepala_lppm']->id])
+                ? URL::signedRoute('signatures.verify', ['documentSignature' => $logbookSigs['approved|kepala_lppm']->id])
                 : null;
 
             $notesPdfContent = Pdf::loadView('pdf.daily-notes', [
@@ -826,7 +843,7 @@ class ProposalPdfService
                 'notes' => $dailyNotes,
                 'isSigned' => $proposal->logbook_signed_at !== null,
                 'isApproved' => $proposal->logbook_approved_at !== null,
-                'logbookApprovalMode' => \App\Models\Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital',
+                'logbookApprovalMode' => Setting::where('key', 'logbook_approval_mode')->value('value') ?? 'digital',
                 'submitterFullName' => $submitterFullName,
                 'facultyName' => $facultyName,
                 'prodiName' => $prodiName,
@@ -849,7 +866,7 @@ class ProposalPdfService
                     $pdf->useTemplate($templateId);
                 }
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('FPDI Merge Fail (Daily Notes) for '.$report->id.': '.$e->getMessage());
+                Log::warning('FPDI Merge Fail (Daily Notes) for '.$report->id.': '.$e->getMessage());
             }
             @unlink($tempNotesPath);
         }

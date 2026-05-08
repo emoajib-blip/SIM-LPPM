@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -15,15 +16,15 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string $organization
  * @property string|null $level
  * @property string|null $role
- * @property \Illuminate\Support\Carbon|null $date
+ * @property Carbon|null $date
  * @property string|null $status
  * @property string|null $description
- * @property \Illuminate\Support\Carbon|null $verified_at
+ * @property Carbon|null $verified_at
  * @property string|null $verified_by
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\User $user
- * @property-read \App\Models\User|null $verifier
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User $user
+ * @property-read User|null $verifier
  *
  * Virtual properties used in IKU Verification
  * @property string $model_type

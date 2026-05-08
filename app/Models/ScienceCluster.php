@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property bool $is_active_for_research
  * @property bool $is_active_for_community_service
- * @property-read \App\Models\ScienceCluster|null $parent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ScienceCluster[] $children
+ * @property-read ScienceCluster|null $parent
+ * @property-read Collection|ScienceCluster[] $children
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class ScienceCluster extends Model

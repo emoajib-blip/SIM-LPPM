@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Enums\ProposalStatus;
 use App\Models\Proposal;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -19,7 +20,7 @@ class MonevRecapExport implements FromView, ShouldAutoSize, WithStyles
     public function view(): View
     {
         $query = Proposal::query()
-            ->where('status', \App\Enums\ProposalStatus::COMPLETED)
+            ->where('status', ProposalStatus::COMPLETED)
             ->where('start_year', $this->academicYear)
             ->with([
                 'submitter.identity.faculty',

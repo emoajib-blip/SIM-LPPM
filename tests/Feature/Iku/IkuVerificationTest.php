@@ -4,10 +4,12 @@ use App\Livewire\Iku\IkuVerification;
 use App\Models\MandatoryOutput;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Models\ProposalOutput;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
     Artisan::call('db:seed', ['--class' => RoleSeeder::class]);
@@ -15,7 +17,7 @@ beforeEach(function () {
     $this->admin->assignRole('admin lppm');
 
     // Grant required permission dynamically
-    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'module_laporan']);
+    Permission::firstOrCreate(['name' => 'module_laporan']);
     $this->admin->givePermissionTo('module_laporan');
 });
 
@@ -27,14 +29,14 @@ test('iku verification page is accessible to admin', function () {
 });
 
 test('admin can verify a mandatory output', function () {
-    $proposal = \App\Models\Proposal::factory()->create();
-    $report = \App\Models\ProgressReport::factory()->create([
+    $proposal = Proposal::factory()->create();
+    $report = ProgressReport::factory()->create([
         'proposal_id' => $proposal->id,
         'reporting_year' => (int) date('Y'),
         'reporting_period' => 'annual',
     ]);
 
-    $pOutput = \App\Models\ProposalOutput::factory()->create([
+    $pOutput = ProposalOutput::factory()->create([
         'category' => 'journal',
         'type' => 'article',
     ]);
@@ -63,7 +65,7 @@ test('admin can update output rank', function () {
         'reporting_period' => 'annual',
     ]);
 
-    $pOutput = \App\Models\ProposalOutput::factory()->create([
+    $pOutput = ProposalOutput::factory()->create([
         'category' => 'journal',
         'type' => 'article',
     ]);

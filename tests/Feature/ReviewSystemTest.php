@@ -4,11 +4,15 @@ namespace Tests\Feature;
 
 use App\Enums\ProposalStatus;
 use App\Enums\ReviewStatus;
+use App\Livewire\Actions\CompleteReviewAction;
+use App\Livewire\Research\Proposal\ReviewerForm;
 use App\Models\Proposal;
 use App\Models\ProposalReviewer;
 use App\Models\Research;
 use App\Models\ReviewCriteria;
 use App\Models\User;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -30,8 +34,8 @@ class ReviewSystemTest extends TestCase
         parent::setUp();
 
         // Setup base roles and data
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
 
         // Generate users
         $this->reviewer = User::factory()->create(['name' => 'Reviewer Ahli']);
@@ -83,13 +87,13 @@ class ReviewSystemTest extends TestCase
         // Random dosen tries to review
         $this->actingAs($this->randomDosen);
 
-        $component = Livewire::test(\App\Livewire\Research\Proposal\ReviewerForm::class, ['proposalId' => $this->proposal->id]);
+        $component = Livewire::test(ReviewerForm::class, ['proposalId' => $this->proposal->id]);
 
         // Ensure canReview is false for random dosen
         $this->assertFalse($component->get('canReview'));
 
         // Attempt to submit
-        $component->call('submitReview', app(\App\Livewire\Actions\CompleteReviewAction::class))
+        $component->call('submitReview', app(CompleteReviewAction::class))
             ->assertHasErrors(['reviewNotes', 'recommendation']); // Fails validation first
 
         // Provide valid data but still should fail authorization inside submitReview
@@ -99,7 +103,7 @@ class ReviewSystemTest extends TestCase
             ->set('scores.1.acuan', 'Acuan 1')
             ->set('scores.2.score', 4)
             ->set('scores.2.acuan', 'Acuan 2')
-            ->call('submitReview', app(\App\Livewire\Actions\CompleteReviewAction::class))
+            ->call('submitReview', app(CompleteReviewAction::class))
             ->assertDispatched('error');
     }
 
@@ -107,7 +111,7 @@ class ReviewSystemTest extends TestCase
     {
         $this->actingAs($this->reviewer);
 
-        $component = Livewire::test(\App\Livewire\Research\Proposal\ReviewerForm::class, ['proposalId' => $this->proposal->id]);
+        $component = Livewire::test(ReviewerForm::class, ['proposalId' => $this->proposal->id]);
 
         $this->assertTrue($component->get('canReview'));
 
@@ -126,7 +130,7 @@ class ReviewSystemTest extends TestCase
         $this->assertEquals(470, $component->get('totalScore'));
 
         // Submit the review
-        $component->call('submitReview', app(\App\Livewire\Actions\CompleteReviewAction::class))
+        $component->call('submitReview', app(CompleteReviewAction::class))
             ->assertHasNoErrors()
             ->assertDispatched('review-submitted');
 
@@ -161,7 +165,7 @@ class ReviewSystemTest extends TestCase
     {
         $this->actingAs($this->reviewer);
 
-        $component = Livewire::test(\App\Livewire\Research\Proposal\ReviewerForm::class, ['proposalId' => $this->proposal->id]);
+        $component = Livewire::test(ReviewerForm::class, ['proposalId' => $this->proposal->id]);
 
         // Attempting to inject a score of 6 (Max is 5)
         $component->set('reviewNotes', 'Catatan review')
@@ -170,7 +174,7 @@ class ReviewSystemTest extends TestCase
             ->set('scores.1.acuan', 'Acuan')
             ->set('scores.2.score', 0) // Invalid under min
             ->set('scores.2.acuan', 'Acuan')
-            ->call('submitReview', app(\App\Livewire\Actions\CompleteReviewAction::class))
+            ->call('submitReview', app(CompleteReviewAction::class))
             ->assertHasErrors(['scores.1.score', 'scores.2.score']);
 
         // Verify database is completely untouched

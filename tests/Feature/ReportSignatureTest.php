@@ -5,10 +5,13 @@ namespace Tests\Feature;
 use App\Enums\ReportStatus;
 use App\Models\Faculty;
 use App\Models\Identity;
+use App\Models\Institution;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
 use App\Models\Research;
 use App\Models\User;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -33,10 +36,10 @@ class ReportSignatureTest extends TestCase
         config(['document-signatures.current_kid' => 'v1']);
         config(['document-signatures.keys.v1' => 'test-secret-standard-itsnu']);
 
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
 
-        $institution = \App\Models\Institution::first();
+        $institution = Institution::first();
         $faculty = Faculty::factory()->create(['institution_id' => $institution->id]);
 
         $this->dosen = User::factory()->create(['name' => 'Dosen']);

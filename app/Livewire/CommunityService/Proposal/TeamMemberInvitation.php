@@ -4,6 +4,7 @@ namespace App\Livewire\CommunityService\Proposal;
 
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -60,7 +61,7 @@ class TeamMemberInvitation extends Component
                 $this->proposal->teamMembers()->updateExistingPivot($user->id, ['status' => 'accepted']);
 
                 // Send notification
-                $notificationService = app(\App\Services\NotificationService::class);
+                $notificationService = app(NotificationService::class);
                 $notificationService->notifyTeamInvitationAccepted($this->proposal, $user);
             });
 
@@ -85,7 +86,7 @@ class TeamMemberInvitation extends Component
                 $this->proposal->teamMembers()->updateExistingPivot($user->id, ['status' => 'REJECTED']);
 
                 // Send notification
-                $notificationService = app(\App\Services\NotificationService::class);
+                $notificationService = app(NotificationService::class);
                 $notificationService->notifyTeamInvitationRejected($this->proposal, $user);
             });
 

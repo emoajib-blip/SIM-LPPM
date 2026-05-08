@@ -11,6 +11,8 @@ use App\Models\Research;
 use App\Models\ReviewCriteria;
 use App\Models\ReviewScore;
 use App\Models\User;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -29,8 +31,8 @@ class PessimisticSecurityTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
 
         $this->dosen = User::factory()->create();
         $this->dosen->assignRole('dosen');

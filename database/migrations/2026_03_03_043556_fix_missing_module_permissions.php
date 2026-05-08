@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Spatie\Permission\PermissionRegistrar;
 
 return new class extends Migration
 {
@@ -72,10 +73,10 @@ return new class extends Migration
 
         // Clear Spatie permission cache
         try {
-            if (app()->bound(\Spatie\Permission\PermissionRegistrar::class)) {
-                app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+            if (app()->bound(PermissionRegistrar::class)) {
+                app(PermissionRegistrar::class)->forgetCachedPermissions();
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Silently fail if cache clearing fails
         }
     }

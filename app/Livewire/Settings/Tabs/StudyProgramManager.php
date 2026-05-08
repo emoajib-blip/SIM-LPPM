@@ -6,7 +6,9 @@ use App\Actions\Dekan\DekanValidateStudyProgramRoadmapAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Faculty;
 use App\Models\Institution;
+use App\Models\Setting;
 use App\Models\StudyProgram;
+use App\Models\User;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -57,7 +59,7 @@ class StudyProgramManager extends Component
             'studyPrograms' => StudyProgram::with(['institution', 'faculty', 'kaprodi'])->latest()->paginate(10),
             'institutions' => Institution::all(),
             'faculties' => $this->institutionId ? Faculty::where('institution_id', $this->institutionId)->orderBy('name')->get() : [],
-            'kaprodiUsers' => \App\Models\User::role('kaprodi')->orderBy('name')->get(),
+            'kaprodiUsers' => User::role('kaprodi')->orderBy('name')->get(),
         ]);
     }
 
@@ -105,7 +107,7 @@ class StudyProgramManager extends Component
             'kaprodi_user_id' => $this->kaprodiUserId,
         ];
 
-        if (\App\Models\Setting::get('feature_roadmap_active', false)) {
+        if (Setting::get('feature_roadmap_active', false)) {
             $data['research_roadmap'] = $this->researchRoadmap;
         }
 
@@ -165,7 +167,7 @@ class StudyProgramManager extends Component
 
     public function confirmDelete(int $id): void
     {
-        $studyProgram = \App\Models\StudyProgram::find($id);
+        $studyProgram = StudyProgram::find($id);
         if (! $studyProgram) {
             return;
         }

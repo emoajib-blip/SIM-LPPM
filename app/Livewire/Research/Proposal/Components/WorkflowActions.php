@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Research\Proposal\Components;
 
+use App\Enums\ProposalStatus;
 use App\Livewire\Traits\WithApproval;
 use App\Livewire\Traits\WithTeamManagement;
 use App\Models\Proposal;
+use App\Services\LecturerEligibilityService;
+use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -37,7 +40,7 @@ class WorkflowActions extends Component
         $user = auth()->user();
 
         // Only submitter of a draft proposal can edit
-        if ($this->proposal->status !== \App\Enums\ProposalStatus::DRAFT
+        if ($this->proposal->status !== ProposalStatus::DRAFT
             || $this->proposal->submitter_id !== $user->id) {
             return false;
         }
@@ -48,7 +51,7 @@ class WorkflowActions extends Component
         }
 
         // Dosen: enforce submission schedule window
-        return app(\App\Services\LecturerEligibilityService::class)->getScheduleStatus()['research_open'] ?? true;
+        return app(LecturerEligibilityService::class)->getScheduleStatus()['research_open'] ?? true;
     }
 
     #[Computed]
@@ -57,11 +60,11 @@ class WorkflowActions extends Component
         $user = auth()->user();
 
         // Submitter of a draft proposal can always delete (schedule does not restrict deletion)
-        return $this->proposal->status === \App\Enums\ProposalStatus::DRAFT
+        return $this->proposal->status === ProposalStatus::DRAFT
             && $this->proposal->submitter_id === $user->id;
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         return view('livewire.research.proposal.components.workflow-actions');
     }

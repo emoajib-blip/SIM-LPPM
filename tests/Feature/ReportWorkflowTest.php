@@ -3,14 +3,22 @@
 namespace Tests\Feature;
 
 use App\Enums\ProposalStatus;
+use App\Enums\ReportStatus;
+use App\Livewire\Reports\Show;
+use App\Models\CommunityService;
 use App\Models\Faculty;
 use App\Models\Identity;
+use App\Models\Institution;
+use App\Models\ProgressReport;
 use App\Models\Proposal;
 use App\Models\ProposalOutput;
 use App\Models\Research;
 use App\Models\User;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class ReportWorkflowTest extends TestCase
@@ -26,11 +34,11 @@ class ReportWorkflowTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
-        $institution = \App\Models\Institution::first();
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
+        $institution = Institution::first();
 
         $faculty = Faculty::factory()->create([
             'institution_id' => $institution->id,
@@ -77,13 +85,13 @@ class ReportWorkflowTest extends TestCase
         $report = $this->proposal->progressReports()->where('reporting_period', 'semester_1')->first();
 
         $this->assertNotNull($report);
-        $this->assertEquals(\App\Enums\ReportStatus::DRAFT, $report->status);
+        $this->assertEquals(ReportStatus::DRAFT, $report->status);
 
         // Submit the report
         $component->call('submit');
         $component->assertHasNoErrors();
 
-        $this->assertEquals(\App\Enums\ReportStatus::SUBMITTED, $report->fresh()->status);
+        $this->assertEquals(ReportStatus::SUBMITTED, $report->fresh()->status);
     }
 
     public function test_dosen_can_create_and_submit_final_report()
@@ -103,23 +111,23 @@ class ReportWorkflowTest extends TestCase
         $report = $this->proposal->progressReports()->where('reporting_period', 'final')->first();
 
         $this->assertNotNull($report);
-        $this->assertEquals(\App\Enums\ReportStatus::DRAFT, $report->status);
+        $this->assertEquals(ReportStatus::DRAFT, $report->status);
 
         // Submit
         $component->call('submit');
         $component->assertHasNoErrors();
-        $this->assertEquals(\App\Enums\ReportStatus::SUBMITTED, $report->fresh()->status);
+        $this->assertEquals(ReportStatus::SUBMITTED, $report->fresh()->status);
     }
 
     public function test_dosen_can_fill_mandatory_output_in_report()
     {
         $this->actingAs($this->dosen);
 
-        $report = \App\Models\ProgressReport::create([
+        $report = ProgressReport::create([
             'proposal_id' => $this->proposal->id,
             'reporting_year' => 2025,
             'reporting_period' => 'semester_1',
-            'status' => \App\Enums\ReportStatus::DRAFT,
+            'status' => ReportStatus::DRAFT,
             'summary_update' => 'Initial summary',
         ]);
 
@@ -173,15 +181,15 @@ class ReportWorkflowTest extends TestCase
     {
         $this->actingAs($this->dosen);
 
-        $communityService = \App\Models\CommunityService::factory()->create();
+        $communityService = CommunityService::factory()->create();
         $proposal = Proposal::factory()->create([
             'submitter_id' => $this->dosen->id,
             'detailable_id' => $communityService->id,
-            'detailable_type' => \App\Models\CommunityService::class,
+            'detailable_type' => CommunityService::class,
             'status' => ProposalStatus::COMPLETED,
         ]);
 
-        $component = Livewire::test(\App\Livewire\Reports\Show::class, [
+        $component = Livewire::test(Show::class, [
             'proposal' => $proposal,
             'type' => 'community-service-progress',
         ])

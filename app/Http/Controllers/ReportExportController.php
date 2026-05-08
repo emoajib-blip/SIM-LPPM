@@ -3,17 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Reports\GetPartnerReportQuery;
+use App\Exports\ArchiveDataExport;
+use App\Exports\ArchiveTemplateExport;
+use App\Exports\CommunityServiceReportExport;
+use App\Exports\IkuReportExport;
+use App\Exports\MonevRecapExport;
+use App\Exports\OutputReportExport;
+use App\Exports\PartnerCollaborationExport;
+use App\Exports\ResearchProposalExport;
+use App\Exports\ResearchReportExport;
 use App\Models\DocumentSignature;
+use App\Models\Institution;
 use App\Models\InstitutionalReport;
+use App\Models\MonevReview;
 use App\Models\Proposal;
+use App\Models\Research;
+use App\Models\ReviewCriteria;
+use App\Models\User;
 use App\Services\DocumentSignatureService;
 use App\Traits\HasIkuCalculations;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -162,11 +178,11 @@ class ReportExportController extends Controller
             $period = $request->query('period', date('Y'));
             $ikuMetrics = $this->getIkuMetrics($period);
 
-            $institution = \App\Models\Institution::first();
-            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
-            $lppmHead = \App\Models\User::role('kepala lppm')->with('identity')->first();
+            $institution = Institution::first();
+            $rektor = User::role('rektor')->with('identity')->first();
+            $lppmHead = User::role('kepala lppm')->with('identity')->first();
 
-            $institutionalReport = \App\Models\InstitutionalReport::where('type', 'iku')
+            $institutionalReport = InstitutionalReport::where('type', 'iku')
                 ->where('year', $period)
                 ->first();
 
@@ -207,7 +223,7 @@ class ReportExportController extends Controller
             return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('IKU PDF Export Error: '.$e->getMessage());
+            Log::error('IKU PDF Export Error: '.$e->getMessage());
 
             return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
         }
@@ -220,7 +236,7 @@ class ReportExportController extends Controller
             $period = $request->query('period', date('Y'));
 
             $download = Excel::download(
-                new \App\Exports\IkuReportExport($period),
+                new IkuReportExport($period),
                 'laporan-rekap-iku-'.$period.'-'.now()->format('YmdHis').'.xlsx'
             );
 
@@ -261,13 +277,13 @@ class ReportExportController extends Controller
                 ->latest()
                 ->get();
 
-            $institutionalReport = \App\Models\InstitutionalReport::where('type', 'research')
+            $institutionalReport = InstitutionalReport::where('type', 'research')
                 ->where('year', $period)
                 ->first();
 
-            $institution = \App\Models\Institution::first();
-            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
-            $lppmHead = \App\Models\User::role('kepala lppm')->with('identity')->first();
+            $institution = Institution::first();
+            $rektor = User::role('rektor')->with('identity')->first();
+            $lppmHead = User::role('kepala lppm')->with('identity')->first();
 
             $pdf = Pdf::loadView('reports.research-pdf', [
                 'proposals' => $proposals,
@@ -321,7 +337,7 @@ class ReportExportController extends Controller
             $faculty = $request->query('faculty');
 
             $download = Excel::download(
-                new \App\Exports\ResearchReportExport($period, $search, $scheme, $faculty),
+                new ResearchReportExport($period, $search, $scheme, $faculty),
                 'laporan-penelitian-'.$period.'-'.now()->format('YmdHis').'.xlsx'
             );
 
@@ -362,13 +378,13 @@ class ReportExportController extends Controller
                 ->latest()
                 ->get();
 
-            $institutionalReport = \App\Models\InstitutionalReport::where('type', 'pkm')
+            $institutionalReport = InstitutionalReport::where('type', 'pkm')
                 ->where('year', $period)
                 ->first();
 
-            $institution = \App\Models\Institution::first();
-            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
-            $lppmHead = \App\Models\User::role('kepala lppm')->with('identity')->first();
+            $institution = Institution::first();
+            $rektor = User::role('rektor')->with('identity')->first();
+            $lppmHead = User::role('kepala lppm')->with('identity')->first();
 
             $pdf = Pdf::loadView('reports.community-service-pdf', [
                 'proposals' => $proposals,
@@ -422,14 +438,14 @@ class ReportExportController extends Controller
             $faculty = $request->query('faculty');
 
             $download = Excel::download(
-                new \App\Exports\CommunityServiceReportExport($period, $search, $scheme, $faculty),
+                new CommunityServiceReportExport($period, $search, $scheme, $faculty),
                 'laporan-pkm-'.$period.'-'.now()->format('YmdHis').'.xlsx'
             );
 
             return $download;
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('PKM Excel Export Error: '.$e->getMessage());
+            Log::error('PKM Excel Export Error: '.$e->getMessage());
 
             return back()->with('error', 'Gagal mengunduh Excel: '.$e->getMessage());
         }
@@ -450,13 +466,13 @@ class ReportExportController extends Controller
 
             $proposals = $this->getOutputProposalsQuery($activeTab, $search, $outputType, $period, $scheme, $faculty)->get();
 
-            $institutionalReport = \App\Models\InstitutionalReport::where('type', 'output')
+            $institutionalReport = InstitutionalReport::where('type', 'output')
                 ->where('year', $period)
                 ->first();
 
-            $institution = \App\Models\Institution::first();
-            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
-            $lppmHead = \App\Models\User::role('kepala lppm')->with('identity')->first();
+            $institution = Institution::first();
+            $rektor = User::role('rektor')->with('identity')->first();
+            $lppmHead = User::role('kepala lppm')->with('identity')->first();
 
             $pdf = Pdf::loadView('reports.output-reports-pdf', [
                 'proposals' => $proposals,
@@ -514,7 +530,7 @@ class ReportExportController extends Controller
             $faculty = $request->query('faculty');
 
             $download = Excel::download(
-                new \App\Exports\OutputReportExport($activeTab, $search, $outputType, $period, $scheme, $faculty),
+                new OutputReportExport($activeTab, $search, $outputType, $period, $scheme, $faculty),
                 'laporan-luaran-'.$activeTab.'-'.now()->format('YmdHis').'.xlsx'
             );
 
@@ -579,13 +595,13 @@ class ReportExportController extends Controller
 
             $partners = $action->handle($search, $typeFilter, $periodFilter)->get();
 
-            $institutionalReport = \App\Models\InstitutionalReport::where('type', 'partner')
+            $institutionalReport = InstitutionalReport::where('type', 'partner')
                 ->where('year', $periodFilter ?: date('Y'))
                 ->first();
 
-            $institution = \App\Models\Institution::first();
-            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
-            $lppmHead = \App\Models\User::role('kepala lppm')->with('identity')->first();
+            $institution = Institution::first();
+            $rektor = User::role('rektor')->with('identity')->first();
+            $lppmHead = User::role('kepala lppm')->with('identity')->first();
 
             $isPreview = $request->boolean('preview');
             $pdf = Pdf::loadView('reports.partner-collaboration-pdf', [
@@ -625,7 +641,7 @@ class ReportExportController extends Controller
             return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('Partner PDF Export Error: '.$e->getMessage());
+            Log::error('Partner PDF Export Error: '.$e->getMessage());
 
             return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
         }
@@ -640,14 +656,14 @@ class ReportExportController extends Controller
             $periodFilter = $request->query('periodFilter', '');
 
             $download = Excel::download(
-                new \App\Exports\PartnerCollaborationExport($search, $typeFilter, $periodFilter),
+                new PartnerCollaborationExport($search, $typeFilter, $periodFilter),
                 'laporan-mitra-'.now()->format('Y-m-d').'.xlsx'
             );
 
             return $download;
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('Partner Excel Export Error: '.$e->getMessage());
+            Log::error('Partner Excel Export Error: '.$e->getMessage());
 
             return back()->with('error', 'Gagal mengunduh Excel: '.$e->getMessage());
         }
@@ -663,7 +679,7 @@ class ReportExportController extends Controller
             $filename = 'Export_Arsip_Kegiatan_'.date('Ymd_His').'.xlsx';
 
             $download = Excel::download(
-                new \App\Exports\ArchiveDataExport($search, $yearFilter),
+                new ArchiveDataExport($search, $yearFilter),
                 $filename
             );
 
@@ -681,14 +697,14 @@ class ReportExportController extends Controller
 
         try {
             $download = Excel::download(
-                new \App\Exports\ArchiveTemplateExport,
+                new ArchiveTemplateExport,
                 'template_import_arsip.xlsx'
             );
 
             return $download;
         } catch (\Exception $e) {
 
-            \Illuminate\Support\Facades\Log::error('Archive Template Export Error: '.$e->getMessage());
+            Log::error('Archive Template Export Error: '.$e->getMessage());
 
             return back()->with('error', 'Gagal mengunduh Template: '.$e->getMessage());
         }
@@ -703,7 +719,7 @@ class ReportExportController extends Controller
 
             /** Vetted by AI - Manual Review Required by Senior Engineer/Manager */
             $download = Excel::download(
-                new \App\Exports\ResearchProposalExport((int) $period),
+                new ResearchProposalExport((int) $period),
                 $filename
             );
 
@@ -731,7 +747,7 @@ class ReportExportController extends Controller
 
         $fileName = "Monev_Recap_{$academicYear}_".($semester ?? 'all').'.xlsx';
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\MonevRecapExport($academicYear, $semester), $fileName);
+        return Excel::download(new MonevRecapExport($academicYear, $semester), $fileName);
     }
 
     /**
@@ -740,7 +756,7 @@ class ReportExportController extends Controller
     public function monevBaPdf(Request $request, string $id)
     {
         try {
-            $review = \App\Models\MonevReview::query()->with([
+            $review = MonevReview::query()->with([
                 'proposal.submitter.identity.faculty',
                 'proposal.submitter.identity.studyProgram',
                 'proposal.researchScheme',
@@ -763,8 +779,8 @@ class ReportExportController extends Controller
                 ->first() ?? $review->proposal->progressReports->where('reporting_period', 'final')->first();
 
             // Access check: only Admin LPPM or the Assignee Reviewer can download
-            $user = \Illuminate\Support\Facades\Auth::user();
-            if (! $user instanceof \App\Models\User) {
+            $user = Auth::user();
+            if (! $user instanceof User) {
                 abort(403);
             }
 
@@ -772,11 +788,11 @@ class ReportExportController extends Controller
                 abort(403);
             }
 
-            $type = $review->proposal->detailable_type === \App\Models\Research::class
+            $type = $review->proposal->detailable_type === Research::class
                 ? 'monev_research'
                 : 'monev_community_service';
 
-            $criteria = \App\Models\ReviewCriteria::where('type', $type)
+            $criteria = ReviewCriteria::where('type', $type)
                 ->where('is_active', true)
                 ->orderBy('order')
                 ->get();
@@ -858,13 +874,13 @@ class ReportExportController extends Controller
                 : null;
 
             $qrReviewerUrl = $reviewerSig
-                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $reviewerSig->id])
+                ? URL::signedRoute('signatures.verify', ['documentSignature' => $reviewerSig->id])
                 : null;
             $qrAdminUrl = $adminSig
-                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $adminSig->id])
+                ? URL::signedRoute('signatures.verify', ['documentSignature' => $adminSig->id])
                 : null;
             $qrKepalaUrl = $kepalaSig
-                ? \Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $kepalaSig->id])
+                ? URL::signedRoute('signatures.verify', ['documentSignature' => $kepalaSig->id])
                 : null;
 
             $filename = 'Berita_Acara_Monev_'.str_replace(' ', '_', $review->proposal->title).'_'.now()->format('YmdHi').'.pdf';
@@ -879,7 +895,7 @@ class ReportExportController extends Controller
                 'review' => $review,
                 'criteria' => $criteria,
                 'activeReport' => $activeReport,
-                'institution' => \App\Models\Institution::first(),
+                'institution' => Institution::first(),
                 'isPreview' => $isPreview,
                 'qrReviewerUrl' => $qrReviewerUrl,
                 'qrAdminUrl' => $qrAdminUrl,
@@ -996,7 +1012,7 @@ class ReportExportController extends Controller
             $semester = $request->query('semester', 'all');
             $isPreview = $request->boolean('preview');
 
-            $reviews = \App\Models\MonevReview::query()
+            $reviews = MonevReview::query()
                 ->with(['proposal.submitter.identity', 'reviewer.identity'])
                 ->where('academic_year', $period)
                 ->when($semester !== 'all', function ($query) use ($semester) {
@@ -1005,18 +1021,18 @@ class ReportExportController extends Controller
                 ->latest()
                 ->get();
 
-            $institutionalReport = \App\Models\InstitutionalReport::where('type', 'monev')
+            $institutionalReport = InstitutionalReport::where('type', 'monev')
                 ->where('year', $period)
                 ->when($semester !== 'all', function ($q) use ($semester) {
                     $q->where('metadata->semester', $semester);
                 })
                 ->first();
 
-            $institution = \App\Models\Institution::first();
-            $rektor = \App\Models\User::role('rektor')->with('identity')->first();
-            $lppmHead = \App\Models\User::role('kepala lppm')->with('identity')->first();
+            $institution = Institution::first();
+            $rektor = User::role('rektor')->with('identity')->first();
+            $lppmHead = User::role('kepala lppm')->with('identity')->first();
 
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.monev-pdf', [
+            $pdf = Pdf::loadView('reports.monev-pdf', [
                 'reviews' => $reviews,
                 'period' => $period,
                 'semester' => $semester,
@@ -1052,7 +1068,7 @@ class ReportExportController extends Controller
 
             return $this->pdfDownloadResponse($pdfBinary, $filename);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Monev PDF Export Error: '.$e->getMessage());
+            Log::error('Monev PDF Export Error: '.$e->getMessage());
 
             return back()->with('error', 'Gagal mengunduh PDF: '.$e->getMessage());
         }

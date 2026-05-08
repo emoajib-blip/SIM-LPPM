@@ -1,10 +1,13 @@
 <?php
 
 use App\Enums\ProposalStatus;
+use App\Models\CommunityServiceScheme;
 use App\Models\Identity;
 use App\Models\Proposal;
+use App\Models\QuotaMessage;
 use App\Models\Research;
 use App\Models\ResearchScheme;
+use App\Models\Setting;
 use App\Models\User;
 use App\Services\EligibilityService;
 use App\Services\QuotaMessageService;
@@ -128,11 +131,11 @@ it('blocks proposal creation when head quota is full', function () {
     ]);
 
     // Open the schedule
-    \App\Models\Setting::updateOrCreate(
+    Setting::updateOrCreate(
         ['key' => 'research_proposal_start_date'],
         ['value' => now()->subDay()->toDateString()]
     );
-    \App\Models\Setting::updateOrCreate(
+    Setting::updateOrCreate(
         ['key' => 'research_proposal_end_date'],
         ['value' => now()->addDay()->toDateString()]
     );
@@ -147,7 +150,7 @@ it('blocks proposal creation when head quota is full', function () {
 
 it('uses customizable quota messages from database', function () {
     // Create custom message in database
-    \App\Models\QuotaMessage::create([
+    QuotaMessage::create([
         'key' => 'button_tooltip',
         'message' => 'Custom: batas {limit} proposal tercapai!',
     ]);
@@ -216,7 +219,7 @@ it('separates research and community service quotas', function () {
         ],
     ]);
 
-    $pkmScheme = \App\Models\CommunityServiceScheme::create([
+    $pkmScheme = CommunityServiceScheme::create([
         'name' => 'PKM Internal',
         'strata' => 'Internal',
         'eligibility_rules' => [

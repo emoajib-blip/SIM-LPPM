@@ -2,6 +2,7 @@
 
 namespace App\Support\MediaLibrary;
 
+use App\Models\User;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
@@ -31,15 +32,15 @@ class CustomPathGenerator implements PathGenerator
         $user = null;
 
         // Identifikasi User dari Model
-        if ($model instanceof \App\Models\User) {
+        if ($model instanceof User) {
             $user = $model;
         } elseif (method_exists($model, 'submitter')) {
-            /** @var \App\Models\User|null $user */
+            /** @var User|null $user */
             // property access is intentional: Laravel relationship
             // @phpstan-ignore-next-line
             $user = $model->submitter;
         } elseif (method_exists($model, 'user')) {
-            /** @var \App\Models\User|null $user */
+            /** @var User|null $user */
             // @phpstan-ignore-next-line
             $user = $model->user;
         }

@@ -3,7 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class AdminReportExportTest extends TestCase
@@ -15,8 +18,8 @@ class AdminReportExportTest extends TestCase
         parent::setUp();
 
         // Setup roles
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
     }
 
     public function test_admin_can_download_iku_report()
@@ -24,7 +27,7 @@ class AdminReportExportTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('admin lppm');
 
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'module_laporan']);
+        Permission::firstOrCreate(['name' => 'module_laporan']);
         $admin->givePermissionTo('module_laporan');
 
         // Note: No Rektor or LPPM Head created intentionally to test null-safety
@@ -45,7 +48,7 @@ class AdminReportExportTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('admin lppm');
 
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'module_laporan']);
+        Permission::firstOrCreate(['name' => 'module_laporan']);
         $admin->givePermissionTo('module_laporan');
 
         $response = $this->actingAs($admin)

@@ -3,26 +3,29 @@
 namespace App\Models;
 
 use App\Enums\ReviewStatus;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property string $proposal_id
  * @property string $user_id
- * @property \App\Enums\ReviewStatus $status
+ * @property ReviewStatus $status
  * @property string|null $review_notes
  * @property string|null $recommendation
  * @property int|null $round
- * @property \Illuminate\Support\Carbon|null $assigned_at
- * @property \Illuminate\Support\Carbon|null $deadline_at
- * @property \Illuminate\Support\Carbon|null $started_at
- * @property \Illuminate\Support\Carbon|null $completed_at
- * @property-read \App\Models\Proposal $proposal
- * @property-read \App\Models\User $user
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewLog[] $logs
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewScore[] $scores
+ * @property Carbon|null $assigned_at
+ * @property Carbon|null $deadline_at
+ * @property Carbon|null $started_at
+ * @property Carbon|null $completed_at
+ * @property-read Proposal $proposal
+ * @property-read User $user
+ * @property-read Collection|ReviewLog[] $logs
+ * @property-read Collection|ReviewScore[] $scores
  *
  * @method \Illuminate\Database\Eloquent\Builder|static completed()
  * @method \Illuminate\Database\Eloquent\Builder|static forRound(int $round)
@@ -106,7 +109,7 @@ class ProposalReviewer extends Model
     // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function latestLog(): ?ReviewLog
     {
-        /** @var \App\Models\ReviewLog|null $log */
+        /** @var ReviewLog|null $log */
         $log = $this->logs()->whereNotNull('completed_at')->first();
 
         return $log;
@@ -305,9 +308,9 @@ class ProposalReviewer extends Model
     /**
      * Scope for pending reviews.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
+     * @return Builder<ProposalReviewer>
      */
-    public function scopePending($query): \Illuminate\Database\Eloquent\Builder
+    public function scopePending($query): Builder
     {
         return $query->where('status', ReviewStatus::PENDING);
     }
@@ -315,9 +318,9 @@ class ProposalReviewer extends Model
     /**
      * Scope for reviews requiring action.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
+     * @return Builder<ProposalReviewer>
      */
-    public function scopeRequiresAction($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeRequiresAction($query): Builder
     {
         return $query->whereIn('status', [ReviewStatus::PENDING, ReviewStatus::RE_REVIEW_REQUESTED]);
     }
@@ -325,9 +328,9 @@ class ProposalReviewer extends Model
     /**
      * Scope for overdue reviews.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
+     * @return Builder<ProposalReviewer>
      */
-    public function scopeOverdue($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeOverdue($query): Builder
     {
         return $query->whereNotNull('deadline_at')
             ->where('deadline_at', '<', now())
@@ -337,9 +340,9 @@ class ProposalReviewer extends Model
     /**
      * Scope for reviews with approaching deadline.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
+     * @return Builder<ProposalReviewer>
      */
-    public function scopeDeadlineApproaching($query, int $days = 3): \Illuminate\Database\Eloquent\Builder
+    public function scopeDeadlineApproaching($query, int $days = 3): Builder
     {
         return $query->whereNotNull('deadline_at')
             ->where('deadline_at', '>=', now())
@@ -350,9 +353,9 @@ class ProposalReviewer extends Model
     /**
      * Scope for specific reviewer.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
+     * @return Builder<ProposalReviewer>
      */
-    public function scopeForReviewer($query, $userId): \Illuminate\Database\Eloquent\Builder
+    public function scopeForReviewer($query, $userId): Builder
     {
         return $query->where('user_id', $userId);
     }
@@ -360,9 +363,9 @@ class ProposalReviewer extends Model
     /**
      * Scope for specific round.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
+     * @return Builder<ProposalReviewer>
      */
-    public function scopeForRound($query, int $round): \Illuminate\Database\Eloquent\Builder
+    public function scopeForRound($query, int $round): Builder
     {
         return $query->where('round', $round);
     }
@@ -370,9 +373,9 @@ class ProposalReviewer extends Model
     /**
      * Scope for current (latest) round.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalReviewer>
+     * @return Builder<ProposalReviewer>
      */
-    public function scopeCurrentRound($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeCurrentRound($query): Builder
     {
         return $query->orderBy('round', 'desc');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Institution;
 use App\Traits\HasIkuCalculations;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -28,7 +29,7 @@ class IkuReportExport implements FromView, ShouldAutoSize, WithStyles, WithTitle
         return view('exports.iku', [
             'ikuMetrics' => $ikuMetrics,
             'period' => $this->period,
-            'institution' => \App\Models\Institution::first(),
+            'institution' => Institution::first(),
         ]);
     }
 

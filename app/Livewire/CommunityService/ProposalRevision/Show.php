@@ -6,8 +6,10 @@ namespace App\Livewire\CommunityService\ProposalRevision;
 
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Forms\ProposalForm;
+use App\Models\CommunityService;
 use App\Models\Partner;
 use App\Models\Proposal;
+use App\Services\LecturerEligibilityService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -39,7 +41,7 @@ class Show extends Component
     public function mount(Proposal $proposal): void
     {
         // Redirect if wrong type
-        if ($proposal->detailable_type !== \App\Models\CommunityService::class) {
+        if ($proposal->detailable_type !== CommunityService::class) {
             if (str_contains($proposal->detailable_type, 'Research')) {
                 $this->redirect(route('research.proposal-revision.show', $proposal->id), navigate: true);
             } else {
@@ -68,7 +70,7 @@ class Show extends Component
         $this->form->setProposal($proposal);
 
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-        /** @var \App\Models\CommunityService|null $communityService */
+        /** @var CommunityService|null $communityService */
         $communityService = $proposal->detailable;
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->partnerId = (string) ($communityService->partner_id ?? '');
@@ -94,8 +96,8 @@ class Show extends Component
             return false;
         }
 
-        /** @var \App\Services\LecturerEligibilityService $service */
-        $service = app(\App\Services\LecturerEligibilityService::class);
+        /** @var LecturerEligibilityService $service */
+        $service = app(LecturerEligibilityService::class);
 
         return $service->isRevisionOpen('community_service');
     }
@@ -117,7 +119,7 @@ class Show extends Component
 
         try {
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-            /** @var \App\Models\CommunityService $communityService */
+            /** @var CommunityService $communityService */
             $communityService = $this->form->proposal->detailable;
 
             // Update community service data

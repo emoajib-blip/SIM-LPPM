@@ -2,11 +2,14 @@
 
 namespace App\Livewire\CommunityService\Proposal;
 
+use App\Livewire\Actions\CompleteReviewAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\ProposalReviewer;
 use App\Models\ReviewCriteria;
 use App\Models\ReviewLog;
 use App\Models\ReviewScore;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -14,11 +17,11 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 /**
- * @property-read \Illuminate\Support\Collection|\App\Models\ReviewCriteria[] $activeCriterias
+ * @property-read Collection|ReviewCriteria[] $activeCriterias
  * @property-read float $totalScore
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \App\Models\ProposalReviewer|null $myReview
- * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $allReviews
+ * @property-read Proposal|null $proposal
+ * @property-read ProposalReviewer|null $myReview
+ * @property-read Collection|ProposalReviewer[] $allReviews
  * @property-read bool $canReview
  * @property-read bool $needsAction
  * @property-read bool $hasReviewed
@@ -28,8 +31,8 @@ use Livewire\Component;
  * @property-read mixed $deadline
  * @property-read bool $isOverdue
  * @property-read int|null $daysRemaining
- * @property-read \Illuminate\Support\Collection|\App\Models\ReviewLog[] $previousRoundLogs
- * @property-read \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewLog>> $allReviewLogs
+ * @property-read Collection|ReviewLog[] $previousRoundLogs
+ * @property-read Collection<int, \Illuminate\Database\Eloquent\Collection<int, ReviewLog>> $allReviewLogs
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerForm extends Component
@@ -59,7 +62,7 @@ class ReviewerForm extends Component
             // Load existing scores
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             $existingScores = $myReview->scores()->where('round', $myReview->round)->get();
-            /** @var \App\Models\ReviewScore $score */
+            /** @var ReviewScore $score */
             foreach ($existingScores as $score) {
                 $this->scores[$score->review_criteria_id] = [
                     'score' => $score->score,
@@ -287,10 +290,10 @@ class ReviewerForm extends Component
     /**
      * Get all review logs for this proposal (for showing complete history).
      *
-     * @return \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewLog>>
+     * @return Collection<int, \Illuminate\Database\Eloquent\Collection<int, ReviewLog>>
      */
     #[Computed]
-    public function allReviewLogs(): \Illuminate\Support\Collection
+    public function allReviewLogs(): Collection
     {
         return ReviewLog::forProposal($this->proposalId)
             ->with('user')
@@ -310,7 +313,7 @@ class ReviewerForm extends Component
         }
     }
 
-    public function submitReview(\App\Livewire\Actions\CompleteReviewAction $completeReviewAction): void
+    public function submitReview(CompleteReviewAction $completeReviewAction): void
     {
         $this->validate();
 

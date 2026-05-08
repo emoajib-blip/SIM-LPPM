@@ -6,11 +6,13 @@ use App\Imports\HistoricalProposalImport;
 use App\Livewire\Admin\Archive\ManageArchives;
 use App\Models\Identity;
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class ArchiveImportTest extends TestCase
@@ -20,8 +22,8 @@ class ArchiveImportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-        $this->seed(\Database\Seeders\RoleSeeder::class);
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->seed(RoleSeeder::class);
     }
 
     public function test_admin_can_import_archives_from_excel()

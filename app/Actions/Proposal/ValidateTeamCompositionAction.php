@@ -2,7 +2,9 @@
 
 namespace App\Actions\Proposal;
 
+use App\Models\CommunityServiceScheme;
 use App\Models\Proposal;
+use App\Models\ResearchScheme;
 
 /**
  * Validate the team composition including students and cross-prodi rules.
@@ -17,7 +19,7 @@ class ValidateTeamCompositionAction
      */
     public function execute(Proposal $proposal): array
     {
-        /** @var \App\Models\ResearchScheme|\App\Models\CommunityServiceScheme|null $scheme */
+        /** @var ResearchScheme|CommunityServiceScheme|null $scheme */
         $scheme = $proposal->research_scheme_id ? $proposal->researchScheme : $proposal->communityServiceScheme;
 
         if (! $scheme) {

@@ -2,10 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\BudgetComponent;
+use App\Models\BudgetGroup;
+use App\Models\BudgetItem;
+use App\Models\Proposal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BudgetItem>
+ * @extends Factory<BudgetItem>
  */
 class BudgetItemFactory extends Factory
 {
@@ -19,7 +23,7 @@ class BudgetItemFactory extends Factory
         $volume = fake()->numberBetween(1, 20);
         $unitPrice = fake()->randomFloat(2, 50000, 5000000);
 
-        $group = \App\Models\BudgetGroup::inRandomOrder()->first();
+        $group = BudgetGroup::inRandomOrder()->first();
         $component = null;
         $groupId = null;
         $groupName = fake()->word();
@@ -27,7 +31,7 @@ class BudgetItemFactory extends Factory
         if ($group) {
             $groupId = $group->id;
             $groupName = $group->name;
-            $component = \App\Models\BudgetComponent::where('budget_group_id', $groupId)->inRandomOrder()->first();
+            $component = BudgetComponent::where('budget_group_id', $groupId)->inRandomOrder()->first();
         }
 
         $componentId = null;
@@ -39,7 +43,7 @@ class BudgetItemFactory extends Factory
         }
 
         return [
-            'proposal_id' => \App\Models\Proposal::factory(),
+            'proposal_id' => Proposal::factory(),
             'year' => 1,
             'budget_group_id' => $groupId,
             'budget_component_id' => $componentId,

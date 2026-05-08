@@ -9,6 +9,7 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 #[Layout('components.layouts.app', ['title' => 'Sync SINTA Data', 'pageTitle' => 'Sinkronisasi Data SINTA', 'pageSubtitle' => 'Import data dosen dari SINTA'])]
 class SyncSinta extends Component
@@ -41,7 +42,7 @@ class SyncSinta extends Component
             try {
                 // Gunakan PhpSpreadsheet IOFactory untuk mengidentifikasi format file secara akurat
                 // Ini sangat penting karena ekspor SINTA seringkali berupa file HTML dengan ekstensi .xls
-                $identifiedType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($path);
+                $identifiedType = IOFactory::identify($path);
 
                 $readerType = match ($identifiedType) {
                     'Xlsx' => \Maatwebsite\Excel\Excel::XLSX,

@@ -4,13 +4,14 @@ use App\Livewire\Iku\IkuDashboard;
 use App\Models\Identity;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\Seeders\RoleSeeder']);
-    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\Seeders\MasterIkuSeeder']);
+    Artisan::call('db:seed', ['--class' => 'Database\Seeders\RoleSeeder']);
+    Artisan::call('db:seed', ['--class' => 'Database\Seeders\MasterIkuSeeder']);
 });
 
 test('it can render the dashboard', function () {

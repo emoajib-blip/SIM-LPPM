@@ -2,6 +2,11 @@
 
 namespace App\Listeners;
 
+use App\Models\ActivityLog;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
+
 class UserActivityListener
 {
     /**
@@ -9,7 +14,7 @@ class UserActivityListener
      */
     public function handleLogin($event): void
     {
-        \App\Models\ActivityLog::create([
+        ActivityLog::create([
             'user_id' => $event->user->id,
             'activity' => 'login',
             'description' => 'User logged in',
@@ -26,7 +31,7 @@ class UserActivityListener
     public function handleLogout($event): void
     {
         if ($event->user) {
-            \App\Models\ActivityLog::create([
+            ActivityLog::create([
                 'user_id' => $event->user->id,
                 'activity' => 'logout',
                 'description' => 'User logged out',
@@ -41,7 +46,7 @@ class UserActivityListener
      */
     public function handleFailed($event): void
     {
-        \App\Models\ActivityLog::create([
+        ActivityLog::create([
             'user_id' => $event->user?->id,
             'activity' => 'login_failed',
             'description' => 'Gagal login. Email/Username: '.($event->credentials['email'] ?? ($event->credentials['username'] ?? 'unknown')),
@@ -58,9 +63,9 @@ class UserActivityListener
     public function subscribe($events): array
     {
         return [
-            \Illuminate\Auth\Events\Login::class => 'handleLogin',
-            \Illuminate\Auth\Events\Logout::class => 'handleLogout',
-            \Illuminate\Auth\Events\Failed::class => 'handleFailed',
+            Login::class => 'handleLogin',
+            Logout::class => 'handleLogout',
+            Failed::class => 'handleFailed',
         ];
     }
 }

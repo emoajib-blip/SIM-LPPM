@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\MacroResearchGroup;
+use App\Models\Research;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Research>
+ * @extends Factory<Research>
  */
 class ResearchFactory extends Factory
 {
@@ -17,7 +19,7 @@ class ResearchFactory extends Factory
     public function definition(): array
     {
         return [
-            'macro_research_group_id' => \App\Models\MacroResearchGroup::inRandomOrder()->first()?->id,
+            'macro_research_group_id' => MacroResearchGroup::inRandomOrder()->first()?->id,
             'tkt_type' => fake()->randomElement([
                 'Farmasi/Obat',
                 'Kesehatan - Alat Kesehatan',

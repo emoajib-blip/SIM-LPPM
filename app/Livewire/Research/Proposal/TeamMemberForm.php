@@ -3,13 +3,15 @@
 namespace App\Livewire\Research\Proposal;
 
 use App\Models\Proposal;
+use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $teamMembers
+ * @property-read Proposal|null $proposal
+ * @property-read Collection|User[] $teamMembers
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class TeamMemberForm extends Component

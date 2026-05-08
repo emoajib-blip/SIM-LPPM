@@ -3,7 +3,12 @@
 namespace App\Livewire\Kaprodi;
 
 use App\Enums\ProposalStatus;
+use App\Models\CommunityService;
 use App\Models\Proposal;
+use App\Models\Research;
+use App\Models\Setting;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -18,7 +23,7 @@ class ProposalValidation extends Component
 
     public function mount(): void
     {
-        $isKaprodiValidationActive = \App\Models\Setting::get('feature_kaprodi_validation', false);
+        $isKaprodiValidationActive = Setting::get('feature_kaprodi_validation', false);
 
         if (! $isKaprodiValidationActive) {
             abort(403, 'Maaf Anda tidak memiliki akses ini');
@@ -56,10 +61,10 @@ class ProposalValidation extends Component
     /**
      * Apply study program scope to a query (only proposals from Kaprodi's study program).
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<Proposal>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<Proposal>
+     * @param  Builder<Proposal>  $query
+     * @return Builder<Proposal>
      */
-    protected function applyStudyProgramScope(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    protected function applyStudyProgramScope(Builder $query): Builder
     {
         $studyProgramId = $this->kaprodiStudyProgramId();
 
@@ -77,10 +82,10 @@ class ProposalValidation extends Component
     /**
      * Get proposals for validation.
      *
-     * @return \Illuminate\Pagination\LengthAwarePaginator<int, Proposal>
+     * @return LengthAwarePaginator<int, Proposal>
      */
     #[Computed]
-    public function proposals(): \Illuminate\Pagination\LengthAwarePaginator
+    public function proposals(): LengthAwarePaginator
     {
         $query = Proposal::query()
             ->where('status', ProposalStatus::SUBMITTED);
@@ -98,8 +103,8 @@ class ProposalValidation extends Component
             })
             ->when($this->typeFilter !== 'all', function ($query) {
                 $detailableType = $this->typeFilter === 'research'
-                    ? \App\Models\Research::class
-                    : \App\Models\CommunityService::class;
+                    ? Research::class
+                    : CommunityService::class;
                 $query->where('detailable_type', $detailableType);
             })
             ->orderBy('created_at', 'desc')

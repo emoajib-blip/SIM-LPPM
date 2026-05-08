@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Research\Proposal;
 
+use App\Livewire\Actions\CompleteReviewAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\ProposalReviewer;
 use App\Models\ReviewCriteria;
 use App\Models\ReviewLog;
 use App\Models\ReviewScore;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -14,11 +17,11 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 /**
- * @property-read \Illuminate\Support\Collection|\App\Models\ReviewCriteria[] $activeCriterias
+ * @property-read Collection|ReviewCriteria[] $activeCriterias
  * @property-read float $totalScore
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \App\Models\ProposalReviewer|null $myReview
- * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $allReviews
+ * @property-read Proposal|null $proposal
+ * @property-read ProposalReviewer|null $myReview
+ * @property-read Collection|ProposalReviewer[] $allReviews
  * @property-read bool $canReview
  * @property-read bool $needsAction
  * @property-read bool $hasReviewed
@@ -28,8 +31,8 @@ use Livewire\Component;
  * @property-read mixed $deadline
  * @property-read bool $isOverdue
  * @property-read int|null $daysRemaining
- * @property-read \Illuminate\Support\Collection<int, \App\Models\ReviewLog> $previousRoundLogs
- * @property-read \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewLog>> $allReviewLogs
+ * @property-read Collection<int, ReviewLog> $previousRoundLogs
+ * @property-read Collection<int, \Illuminate\Database\Eloquent\Collection<int, ReviewLog>> $allReviewLogs
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerForm extends Component
@@ -163,7 +166,7 @@ class ReviewerForm extends Component
     }
 
     #[Computed]
-    public function myReview(): ?\App\Models\ProposalReviewer
+    public function myReview(): ?ProposalReviewer
     {
         return $this->proposal->reviewers
             ->where('user_id', Auth::id())
@@ -171,13 +174,13 @@ class ReviewerForm extends Component
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\ProposalReviewer>
+     * @return Collection<int, ProposalReviewer>
      */
     #[Computed]
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\ReviewLog>
+     * @return Collection<int, ReviewLog>
      */
-    public function allReviews(): \Illuminate\Support\Collection
+    public function allReviews(): Collection
     {
         return $this->proposal->reviewers;
     }
@@ -263,10 +266,10 @@ class ReviewerForm extends Component
     /**
      * Get all review logs for this proposal (for showing complete history).
      *
-     * @return \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewLog>>
+     * @return Collection<int, \Illuminate\Database\Eloquent\Collection<int, ReviewLog>>
      */
     #[Computed]
-    public function allReviewLogs(): \Illuminate\Support\Collection
+    public function allReviewLogs(): Collection
     {
         return ReviewLog::forProposal($this->proposalId)
             ->with(['user', 'scores.criteria'])
@@ -288,7 +291,7 @@ class ReviewerForm extends Component
 
     public function submitReview(): void
     {
-        $completeReviewAction = app(\App\Livewire\Actions\CompleteReviewAction::class);
+        $completeReviewAction = app(CompleteReviewAction::class);
         $this->validate();
 
         $review = $this->myReview;

@@ -9,6 +9,8 @@ use App\Models\Proposal;
 use App\Models\Research;
 use App\Models\ReviewCriteria;
 use App\Models\User;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -20,8 +22,8 @@ class MonevBaSignatureTest extends TestCase
 
     public function test_monev_ba_pdf_generates_signatures_and_verification_page(): void
     {
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
 
         Storage::fake('local');
 

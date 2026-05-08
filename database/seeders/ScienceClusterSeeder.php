@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ScienceCluster;
 use Illuminate\Database\Seeder;
 
 class ScienceClusterSeeder extends Seeder
@@ -232,7 +233,7 @@ class ScienceClusterSeeder extends Seeder
         }, $clusters);
 
         // Upsert all clusters - will update if exists (by id), insert if not
-        \App\Models\ScienceCluster::upsert($upsertData, ['id'], ['name', 'level', 'parent_id', 'updated_at']);
+        ScienceCluster::upsert($upsertData, ['id'], ['name', 'level', 'parent_id', 'updated_at']);
 
         $this->command->info('Science clusters seeded successfully!');
         $this->command->info('Level 1: 12 Rumpun Ilmu');

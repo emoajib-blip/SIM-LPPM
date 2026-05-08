@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 trait SeedHelper
 {
@@ -17,7 +18,7 @@ trait SeedHelper
      */
     protected function assertUnique(string $modelClass, string $column): void
     {
-        /** @var \Illuminate\Database\Query\Builder $query */
+        /** @var Builder $query */
         $query = $modelClass::query();
 
         $duplicates = $query->select($column)

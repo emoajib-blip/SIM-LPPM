@@ -11,7 +11,7 @@ class GetPartnerReportQuery
     /**
      * Execute the action to get a standardized partner collaboration query.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Partner>
+     * @return Builder<Partner>
      */
     public function handle(string $search = '', string $type = '', string $period = ''): Builder
     {

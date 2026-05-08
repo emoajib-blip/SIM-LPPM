@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Faculty;
 use App\Models\Identity;
+use App\Models\Institution;
+use App\Models\StudyProgram;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,9 +26,9 @@ class IdentityFactory extends Factory
                 : null,
             'type' => $type,
             'user_id' => User::factory(),
-            'institution_id' => \App\Models\Institution::factory(),
-            'study_program_id' => \App\Models\StudyProgram::factory(),
-            'faculty_id' => \App\Models\Faculty::factory(),
+            'institution_id' => Institution::factory(),
+            'study_program_id' => StudyProgram::factory(),
+            'faculty_id' => Faculty::factory(),
             'address' => $this->faker->address(),
             'birthdate' => $this->faker->date(),
             'birthplace' => $this->faker->city(),

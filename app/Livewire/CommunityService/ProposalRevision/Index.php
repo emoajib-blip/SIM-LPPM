@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\CommunityService\ProposalRevision;
 
 use App\Enums\ProposalStatus;
+use App\Models\CommunityService;
 use App\Models\Proposal;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,7 @@ class Index extends Component
     {
         $user = Auth::user();
 
-        $query = Proposal::where('detailable_type', \App\Models\CommunityService::class);
+        $query = Proposal::where('detailable_type', CommunityService::class);
 
         // Filter berdasarkan role user
         if ($user->hasRole('dosen')) {
@@ -97,7 +98,7 @@ class Index extends Component
     {
         $user = Auth::user();
 
-        $query = Proposal::where('detailable_type', \App\Models\CommunityService::class);
+        $query = Proposal::where('detailable_type', CommunityService::class);
 
         if ($user->hasRole('dosen')) {
             $query->where('submitter_id', $user->id)

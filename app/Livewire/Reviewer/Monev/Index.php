@@ -4,7 +4,13 @@ namespace App\Livewire\Reviewer\Monev;
 
 use App\Livewire\Concerns\HasToast;
 use App\Models\MonevReview;
+use App\Models\Research;
+use App\Models\ReviewCriteria;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -40,14 +46,14 @@ class Index extends Component
 
         // Self-Healing Database: Ensure columns exist to avoid 500 errors
         try {
-            if (! \Illuminate\Support\Facades\Schema::hasColumn('proposal_monevs', 'academic_year')) {
-                \Illuminate\Support\Facades\Schema::table('proposal_monevs', function (\Illuminate\Database\Schema\Blueprint $table) {
+            if (! Schema::hasColumn('proposal_monevs', 'academic_year')) {
+                Schema::table('proposal_monevs', function (Blueprint $table) {
                     $table->string('academic_year')->nullable()->after('proposal_id');
                     $table->enum('semester', ['ganjil', 'genap'])->nullable()->after('academic_year');
                 });
 
                 // Populate initial data
-                \Illuminate\Support\Facades\DB::statement("
+                DB::statement("
                     UPDATE proposal_monevs 
                     INNER JOIN proposals ON proposal_monevs.proposal_id = proposals.id
                     SET proposal_monevs.academic_year = proposals.start_year,
@@ -56,7 +62,7 @@ class Index extends Component
                 ");
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Reviewer Monev Self-Healing Failed: '.$e->getMessage());
+            Log::error('Reviewer Monev Self-Healing Failed: '.$e->getMessage());
         }
     }
 
@@ -208,11 +214,11 @@ class Index extends Component
             return collect();
         }
 
-        $type = $this->selectedReview->proposal->detailable_type === \App\Models\Research::class
+        $type = $this->selectedReview->proposal->detailable_type === Research::class
             ? 'monev_research'
             : 'monev_community_service';
 
-        return \App\Models\ReviewCriteria::where('type', $type)
+        return ReviewCriteria::where('type', $type)
             ->where('is_active', true)
             ->orderBy('order')
             ->get();

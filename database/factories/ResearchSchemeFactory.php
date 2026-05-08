@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\ResearchScheme;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ResearchScheme>
+ * @extends Factory<ResearchScheme>
  */
 class ResearchSchemeFactory extends Factory
 {

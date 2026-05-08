@@ -3,7 +3,10 @@
 namespace App\Livewire\KepalaLppm;
 
 use App\Enums\ReportStatus;
+use App\Models\CommunityService;
 use App\Models\ProgressReport;
+use App\Models\Research;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -11,7 +14,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 /**
- * @property-read \Illuminate\Pagination\LengthAwarePaginator $reports
+ * @property-read LengthAwarePaginator $reports
  */
 class ReportApproval extends Component
 {
@@ -54,8 +57,8 @@ class ReportApproval extends Component
             })
             ->when($this->typeFilter !== 'all', function ($query) {
                 $detailableType = $this->typeFilter === 'research'
-                    ? \App\Models\Research::class
-                    : \App\Models\CommunityService::class;
+                    ? Research::class
+                    : CommunityService::class;
                 $query->whereHas('proposal', function ($q) use ($detailableType) {
                     $q->where('detailable_type', $detailableType);
                 });

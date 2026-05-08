@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $weight_snapshot
  * @property int|null $value
  * @property int|null $round
- * @property-read \App\Models\ProposalReviewer $reviewer
- * @property-read \App\Models\ReviewCriteria $criteria
+ * @property-read ProposalReviewer $reviewer
+ * @property-read ReviewCriteria $criteria
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewScore extends Model

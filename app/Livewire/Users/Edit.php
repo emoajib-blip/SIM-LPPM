@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Users;
 
+use App\Actions\HandleHybridInstitution;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Faculty;
 use App\Models\Institution;
+use App\Models\StudyProgram;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -15,7 +18,7 @@ use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
 /**
- * @property-read \App\Models\User $user
+ * @property-read User $user
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 #[Layout('components.layouts.app', ['title' => 'Edit User', 'pageTitle' => 'Edit User', 'pageSubtitle' => 'Update the user profile and role assignments'])]
@@ -180,7 +183,7 @@ class Edit extends Component
                 'exists:study_programs,id',
                 function ($attribute, $value, $fail) {
                     if ($this->faculty_id && $value) {
-                        $exists = \App\Models\StudyProgram::where('faculty_id', $this->faculty_id)->where('id', $value)->exists();
+                        $exists = StudyProgram::where('faculty_id', $this->faculty_id)->where('id', $value)->exists();
                         if (! $exists) {
                             $fail('Program Studi tidak valid untuk fakultas yang dipilih.');
                         }
@@ -226,7 +229,7 @@ class Edit extends Component
 
             // Only update password if provided
             if (! empty($validated['password'])) {
-                $user->password = \Illuminate\Support\Facades\Hash::make($validated['password']);
+                $user->password = Hash::make($validated['password']);
                 $user->original_password = $validated['password'];
             }
 
@@ -243,7 +246,7 @@ class Edit extends Component
             $user->save();
 
             // Handle hybrid institution
-            $finalInstitutionId = app(\App\Actions\HandleHybridInstitution::class)->execute($validated['institution_id']);
+            $finalInstitutionId = app(HandleHybridInstitution::class)->execute($validated['institution_id']);
             $finalInstitutionName = is_numeric($validated['institution_id']) ? null : $validated['institution_id'];
 
             // Update or create identity
@@ -402,11 +405,11 @@ class Edit extends Component
         }
 
         // Fetch study programs belonging to the selected faculty
-        return \App\Models\StudyProgram::query()
+        return StudyProgram::query()
             ->where('faculty_id', $this->faculty_id)
             ->orderBy('name')
             ->get()
-            ->map(fn (\App\Models\StudyProgram $program) => [
+            ->map(fn (StudyProgram $program) => [
                 'value' => $program->id,
                 'label' => $program->name,
             ])

@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProposalStatus;
+use App\Models\DailyNote;
+use App\Models\Proposal;
 use Illuminate\Database\Seeder;
 
 class DailyNoteSeeder extends Seeder
@@ -11,12 +14,12 @@ class DailyNoteSeeder extends Seeder
      */
     public function run(): void
     {
-        $proposals = \App\Models\Proposal::where('status', \App\Enums\ProposalStatus::APPROVED)
-            ->orWhere('status', \App\Enums\ProposalStatus::COMPLETED)
+        $proposals = Proposal::where('status', ProposalStatus::APPROVED)
+            ->orWhere('status', ProposalStatus::COMPLETED)
             ->get();
 
         foreach ($proposals as $proposal) {
-            \App\Models\DailyNote::factory(rand(5, 15))->create([
+            DailyNote::factory(rand(5, 15))->create([
                 'proposal_id' => $proposal->id,
             ]);
         }

@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -15,12 +18,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $review_notes
  * @property string|null $recommendation
  * @property int|null $total_score
- * @property \Illuminate\Support\Carbon|null $started_at
- * @property \Illuminate\Support\Carbon|null $completed_at
- * @property-read \App\Models\ProposalReviewer $proposalReviewer
- * @property-read \App\Models\Proposal $proposal
- * @property-read \App\Models\User $user
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ReviewScore[] $scores
+ * @property Carbon|null $started_at
+ * @property Carbon|null $completed_at
+ * @property-read ProposalReviewer $proposalReviewer
+ * @property-read Proposal $proposal
+ * @property-read User $user
+ * @property-read Collection|ReviewScore[] $scores
  *
  * @method \Illuminate\Database\Eloquent\Builder|static forProposal(string $proposalId)
  * @method \Illuminate\Database\Eloquent\Builder|static forReviewer(string $userId)
@@ -118,10 +121,10 @@ class ReviewLog extends Model
     /**
      * Scope for specific proposal.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<ReviewLog>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<ReviewLog>
+     * @param  Builder<ReviewLog>  $query
+     * @return Builder<ReviewLog>
      */
-    public function scopeForProposal($query, string $proposalId): \Illuminate\Database\Eloquent\Builder
+    public function scopeForProposal($query, string $proposalId): Builder
     {
         return $query->where('proposal_id', $proposalId);
     }
@@ -129,10 +132,10 @@ class ReviewLog extends Model
     /**
      * Scope for specific reviewer.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<ReviewLog>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<ReviewLog>
+     * @param  Builder<ReviewLog>  $query
+     * @return Builder<ReviewLog>
      */
-    public function scopeForReviewer($query, string $userId): \Illuminate\Database\Eloquent\Builder
+    public function scopeForReviewer($query, string $userId): Builder
     {
         return $query->where('user_id', $userId);
     }
@@ -140,9 +143,9 @@ class ReviewLog extends Model
     /**
      * Scope for specific round.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ReviewLog>
+     * @return Builder<ReviewLog>
      */
-    public function scopeForRound($query, int $round): \Illuminate\Database\Eloquent\Builder
+    public function scopeForRound($query, int $round): Builder
     {
         return $query->where('round', $round);
     }
@@ -150,9 +153,9 @@ class ReviewLog extends Model
     /**
      * Scope for completed reviews.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ReviewLog>
+     * @return Builder<ReviewLog>
      */
-    public function scopeCompleted($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeCompleted($query): Builder
     {
         return $query->whereNotNull('completed_at');
     }
@@ -160,9 +163,9 @@ class ReviewLog extends Model
     /**
      * Scope ordered by round descending (latest first).
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ReviewLog>
+     * @return Builder<ReviewLog>
      */
-    public function scopeLatestRound($query): \Illuminate\Database\Eloquent\Builder
+    public function scopeLatestRound($query): Builder
     {
         return $query->orderBy('round', 'desc');
     }

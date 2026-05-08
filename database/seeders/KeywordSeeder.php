@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Keyword;
 use Illuminate\Database\Seeder;
 
 class KeywordSeeder extends Seeder
@@ -47,7 +48,7 @@ class KeywordSeeder extends Seeder
         ];
 
         foreach ($keywords as $keyword) {
-            \App\Models\Keyword::firstOrCreate(['name' => $keyword]);
+            Keyword::firstOrCreate(['name' => $keyword]);
         }
     }
 }

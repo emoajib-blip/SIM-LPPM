@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\AdditionalOutput;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AdditionalOutput>
+ * @extends Factory<AdditionalOutput>
  */
 class AdditionalOutputFactory extends Factory
 {

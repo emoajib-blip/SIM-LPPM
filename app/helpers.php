@@ -1,6 +1,12 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
+use Illuminate\Support\Facades\DB;
 
 if (! function_exists('active_role')) {
     /**
@@ -40,9 +46,9 @@ if (! function_exists('active_can')) {
         // Cache the role model per request for performance
         if ($activeRoleModel === null || $checkedRoleName !== $roleName) {
             try {
-                $activeRoleModel = \App\Models\Role::findByName($roleName, 'web');
+                $activeRoleModel = Role::findByName($roleName, 'web');
                 $checkedRoleName = $roleName;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 return false;
             }
         }
@@ -111,7 +117,7 @@ if (! function_exists('sql_year')) {
      */
     function sql_year(string $column = 'created_at'): string
     {
-        $driver = strtolower(\Illuminate\Support\Facades\DB::getDriverName());
+        $driver = strtolower(DB::getDriverName());
 
         return $driver === 'sqlite'
             ? "strftime('%Y', {$column})"
@@ -137,16 +143,16 @@ if (! function_exists('generate_qr_code_data_uri')) {
         }
 
         try {
-            $renderer = new \BaconQrCode\Renderer\ImageRenderer(
-                new \BaconQrCode\Renderer\RendererStyle\RendererStyle($size),
-                new \BaconQrCode\Renderer\Image\SvgImageBackEnd
+            $renderer = new ImageRenderer(
+                new RendererStyle($size),
+                new SvgImageBackEnd
             );
-            $writer = new \BaconQrCode\Writer($renderer);
+            $writer = new Writer($renderer);
             $svg = $writer->writeString($data);
 
             return 'data:image/svg+xml;base64,'.base64_encode($svg);
-        } catch (\Throwable $e) {
-            \Log::warning('QR Code Generation Failed: '.$e->getMessage());
+        } catch (Throwable $e) {
+            Log::warning('QR Code Generation Failed: '.$e->getMessage());
 
             return 'data:image/svg+xml;base64,'.base64_encode(
                 '<svg width="'.$size.'" height="'.$size.'" xmlns="http://www.w3.org/2000/svg">'.

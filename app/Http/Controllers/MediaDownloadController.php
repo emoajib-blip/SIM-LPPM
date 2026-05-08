@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
@@ -35,7 +36,7 @@ class MediaDownloadController extends Controller
             }
 
             // 3. Path Traversal & Existence Check for local disks
-            $disk = \Illuminate\Support\Facades\Storage::disk($diskName);
+            $disk = Storage::disk($diskName);
             // getPath() already returns full path, don't double-prepend disk root
             $path = $media->getPath();
             if (str_contains($path, '..')) {

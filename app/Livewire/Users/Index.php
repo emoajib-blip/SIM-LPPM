@@ -272,7 +272,7 @@ class Index extends Component
             }
 
             $user->update([
-                'password' => \Illuminate\Support\Facades\Hash::make($this->massResetPassword),
+                'password' => Hash::make($this->massResetPassword),
                 'original_password' => $this->massResetPassword,
             ]);
             $count++;

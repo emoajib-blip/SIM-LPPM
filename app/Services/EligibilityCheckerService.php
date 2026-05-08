@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Actions\Proposal\IdentityEligibilityAction;
+use App\Actions\Proposal\ValidateTeamCompositionAction;
 use App\Models\Proposal;
 use App\Models\User;
 
@@ -12,7 +14,7 @@ class EligibilityCheckerService
      */
     public function checkLeaderEligibility(User $user, $scheme): array
     {
-        return app(\App\Actions\Proposal\IdentityEligibilityAction::class)->execute($user, $scheme, 'leader');
+        return app(IdentityEligibilityAction::class)->execute($user, $scheme, 'leader');
     }
 
     /**
@@ -22,7 +24,7 @@ class EligibilityCheckerService
     {
         $scheme = $proposal->research_scheme_id ? $proposal->researchScheme : $proposal->communityServiceScheme;
 
-        return app(\App\Actions\Proposal\IdentityEligibilityAction::class)->execute($user, $scheme, 'member');
+        return app(IdentityEligibilityAction::class)->execute($user, $scheme, 'member');
     }
 
     /**
@@ -30,6 +32,6 @@ class EligibilityCheckerService
      */
     public function validateTeamComposition(Proposal $proposal): array
     {
-        return app(\App\Actions\Proposal\ValidateTeamCompositionAction::class)->execute($proposal);
+        return app(ValidateTeamCompositionAction::class)->execute($proposal);
     }
 }

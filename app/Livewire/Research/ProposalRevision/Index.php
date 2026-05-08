@@ -6,6 +6,7 @@ namespace App\Livewire\Research\ProposalRevision;
 
 use App\Enums\ProposalStatus;
 use App\Models\Proposal;
+use App\Models\Research;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -32,7 +33,7 @@ class Index extends Component
     {
         $user = Auth::user();
 
-        $query = Proposal::where('detailable_type', \App\Models\Research::class);
+        $query = Proposal::where('detailable_type', Research::class);
 
         // Eager load relationships
         $query->with([
@@ -94,7 +95,7 @@ class Index extends Component
     {
         $user = Auth::user();
 
-        $query = Proposal::where('detailable_type', \App\Models\Research::class);
+        $query = Proposal::where('detailable_type', Research::class);
 
         if ($user->hasRole('dosen')) {
             $query->where('submitter_id', $user->id)

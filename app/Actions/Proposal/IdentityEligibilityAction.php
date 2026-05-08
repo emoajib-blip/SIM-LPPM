@@ -3,8 +3,11 @@
 namespace App\Actions\Proposal;
 
 use App\Enums\ProposalStatus;
+use App\Models\CommunityServiceScheme;
 use App\Models\Proposal;
+use App\Models\ResearchScheme;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class IdentityEligibilityAction
 {
@@ -82,9 +85,9 @@ class IdentityEligibilityAction
             $query = Proposal::query()->where('submitter_id', '=', $user->id)
                 ->whereIn('status', $activeStatuses, 'and', false);
 
-            if ($scheme instanceof \App\Models\ResearchScheme) {
+            if ($scheme instanceof ResearchScheme) {
                 $query->whereNotNull('research_scheme_id', 'and');
-            } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
+            } elseif ($scheme instanceof CommunityServiceScheme) {
                 $query->whereNotNull('community_service_scheme_id', 'and');
             }
 
@@ -103,9 +106,9 @@ class IdentityEligibilityAction
             $query = Proposal::query()->where('submitter_id', '=', $user->id)
                 ->whereIn('status', $activeStatuses, 'and', false);
 
-            if ($scheme instanceof \App\Models\ResearchScheme) {
+            if ($scheme instanceof ResearchScheme) {
                 $query->whereNotNull('research_scheme_id', 'and');
-            } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
+            } elseif ($scheme instanceof CommunityServiceScheme) {
                 $query->whereNotNull('community_service_scheme_id', 'and');
             }
 
@@ -120,15 +123,15 @@ class IdentityEligibilityAction
         }
 
         if ($role === 'member' && isset($rules['max_proposals_as_member'])) {
-            $query = \Illuminate\Support\Facades\DB::table('proposal_user')
+            $query = DB::table('proposal_user')
                 ->join('proposals', 'proposal_user.proposal_id', '=', 'proposals.id')
                 ->where('proposal_user.user_id', $user->id)
                 ->where('proposal_user.role', '!=', 'Ketua')
                 ->whereIn('proposals.status', $activeStatuses);
 
-            if ($scheme instanceof \App\Models\ResearchScheme) {
+            if ($scheme instanceof ResearchScheme) {
                 $query->whereNotNull('proposals.research_scheme_id');
-            } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
+            } elseif ($scheme instanceof CommunityServiceScheme) {
                 $query->whereNotNull('proposals.community_service_scheme_id');
             }
 
@@ -144,15 +147,15 @@ class IdentityEligibilityAction
 
         // 4.2 Total Member Quota Check (across all proposals of the same type)
         if ($role === 'member' && isset($rules['max_total_proposals_as_member'])) {
-            $query = \Illuminate\Support\Facades\DB::table('proposal_user')
+            $query = DB::table('proposal_user')
                 ->join('proposals', 'proposal_user.proposal_id', '=', 'proposals.id')
                 ->where('proposal_user.user_id', $user->id)
                 ->where('proposal_user.role', '!=', 'Ketua')
                 ->whereIn('proposals.status', $activeStatuses);
 
-            if ($scheme instanceof \App\Models\ResearchScheme) {
+            if ($scheme instanceof ResearchScheme) {
                 $query->whereNotNull('proposals.research_scheme_id');
-            } elseif ($scheme instanceof \App\Models\CommunityServiceScheme) {
+            } elseif ($scheme instanceof CommunityServiceScheme) {
                 $query->whereNotNull('proposals.community_service_scheme_id');
             }
 

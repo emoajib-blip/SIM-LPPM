@@ -8,10 +8,21 @@ use App\Models\BudgetComponent;
 use App\Models\BudgetGroup;
 use App\Models\BudgetItem;
 use App\Models\CommunityService;
+use App\Models\FocusArea;
+use App\Models\Keyword;
 use App\Models\MandatoryOutput;
+use App\Models\Partner;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Models\ProposalOutput;
+use App\Models\ProposalReviewer;
 use App\Models\ProposalStatusLog;
+use App\Models\ResearchScheme;
+use App\Models\ReviewCriteria;
+use App\Models\ReviewLog;
+use App\Models\ReviewScore;
+use App\Models\ScienceCluster;
+use App\Models\Theme;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -32,11 +43,11 @@ class CommunityServiceSeeder extends Seeder
             return;
         }
 
-        $keywords = \App\Models\Keyword::all();
-        $researchSchemes = \App\Models\ResearchScheme::all();
-        $focusAreas = \App\Models\FocusArea::all();
-        $themes = \App\Models\Theme::all();
-        $partners = \App\Models\Partner::all();
+        $keywords = Keyword::all();
+        $researchSchemes = ResearchScheme::all();
+        $focusAreas = FocusArea::all();
+        $themes = Theme::all();
+        $partners = Partner::all();
 
         if ($keywords->isEmpty() || $researchSchemes->isEmpty() || $focusAreas->isEmpty()) {
             $this->command->warn('Master data tidak lengkap untuk membuat proposal PKM');
@@ -86,11 +97,11 @@ class CommunityServiceSeeder extends Seeder
                 $focusArea = $focusAreas->random();
                 $theme = $themes->where('focus_area_id', $focusArea->id)->first() ?? $themes->random();
 
-                $cluster3 = \App\Models\ScienceCluster::where('level', 3)->inRandomOrder()->first();
-                $cluster2 = $cluster3 ? \App\Models\ScienceCluster::find($cluster3->parent_id) : null;
-                $cluster1 = $cluster2 ? \App\Models\ScienceCluster::find($cluster2->parent_id) : null;
+                $cluster3 = ScienceCluster::where('level', 3)->inRandomOrder()->first();
+                $cluster2 = $cluster3 ? ScienceCluster::find($cluster3->parent_id) : null;
+                $cluster1 = $cluster2 ? ScienceCluster::find($cluster2->parent_id) : null;
 
-                $partner = $partners->isNotEmpty() ? $partners->random() : \App\Models\Partner::factory()->create();
+                $partner = $partners->isNotEmpty() ? $partners->random() : Partner::factory()->create();
 
                 // Base Date: 10 days ago
                 $baseCreatedAt = Carbon::now()->subDays(10)->addHours(rand(1, 23));
@@ -156,7 +167,7 @@ class CommunityServiceSeeder extends Seeder
                 }
 
                 // Targets
-                $mandatoryTarget = \App\Models\ProposalOutput::factory()->create([
+                $mandatoryTarget = ProposalOutput::factory()->create([
                     'proposal_id' => $proposal->id,
                     'category' => 'Wajib',
                     'type' => 'Video Kegiatan (Youtube)',
@@ -164,7 +175,7 @@ class CommunityServiceSeeder extends Seeder
                     'output_year' => 1,
                 ]);
 
-                $additionalTarget = \App\Models\ProposalOutput::factory()->create([
+                $additionalTarget = ProposalOutput::factory()->create([
                     'proposal_id' => $proposal->id,
                     'category' => 'Tambahan',
                     'type' => 'Publikasi Media Massa',
@@ -243,7 +254,7 @@ class CommunityServiceSeeder extends Seeder
         $currentRound = ($status === ProposalStatus::COMPLETED) ? 2 : 1;
 
         $reviewers = $reviewerUsers->random(min(2, $reviewerUsers->count()));
-        $criterias = \App\Models\ReviewCriteria::where('type', 'community_service')->where('is_active', true)->get();
+        $criterias = ReviewCriteria::where('type', 'community_service')->where('is_active', true)->get();
 
         // Find assignment date from logs
         $assignedAt = $proposal->statusLogs()->where('status_after', ProposalStatus::UNDER_REVIEW)->value('at')
@@ -262,7 +273,7 @@ class CommunityServiceSeeder extends Seeder
             $notes = $isCompleted ? fake()->paragraph(2) : null;
             $completedAt = $isCompleted ? Carbon::parse($assignedAt)->addDays(3) : null;
 
-            $assignment = \App\Models\ProposalReviewer::create([
+            $assignment = ProposalReviewer::create([
                 'proposal_id' => $proposal->id,
                 'user_id' => $reviewer->id,
                 'status' => $isCompleted ? 'completed' : 'pending',
@@ -297,7 +308,7 @@ class CommunityServiceSeeder extends Seeder
             $val = $score * $criteria->weight;
             $totalScore += $val;
 
-            \App\Models\ReviewScore::create([
+            ReviewScore::create([
                 'proposal_reviewer_id' => $assignment->id,
                 'review_criteria_id' => $criteria->id,
                 'acuan' => fake()->sentence(8),
@@ -308,7 +319,7 @@ class CommunityServiceSeeder extends Seeder
             ]);
         }
 
-        \App\Models\ReviewLog::create([
+        ReviewLog::create([
             'proposal_reviewer_id' => $assignment->id,
             'proposal_id' => $assignment->proposal_id,
             'user_id' => $assignment->user_id,

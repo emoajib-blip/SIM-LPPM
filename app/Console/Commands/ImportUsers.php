@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Imports\UsersImport;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class ImportUsers extends Command
 {
@@ -37,7 +39,7 @@ class ImportUsers extends Command
         $this->info("Reading file: $file");
 
         try {
-            $import = new \App\Imports\UsersImport;
+            $import = new UsersImport;
 
             // Preview
             $rows = Excel::toArray($import, $file)[0];
@@ -54,7 +56,7 @@ class ImportUsers extends Command
             Excel::import($import, $file);
 
             $this->info('Import completed successfully.');
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->error('Validation failed:');
             foreach ($e->failures() as $failure) {
                 $this->line('Row '.$failure->row().': '.implode(', ', $failure->errors()));

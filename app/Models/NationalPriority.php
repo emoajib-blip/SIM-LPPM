@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\NationalPriorityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NationalPriority extends Model
 {
-    /** @use HasFactory<\Database\Factories\NationalPriorityFactory> */
+    /** @use HasFactory<NationalPriorityFactory> */
     use HasFactory;
 
     protected $fillable = [

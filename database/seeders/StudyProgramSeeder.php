@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Faculty;
+use App\Models\Institution;
+use App\Models\StudyProgram;
 use Illuminate\Database\Seeder;
 
 class StudyProgramSeeder extends Seeder
@@ -11,15 +14,15 @@ class StudyProgramSeeder extends Seeder
      */
     public function run(): void
     {
-        $institution = \App\Models\Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
-            ?? \App\Models\Institution::first();
+        $institution = Institution::where('name', 'like', '%Institut Teknologi dan Sains Nahdlatul Ulama%')->first()
+            ?? Institution::first();
 
         if (! $institution) {
             return;
         }
 
-        $saintek = \App\Models\Faculty::where('code', 'SAINTEK')->first();
-        $dekabita = \App\Models\Faculty::where('code', 'DEKABITA')->first();
+        $saintek = Faculty::where('code', 'SAINTEK')->first();
+        $dekabita = Faculty::where('code', 'DEKABITA')->first();
 
         if ($saintek) {
             $saintekPrograms = [
@@ -30,7 +33,7 @@ class StudyProgramSeeder extends Seeder
             ];
 
             foreach ($saintekPrograms as $programName) {
-                \App\Models\StudyProgram::updateOrCreate(
+                StudyProgram::updateOrCreate(
                     ['name' => $programName, 'institution_id' => $institution->id],
                     [
                         'faculty_id' => $saintek->id,
@@ -49,7 +52,7 @@ class StudyProgramSeeder extends Seeder
             ];
 
             foreach ($dekabitaPrograms as $programName) {
-                \App\Models\StudyProgram::updateOrCreate(
+                StudyProgram::updateOrCreate(
                     ['name' => $programName, 'institution_id' => $institution->id],
                     [
                         'faculty_id' => $dekabita->id,

@@ -2,8 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\Reports\CommunityService;
+use App\Livewire\Reports\OutputReports;
+use App\Livewire\Reports\PartnerCollaboration;
 use App\Models\Research;
 use App\Models\User;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -19,8 +24,8 @@ class ReportExportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
 
         $this->admin = User::factory()->create();
         $this->admin->assignRole('superadmin');
@@ -33,9 +38,9 @@ class ReportExportTest extends TestCase
         $this->actingAs($this->admin);
 
         Livewire::test(\App\Livewire\Reports\Research::class)->assertStatus(200);
-        Livewire::test(\App\Livewire\Reports\CommunityService::class)->assertStatus(200);
-        Livewire::test(\App\Livewire\Reports\PartnerCollaboration::class)->assertStatus(200);
-        Livewire::test(\App\Livewire\Reports\OutputReports::class)->assertStatus(200);
+        Livewire::test(CommunityService::class)->assertStatus(200);
+        Livewire::test(PartnerCollaboration::class)->assertStatus(200);
+        Livewire::test(OutputReports::class)->assertStatus(200);
     }
 
     public function test_research_export_logic()
@@ -53,7 +58,7 @@ class ReportExportTest extends TestCase
     {
         $this->actingAs($this->admin);
 
-        $component = Livewire::test(\App\Livewire\Reports\CommunityService::class)
+        $component = Livewire::test(CommunityService::class)
             ->set('period', $this->currentYear);
 
         $component->call('exportPdf')->assertStatus(200);
@@ -64,7 +69,7 @@ class ReportExportTest extends TestCase
     {
         $this->actingAs($this->admin);
 
-        $component = Livewire::test(\App\Livewire\Reports\PartnerCollaboration::class)
+        $component = Livewire::test(PartnerCollaboration::class)
             ->set('periodFilter', $this->currentYear);
 
         $component->call('exportPdf')->assertStatus(200);
@@ -76,13 +81,13 @@ class ReportExportTest extends TestCase
         $this->actingAs($this->admin);
 
         // Research tab
-        $component = Livewire::test(\App\Livewire\Reports\OutputReports::class)
+        $component = Livewire::test(OutputReports::class)
             ->set('activeTab', 'research');
         $component->call('exportPdf')->assertStatus(200);
         $component->call('exportExcel')->assertStatus(200);
 
         // PKM tab
-        $component = Livewire::test(\App\Livewire\Reports\OutputReports::class)
+        $component = Livewire::test(OutputReports::class)
             ->set('activeTab', 'community_service');
         $component->call('exportPdf')->assertStatus(200);
         $component->call('exportExcel')->assertStatus(200);

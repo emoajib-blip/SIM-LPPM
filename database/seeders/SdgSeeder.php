@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Sdg;
 use Illuminate\Database\Seeder;
 
 class SdgSeeder extends Seeder
@@ -32,7 +33,7 @@ class SdgSeeder extends Seeder
         ];
 
         foreach ($sdgs as $sdg) {
-            \App\Models\Sdg::updateOrCreate(['name' => $sdg['name']], $sdg);
+            Sdg::updateOrCreate(['name' => $sdg['name']], $sdg);
         }
     }
 }

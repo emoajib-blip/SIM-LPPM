@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Users;
 
+use App\Actions\HandleHybridInstitution;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Faculty;
 use App\Models\Institution;
+use App\Models\StudyProgram;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -87,7 +89,7 @@ class Create extends Component
             ]);
 
             // Handle hybrid institution
-            $finalInstitutionId = app(\App\Actions\HandleHybridInstitution::class)->execute($validated['institution_id']);
+            $finalInstitutionId = app(HandleHybridInstitution::class)->execute($validated['institution_id']);
             $finalInstitutionName = is_numeric($validated['institution_id']) ? null : $validated['institution_id'];
 
             // Create identity
@@ -202,7 +204,7 @@ class Create extends Component
                 'exists:study_programs,id',
                 function ($attribute, $value, $fail) {
                     if ($this->faculty_id && $value) {
-                        $exists = \App\Models\StudyProgram::where('faculty_id', $this->faculty_id)->where('id', $value)->exists();
+                        $exists = StudyProgram::where('faculty_id', $this->faculty_id)->where('id', $value)->exists();
                         if (! $exists) {
                             $fail('Program Studi tidak valid untuk fakultas yang dipilih.');
                         }
@@ -282,11 +284,11 @@ class Create extends Component
             return [];
         }
 
-        return \App\Models\StudyProgram::query()
+        return StudyProgram::query()
             ->where('faculty_id', $this->faculty_id)
             ->orderBy('name')
             ->get()
-            ->map(fn (\App\Models\StudyProgram $program) => [
+            ->map(fn (StudyProgram $program) => [
                 'value' => $program->id,
                 'label' => $program->name,
             ])

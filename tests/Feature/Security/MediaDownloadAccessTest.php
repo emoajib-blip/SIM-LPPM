@@ -2,11 +2,14 @@
 
 namespace Tests\Feature\Security;
 
+use App\Http\Middleware\RecordActivity;
 use App\Models\Proposal;
 use App\Models\Research;
 use App\Models\Setting;
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Tests\TestCase;
@@ -40,7 +43,7 @@ class MediaDownloadAccessTest extends TestCase
             file_put_contents(storage_path('app/.installed'), 'installed');
         }
 
-        $this->seed(\Database\Seeders\RoleSeeder::class);
+        $this->seed(RoleSeeder::class);
 
         $this->ketua = User::factory()->create();
         $this->ketua->assignRole('dosen');
@@ -67,7 +70,7 @@ class MediaDownloadAccessTest extends TestCase
         ]);
 
         // Create a dummy file for media with actual content
-        $file = \Illuminate\Http\UploadedFile::fake()->create('document.pdf', 100, 'application/pdf');
+        $file = UploadedFile::fake()->create('document.pdf', 100, 'application/pdf');
 
         // Ensure the file has content so mime is not x-empty
         file_put_contents($file->getPathname(), "%PDF-1.4\ntest content");
@@ -128,7 +131,7 @@ class MediaDownloadAccessTest extends TestCase
     public function test_system_settings_are_accessible_to_all_authenticated_users()
     {
         $setting = Setting::create(['key' => 'template_borang', 'value' => 'test']);
-        $file = \Illuminate\Http\UploadedFile::fake()->create('template.pdf', 100, 'application/pdf');
+        $file = UploadedFile::fake()->create('template.pdf', 100, 'application/pdf');
         $settingMedia = $setting->addMedia($file)->toMediaCollection('template');
 
         $this->actingAs($this->otherDosen)
@@ -147,7 +150,7 @@ class MediaDownloadAccessTest extends TestCase
 
         // Use withoutMiddleware or disable output buffer checking
         $this->actingAs($this->adminLppm)
-            ->withoutMiddleware([\App\Http\Middleware\RecordActivity::class])
+            ->withoutMiddleware([RecordActivity::class])
             ->get(route('media.download', ['media' => $this->media->uuid]))
             ->assertStatus(422);
     }

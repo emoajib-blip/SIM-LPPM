@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Database\Factories\DailyNoteFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -15,16 +17,16 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string $proposal_id
  * @property string|null $budget_group_id
  * @property float|null $amount
- * @property \Illuminate\Support\Carbon|null $activity_date
+ * @property Carbon|null $activity_date
  * @property string|null $activity_description
  * @property int|null $progress_percentage
  * @property string|null $notes
- * @property-read \App\Models\Proposal $proposal
- * @property-read \App\Models\BudgetGroup|null $budgetGroup
+ * @property-read Proposal $proposal
+ * @property-read BudgetGroup|null $budgetGroup
  */
 class DailyNote extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\DailyNoteFactory> */
+    /** @use HasFactory<DailyNoteFactory> */
     use HasFactory, HasUuids, InteractsWithMedia;
 
     protected $fillable = [
@@ -81,11 +83,11 @@ class DailyNote extends Model implements HasMedia
     // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function registerMediaConversions(?Media $media = null): void
     {
-        // @phpstan-ignore-next-line
         $this->addMediaConversion('pdf_image')
             ->nonQueued()
             ->width(800)
             ->quality(80)
+            // @phpstan-ignore-next-line method.notFound
             ->performOnCollections('evidence');
     }
 }

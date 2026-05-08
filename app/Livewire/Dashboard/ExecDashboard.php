@@ -2,6 +2,12 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Enums\InstitutionalReportStatus;
+use App\Enums\ReportStatus;
+use App\Models\AdditionalOutput;
+use App\Models\InstitutionalReport;
+use App\Models\MandatoryOutput;
+use App\Models\ProgressReport;
 use App\Models\Proposal;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -164,10 +170,10 @@ class ExecDashboard extends Component
             'community_service_approved' => $communityService->filter(fn ($r) => in_array($r->status->value, ['APPROVED', 'COMPLETED']))->sum('count'),
             'faculty_name' => $facultyId ? $this->user->identity?->faculty?->name : null,
             'final_report_pending' => $this->roleName === 'rektor'
-                ? \App\Models\InstitutionalReport::where('status', \App\Enums\InstitutionalReportStatus::SUBMITTED)->count()
-                : \App\Models\ProgressReport::query()
+                ? InstitutionalReport::where('status', InstitutionalReportStatus::SUBMITTED)->count()
+                : ProgressReport::query()
                     ->where('reporting_period', 'final')
-                    ->where('status', \App\Enums\ReportStatus::SUBMITTED)
+                    ->where('status', ReportStatus::SUBMITTED)
                     ->when($facultyId, function ($q) use ($facultyId) {
                         $q->whereHas('proposal.submitter.identity', function ($sq) use ($facultyId) {
                             $sq->where('faculty_id', $facultyId);
@@ -175,7 +181,7 @@ class ExecDashboard extends Component
                     })
                     ->whereYear('created_at', $yearFilter)
                     ->count(),
-            'total_outputs' => \App\Models\MandatoryOutput::whereHas('progressReport', function ($q) use ($yearFilter, $facultyId) {
+            'total_outputs' => MandatoryOutput::whereHas('progressReport', function ($q) use ($yearFilter, $facultyId) {
                 $q->whereYear('created_at', $yearFilter);
                 if ($facultyId) {
                     $q->whereHas('proposal.submitter.identity', function ($sq) use ($facultyId) {
@@ -183,7 +189,7 @@ class ExecDashboard extends Component
                     });
                 }
             })->count() +
-                \App\Models\AdditionalOutput::whereHas('progressReport', function ($q) use ($yearFilter, $facultyId) {
+                AdditionalOutput::whereHas('progressReport', function ($q) use ($yearFilter, $facultyId) {
                     $q->whereYear('created_at', $yearFilter);
                     if ($facultyId) {
                         $q->whereHas('proposal.submitter.identity', function ($sq) use ($facultyId) {

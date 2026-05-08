@@ -3,7 +3,10 @@
 namespace App\Livewire\Dekan;
 
 use App\Enums\ReportStatus;
+use App\Models\CommunityService;
 use App\Models\ProgressReport;
+use App\Models\Research;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -13,7 +16,7 @@ use Livewire\WithPagination;
 
 /**
  * @property-read ?int $dekanFacultyId
- * @property-read \Illuminate\Contracts\Pagination\LengthAwarePaginator $reports
+ * @property-read LengthAwarePaginator $reports
  * @property-read ?string $facultyName
  */
 class ReportIndex extends Component
@@ -70,8 +73,8 @@ class ReportIndex extends Component
             })
             ->when($this->typeFilter !== 'all', function ($query) {
                 $detailableType = $this->typeFilter === 'research'
-                    ? \App\Models\Research::class
-                    : \App\Models\CommunityService::class;
+                    ? Research::class
+                    : CommunityService::class;
                 $query->whereHas('proposal', function ($q) use ($detailableType) {
                     $q->where('detailable_type', $detailableType);
                 });

@@ -4,17 +4,19 @@ namespace App\Livewire\Research\Proposal;
 
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $teamMembers
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $pendingInvitations
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $acceptedMembers
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $rejectedMembers
+ * @property-read Proposal|null $proposal
+ * @property-read Collection|User[] $teamMembers
+ * @property-read Collection|User[] $pendingInvitations
+ * @property-read Collection|User[] $acceptedMembers
+ * @property-read Collection|User[] $rejectedMembers
  * @property-read bool $allAccepted
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
@@ -36,10 +38,10 @@ class TeamMemberInvitations extends Component
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     * @return Collection<int, User>
      */
     #[Computed]
-    public function teamMembers(): \Illuminate\Support\Collection
+    public function teamMembers(): Collection
     {
         return $this->proposal->teamMembers()
             ->orderByPivot('created_at', 'desc')
@@ -47,28 +49,28 @@ class TeamMemberInvitations extends Component
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     * @return Collection<int, User>
      */
     #[Computed]
-    public function pendingInvitations(): \Illuminate\Support\Collection
+    public function pendingInvitations(): Collection
     {
         return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'pending');
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     * @return Collection<int, User>
      */
     #[Computed]
-    public function acceptedMembers(): \Illuminate\Support\Collection
+    public function acceptedMembers(): Collection
     {
         return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'accepted');
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     * @return Collection<int, User>
      */
     #[Computed]
-    public function rejectedMembers(): \Illuminate\Support\Collection
+    public function rejectedMembers(): Collection
     {
         return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'REJECTED');
     }

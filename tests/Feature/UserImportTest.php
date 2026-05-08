@@ -3,11 +3,15 @@
 namespace Tests\Feature;
 
 use App\Livewire\Users\Import;
+use App\Models\Institution;
+use App\Models\StudyProgram;
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Livewire\Livewire;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class UserImportTest extends TestCase
@@ -18,8 +22,8 @@ class UserImportTest extends TestCase
     {
         parent::setUp();
         // Ensure roles exist for authorization middleware in routes
-        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-        $this->seed(\Database\Seeders\RoleSeeder::class);
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->seed(RoleSeeder::class);
 
         // Using Excel facade mocking instead of reading real files.
         // Livewire v3 temporary uploads are bypassed by mocking Excel::toArray / Excel::import.
@@ -49,8 +53,8 @@ class UserImportTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('admin lppm');
 
-        \App\Models\Institution::factory()->create(['name' => 'INST']);
-        \App\Models\StudyProgram::factory()->create(['name' => 'PRODI']);
+        Institution::factory()->create(['name' => 'INST']);
+        StudyProgram::factory()->create(['name' => 'PRODI']);
 
         Excel::shouldReceive('toArray')
             ->andReturn([[
@@ -71,8 +75,8 @@ class UserImportTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('admin lppm');
 
-        \App\Models\Institution::factory()->create(['name' => 'INST']);
-        \App\Models\StudyProgram::factory()->create(['name' => 'PRODI']);
+        Institution::factory()->create(['name' => 'INST']);
+        StudyProgram::factory()->create(['name' => 'PRODI']);
 
         Excel::shouldReceive('toArray')
             ->andReturn([[

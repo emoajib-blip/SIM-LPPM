@@ -3,6 +3,7 @@
 namespace App\Livewire\Lecturer\PolicyInvolvement;
 
 use App\Models\PolicyInvolvement;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -160,7 +161,7 @@ class Index extends Component
         ]);
     }
 
-    public function render(): \Illuminate\Contracts\View\View
+    public function render(): View
     {
         $isAdmin = auth()->user()->activeHasAnyRole(['admin lppm', 'kepala lppm']);
 

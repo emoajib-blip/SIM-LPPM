@@ -6,16 +6,17 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * @property string $id
  * @property string $proposal_id
- * @property \Illuminate\Support\Carbon $monev_date
+ * @property Carbon $monev_date
  * @property int $progress_percentage
  * @property string|null $notes
- * @property-read \App\Models\Proposal $proposal
+ * @property-read Proposal $proposal
  *
  * "Efficiency is the goal, but Integrity is the foundation."
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager

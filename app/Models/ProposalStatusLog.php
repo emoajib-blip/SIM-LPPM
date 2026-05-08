@@ -3,21 +3,23 @@
 namespace App\Models;
 
 use App\Enums\ProposalStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
  * @property string $proposal_id
  * @property string|null $user_id
- * @property \App\Enums\ProposalStatus|null $status_before
- * @property \App\Enums\ProposalStatus $status_after
+ * @property ProposalStatus|null $status_before
+ * @property ProposalStatus $status_after
  * @property string|null $body
  * @property string|null $notes
- * @property \Illuminate\Support\Carbon $at
- * @property-read \App\Models\Proposal $proposal
- * @property-read \App\Models\User|null $user
+ * @property Carbon $at
+ * @property-read Proposal $proposal
+ * @property-read User|null $user
  */
 class ProposalStatusLog extends Model
 {
@@ -68,9 +70,9 @@ class ProposalStatusLog extends Model
     /**
      * Scope to get logs for a specific proposal, ordered by date.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalStatusLog>
+     * @return Builder<ProposalStatusLog>
      */
-    public function scopeForProposal($query, $proposalId): \Illuminate\Database\Eloquent\Builder
+    public function scopeForProposal($query, $proposalId): Builder
     {
         return $query->where('proposal_id', $proposalId)
             ->orderBy('at', 'desc');
@@ -79,9 +81,9 @@ class ProposalStatusLog extends Model
     /**
      * Scope to get logs by a specific user.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalStatusLog>
+     * @return Builder<ProposalStatusLog>
      */
-    public function scopeByUser($query, $userId): \Illuminate\Database\Eloquent\Builder
+    public function scopeByUser($query, $userId): Builder
     {
         return $query->where('user_id', $userId);
     }
@@ -89,9 +91,9 @@ class ProposalStatusLog extends Model
     /**
      * Scope to get logs within a date range.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\ProposalStatusLog>
+     * @return Builder<ProposalStatusLog>
      */
-    public function scopeWithinDateRange($query, $startDate, $endDate = null): \Illuminate\Database\Eloquent\Builder
+    public function scopeWithinDateRange($query, $startDate, $endDate = null): Builder
     {
         $query->where('at', '>=', $startDate);
 

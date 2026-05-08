@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\NationalPriority;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\NationalPriority>
+ * @extends Factory<NationalPriority>
  */
 class NationalPriorityFactory extends Factory
 {

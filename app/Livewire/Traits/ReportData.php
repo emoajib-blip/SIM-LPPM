@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Livewire\Traits;
 
+use App\Models\Proposal;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 trait ReportData
 {
     protected function buildProposalQuery(string $detailableType, array $statuses): Builder
     {
-        $query = \App\Models\Proposal::where('detailable_type', $detailableType)
+        $query = Proposal::where('detailable_type', $detailableType)
             ->whereIn('status', $statuses);
 
         $query = $this->filterByUserAccess($query);
 
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         /** @phpstan-ignore-next-line */
         $roleFilter = property_exists($this, 'roleFilter') ? $this->roleFilter : '';
@@ -80,7 +83,7 @@ trait ReportData
         return $query->with($relations);
     }
 
-    protected function getAvailableYears(string $detailableType, array $statuses): \Illuminate\Support\Collection
+    protected function getAvailableYears(string $detailableType, array $statuses): Collection
     {
         $query = $this->buildProposalQuery($detailableType, $statuses);
 

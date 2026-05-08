@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Proposal;
+use App\Models\Research;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,7 +26,7 @@ class ReviewerAssignment extends Notification implements ShouldQueue
 
     public function toDatabase(object $notifiable): array
     {
-        $isResearch = $this->proposal->detailable instanceof \App\Models\Research;
+        $isResearch = $this->proposal->detailable instanceof Research;
         $proposalType = $isResearch ? 'Penelitian' : 'Pengabdian Masyarakat';
 
         return [
@@ -46,7 +47,7 @@ class ReviewerAssignment extends Notification implements ShouldQueue
 
     public function toMail(object $notifiable): MailMessage
     {
-        $isResearch = $this->proposal->detailable instanceof \App\Models\Research;
+        $isResearch = $this->proposal->detailable instanceof Research;
         $proposalType = $isResearch ? 'Penelitian' : 'Pengabdian Masyarakat';
         $assignmentUrl = route($isResearch ? 'research.proposal.show' : 'community-service.proposal.show', $this->proposal->id);
 

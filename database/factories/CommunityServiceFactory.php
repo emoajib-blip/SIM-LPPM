@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\CommunityService;
+use App\Models\Partner;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CommunityService>
+ * @extends Factory<CommunityService>
  */
 class CommunityServiceFactory extends Factory
 {
@@ -17,7 +19,7 @@ class CommunityServiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'partner_id' => \App\Models\Partner::factory(),
+            'partner_id' => Partner::factory(),
             'partner_issue_summary' => fake()->paragraphs(2, true),
             'solution_offered' => fake()->paragraphs(2, true),
         ];

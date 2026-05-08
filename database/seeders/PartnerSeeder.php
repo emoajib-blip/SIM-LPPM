@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Partner;
 use Illuminate\Database\Seeder;
 
 class PartnerSeeder extends Seeder
@@ -23,7 +24,7 @@ class PartnerSeeder extends Seeder
         ];
 
         foreach ($partners as $partner) {
-            \App\Models\Partner::create($partner);
+            Partner::create($partner);
         }
     }
 }

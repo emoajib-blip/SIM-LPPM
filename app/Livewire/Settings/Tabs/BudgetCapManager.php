@@ -4,6 +4,8 @@ namespace App\Livewire\Settings\Tabs;
 
 use App\Livewire\Concerns\HasToast;
 use App\Models\BudgetCap;
+use App\Models\CommunityServiceScheme;
+use App\Models\ResearchScheme;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -54,8 +56,8 @@ class BudgetCapManager extends Component
     {
         return view('livewire.settings.tabs.budget-cap-manager', [
             'budgetCaps' => BudgetCap::latest('year')->paginate(10),
-            'researchSchemes' => \App\Models\ResearchScheme::all(),
-            'communityServiceSchemes' => \App\Models\CommunityServiceScheme::all(),
+            'researchSchemes' => ResearchScheme::all(),
+            'communityServiceSchemes' => CommunityServiceScheme::all(),
         ]);
     }
 
@@ -186,7 +188,7 @@ class BudgetCapManager extends Component
     {
         $this->deleteItemId = $id;
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-        $this->deleteItemYear = (string) (\App\Models\BudgetCap::find($id)->year ?? '');
+        $this->deleteItemYear = (string) (BudgetCap::find($id)->year ?? '');
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-budget-cap');
     }
 }

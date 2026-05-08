@@ -3,6 +3,7 @@
 namespace App\Livewire\KepalaLppm\Monev;
 
 use App\Livewire\Concerns\HasToast;
+use App\Livewire\Traits\WithInstitutionalApproval;
 use App\Models\MonevReview;
 use App\Models\Proposal;
 use App\Models\User;
@@ -14,7 +15,7 @@ use Livewire\WithPagination;
 
 class MonevRecap extends Component
 {
-    use \App\Livewire\Traits\WithInstitutionalApproval, HasToast, WithPagination;
+    use HasToast, WithInstitutionalApproval, WithPagination;
 
     #[Url]
     public $academicYear = '';

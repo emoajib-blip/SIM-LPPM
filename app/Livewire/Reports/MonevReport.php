@@ -4,7 +4,9 @@ namespace App\Livewire\Reports;
 
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
+use App\Models\CommunityService;
 use App\Models\MonevReview;
+use App\Models\Research;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -107,8 +109,8 @@ class MonevReport extends Component
             ->when($this->selectedSemester !== 'all', fn ($q) => $q->where('semester', $this->selectedSemester))
             ->when($this->selectedType !== 'all', function ($q) {
                 $type = $this->selectedType === 'research'
-                    ? \App\Models\Research::class
-                    : \App\Models\CommunityService::class;
+                    ? Research::class
+                    : CommunityService::class;
                 $q->whereHas('proposal', fn ($pq) => $pq->where('detailable_type', $type));
             })
             ->when($this->selectedStatus !== 'all', function ($q) {

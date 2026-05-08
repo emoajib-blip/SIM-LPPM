@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\CommunityService;
 use App\Models\Proposal;
+use App\Models\ProposalReviewer;
+use App\Models\Research;
 use App\Services\NotificationService;
 use Illuminate\Console\Command;
 
@@ -66,7 +69,7 @@ class SendWeeklySummaries extends Command
             'proposals_assigned' => Proposal::whereBetween('updated_at', [$weekStart, $weekEnd])
                 ->where('status', 'UNDER_REVIEW')
                 ->count(),
-            'reviews_completed' => \App\Models\ProposalReviewer::whereBetween('updated_at', [$weekStart, $weekEnd])
+            'reviews_completed' => ProposalReviewer::whereBetween('updated_at', [$weekStart, $weekEnd])
                 ->where('status', 'COMPLETED')
                 ->count(),
             'final_decisions' => Proposal::whereBetween('updated_at', [$weekStart, $weekEnd])
@@ -86,11 +89,11 @@ class SendWeeklySummaries extends Command
             'completed_this_week' => Proposal::whereBetween('updated_at', [$weekStart, $weekEnd])
                 ->where('status', 'COMPLETED')
                 ->count(),
-            'total_research' => Proposal::where('detailable_type', \App\Models\Research::class)->count(),
-            'total_community_service' => Proposal::where('detailable_type', \App\Models\CommunityService::class)->count(),
+            'total_research' => Proposal::where('detailable_type', Research::class)->count(),
+            'total_community_service' => Proposal::where('detailable_type', CommunityService::class)->count(),
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             'avg_review_time' => round(
-                \App\Models\ProposalReviewer::whereBetween('updated_at', [$weekStart, $weekEnd])
+                ProposalReviewer::whereBetween('updated_at', [$weekStart, $weekEnd])
                     ->where('status', 'COMPLETED')
                     ->selectRaw('AVG(DATEDIFF(updated_at, created_at)) as avg_days')
                     ->value('avg_days') ?? 0

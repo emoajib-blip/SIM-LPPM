@@ -2,14 +2,20 @@
 
 namespace App\Providers;
 
+use App\Listeners\UserActivityListener;
 use App\Models\Proposal;
 use App\Observers\ProposalObserver;
+use App\Policies\MediaPolicy;
+use App\Policies\ProposalPolicy;
 use App\View\Composers\MenuComposer;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -60,11 +66,11 @@ class AppServiceProvider extends ServiceProvider
         if ($this->isInstalled()) {
             View::composer('components.layouts.header', MenuComposer::class);
             Proposal::observe(ProposalObserver::class);
-            \Illuminate\Support\Facades\Event::subscribe(\App\Listeners\UserActivityListener::class);
+            Event::subscribe(UserActivityListener::class);
 
             // Register Policies
-            \Illuminate\Support\Facades\Gate::policy(\App\Models\Proposal::class, \App\Policies\ProposalPolicy::class);
-            \Illuminate\Support\Facades\Gate::policy(\Spatie\MediaLibrary\MediaCollections\Models\Media::class, \App\Policies\MediaPolicy::class);
+            Gate::policy(Proposal::class, ProposalPolicy::class);
+            Gate::policy(Media::class, MediaPolicy::class);
 
             // Global Password Policy
             Password::defaults(function () {
@@ -81,7 +87,7 @@ class AppServiceProvider extends ServiceProvider
 
             // Spatie: Implicitly grant "superadmin" role all permissions
             // This works in the app by using gate-related functions like auth()->user->can() and @can()
-            \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            Gate::before(function ($user, $ability) {
                 return $user->hasRole('superadmin') ? true : null;
             });
         }

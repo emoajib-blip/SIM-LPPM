@@ -8,26 +8,35 @@ use App\Enums\ProposalStatus;
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Forms\ReportForm;
 use App\Livewire\Traits\HasFileUploads;
+use App\Livewire\Traits\HasReportTemplates;
 use App\Livewire\Traits\ManagesOutputs;
 use App\Livewire\Traits\ReportAccess;
 use App\Livewire\Traits\ReportAuthorization;
+use App\Livewire\Traits\WithReportApproval;
+use App\Models\AdditionalOutput;
 use App\Models\Keyword;
+use App\Models\MandatoryOutput;
+use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Services\LecturerEligibilityService;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Show extends Component
 {
-    use \App\Livewire\Traits\HasReportTemplates;
-    use \App\Livewire\Traits\WithReportApproval;
     use HasFileUploads;
+    use HasReportTemplates;
     use HasToast;
     use ManagesOutputs;
     use ReportAccess;
     use ReportAuthorization;
     use WithFileUploads;
+    use WithReportApproval;
 
     // Form instance - Livewire v3 Form pattern
     public ReportForm $form;
@@ -52,8 +61,8 @@ class Show extends Component
 
         // Enforce schedule
         $type = 'community_service';
-        /** @var \App\Services\LecturerEligibilityService $service */
-        $service = app(\App\Services\LecturerEligibilityService::class);
+        /** @var LecturerEligibilityService $service */
+        $service = app(LecturerEligibilityService::class);
 
         if ($this->canEdit && ! $service->isFinalReportOpen($type)) {
             $this->canEdit = false;
@@ -61,7 +70,7 @@ class Show extends Component
 
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Load existing final report
-        /** @var \App\Models\ProgressReport|null $finalReport */
+        /** @var ProgressReport|null $finalReport */
         $finalReport = $proposal->progressReports()->where('reporting_period', 'final')->latest()->first();
 
         if ($finalReport) {
@@ -69,7 +78,7 @@ class Show extends Component
             $this->isFinalReportDraft = true;
         } else {
             // Fallback to latest progress report for pre-filling data
-            /** @var \App\Models\ProgressReport|null $latestReport */
+            /** @var ProgressReport|null $latestReport */
             $latestReport = $proposal->progressReports()->latest()->first();
             $this->progressReport = $latestReport;
             $this->isFinalReportDraft = false;
@@ -119,7 +128,7 @@ class Show extends Component
             $message = 'Laporan akhir berhasil disimpan.';
             session()->flash('success', $message);
             $this->toastSuccess($message);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             // Let Livewire handle validation errors
             throw $e;
         } catch (\Exception $e) {
@@ -170,7 +179,7 @@ class Show extends Component
             session()->flash('success', $message);
             $this->toastSuccess($message);
             $this->redirect(route('community-service.final-report.index'), navigate: true);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
             $message = 'Gagal mengajukan laporan: '.$e->getMessage();
@@ -196,7 +205,7 @@ class Show extends Component
             }
 
             // Find the mandatory output
-            $mandatoryOutput = \App\Models\MandatoryOutput::where('progress_report_id', $report->id)
+            $mandatoryOutput = MandatoryOutput::where('progress_report_id', $report->id)
                 ->where('proposal_output_id', $proposalOutputId)
                 ->first();
 
@@ -216,7 +225,7 @@ class Show extends Component
             }
 
             // Find the additional output
-            $additionalOutput = \App\Models\AdditionalOutput::where('progress_report_id', $report->id)
+            $additionalOutput = AdditionalOutput::where('progress_report_id', $report->id)
                 ->where('proposal_output_id', $proposalOutputId)
                 ->first();
 
@@ -340,7 +349,7 @@ class Show extends Component
             $message = 'Data luaran wajib berhasil disimpan.';
             session()->flash('success', $message);
             $this->toastSuccess($message);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
             $message = 'Gagal menyimpan: '.$e->getMessage();
@@ -366,7 +375,7 @@ class Show extends Component
             $message = 'Data luaran tambahan berhasil disimpan.';
             session()->flash('success', $message);
             $this->toastSuccess($message);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
             $message = 'Gagal menyimpan: '.$e->getMessage();
@@ -380,7 +389,7 @@ class Show extends Component
      */
     public function updatedTempMandatoryFiles($value, $key): void
     {
-        if ($value instanceof \Illuminate\Http\UploadedFile) {
+        if ($value instanceof UploadedFile) {
             $this->validateMandatoryFile((int) $key);
 
             $this->form->tempMandatoryFiles[(int) $key] = $value;
@@ -400,7 +409,7 @@ class Show extends Component
      */
     public function updatedTempAdditionalFiles($value, $key): void
     {
-        if ($value instanceof \Illuminate\Http\UploadedFile) {
+        if ($value instanceof UploadedFile) {
             $this->validateAdditionalFile((int) $key);
 
             $this->form->tempAdditionalFiles[(int) $key] = $value;
@@ -420,7 +429,7 @@ class Show extends Component
      */
     public function updatedTempAdditionalCerts($value, $key): void
     {
-        if ($value instanceof \Illuminate\Http\UploadedFile) {
+        if ($value instanceof UploadedFile) {
             $this->validateAdditionalCert((int) $key);
 
             $this->form->tempAdditionalCerts[(int) $key] = $value;
@@ -447,13 +456,13 @@ class Show extends Component
      * Get mandatory output model for editing
      */
     #[Computed]
-    public function mandatoryOutput(): ?\App\Models\MandatoryOutput
+    public function mandatoryOutput(): ?MandatoryOutput
     {
         if (! $this->progressReport || ! $this->form->editingMandatoryId) {
             return null;
         }
 
-        return \App\Models\MandatoryOutput::where('progress_report_id', $this->progressReport->id)
+        return MandatoryOutput::where('progress_report_id', $this->progressReport->id)
             ->where('proposal_output_id', $this->form->editingMandatoryId)
             ->first();
     }
@@ -462,13 +471,13 @@ class Show extends Component
      * Get additional output model for editing
      */
     #[Computed]
-    public function additionalOutput(): ?\App\Models\AdditionalOutput
+    public function additionalOutput(): ?AdditionalOutput
     {
         if (! $this->progressReport || ! $this->form->editingAdditionalId) {
             return null;
         }
 
-        return \App\Models\AdditionalOutput::where('progress_report_id', $this->progressReport->id)
+        return AdditionalOutput::where('progress_report_id', $this->progressReport->id)
             ->where('proposal_output_id', $this->form->editingAdditionalId)
             ->first();
     }
@@ -508,7 +517,7 @@ class Show extends Component
     /**
      * Get all keywords for the view
      */
-    public function getAllKeywords(): \Illuminate\Database\Eloquent\Collection
+    public function getAllKeywords(): Collection
     {
         return Keyword::orderBy('name')->get();
     }

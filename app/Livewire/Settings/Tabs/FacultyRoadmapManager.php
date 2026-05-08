@@ -6,6 +6,7 @@ use App\Livewire\Concerns\HasToast;
 use App\Models\Faculty;
 use App\Models\FacultyRoadmap;
 use App\Models\FocusArea;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -49,7 +50,7 @@ class FacultyRoadmapManager extends Component
 
     public string $deleteItemName = '';
 
-    public function render(): \Illuminate\Contracts\View\View
+    public function render(): View
     {
         $user = auth()->user();
         $query = FacultyRoadmap::with('faculty')->latest();

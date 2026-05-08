@@ -4,17 +4,19 @@ namespace App\Livewire\CommunityService\Proposal;
 
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $teamMembers
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $pendingInvitations
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $acceptedMembers
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $rejectedMembers
+ * @property-read Proposal|null $proposal
+ * @property-read Collection<int, User> $teamMembers
+ * @property-read Collection<int, User> $pendingInvitations
+ * @property-read Collection<int, User> $acceptedMembers
+ * @property-read Collection<int, User> $rejectedMembers
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class TeamMemberInvitations extends Component

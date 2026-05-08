@@ -4,6 +4,8 @@ namespace App\Livewire\Research\Proposal;
 
 use App\Constants\ProposalConstants;
 use App\Livewire\Abstracts\ProposalCreate;
+use App\Models\ResearchScheme;
+use Spatie\MediaLibrary\HasMedia;
 
 class Create extends ProposalCreate
 {
@@ -26,7 +28,7 @@ class Create extends ProposalCreate
     {
         // Check if file already exists (edit mode)
         $detailable = $this->form->proposal?->detailable;
-        $hasFile = $detailable instanceof \Spatie\MediaLibrary\HasMedia &&
+        $hasFile = $detailable instanceof HasMedia &&
             $detailable->hasMedia('substance_file');
 
         return array_merge($this->getOutputValidationRules(), [
@@ -41,7 +43,7 @@ class Create extends ProposalCreate
             return;
         }
 
-        $scheme = \App\Models\ResearchScheme::find($this->form->research_scheme_id);
+        $scheme = ResearchScheme::find($this->form->research_scheme_id);
         if (! $scheme) {
             return;
         }
@@ -53,7 +55,7 @@ class Create extends ProposalCreate
         }
     }
 
-    private function getOutputForScheme(\App\Models\ResearchScheme $scheme): array
+    private function getOutputForScheme(ResearchScheme $scheme): array
     {
         $schemeName = strtolower($scheme->name);
         $schemeStrata = strtolower($scheme->strata);

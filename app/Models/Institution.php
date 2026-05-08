@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Database\Factories\InstitutionFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -21,14 +24,14 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property string|null $lppm_head_id
  * @property string|null $lppm_head_user_id
  * @property bool $is_verified
- * @property-read \App\Models\User|null $lppmHeadUser
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Faculty[] $faculties
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\StudyProgram[] $studyPrograms
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Identity[] $identities
+ * @property-read User|null $lppmHeadUser
+ * @property-read Collection|Faculty[] $faculties
+ * @property-read Collection|StudyProgram[] $studyPrograms
+ * @property-read Collection|Identity[] $identities
  */
 class Institution extends Model
 {
-    /** @use HasFactory<\Database\Factories\InstitutionFactory> */
+    /** @use HasFactory<InstitutionFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -50,7 +53,7 @@ class Institution extends Model
      * Get the user who is the head of LPPM for this institution.
      */
     // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-    public function lppmHeadUser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function lppmHeadUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'lppm_head_user_id');
     }

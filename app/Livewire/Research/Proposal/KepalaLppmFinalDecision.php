@@ -5,8 +5,10 @@ namespace App\Livewire\Research\Proposal;
 use App\Enums\ProposalStatus;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\ProposalReviewer;
 use App\Models\User;
 use App\Services\NotificationService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -15,10 +17,10 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
+ * @property-read Proposal|null $proposal
  * @property-read bool $canDecide
- * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $pendingReviewers
- * @property-read \Illuminate\Support\Collection $reviewSummary
+ * @property-read Collection|ProposalReviewer[] $pendingReviewers
+ * @property-read Collection $reviewSummary
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class KepalaLppmFinalDecision extends Component
@@ -53,19 +55,19 @@ class KepalaLppmFinalDecision extends Component
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\ProposalReviewer>
+     * @return Collection<int, ProposalReviewer>
      */
     #[Computed]
-    public function pendingReviewers(): \Illuminate\Support\Collection
+    public function pendingReviewers(): Collection
     {
         return $this->proposal->pendingReviewers()->get();
     }
 
     /**
-     * @return \Illuminate\Support\Collection<(int|string), int<0, max>>
+     * @return Collection<(int|string), int<0, max>>
      */
     #[Computed]
-    public function reviewSummary(): \Illuminate\Support\Collection
+    public function reviewSummary(): Collection
     {
         return $this->proposal->reviewers()
             ->select('recommendation')

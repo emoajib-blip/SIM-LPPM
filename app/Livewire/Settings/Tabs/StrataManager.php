@@ -102,7 +102,7 @@ class StrataManager extends Component
     {
         $this->deleteItemId = $id;
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-        $item = \App\Models\Strata::find($id);
+        $item = Strata::find($id);
         $this->deleteItemName = $item->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-strata');
     }

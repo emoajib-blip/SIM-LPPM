@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Reviewer;
 
+use App\Actions\HandleHybridInstitution;
 use App\Livewire\Forms\ReviewerProfileForm;
 use App\Models\Institution;
 use Livewire\Attributes\Layout;
@@ -18,7 +19,7 @@ class ProfileEditor extends Component
 
     public function save()
     {
-        $this->form.store(new \App\Actions\HandleHybridInstitution);
+        $this->form.store(new HandleHybridInstitution);
 
         session()->flash('success', 'Profil reviewer berhasil diperbarui.');
         $this->dispatch('profile-updated');

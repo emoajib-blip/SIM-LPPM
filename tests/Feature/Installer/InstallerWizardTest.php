@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Livewire\Installer\InstallerWizard;
+use App\Services\Installer\EnvironmentWriter;
 use App\Services\Installer\InstallationService;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -148,7 +149,7 @@ it('writes empty values from installer inputs', function () {
     file_put_contents($envPath, $content);
     file_put_contents($examplePath, $content);
 
-    $writer = new \App\Services\Installer\EnvironmentWriter;
+    $writer = new EnvironmentWriter;
     $writer->write([
         'APP_DEBUG' => false,
         'APP_NAME' => 'LPPM-ITSNU',

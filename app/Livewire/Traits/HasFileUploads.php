@@ -7,6 +7,7 @@ namespace App\Livewire\Traits;
 use App\Models\AdditionalOutput;
 use App\Models\MandatoryOutput;
 use App\Models\ProgressReport;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 
 trait HasFileUploads
@@ -91,7 +92,7 @@ trait HasFileUploads
      */
     protected function saveSubstanceFile(ProgressReport $report, string $reportType = 'progress'): void
     {
-        if (! $this->substanceFile || ! $this->substanceFile instanceof \Illuminate\Http\UploadedFile) {
+        if (! $this->substanceFile || ! $this->substanceFile instanceof UploadedFile) {
             return;
         }
 
@@ -118,7 +119,7 @@ trait HasFileUploads
      */
     protected function saveRealizationFile(ProgressReport $report, string $reportType = 'final'): void
     {
-        if (! $this->realizationFile || ! $this->realizationFile instanceof \Illuminate\Http\UploadedFile) {
+        if (! $this->realizationFile || ! $this->realizationFile instanceof UploadedFile) {
             return;
         }
 
@@ -145,7 +146,7 @@ trait HasFileUploads
      */
     protected function savePresentationFile(ProgressReport $report, string $reportType = 'final'): void
     {
-        if (! $this->presentationFile || ! $this->presentationFile instanceof \Illuminate\Http\UploadedFile) {
+        if (! $this->presentationFile || ! $this->presentationFile instanceof UploadedFile) {
             return;
         }
 
@@ -179,7 +180,7 @@ trait HasFileUploads
         $file = $this->tempMandatoryFiles[$proposalOutputId];
 
         // Check if file is valid and still exists
-        if (! $file instanceof \Illuminate\Http\UploadedFile || ! file_exists($file->getRealPath())) {
+        if (! $file instanceof UploadedFile || ! file_exists($file->getRealPath())) {
             return;
         }
 
@@ -208,7 +209,7 @@ trait HasFileUploads
         $file = $this->tempAdditionalFiles[$proposalOutputId];
 
         // Check if file is valid and still exists
-        if (! $file instanceof \Illuminate\Http\UploadedFile || ! file_exists($file->getRealPath())) {
+        if (! $file instanceof UploadedFile || ! file_exists($file->getRealPath())) {
             return;
         }
 
@@ -237,7 +238,7 @@ trait HasFileUploads
         $file = $this->tempAdditionalCerts[$proposalOutputId];
 
         // Check if file is valid and still exists
-        if (! $file instanceof \Illuminate\Http\UploadedFile || ! file_exists($file->getRealPath())) {
+        if (! $file instanceof UploadedFile || ! file_exists($file->getRealPath())) {
             return;
         }
 

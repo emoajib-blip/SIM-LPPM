@@ -5,16 +5,18 @@ namespace App\Livewire\CommunityService\Proposal;
 use App\Livewire\Actions\AssignReviewersAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\ProposalReviewer;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
- * @property-read \Illuminate\Support\Collection|\App\Models\User[] $availableReviewers
- * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $currentReviewers
+ * @property-read Proposal|null $proposal
+ * @property-read Collection|User[] $availableReviewers
+ * @property-read Collection|ProposalReviewer[] $currentReviewers
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerAssignment extends Component
@@ -82,7 +84,7 @@ class ReviewerAssignment extends Component
             ->where('user_id', $reviewerId)
             ->first();
 
-        if ($reviewer instanceof \App\Models\ProposalReviewer) {
+        if ($reviewer instanceof ProposalReviewer) {
             $reviewer->delete();
             session()->flash('success', 'Reviewer berhasil dihapus');
             $this->toastSuccess('Reviewer berhasil dihapus');

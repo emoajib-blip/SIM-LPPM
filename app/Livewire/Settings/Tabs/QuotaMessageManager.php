@@ -4,6 +4,7 @@ namespace App\Livewire\Settings\Tabs;
 
 use App\Livewire\Concerns\HasToast;
 use App\Models\QuotaMessage;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -26,7 +27,7 @@ class QuotaMessageManager extends Component
 
     public string $deleteItemKey = '';
 
-    public function render(): \Illuminate\Contracts\View\View
+    public function render(): View
     {
         /** @var view-string $viewName */
         $viewName = 'livewire.settings.tabs.quota-message-manager';

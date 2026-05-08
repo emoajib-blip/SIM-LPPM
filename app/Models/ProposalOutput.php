@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ProposalOutputFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,11 +16,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $type
  * @property string|null $target_status
  * @property string|null $description
- * @property-read \App\Models\Proposal $proposal
+ * @property-read Proposal $proposal
  */
 class ProposalOutput extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProposalOutputFactory> */
+    /** @use HasFactory<ProposalOutputFactory> */
     use HasFactory;
 
     protected $fillable = [

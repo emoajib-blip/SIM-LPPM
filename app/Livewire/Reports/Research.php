@@ -6,8 +6,10 @@ use App\Enums\ProposalStatus;
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Traits\WithInstitutionalApproval;
 use App\Models\AdditionalOutput;
+use App\Models\Faculty;
 use App\Models\MandatoryOutput;
 use App\Models\Proposal;
+use App\Models\ResearchScheme;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
@@ -156,8 +158,8 @@ class Research extends Component
             'faculties' => $this->researchByFaculty(),
             'outputStats' => $this->outputAnalytics(),
             'proposals' => $this->proposals(),
-            'allSchemes' => \App\Models\ResearchScheme::orderBy('name')->get(),
-            'allFaculties' => \App\Models\Faculty::orderBy('name')->get(),
+            'allSchemes' => ResearchScheme::orderBy('name')->get(),
+            'allFaculties' => Faculty::orderBy('name')->get(),
             'institutionalReport' => $this->getInstitutionalReport('research', (int) $this->period),
         ]);
     }

@@ -4,7 +4,12 @@ namespace App\Livewire\Abstracts;
 
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Traits\WithFilters;
+use App\Models\CommunityService;
+use App\Models\Proposal;
+use App\Models\Research;
+use App\Services\EligibilityService;
 use App\Services\ProposalService;
+use App\Services\QuotaMessageService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -45,7 +50,7 @@ abstract class ProposalIndex extends Component
     #[Computed]
     public function canCreateProposal(): array
     {
-        $eligibilityService = app(\App\Services\EligibilityService::class);
+        $eligibilityService = app(EligibilityService::class);
         $result = $eligibilityService->canCreateProposal(Auth::user(), $this->getProposalType());
 
         return $result;
@@ -55,7 +60,7 @@ abstract class ProposalIndex extends Component
     public function quotaTooltip(): string
     {
         $quotaInfo = $this->canCreateProposal()['quota_info'];
-        $messageService = app(\App\Services\QuotaMessageService::class);
+        $messageService = app(QuotaMessageService::class);
 
         return $messageService->getMessage('button_tooltip', [
             'limit' => $quotaInfo['head_limit'],
@@ -99,10 +104,10 @@ abstract class ProposalIndex extends Component
     #[Computed]
     public function pendingInvitationsCount()
     {
-        return \App\Models\Proposal::whereHas('teamMembers', function ($q) {
+        return Proposal::whereHas('teamMembers', function ($q) {
             $q->where('user_id', Auth::id())->where('status', 'pending');
         })->whereHas('detailable', function ($q) {
-            $q->where('detailable_type', $this->getProposalType() === 'research' ? \App\Models\Research::class : \App\Models\CommunityService::class);
+            $q->where('detailable_type', $this->getProposalType() === 'research' ? Research::class : CommunityService::class);
         })->count();
     }
 

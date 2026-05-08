@@ -7,6 +7,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolePermissionMatrix extends Component
 {
@@ -115,7 +116,7 @@ class RolePermissionMatrix extends Component
             });
 
             // Clear Spatie Permissions cache to ensure changes take effect immediately
-            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+            app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
             $this->toastSuccess('Pengaturan hak akses berhasil disimpan permanent ke sistem.');
         } catch (\Throwable $e) {

@@ -3,7 +3,10 @@
 namespace App\Livewire\Dekan;
 
 use App\Enums\ProposalStatus;
+use App\Models\CommunityService;
 use App\Models\Proposal;
+use App\Models\Research;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -13,7 +16,7 @@ use Livewire\WithPagination;
 
 /**
  * @property-read ?int $dekanFacultyId
- * @property-read \Illuminate\Contracts\Pagination\LengthAwarePaginator $proposals
+ * @property-read LengthAwarePaginator $proposals
  * @property-read array $statusStats
  * @property-read array $availableYears
  * @property-read ?string $facultyName
@@ -91,8 +94,8 @@ class ProposalIndex extends Component
             })
             ->when($this->typeFilter !== 'all', function ($query) {
                 $detailableType = $this->typeFilter === 'research'
-                    ? \App\Models\Research::class
-                    : \App\Models\CommunityService::class;
+                    ? Research::class
+                    : CommunityService::class;
                 $query->where('detailable_type', $detailableType);
             })
             ->when($this->yearFilter, function ($query) {
@@ -119,10 +122,10 @@ class ProposalIndex extends Component
         return [
             'all' => (clone $baseQuery)->count(),
             'research' => (clone $baseQuery)
-                ->where('detailable_type', \App\Models\Research::class)
+                ->where('detailable_type', Research::class)
                 ->count(),
             'community_service' => (clone $baseQuery)
-                ->where('detailable_type', \App\Models\CommunityService::class)
+                ->where('detailable_type', CommunityService::class)
                 ->count(),
         ];
     }

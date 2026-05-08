@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\ActivitySchedule;
+use App\Models\Proposal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ActivitySchedule>
+ * @extends Factory<ActivitySchedule>
  */
 class ActivityScheduleFactory extends Factory
 {
@@ -20,7 +22,7 @@ class ActivityScheduleFactory extends Factory
         $endMonth = fake()->numberBetween($startMonth, 12);
 
         return [
-            'proposal_id' => \App\Models\Proposal::factory(),
+            'proposal_id' => Proposal::factory(),
             'activity_name' => fake()->randomElement([
                 'Persiapan Penelitian',
                 'Pengumpulan Data',

@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\DailyNote;
+use App\Models\Proposal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DailyNote>
+ * @extends Factory<DailyNote>
  */
 class DailyNoteFactory extends Factory
 {
@@ -17,7 +19,7 @@ class DailyNoteFactory extends Factory
     public function definition(): array
     {
         return [
-            'proposal_id' => \App\Models\Proposal::factory(),
+            'proposal_id' => Proposal::factory(),
             'activity_date' => fake()->dateTimeBetween('-6 months', 'now'),
             'activity_description' => fake()->paragraph(),
             'progress_percentage' => fake()->numberBetween(0, 100),

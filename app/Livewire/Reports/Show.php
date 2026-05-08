@@ -7,6 +7,7 @@ namespace App\Livewire\Reports;
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Forms\ReportForm;
 use App\Livewire\Traits\HasFileUploads;
+use App\Livewire\Traits\HasReportTemplates;
 use App\Livewire\Traits\ReportAccess;
 use App\Livewire\Traits\ReportAuthorization;
 use App\Models\AdditionalOutput;
@@ -14,13 +15,15 @@ use App\Models\Keyword;
 use App\Models\MandatoryOutput;
 use App\Models\Proposal;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Show extends Component
 {
-    use \App\Livewire\Traits\HasReportTemplates;
     use HasFileUploads;
+    use HasReportTemplates;
     use HasToast;
     use ReportAccess;
     use ReportAuthorization;
@@ -203,7 +206,7 @@ class Show extends Component
                 $this->progressReport->refresh();
                 $this->progressReport->load('mandatoryOutputs');
             }
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
             // If auto-saving (closeModal = false), we might want to suppress some errors or just show them
@@ -269,7 +272,7 @@ class Show extends Component
                 $this->progressReport->refresh();
                 $this->progressReport->load('additionalOutputs');
             }
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
             $message = 'Gagal menyimpan: '.$e->getMessage();
@@ -291,7 +294,7 @@ class Show extends Component
     /**
      * Get mandatory output model for editing
      */
-    #[\Livewire\Attributes\Computed]
+    #[Computed]
     public function mandatoryOutput(): ?MandatoryOutput
     {
         if (! $this->progressReport || ! $this->form->editingMandatoryId) {
@@ -306,7 +309,7 @@ class Show extends Component
     /**
      * Get additional output model for editing
      */
-    #[\Livewire\Attributes\Computed]
+    #[Computed]
     public function additionalOutput(): ?AdditionalOutput
     {
         if (! $this->progressReport || ! $this->form->editingAdditionalId) {

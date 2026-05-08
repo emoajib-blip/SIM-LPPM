@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\DocumentSignature;
 use App\Models\ProposalReviewer;
+use App\Models\User;
 use App\Services\DocumentSignatureService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -33,9 +35,9 @@ class ReviewExportController extends Controller
     /**
      * Download the review result as PDF.
      */
-    public function download(\Illuminate\Http\Request $request, ProposalReviewer $proposalReviewer)
+    public function download(Request $request, ProposalReviewer $proposalReviewer)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $proposal = $proposalReviewer->proposal;
 

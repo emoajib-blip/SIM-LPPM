@@ -2,7 +2,9 @@
 
 namespace App\Livewire\AdminLppm;
 
+use App\Models\CommunityService;
 use App\Models\Proposal;
+use App\Models\Research;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -45,8 +47,8 @@ class ReviewMonitoring extends Component
             })
             ->when($this->typeFilter !== 'all', function ($query) {
                 $detailableType = $this->typeFilter === 'research'
-                    ? \App\Models\Research::class
-                    : \App\Models\CommunityService::class;
+                    ? Research::class
+                    : CommunityService::class;
                 $query->where('detailable_type', $detailableType);
             })
             ->latest()

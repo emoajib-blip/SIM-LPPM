@@ -2,10 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Faculty;
+use App\Models\Institution;
+use App\Models\StudyProgram;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\StudyProgram>
+ * @extends Factory<StudyProgram>
  */
 class StudyProgramFactory extends Factory
 {
@@ -32,8 +35,8 @@ class StudyProgramFactory extends Factory
         ];
 
         return [
-            'institution_id' => \App\Models\Institution::factory(),
-            'faculty_id' => \App\Models\Faculty::factory(),
+            'institution_id' => Institution::factory(),
+            'faculty_id' => Faculty::factory(),
             'name' => fake()->randomElement($programs),
         ];
     }

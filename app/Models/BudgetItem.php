@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\BudgetItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,14 +19,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $volume
  * @property float $unit_price
  * @property float $total_price
- * @property-read \App\Models\Proposal $proposal
- * @property-read \App\Models\BudgetGroup $budgetGroup
- * @property-read \App\Models\BudgetComponent|null $budgetComponent
+ * @property-read Proposal $proposal
+ * @property-read BudgetGroup $budgetGroup
+ * @property-read BudgetComponent|null $budgetComponent
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class BudgetItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\BudgetItemFactory> */
+    /** @use HasFactory<BudgetItemFactory> */
     use HasFactory;
 
     protected $fillable = [

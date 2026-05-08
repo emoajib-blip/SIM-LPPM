@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Database\Factories\TopicFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,12 +15,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property bool $is_active_for_research
  * @property bool $is_active_for_community_service
- * @property-read \App\Models\Theme $theme
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $proposals
+ * @property-read Theme $theme
+ * @property-read Collection|Proposal[] $proposals
  */
 class Topic extends Model
 {
-    /** @use HasFactory<\Database\Factories\TopicFactory> */
+    /** @use HasFactory<TopicFactory> */
     use HasFactory;
 
     protected $fillable = [

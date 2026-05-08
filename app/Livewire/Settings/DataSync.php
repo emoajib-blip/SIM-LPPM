@@ -4,6 +4,7 @@ namespace App\Livewire\Settings;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Process;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class DataSync extends Component
@@ -128,7 +129,7 @@ class DataSync extends Component
         }
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         return view('livewire.settings.data-sync');
     }

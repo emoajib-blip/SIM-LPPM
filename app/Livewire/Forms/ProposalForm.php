@@ -2,15 +2,30 @@
 
 namespace App\Livewire\Forms;
 
+use App\Actions\Proposal\IdentityEligibilityAction;
+use App\Constants\ProposalConstants;
+use App\Livewire\Research\Proposal\Components\TktMeasurement;
+use App\Models\BudgetCap;
+use App\Models\BudgetGroup;
 use App\Models\CommunityService;
+use App\Models\CommunityServiceScheme;
+use App\Models\Identity;
+use App\Models\Institution;
+use App\Models\Keyword;
 use App\Models\Proposal;
 use App\Models\Research;
 use App\Models\ResearchScheme;
+use App\Models\TktLevel;
+use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
+use Spatie\Permission\Models\Role;
 
 class ProposalForm extends Form
 {
@@ -696,14 +711,14 @@ class ProposalForm extends Form
                     }
 
                     $scheme = $this->research_scheme_id
-                        ? \App\Models\ResearchScheme::find($schemeId)
-                        : \App\Models\CommunityServiceScheme::find($schemeId);
+                        ? ResearchScheme::find($schemeId)
+                        : CommunityServiceScheme::find($schemeId);
 
                     if (! $scheme) {
                         return;
                     }
 
-                    $result = app(\App\Actions\Proposal\IdentityEligibilityAction::class)->execute(Auth::user(), $scheme);
+                    $result = app(IdentityEligibilityAction::class)->execute(Auth::user(), $scheme);
                     if (! $result['is_eligible']) {
                         $fail($result['reason']);
                     }
@@ -743,7 +758,7 @@ class ProposalForm extends Form
                 // 1. Calculate achieved level
                 $achievedLevel = 0;
                 // Get level models to map IDs to integer levels
-                $levels = \App\Models\TktLevel::whereIn('id', array_keys($value))->get();
+                $levels = TktLevel::whereIn('id', array_keys($value))->get();
 
                 foreach ($levels as $level) {
                     $data = $value[$level->id] ?? null;
@@ -757,7 +772,7 @@ class ProposalForm extends Form
                 if ($this->research_scheme_id) {
                     $scheme = ResearchScheme::find($this->research_scheme_id);
                     if ($scheme && $scheme->strata) {
-                        $range = \App\Livewire\Research\Proposal\Components\TktMeasurement::getTktRangeForStrata($scheme->strata);
+                        $range = TktMeasurement::getTktRangeForStrata($scheme->strata);
 
                         // If range exists (not PKM), validate
                         if ($range) {
@@ -789,7 +804,7 @@ class ProposalForm extends Form
 
         // Strict validation for array inputs to prevent injection
         $rules['outputs.*.year'] = 'required|integer|min:1|max:10';
-        $rules['outputs.*.category'] = ['required', Rule::in(\App\Constants\ProposalConstants::OUTPUT_CATEGORIES)];
+        $rules['outputs.*.category'] = ['required', Rule::in(ProposalConstants::OUTPUT_CATEGORIES)];
         // Group and Type validated in step-specific rules in components for better context
 
         $rules['budget_items.*.year'] = 'required|integer|min:1|max:10';
@@ -815,7 +830,7 @@ class ProposalForm extends Form
         ];
 
         // Get the submitter user for notifications
-        $submitter = \App\Models\User::find($submitterId);
+        $submitter = User::find($submitterId);
 
         // Get existing members to preserve their status
         $existingMembers = $proposal->teamMembers()->withPivot('status')->get()->keyBy('id');
@@ -843,20 +858,20 @@ class ProposalForm extends Form
                     continue;
                 }
 
-                $identity = \App\Models\Identity::where('identity_id', $member['nidn'])->first();
+                $identity = Identity::where('identity_id', $member['nidn'])->first();
 
                 // If not found and it's a manual entry, create a shadow user
                 if (! $identity && ! empty($member['is_manual'])) {
-                    $user = \App\Models\User::firstOrCreate(
+                    $user = User::firstOrCreate(
                         ['email' => $member['email']],
                         [
                             'name' => $member['name'],
-                            'password' => bcrypt(\Illuminate\Support\Str::random(16)),
+                            'password' => bcrypt(Str::random(16)),
                         ]
                     );
 
                     if (! $user->identity) {
-                        $institutionId = \App\Models\Institution::where('name', 'like', '%'.($member['institution'] ?? '').'%')->first()?->id;
+                        $institutionId = Institution::where('name', 'like', '%'.($member['institution'] ?? '').'%')->first()?->id;
 
                         $user->identity()->create([
                             'identity_id' => $member['nidn'],
@@ -867,7 +882,7 @@ class ProposalForm extends Form
 
                     $roleName = $member['role'] ?? 'dosen';
                     // Only assign if the role actually exists in the system
-                    $roleExists = \Spatie\Permission\Models\Role::where('name', $roleName)->exists();
+                    $roleExists = Role::where('name', $roleName)->exists();
 
                     if ($roleExists && ! $user->hasRole($roleName)) {
                         $user->assignRole($roleName);
@@ -895,7 +910,7 @@ class ProposalForm extends Form
                     // Send invitation notification ONLY if it's a completely new member AND not manual
                     if (! in_array($userId, $existingMemberIds) && empty($member['is_manual'])) {
                         $invitee = $identity->user;
-                        $notificationService = app(\App\Services\NotificationService::class);
+                        $notificationService = app(NotificationService::class);
                         $notificationService->notifyTeamInvitationSent($proposal, $submitter, $invitee);
                     }
                 }
@@ -973,7 +988,7 @@ class ProposalForm extends Form
             foreach ($this->keywords as $keywordName) {
                 $trimmedName = trim($keywordName);
                 if (! empty($trimmedName)) {
-                    $keyword = \App\Models\Keyword::firstOrCreate(['name' => $trimmedName]);
+                    $keyword = Keyword::firstOrCreate(['name' => $trimmedName]);
                     $keywordIds[] = $keyword->id;
                 }
             }
@@ -1005,7 +1020,7 @@ class ProposalForm extends Form
      * Validate budget items against budget group percentage limits.
      * Percentages are calculated based on the budget cap, not the total budget entered.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function validateBudgetGroupPercentages(): void
     {
@@ -1019,11 +1034,11 @@ class ProposalForm extends Form
 
         // Get budget cap for current year and proposal type (with scheme priority)
         $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
-        $budgetCap = \App\Models\BudgetCap::getCapForYear($currentYear, $proposalType, (int) $schemeId);
+        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, (int) $schemeId);
 
         if ($budgetCap === null || $budgetCap <= 0) {
             // No budget cap set, cannot validate percentages
-            throw \Illuminate\Validation\ValidationException::withMessages([
+            throw ValidationException::withMessages([
                 'budget_items' => [
                     sprintf(
                         'Batas anggaran untuk %s tahun %s belum diatur. Silakan hubungi Admin LPPM.',
@@ -1035,7 +1050,7 @@ class ProposalForm extends Form
         }
 
         // Group budget items by budget_group_id and check percentages
-        $budgetGroups = \App\Models\BudgetGroup::whereNotNull('percentage')->get();
+        $budgetGroups = BudgetGroup::whereNotNull('percentage')->get();
         $errors = [];
 
         foreach ($budgetGroups as $group) {
@@ -1062,7 +1077,7 @@ class ProposalForm extends Form
         }
 
         if (! empty($errors)) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
+            throw ValidationException::withMessages([
                 'budget_items' => $errors,
             ]);
         }
@@ -1073,7 +1088,7 @@ class ProposalForm extends Form
      *
      * @param  string  $proposalType  'research' or 'community_service'
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function validateBudgetCap(string $proposalType): void
     {
@@ -1093,7 +1108,7 @@ class ProposalForm extends Form
 
         // Get budget cap for current year and proposal type (with scheme priority)
         $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
-        $budgetCap = \App\Models\BudgetCap::getCapForYear($currentYear, $proposalType, (int) $schemeId);
+        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, (int) $schemeId);
 
         if ($budgetCap === null) {
             // No cap set, allow any amount
@@ -1102,7 +1117,7 @@ class ProposalForm extends Form
 
         if ($totalBudget > $budgetCap) {
             $typeLabel = $proposalType === 'research' ? 'Penelitian' : 'Pengabdian Masyarakat';
-            throw \Illuminate\Validation\ValidationException::withMessages([
+            throw ValidationException::withMessages([
                 'budget_items' => [
                     sprintf(
                         'Total anggaran melebihi batas maksimal untuk %s tahun %s. Batas: Rp %s, Total saat ini: Rp %s',

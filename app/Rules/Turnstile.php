@@ -4,14 +4,17 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class Turnstile implements ValidationRule
 {
     /**
      * Run the validation rule.
      *
-     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param  Closure(string, ?string=): PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -25,14 +28,14 @@ class Turnstile implements ValidationRule
             return;
         }
 
-        /** @var \Illuminate\Http\Client\Response $response */
+        /** @var Response $response */
         $response = Http::asForm()->timeout(10)->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
             'secret' => config('turnstile.secret_key'),
             'response' => $value,
         ]);
 
         if (! $response->successful() || ! $response->json('success')) {
-            \Illuminate\Support\Facades\Log::error('Turnstile verification failed', [
+            Log::error('Turnstile verification failed', [
                 'status' => $response->status(),
                 'body' => $response->json(),
                 'site_key' => config('turnstile.site_key'),

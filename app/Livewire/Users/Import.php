@@ -2,14 +2,17 @@
 
 namespace App\Livewire\Users;
 
+use App\Imports\UsersImport;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Identity;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 #[Layout('components.layouts.app', ['title' => 'Import Users', 'pageTitle' => 'Import Pengguna', 'pageSubtitle' => 'Import data pengguna dari file Excel'])]
 class Import extends Component
@@ -36,7 +39,7 @@ class Import extends Component
         $this->reset(['parsedData', 'validationErrors', 'isPreviewing']);
 
         try {
-            $import = new \App\Imports\UsersImport;
+            $import = new UsersImport;
             // Parse to array for preview
             $rows = Excel::toArray($import, $this->file)[0];
 
@@ -53,7 +56,7 @@ class Import extends Component
                 // Map keys to match rules if necessary, or ensure Excel header matches rule keys
                 // Assuming Excel headers match rule keys (name, email, etc.)
 
-                $validator = \Illuminate\Support\Facades\Validator::make($data, $rules, $messages);
+                $validator = Validator::make($data, $rules, $messages);
 
                 if ($validator->fails()) {
                     $this->validationErrors[$index + 2] = $validator->errors()->all();
@@ -109,14 +112,14 @@ class Import extends Component
         }
 
         try {
-            Excel::import(new \App\Imports\UsersImport, $this->file);
+            Excel::import(new UsersImport, $this->file);
 
             $message = 'Data pengguna berhasil diimpor.';
             session()->flash('success', $message);
             $this->toastSuccess($message);
 
             $this->redirect(route('users.index'), navigate: true);
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        } catch (ValidationException $e) {
             $failures = $e->failures();
             foreach ($failures as $failure) {
                 $this->validationErrors[$failure->row()] = $failure->errors();

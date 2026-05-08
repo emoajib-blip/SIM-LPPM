@@ -3,12 +3,17 @@
 namespace Tests\Feature\Security;
 
 use App\Enums\ProposalStatus;
+use App\Enums\ReportStatus;
+use App\Models\DailyNote;
+use App\Models\ProgressReport;
 use App\Models\Proposal;
 use App\Models\Research;
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class MediaIdorTest extends TestCase
@@ -18,8 +23,8 @@ class MediaIdorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-        $this->seed(\Database\Seeders\RoleSeeder::class);
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->seed(RoleSeeder::class);
     }
 
     public function test_user_cannot_view_other_users_progress_report_and_media_links()
@@ -41,11 +46,11 @@ class MediaIdorTest extends TestCase
         ]);
 
         // Create a draft progress report with a media file
-        $report = \App\Models\ProgressReport::create([
+        $report = ProgressReport::create([
             'proposal_id' => $proposal->id,
             'reporting_year' => now()->year,
             'reporting_period' => 'semester_1',
-            'status' => \App\Enums\ReportStatus::DRAFT,
+            'status' => ReportStatus::DRAFT,
             'summary_update' => 'Test summary',
         ]);
 
@@ -80,7 +85,7 @@ class MediaIdorTest extends TestCase
             'status' => ProposalStatus::COMPLETED,
         ]);
 
-        \App\Models\DailyNote::create([
+        DailyNote::create([
             'proposal_id' => $proposal->id,
             'activity_date' => now()->toDateString(),
             'activity_description' => 'Testing note',

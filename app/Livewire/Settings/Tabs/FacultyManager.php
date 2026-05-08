@@ -165,7 +165,7 @@ class FacultyManager extends Component
 
     public function confirmDelete(int $id): void
     {
-        $faculty = \App\Models\Faculty::find($id);
+        $faculty = Faculty::find($id);
         if (! $faculty) {
             return;
         }

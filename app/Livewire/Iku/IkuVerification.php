@@ -4,6 +4,7 @@ namespace App\Livewire\Iku;
 
 use App\Models\AdditionalOutput;
 use App\Models\MandatoryOutput;
+use App\Models\PolicyInvolvement;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -36,7 +37,7 @@ class IkuVerification extends Component
         $model = match ($modelType) {
             'mandatory' => MandatoryOutput::find($id),
             'additional' => AdditionalOutput::find($id),
-            'policy' => \App\Models\PolicyInvolvement::find($id),
+            'policy' => PolicyInvolvement::find($id),
             default => null
         };
 
@@ -67,7 +68,7 @@ class IkuVerification extends Component
         $model = match ($modelType) {
             'mandatory' => MandatoryOutput::find($id),
             'additional' => AdditionalOutput::find($id),
-            'policy' => \App\Models\PolicyInvolvement::find($id),
+            'policy' => PolicyInvolvement::find($id),
             default => null
         };
 
@@ -121,7 +122,7 @@ class IkuVerification extends Component
                     ->orWhereHas('progressReport.proposal', fn ($pq) => $pq->where('title', 'like', "%{$this->search}%"));
             })
             ->get()
-            ->map(function (\App\Models\MandatoryOutput $item) {
+            ->map(function (MandatoryOutput $item) {
                 $item->model_type = 'mandatory';
                 $item->is_verified_status = $item->is_verified;
                 $item->display_title = $item->journal_title ?? $item->article_title;
@@ -141,7 +142,7 @@ class IkuVerification extends Component
                     ->orWhereHas('progressReport.proposal', fn ($pq) => $pq->where('title', 'like', "%{$this->search}%"));
             })
             ->get()
-            ->map(function (\App\Models\AdditionalOutput $item) {
+            ->map(function (AdditionalOutput $item) {
                 $item->model_type = 'additional';
                 $item->is_verified_status = $item->is_verified;
                 $item->display_title = $item->journal_title ?? $item->book_title ?? $item->product_name;
@@ -152,7 +153,7 @@ class IkuVerification extends Component
                 return $item;
             });
 
-        $policies = \App\Models\PolicyInvolvement::with('user.identity')
+        $policies = PolicyInvolvement::with('user.identity')
             ->when($this->status === 'unverified', fn ($q) => $q->where('status', 'pending'))
             ->when($this->status === 'verified', fn ($q) => $q->where('status', 'verified'))
             ->when($this->search, function ($q) {
@@ -160,7 +161,7 @@ class IkuVerification extends Component
                     ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$this->search}%"));
             })
             ->get()
-            ->map(function (\App\Models\PolicyInvolvement $item) {
+            ->map(function (PolicyInvolvement $item) {
                 $item->model_type = 'policy';
                 $item->is_verified_status = $item->status === 'verified';
                 $item->display_title = $item->title;

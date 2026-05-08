@@ -200,7 +200,7 @@ class ResearchSchemeManager extends Component
     public function confirmDelete(int $id): void
     {
         $this->deleteItemId = $id;
-        $this->deleteItemName = \App\Models\ResearchScheme::find($id)->name ?? '';
+        $this->deleteItemName = ResearchScheme::find($id)->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-research-scheme');
     }
 }

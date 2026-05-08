@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Institution;
 use App\Models\StudyProgram;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -11,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 class UsersTemplateExport implements FromCollection, WithHeadings, WithTitle
 {
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function collection()
     {

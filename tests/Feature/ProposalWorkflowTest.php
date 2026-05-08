@@ -15,16 +15,25 @@ use App\Models\CommunityService;
 use App\Models\Faculty;
 use App\Models\FocusArea;
 use App\Models\Identity;
+use App\Models\Institution;
 use App\Models\Proposal;
 use App\Models\Research;
 use App\Models\ResearchScheme;
+use App\Models\ReviewCriteria;
+use App\Models\ReviewScore;
 use App\Models\ScienceCluster;
 use App\Models\Theme;
 use App\Models\Topic;
 use App\Models\User;
+use App\Notifications\ProposalSubmitted;
+use App\Services\BudgetValidationService;
 use App\Services\ProposalService;
+use Database\Seeders\InstitutionSeeder;
+use Database\Seeders\RoleSeeder;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class ProposalWorkflowTest extends TestCase
@@ -50,11 +59,11 @@ class ProposalWorkflowTest extends TestCase
         parent::setUp();
 
         // Seed roles
-        $this->seed(\Database\Seeders\RoleSeeder::class);
-        $this->seed(\Database\Seeders\InstitutionSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(InstitutionSeeder::class);
 
         // Setup Master Data
-        $institution = \App\Models\Institution::first();
+        $institution = Institution::first();
         $this->faculty = Faculty::factory()->create([
             'name' => 'Fakultas Teknik',
             'institution_id' => $institution->id,
@@ -64,7 +73,7 @@ class ProposalWorkflowTest extends TestCase
         $theme = Theme::factory()->create(['focus_area_id' => $focusArea->id, 'name' => 'Energi Terbarukan']);
         $topic = Topic::factory()->create(['theme_id' => $theme->id, 'name' => 'Panel Surya']);
 
-        \App\Models\ReviewCriteria::create([
+        ReviewCriteria::create([
             'id' => 1,
             'criteria' => 'Relevansi',
             'weight' => 20,
@@ -235,7 +244,7 @@ class ProposalWorkflowTest extends TestCase
         $review->markAsStarted();
 
         $completeReviewAction = app(CompleteReviewAction::class);
-        \App\Models\ReviewScore::create([
+        ReviewScore::create([
             'proposal_reviewer_id' => $review->id,
             'review_criteria_id' => 1,
             'score' => 5,
@@ -269,7 +278,7 @@ class ProposalWorkflowTest extends TestCase
         // Only one reviewer completes
         $this->actingAs($this->reviewer1);
         $review1 = $proposal->fresh()->reviewers()->where('user_id', $this->reviewer1->id)->first();
-        \App\Models\ReviewScore::create(['proposal_reviewer_id' => $review1->id, 'review_criteria_id' => 1, 'score' => 5, 'round' => 1, 'acuan' => 'Evidence', 'weight_snapshot' => 10, 'value' => 50]);
+        ReviewScore::create(['proposal_reviewer_id' => $review1->id, 'review_criteria_id' => 1, 'score' => 5, 'round' => 1, 'acuan' => 'Evidence', 'weight_snapshot' => 10, 'value' => 50]);
         $review1->markAsStarted();
         app(CompleteReviewAction::class)->execute($review1, 'I am fast', 'approved');
 
@@ -317,7 +326,7 @@ class ProposalWorkflowTest extends TestCase
 
         $this->actingAs($this->reviewer1);
         $review = $proposal->fresh()->reviewers()->first();
-        \App\Models\ReviewScore::create(['proposal_reviewer_id' => $review->id, 'review_criteria_id' => 1, 'score' => 2, 'round' => 1, 'acuan' => 'Evidence', 'weight_snapshot' => 10, 'value' => 20]);
+        ReviewScore::create(['proposal_reviewer_id' => $review->id, 'review_criteria_id' => 1, 'score' => 2, 'round' => 1, 'acuan' => 'Evidence', 'weight_snapshot' => 10, 'value' => 20]);
         $review->markAsStarted();
         app(CompleteReviewAction::class)->execute($review, 'Rejected review', 'rejected');
 
@@ -368,7 +377,7 @@ class ProposalWorkflowTest extends TestCase
         // 6. Reviewer Completes
         $this->actingAs($this->reviewer1);
         $review = $proposal->fresh()->reviewers()->first();
-        \App\Models\ReviewScore::create([
+        ReviewScore::create([
             'proposal_reviewer_id' => $review->id,
             'review_criteria_id' => 1,
             'score' => 5,
@@ -418,9 +427,9 @@ class ProposalWorkflowTest extends TestCase
             ['total' => 5000000, 'budget_group_id' => 1],
         ]; // Total 11 Million > 10 Million
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
-        app(\App\Services\BudgetValidationService::class)->validateBudgetCap($budgetItems, 'research', $year);
+        app(BudgetValidationService::class)->validateBudgetCap($budgetItems, 'research', $year);
     }
 
     public function test_dekan_can_return_to_need_assignment()
@@ -457,7 +466,7 @@ class ProposalWorkflowTest extends TestCase
 
         $this->actingAs($this->reviewer1);
         $review = $proposal->fresh()->reviewers()->first();
-        \App\Models\ReviewScore::create(['proposal_reviewer_id' => $review->id, 'review_criteria_id' => 1, 'score' => 2, 'round' => 1, 'acuan' => 'Evidence', 'weight_snapshot' => 10, 'value' => 20]);
+        ReviewScore::create(['proposal_reviewer_id' => $review->id, 'review_criteria_id' => 1, 'score' => 2, 'round' => 1, 'acuan' => 'Evidence', 'weight_snapshot' => 10, 'value' => 20]);
         $review->markAsStarted();
         app(CompleteReviewAction::class)->execute($review, 'Needs fix', 'revision_needed');
 
@@ -492,7 +501,7 @@ class ProposalWorkflowTest extends TestCase
         $this->actingAs($this->dosen);
         $proposalService = app(ProposalService::class);
 
-        $this->expectException(\Illuminate\Auth\Access\AuthorizationException::class);
+        $this->expectException(AuthorizationException::class);
         $this->expectExceptionMessage('This action is unauthorized.');
 
         $proposalService->deleteProposal($proposal);
@@ -722,7 +731,7 @@ class ProposalWorkflowTest extends TestCase
 
         Notification::assertSentTo(
             [$this->dekan],
-            \App\Notifications\ProposalSubmitted::class
+            ProposalSubmitted::class
         );
     }
 }

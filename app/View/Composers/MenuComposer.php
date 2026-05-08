@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\View\Composers;
 
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
@@ -24,15 +26,15 @@ class MenuComposer
             $firstRole = $user->getRoleNames()->first();
             if ($firstRole) {
                 session(['active_role' => $firstRole]);
-                \Illuminate\Support\Facades\Log::info('MenuComposer: Force set active_role', [
+                Log::info('MenuComposer: Force set active_role', [
                     'user' => $user->email,
                     'role' => $firstRole,
                 ]);
             }
         }
 
-        $roadmapActive = \App\Models\Setting::get('feature_roadmap_active', false);
-        $kaprodiValidationActive = \App\Models\Setting::get('feature_kaprodi_validation', false);
+        $roadmapActive = Setting::get('feature_roadmap_active', false);
+        $kaprodiValidationActive = Setting::get('feature_kaprodi_validation', false);
 
         $items = [
             // Dashboard - available for all roles

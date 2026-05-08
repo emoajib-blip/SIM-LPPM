@@ -15,10 +15,10 @@ use Livewire\Component;
  * Manages TKT Types, Levels, and Indicators with tree navigation
  */
 /**
- * @property-read \App\Models\TktLevel|null $selectedLevel
- * @property-read \Illuminate\Support\Collection $indicators
- * @property-read \Illuminate\Support\Collection $types
- * @property-read \Illuminate\Support\Collection $typesWithLevels
+ * @property-read TktLevel|null $selectedLevel
+ * @property-read Collection $indicators
+ * @property-read Collection $types
+ * @property-read Collection $typesWithLevels
  * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class TktManager extends Component

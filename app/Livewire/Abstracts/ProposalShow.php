@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Abstracts;
 
+use App\Enums\ProposalStatus;
 use App\Livewire\Forms\ProposalForm;
 use App\Livewire\Traits\WithApproval;
 use App\Livewire\Traits\WithTeamManagement;
@@ -118,7 +119,7 @@ abstract class ProposalShow extends Component
         $user = Auth::user();
 
         // Allow editing for draft or revision_needed proposals by submitter
-        if (! in_array($this->proposal->status, [\App\Enums\ProposalStatus::DRAFT, \App\Enums\ProposalStatus::REVISION_NEEDED])
+        if (! in_array($this->proposal->status, [ProposalStatus::DRAFT, ProposalStatus::REVISION_NEEDED])
             || $this->proposal->submitter_id !== $user->id) {
             return false;
         }
@@ -154,7 +155,7 @@ abstract class ProposalShow extends Component
         $user = Auth::user();
 
         // Submitter of a draft proposal can always delete (schedule does not restrict deletion)
-        return $this->proposal->status === \App\Enums\ProposalStatus::DRAFT
+        return $this->proposal->status === ProposalStatus::DRAFT
             && $this->proposal->submitter_id === $user->id;
     }
 

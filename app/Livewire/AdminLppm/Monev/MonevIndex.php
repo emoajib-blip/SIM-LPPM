@@ -2,13 +2,24 @@
 
 namespace App\Livewire\AdminLppm\Monev;
 
+use App\Enums\ProposalStatus;
 use App\Livewire\Concerns\HasToast;
+use App\Models\CommunityService;
+use App\Models\MonevReview;
 use App\Models\Proposal;
 use App\Models\ProposalMonev;
+use App\Models\Research;
+use App\Models\ReviewCriteria;
 use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\MonevReportReminderNotification;
+use Carbon\Carbon;
+use Database\Seeders\ReviewCriteriaSeeder;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -66,14 +77,14 @@ class MonevIndex extends Component
 
         // Self-Healing Database: Ensure columns exist to avoid 500 errors
         try {
-            if (! \Illuminate\Support\Facades\Schema::hasColumn('proposal_monevs', 'academic_year')) {
-                \Illuminate\Support\Facades\Schema::table('proposal_monevs', function (\Illuminate\Database\Schema\Blueprint $table) {
+            if (! Schema::hasColumn('proposal_monevs', 'academic_year')) {
+                Schema::table('proposal_monevs', function (Blueprint $table) {
                     $table->string('academic_year')->nullable()->after('proposal_id');
                     $table->enum('semester', ['ganjil', 'genap'])->nullable()->after('academic_year');
                 });
 
                 // Populate initial data
-                \Illuminate\Support\Facades\DB::statement("
+                DB::statement("
                     UPDATE proposal_monevs
                     SET academic_year = (
                         SELECT start_year
@@ -88,18 +99,18 @@ class MonevIndex extends Component
                     WHERE academic_year IS NULL
                 ");
             }
-            if (! \Illuminate\Support\Facades\Schema::hasColumn('monev_reviews', 'approved_by_kepala_at')) {
-                \Illuminate\Support\Facades\Schema::table('monev_reviews', function (\Illuminate\Database\Schema\Blueprint $table) {
+            if (! Schema::hasColumn('monev_reviews', 'approved_by_kepala_at')) {
+                Schema::table('monev_reviews', function (Blueprint $table) {
                     $table->timestamp('approved_by_kepala_at')->nullable()->after('finalized_by_lppm_at');
                 });
             }
 
             // Automate seeding if Monev criteria are empty
-            if (\App\Models\ReviewCriteria::where('type', 'like', 'monev_%')->count() === 0) {
-                (new \Database\Seeders\ReviewCriteriaSeeder)->run();
+            if (ReviewCriteria::where('type', 'like', 'monev_%')->count() === 0) {
+                (new ReviewCriteriaSeeder)->run();
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Monev Self-Healing Failed: '.$e->getMessage());
+            Log::error('Monev Self-Healing Failed: '.$e->getMessage());
         }
     }
 
@@ -124,7 +135,7 @@ class MonevIndex extends Component
             return;
         }
 
-        \App\Models\MonevReview::updateOrCreate(
+        MonevReview::updateOrCreate(
             [
                 'proposal_id' => $this->selectedProposal->id,
                 'academic_year' => $this->selectedProposal->start_year,
@@ -142,10 +153,10 @@ class MonevIndex extends Component
 
     public function finalizeReview(string $id)
     {
-        $review = \App\Models\MonevReview::findOrFail($id);
+        $review = MonevReview::findOrFail($id);
         $review->update([
             'finalized_by_lppm_at' => now(),
-            'finalized_by_lppm_by' => \Illuminate\Support\Facades\Auth::id(),
+            'finalized_by_lppm_by' => Auth::id(),
         ]);
         $this->toastSuccess('Hasil evaluasi berhasil diverifikasi dan BA telah ditandatangani.');
         $this->loadSelectedProposal();
@@ -153,7 +164,7 @@ class MonevIndex extends Component
 
     public function unfinalizeReview(string $id)
     {
-        $review = \App\Models\MonevReview::findOrFail($id);
+        $review = MonevReview::findOrFail($id);
         $review->update([
             'finalized_by_lppm_at' => null,
             'finalized_by_lppm_by' => null,
@@ -165,7 +176,7 @@ class MonevIndex extends Component
 
     public function sendReminderToKepala()
     {
-        $pendingCount = \App\Models\MonevReview::where('academic_year', $this->academicYear)
+        $pendingCount = MonevReview::where('academic_year', $this->academicYear)
             ->when($this->semester !== 'all', fn ($q) => $q->where('semester', $this->semester))
             ->whereNotNull('approved_by_kepala_at')
             ->whereNull('reported_to_rektor_at')
@@ -189,7 +200,7 @@ class MonevIndex extends Component
     #[Computed]
     public function pendingRektorCount()
     {
-        return \App\Models\MonevReview::where('academic_year', $this->academicYear)
+        return MonevReview::where('academic_year', $this->academicYear)
             ->when($this->semester !== 'all', fn ($q) => $q->where('semester', $this->semester))
             ->whereNotNull('approved_by_kepala_at')
             ->whereNull('reported_to_rektor_at')
@@ -275,7 +286,7 @@ class MonevIndex extends Component
         ]);
 
         $monev = $this->selectedMonev ?? new ProposalMonev(['proposal_id' => $this->selectedProposal->id]);
-        $monev->monev_date = \Carbon\Carbon::parse($this->monev_date);
+        $monev->monev_date = Carbon::parse($this->monev_date);
         $monev->progress_percentage = $this->progress_percentage;
         $monev->notes = $this->notes;
 
@@ -349,7 +360,7 @@ class MonevIndex extends Component
     #[Computed]
     public function reviewers()
     {
-        return \App\Models\User::role('reviewer')->with('identity')->get();
+        return User::role('reviewer')->with('identity')->get();
     }
 
     #[Computed]
@@ -362,13 +373,13 @@ class MonevIndex extends Component
     public function proposals()
     {
         return Proposal::query()
-            ->where('status', \App\Enums\ProposalStatus::COMPLETED)
+            ->where('status', ProposalStatus::COMPLETED)
             ->with([
                 'submitter',
                 'detailable',
                 'monevs' => function ($q) {
                     // Only filter by year/semester if columns exist to prevent 500 errors during transition
-                    $q->when(\Illuminate\Support\Facades\Schema::hasColumn('proposal_monevs', 'academic_year'), function ($sq) {
+                    $q->when(Schema::hasColumn('proposal_monevs', 'academic_year'), function ($sq) {
                         $sq->where('academic_year', $this->academicYear)
                             ->when($this->semester !== 'all', fn ($ssq) => $ssq->where('semester', $this->semester));
                     })->latest();
@@ -394,8 +405,8 @@ class MonevIndex extends Component
             })
             ->when($this->typeFilter !== 'all', function ($query) {
                 $detailableType = $this->typeFilter === 'research'
-                    ? \App\Models\Research::class
-                    : \App\Models\CommunityService::class;
+                    ? Research::class
+                    : CommunityService::class;
                 $query->where('detailable_type', $detailableType);
             })
             ->latest()

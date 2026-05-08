@@ -2,9 +2,14 @@
 
 namespace App\Services;
 
+use App\Actions\Proposal\IdentityEligibilityAction;
 use App\Enums\ProposalStatus;
+use App\Models\CommunityServiceScheme;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Models\ProposalOutput;
+use App\Models\ResearchScheme;
+use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -70,7 +75,7 @@ class LecturerEligibilityService
             })
             ->get();
 
-        /** @var \App\Models\Proposal $proposal */
+        /** @var Proposal $proposal */
         foreach ($prevProposals as $proposal) {
             // Check for Final Report
             $hasFinalReport = ProgressReport::where('proposal_id', $proposal->id)->where('reporting_period', 'final')->whereIn('status', ['APPROVED', 'COMPLETED'])->exists();
@@ -80,7 +85,7 @@ class LecturerEligibilityService
 
             // Check for Mandatory Outputs
             $targets = $proposal->outputs()->where('category', 'Wajib')->get();
-            /** @var \App\Models\ProposalOutput $target */
+            /** @var ProposalOutput $target */
             foreach ($targets as $target) {
                 $isSubmitted = DB::table('mandatory_outputs')->join('progress_reports', 'mandatory_outputs.progress_report_id', '=', 'progress_reports.id')->where('progress_reports.proposal_id', $proposal->id)->where('mandatory_outputs.proposal_output_id', $target->id)->exists();
                 if (! $isSubmitted) {
@@ -109,16 +114,16 @@ class LecturerEligibilityService
     {
         $now = Carbon::now();
 
-        $resStart = \App\Models\Setting::where('key', 'research_proposal_start_date')->value('value');
-        $resEnd = \App\Models\Setting::where('key', 'research_proposal_end_date')->value('value');
-        $pkmStart = \App\Models\Setting::where('key', 'community_service_proposal_start_date')->value('value');
-        $pkmEnd = \App\Models\Setting::where('key', 'community_service_proposal_end_date')->value('value');
+        $resStart = Setting::where('key', 'research_proposal_start_date')->value('value');
+        $resEnd = Setting::where('key', 'research_proposal_end_date')->value('value');
+        $pkmStart = Setting::where('key', 'community_service_proposal_start_date')->value('value');
+        $pkmEnd = Setting::where('key', 'community_service_proposal_end_date')->value('value');
 
-        $researchSchemes = \App\Models\ResearchScheme::all();
-        $pkmSchemes = \App\Models\CommunityServiceScheme::all();
+        $researchSchemes = ResearchScheme::all();
+        $pkmSchemes = CommunityServiceScheme::all();
 
         if ($user) {
-            $eligibilityAction = app(\App\Actions\Proposal\IdentityEligibilityAction::class);
+            $eligibilityAction = app(IdentityEligibilityAction::class);
 
             $researchSchemes = $researchSchemes->filter(function ($scheme) use ($user, $eligibilityAction) {
                 $result = $eligibilityAction->execute($user, $scheme);
@@ -152,8 +157,8 @@ class LecturerEligibilityService
         $startKey = $type === 'research' ? 'research_revision_start_date' : 'community_service_revision_start_date';
         $endKey = $type === 'research' ? 'research_revision_end_date' : 'community_service_revision_end_date';
 
-        $start = \App\Models\Setting::where('key', $startKey)->value('value');
-        $end = \App\Models\Setting::where('key', $endKey)->value('value');
+        $start = Setting::where('key', $startKey)->value('value');
+        $end = Setting::where('key', $endKey)->value('value');
 
         // If dates are not set, default to open (as per plan for flexibility)
         if (! $start || ! $end) {
@@ -172,8 +177,8 @@ class LecturerEligibilityService
         $startKey = $type === 'research' ? 'research_final_report_start_date' : 'community_service_final_report_start_date';
         $endKey = $type === 'research' ? 'research_final_report_end_date' : 'community_service_final_report_end_date';
 
-        $start = \App\Models\Setting::where('key', $startKey)->value('value');
-        $end = \App\Models\Setting::where('key', $endKey)->value('value');
+        $start = Setting::where('key', $startKey)->value('value');
+        $end = Setting::where('key', $endKey)->value('value');
 
         if (! $start || ! $end) {
             return true;

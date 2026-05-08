@@ -16,7 +16,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
+ * @property-read Proposal|null $proposal
  * @property-read bool $canApprove
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager

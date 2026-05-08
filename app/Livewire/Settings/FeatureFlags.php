@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use App\Models\Setting;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class FeatureFlags extends Component
@@ -31,7 +32,7 @@ class FeatureFlags extends Component
         $this->dispatch('settings-updated', message: 'Feature Flags berhasil diperbarui.');
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         return view('livewire.settings.feature-flags');
     }

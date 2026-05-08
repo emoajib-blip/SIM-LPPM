@@ -13,7 +13,7 @@ class KaprodiApprovalAction
     /**
      * Request kaprodi approval for a proposal.
      *
-     * @return array{success: bool, approval: ?\App\Models\KaprodiApproval, message: string}
+     * @return array{success: bool, approval: ?KaprodiApproval, message: string}
      */
     public function requestApproval(Proposal $proposal, User $kaprodi): array
     {
@@ -51,7 +51,7 @@ class KaprodiApprovalAction
     /**
      * Approve a proposal as kaprodi.
      *
-     * @return array{success: bool, approval: ?\App\Models\KaprodiApproval, message: string}
+     * @return array{success: bool, approval: ?KaprodiApproval, message: string}
      */
     public function approve(Proposal $proposal, User $kaprodi, ?string $notes = null): array
     {
@@ -94,7 +94,7 @@ class KaprodiApprovalAction
     /**
      * Reject a proposal as kaprodi.
      *
-     * @return array{success: bool, approval: ?\App\Models\KaprodiApproval, message: string}
+     * @return array{success: bool, approval: ?KaprodiApproval, message: string}
      */
     public function reject(Proposal $proposal, User $kaprodi, string $notes): array
     {
@@ -171,7 +171,7 @@ class KaprodiApprovalAction
             return null;
         }
 
-        /** @var \App\Models\User|null $kaprodi */
+        /** @var User|null $kaprodi */
         $kaprodi = $studyProgram->kaprodi;
 
         return $kaprodi;

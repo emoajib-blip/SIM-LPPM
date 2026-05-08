@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\Models\CommunityServiceScheme;
 use App\Models\Identity;
+use App\Models\Proposal;
 use App\Models\ResearchScheme;
+use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class EligibilityService
 {
@@ -30,11 +33,11 @@ class EligibilityService
      *
      * @return array{can_create: bool, reason: ?string, quota_info: array{head_limit: int, head_current: int, member_limit: int, member_current: int}}
      */
-    public function canCreateProposal(\App\Models\User $user, string $type): array
+    public function canCreateProposal(User $user, string $type): array
     {
         $schemes = $type === 'research'
-            ? \App\Models\ResearchScheme::all()
-            : \App\Models\CommunityServiceScheme::all();
+            ? ResearchScheme::all()
+            : CommunityServiceScheme::all();
 
         $totalHeadLimit = 0;
         $totalMemberLimit = 0;
@@ -62,7 +65,7 @@ class EligibilityService
             'REVISION_NEEDED',
         ];
 
-        $headQuery = \App\Models\Proposal::where('submitter_id', $user->id)
+        $headQuery = Proposal::where('submitter_id', $user->id)
             ->whereIn('status', $activeStatuses);
 
         if ($type === 'research') {
@@ -73,7 +76,7 @@ class EligibilityService
 
         $currentHeadCount = $headQuery->count();
 
-        $memberQuery = \Illuminate\Support\Facades\DB::table('proposal_user')
+        $memberQuery = DB::table('proposal_user')
             ->join('proposals', 'proposal_user.proposal_id', '=', 'proposals.id')
             ->where('proposal_user.user_id', $user->id)
             ->where('proposal_user.role', '!=', 'Ketua')
@@ -96,7 +99,7 @@ class EligibilityService
 
         // Check head quota
         if ($totalHeadLimit > 0 && $currentHeadCount >= $totalHeadLimit) {
-            $messageService = app(\App\Services\QuotaMessageService::class);
+            $messageService = app(QuotaMessageService::class);
 
             return [
                 'can_create' => false,
@@ -109,7 +112,7 @@ class EligibilityService
 
         // Check member quota
         if ($totalMemberLimit > 0 && $currentMemberCount >= $totalMemberLimit) {
-            $messageService = app(\App\Services\QuotaMessageService::class);
+            $messageService = app(QuotaMessageService::class);
 
             return [
                 'can_create' => false,

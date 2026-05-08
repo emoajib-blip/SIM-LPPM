@@ -2,6 +2,7 @@
 
 use App\Models\Faculty;
 use App\Models\Institution;
+use App\Models\Setting;
 use App\Models\StudyProgram;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
@@ -19,7 +20,7 @@ it('stores research_roadmap data only when feature flag is active', function () 
     $user = User::factory()->create();
     $user->assignRole('admin lppm');
 
-    \App\Models\Setting::set('feature_roadmap_active', true, 'boolean');
+    Setting::set('feature_roadmap_active', true, 'boolean');
 
     $program = StudyProgram::create([
         'name' => 'Teknik Informatika',
@@ -39,7 +40,7 @@ it('stores research_roadmap data only when feature flag is active', function () 
 });
 
 it('gates roadmap UI behind feature flag in view', function () {
-    \App\Models\Setting::set('feature_roadmap_active', false, 'boolean');
+    Setting::set('feature_roadmap_active', false, 'boolean');
 
     $user = User::factory()->create();
     $user->assignRole('admin lppm');
@@ -52,7 +53,7 @@ it('gates roadmap UI behind feature flag in view', function () {
 });
 
 it('shows roadmap UI when feature flag is active', function () {
-    \App\Models\Setting::set('feature_roadmap_active', true, 'boolean');
+    Setting::set('feature_roadmap_active', true, 'boolean');
 
     $user = User::factory()->create();
     $user->assignRole('admin lppm');

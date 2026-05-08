@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\FocusArea;
 use Illuminate\Database\Seeder;
 
 class FocusAreaSeeder extends Seeder
@@ -26,7 +27,7 @@ class FocusAreaSeeder extends Seeder
         ];
 
         foreach ($focusAreas as $area) {
-            \App\Models\FocusArea::firstOrCreate(['name' => $area]);
+            FocusArea::firstOrCreate(['name' => $area]);
         }
     }
 }

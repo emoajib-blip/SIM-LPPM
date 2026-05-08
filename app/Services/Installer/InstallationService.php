@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Installer;
 
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -414,7 +415,7 @@ class InstallationService
 
         // Update the admin user with custom details
         if (! empty($adminConfig['email'])) {
-            \App\Models\User::where('email', 'superadmin@email.com')
+            User::where('email', 'superadmin@email.com')
                 ->update([
                     'email' => $adminConfig['email'],
                     'name' => $adminConfig['name'] ?? 'Administrator',
@@ -422,7 +423,7 @@ class InstallationService
         }
 
         if (! empty($adminConfig['password'])) {
-            \App\Models\User::where('email', $adminConfig['email'] ?? 'superadmin@email.com')
+            User::where('email', $adminConfig['email'] ?? 'superadmin@email.com')
                 ->update([
                     'password' => bcrypt($adminConfig['password']),
                 ]);

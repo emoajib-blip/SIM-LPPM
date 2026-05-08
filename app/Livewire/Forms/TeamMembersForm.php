@@ -3,6 +3,9 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Identity;
+use App\Models\Institution;
+use App\Models\StudyProgram;
+use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -225,7 +228,7 @@ class TeamMembersForm extends Component
         $this->member_email = '';
         $this->member_type = 'dosen';
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-        $institution = \App\Models\Institution::where('name', 'like', '%Pekalongan%')->first();
+        $institution = Institution::where('name', 'like', '%Pekalongan%')->first();
         $this->member_institution = $institution !== null ? $institution->name : 'ITSNU Pekalongan';
         $this->member_study_program = '';
         $this->memberFound = false;
@@ -249,7 +252,7 @@ class TeamMembersForm extends Component
     #[Computed]
     public function studyPrograms()
     {
-        return \App\Models\StudyProgram::orderBy('name')->get();
+        return StudyProgram::orderBy('name')->get();
     }
 
     #[Computed]
@@ -258,7 +261,7 @@ class TeamMembersForm extends Component
         return $this->members;
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         return view('livewire.forms.team-members-form');
     }

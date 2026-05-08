@@ -3,7 +3,10 @@
 namespace App\Livewire\CommunityService\DailyNote;
 
 use App\Livewire\Concerns\HasToast;
+use App\Livewire\Traits\HasReportTemplates;
+use App\Models\BudgetGroup;
 use App\Models\DailyNote;
+use App\Models\ProgressReport;
 use App\Models\Proposal;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -14,7 +17,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Show extends Component
 {
-    use \App\Livewire\Traits\HasReportTemplates;
+    use HasReportTemplates;
     use HasToast;
     use WithFileUploads;
 
@@ -232,7 +235,7 @@ class Show extends Component
     {
         return view('livewire.community-service.daily-note.show', [
             'notes_list' => $this->proposal->dailyNotes()->with(['media.model', 'budgetGroup'])->latest('activity_date')->get(),
-            'budget_groups' => \App\Models\BudgetGroup::whereIn('id', $this->proposal->budgetItems()->pluck('budget_group_id'))->get(),
+            'budget_groups' => BudgetGroup::whereIn('id', $this->proposal->budgetItems()->pluck('budget_group_id'))->get(),
             'budget_summaries' => $this->proposal->budgetItems()
                 ->selectRaw('budget_group_id, sum(total_price) as total_budget')
                 ->groupBy('budget_group_id')
@@ -253,7 +256,7 @@ class Show extends Component
 
         // Invalidate cached reports so the signature appears on newly downloaded final reports
         $reports = $this->proposal->progressReports()->get();
-        /** @var \App\Models\ProgressReport $report */
+        /** @var ProgressReport $report */
         foreach ($reports as $report) {
             $files = glob(storage_path('app/public/pdf_cache/reports/report_'.$report->id.'_*.pdf'));
             if (is_array($files)) {

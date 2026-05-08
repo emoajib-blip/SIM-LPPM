@@ -3,7 +3,9 @@
 namespace App\Livewire\AdminLppm;
 
 use App\Enums\ProposalStatus;
+use App\Models\CommunityService;
 use App\Models\Proposal;
+use App\Models\Research;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -89,8 +91,8 @@ class ReviewerAssignment extends Component
                 $type = (string) $this->typeFilter;
                 if (in_array($type, ['research', 'community_service'])) {
                     $detailableType = $type === 'research'
-                        ? \App\Models\Research::class
-                        : \App\Models\CommunityService::class;
+                        ? Research::class
+                        : CommunityService::class;
                     $query->where('detailable_type', $detailableType);
                 }
             })
@@ -120,10 +122,10 @@ class ReviewerAssignment extends Component
             'WAITING_REVIEWER' => Proposal::where('status', ProposalStatus::WAITING_REVIEWER)->count(),
             'UNDER_REVIEW' => Proposal::where('status', ProposalStatus::UNDER_REVIEW)->count(),
             'research' => Proposal::whereIn('status', $statuses)
-                ->where('detailable_type', \App\Models\Research::class)
+                ->where('detailable_type', Research::class)
                 ->count(),
             'community_service' => Proposal::whereIn('status', $statuses)
-                ->where('detailable_type', \App\Models\CommunityService::class)
+                ->where('detailable_type', CommunityService::class)
                 ->count(),
             'assigned' => Proposal::whereIn('status', $statuses)
                 ->has('reviewers')

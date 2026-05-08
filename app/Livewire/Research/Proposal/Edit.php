@@ -3,6 +3,7 @@
 namespace App\Livewire\Research\Proposal;
 
 use App\Livewire\Abstracts\ProposalCreate;
+use App\Models\Proposal;
 
 class Edit extends ProposalCreate
 {
@@ -10,7 +11,7 @@ class Edit extends ProposalCreate
 
     public string $componentId = '';
 
-    public function mount(?string $proposalId = null, ?\App\Models\Proposal $proposal = null): void
+    public function mount(?string $proposalId = null, ?Proposal $proposal = null): void
     {
         if ($proposalId === null && $proposal === null) {
             abort(404);

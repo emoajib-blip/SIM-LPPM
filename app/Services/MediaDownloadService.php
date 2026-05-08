@@ -3,10 +3,14 @@
 namespace App\Services;
 
 use App\Models\AdditionalOutput;
+use App\Models\CommunityService;
 use App\Models\DailyNote;
 use App\Models\MandatoryOutput;
+use App\Models\Partner;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Models\Research;
+use App\Models\Setting;
 use App\Models\User;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -26,7 +30,7 @@ class MediaDownloadService
         $model = $media->model;
 
         // 2. Global resources (Settings)
-        if ($model instanceof \App\Models\Setting) {
+        if ($model instanceof Setting) {
             return true;
         }
 
@@ -41,13 +45,13 @@ class MediaDownloadService
             $proposalId = optional($model->progressReport)->proposal_id;
         } elseif ($model instanceof AdditionalOutput) {
             $proposalId = optional($model->progressReport)->proposal_id;
-        } elseif ($model instanceof \App\Models\Partner) {
+        } elseif ($model instanceof Partner) {
             // MOU/PKS is readable by authenticated users (as per current logic)
             if ($media->collection_name === 'mou_pks') {
                 return true;
             }
             $proposalId = $media->getCustomProperty('proposal_id');
-        } elseif ($model instanceof \App\Models\Research || $model instanceof \App\Models\CommunityService) {
+        } elseif ($model instanceof Research || $model instanceof CommunityService) {
             // Explicit handling for Research/CommunityService - query proposal directly
             $proposal = Proposal::where('detailable_id', $model->id)
                 ->where('detailable_type', get_class($model))

@@ -11,6 +11,7 @@ use App\Models\StudyProgram;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -187,7 +188,7 @@ it('calculates roadmap alignment score based on research tree', function () {
     $submitter->assignRole('dosen');
     Identity::factory()->create(['user_id' => $submitter->id, 'study_program_id' => $program->id]);
 
-    $research = Research::create(['proposal_id' => $proposalId = \Illuminate\Support\Str::uuid()]);
+    $research = Research::create(['proposal_id' => $proposalId = Str::uuid()]);
 
     $proposal = Proposal::create([
         'id' => $proposalId,
@@ -223,7 +224,7 @@ it('calculates roadmap alignment score based on yearly priorities', function () 
     $submitter->assignRole('dosen');
     Identity::factory()->create(['user_id' => $submitter->id, 'study_program_id' => $program->id]);
 
-    $research = Research::create(['proposal_id' => $proposalId = \Illuminate\Support\Str::uuid()]);
+    $research = Research::create(['proposal_id' => $proposalId = Str::uuid()]);
 
     $proposal = Proposal::create([
         'id' => $proposalId,
@@ -259,7 +260,7 @@ it('returns zero alignment when no roadmap exists', function () {
     $submitter->assignRole('dosen');
     Identity::factory()->create(['user_id' => $submitter->id, 'study_program_id' => $program->id]);
 
-    $research = Research::create(['proposal_id' => $proposalId = \Illuminate\Support\Str::uuid()]);
+    $research = Research::create(['proposal_id' => $proposalId = Str::uuid()]);
 
     $proposal = Proposal::create([
         'id' => $proposalId,
@@ -292,7 +293,7 @@ it('returns default score when roadmap has no priorities or research tree', func
     $submitter->assignRole('dosen');
     Identity::factory()->create(['user_id' => $submitter->id, 'study_program_id' => $program->id]);
 
-    $research = Research::create(['proposal_id' => $proposalId = \Illuminate\Support\Str::uuid()]);
+    $research = Research::create(['proposal_id' => $proposalId = Str::uuid()]);
 
     $proposal = Proposal::create([
         'id' => $proposalId,

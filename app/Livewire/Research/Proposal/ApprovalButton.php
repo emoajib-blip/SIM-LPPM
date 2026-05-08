@@ -6,16 +6,18 @@ use App\Enums\ProposalStatus;
 use App\Livewire\Actions\ApproveProposalAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
+use App\Models\ProposalReviewer;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 /**
- * @property-read \App\Models\Proposal|null $proposal
+ * @property-read Proposal|null $proposal
  * @property-read bool $canApprove
- * @property-read \Illuminate\Support\Collection|\App\Models\ProposalReviewer[] $pendingReviewers
- * @property-read \Illuminate\Support\Collection $reviewSummary
+ * @property-read Collection|ProposalReviewer[] $pendingReviewers
+ * @property-read Collection $reviewSummary
  */
 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ApprovalButton extends Component

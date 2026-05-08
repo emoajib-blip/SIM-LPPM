@@ -9,6 +9,8 @@ use App\Models\Keyword;
 use App\Models\MandatoryOutput;
 use App\Models\ProgressReport;
 use App\Models\Proposal;
+use App\Models\ProposalOutput;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -52,7 +54,7 @@ class ReportForm extends Form
     public $signatureFile;
 
     // Report configuration
-    public string $type = 'progress'; // 'progress' or 'final'
+    public ?string $type = 'progress'; // 'progress' or 'final'
 
     protected array $fileValidationRules = [
         'substanceFile' => 'nullable|file|mimes:pdf,application/pdf|max:10240',
@@ -73,7 +75,7 @@ class ReportForm extends Form
         $this->ensureProposalInitialized();
 
         // Create draft report
-        $this->progressReport = \App\Models\ProgressReport::create([
+        $this->progressReport = ProgressReport::create([
             'proposal_id' => $this->proposal->id,
             'summary_update' => $this->summaryUpdate ?: ($this->proposal->summary ?? 'Draft Report'),
             'reporting_year' => $this->reportingYear,
@@ -373,7 +375,7 @@ class ReportForm extends Form
 
     public function validateMandatoryOutput(int $outputId): void
     {
-        $output = \App\Models\ProposalOutput::find($outputId);
+        $output = ProposalOutput::find($outputId);
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $type = strtolower($output->type ?? '');
         $group = strtolower($output->group ?? '');
@@ -422,7 +424,7 @@ class ReportForm extends Form
 
     public function validateAdditionalOutput(int $outputId): void
     {
-        $output = \App\Models\ProposalOutput::find($outputId);
+        $output = ProposalOutput::find($outputId);
         // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $type = strtolower($output->type ?? '');
         $group = strtolower($output->group ?? '');
@@ -720,25 +722,25 @@ class ReportForm extends Form
     /**
      * Save all report files to media collections
      */
-    public function saveReportFiles(\App\Models\ProgressReport $report): void
+    public function saveReportFiles(ProgressReport $report): void
     {
         // Save substance file (all report types have this)
-        if ($this->substanceFile instanceof \Illuminate\Http\UploadedFile && $this->substanceFile->isValid()) {
+        if ($this->substanceFile instanceof UploadedFile && $this->substanceFile->isValid()) {
             $this->saveFileToCollection($report, $this->substanceFile, 'substance_file');
         }
 
         // Save realization file (final reports only)
-        if ($this->realizationFile instanceof \Illuminate\Http\UploadedFile && $this->realizationFile->isValid()) {
+        if ($this->realizationFile instanceof UploadedFile && $this->realizationFile->isValid()) {
             $this->saveFileToCollection($report, $this->realizationFile, 'realization_file');
         }
 
         // Save presentation file (final reports only)
-        if ($this->presentationFile instanceof \Illuminate\Http\UploadedFile && $this->presentationFile->isValid()) {
+        if ($this->presentationFile instanceof UploadedFile && $this->presentationFile->isValid()) {
             $this->saveFileToCollection($report, $this->presentationFile, 'presentation_file');
         }
 
         // Save signature file (if physical mode selected)
-        if ($this->signatureFile instanceof \Illuminate\Http\UploadedFile && $this->signatureFile->isValid()) {
+        if ($this->signatureFile instanceof UploadedFile && $this->signatureFile->isValid()) {
             $this->saveFileToCollection($report, $this->signatureFile, 'signature_page');
         }
     }
@@ -747,7 +749,7 @@ class ReportForm extends Form
      * Save a single file to media collection
      */
     protected function saveFileToCollection(
-        \App\Models\ProgressReport $report,
+        ProgressReport $report,
         $file,
         string $collectionName
     ): void {
@@ -780,7 +782,7 @@ class ReportForm extends Form
     {
         // Create draft report if doesn't exist
         if (! $this->progressReport && $this->{$fileProperty}) {
-            $this->progressReport = \App\Models\ProgressReport::create([
+            $this->progressReport = ProgressReport::create([
                 'proposal_id' => $this->proposal->id,
                 'summary_update' => $this->summaryUpdate ?: $this->proposal->summary,
                 'reporting_year' => $this->reportingYear,
@@ -811,7 +813,7 @@ class ReportForm extends Form
 
         DB::transaction(function () use ($proposalOutputId, $data) {
             // Find or create mandatory output
-            $output = \App\Models\MandatoryOutput::where('progress_report_id', $this->progressReport->id)
+            $output = MandatoryOutput::where('progress_report_id', $this->progressReport->id)
                 ->where('proposal_output_id', $proposalOutputId)
                 ->first();
 
@@ -881,13 +883,13 @@ class ReportForm extends Form
             if ($output) {
                 $output->update($outputData);
             } else {
-                $output = \App\Models\MandatoryOutput::create($outputData);
+                $output = MandatoryOutput::create($outputData);
             }
 
             // Save file if uploaded
             if (
                 isset($this->tempMandatoryFiles[$proposalOutputId]) &&
-                $this->tempMandatoryFiles[$proposalOutputId] instanceof \Illuminate\Http\UploadedFile
+                $this->tempMandatoryFiles[$proposalOutputId] instanceof UploadedFile
             ) {
                 $file = $this->tempMandatoryFiles[$proposalOutputId];
 
@@ -923,7 +925,7 @@ class ReportForm extends Form
 
         DB::transaction(function () use ($proposalOutputId, $data) {
             // Find or create additional output
-            $output = \App\Models\AdditionalOutput::where('progress_report_id', $this->progressReport->id)
+            $output = AdditionalOutput::where('progress_report_id', $this->progressReport->id)
                 ->where('proposal_output_id', $proposalOutputId)
                 ->first();
 
@@ -964,13 +966,13 @@ class ReportForm extends Form
             if ($output) {
                 $output->update($outputData);
             } else {
-                $output = \App\Models\AdditionalOutput::create($outputData);
+                $output = AdditionalOutput::create($outputData);
             }
 
             // Save document file if uploaded
             if (
                 isset($this->tempAdditionalFiles[$proposalOutputId]) &&
-                $this->tempAdditionalFiles[$proposalOutputId] instanceof \Illuminate\Http\UploadedFile
+                $this->tempAdditionalFiles[$proposalOutputId] instanceof UploadedFile
             ) {
                 $file = $this->tempAdditionalFiles[$proposalOutputId];
 
@@ -992,7 +994,7 @@ class ReportForm extends Form
             // Save certificate file if uploaded
             if (
                 isset($this->tempAdditionalCerts[$proposalOutputId]) &&
-                $this->tempAdditionalCerts[$proposalOutputId] instanceof \Illuminate\Http\UploadedFile
+                $this->tempAdditionalCerts[$proposalOutputId] instanceof UploadedFile
             ) {
                 $file = $this->tempAdditionalCerts[$proposalOutputId];
 

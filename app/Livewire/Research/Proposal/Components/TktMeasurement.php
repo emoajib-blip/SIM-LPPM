@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Research\Proposal\Components;
 
+use App\Models\TktIndicator;
 use App\Models\TktLevel;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -68,9 +69,9 @@ class TktMeasurement extends Component
         // Initialize scores if empty
         if (empty($this->indicatorScores)) {
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-            /** @var \App\Models\TktLevel $level */
+            /** @var TktLevel $level */
             foreach ($this->levels as $level) {
-                /** @var \App\Models\TktIndicator $indicator */
+                /** @var TktIndicator $indicator */
                 foreach ($level->indicators as $indicator) {
                     // Default to 0 if not set
                     if (! isset($this->indicatorScores[$indicator->id])) {

@@ -2,10 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Proposal;
+use App\Models\ResearchStage;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ResearchStage>
+ * @extends Factory<ResearchStage>
  */
 class ResearchStageFactory extends Factory
 {
@@ -17,7 +20,7 @@ class ResearchStageFactory extends Factory
     public function definition(): array
     {
         return [
-            'proposal_id' => \App\Models\Proposal::factory(),
+            'proposal_id' => Proposal::factory(),
             'stage_number' => fake()->numberBetween(1, 5),
             'process_name' => fake()->randomElement([
                 'Persiapan Penelitian',
@@ -28,7 +31,7 @@ class ResearchStageFactory extends Factory
             ]),
             'outputs' => fake()->sentence(6),
             'indicator' => fake()->sentence(8),
-            'person_in_charge_id' => \App\Models\User::factory(),
+            'person_in_charge_id' => User::factory(),
         ];
     }
 }
