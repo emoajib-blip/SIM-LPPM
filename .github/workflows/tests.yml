@@ -133,5 +133,5 @@ jobs:
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
-        run: ./vendor/bin/pest --parallel
+        run: ./vendor/bin/pest
 # Vetted by AI - Manual Review Required by Senior Engineer/Manager
