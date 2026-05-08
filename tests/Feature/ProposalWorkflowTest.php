@@ -623,4 +623,106 @@ class ProposalWorkflowTest extends TestCase
         $this->assertFalse($result['success']);
         $this->assertStringContainsString('coi', strtolower($result['message']));
     }
+
+    /* ============================================
+     * STEP 3 TESTS: Edge Cases & New Validations
+     * ============================================ */
+
+    public function test_can_submit_from_need_assignment_status()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::NEED_ASSIGNMENT,
+        ]);
+
+        $proposal->teamMembers()->attach($this->dosen->id, ['role' => 'ketua', 'status' => 'accepted']);
+
+        $this->actingAs($this->dosen);
+        $result = app(SubmitProposalAction::class)->execute($proposal);
+
+        $this->assertTrue($result['success']);
+        $this->assertEquals(ProposalStatus::SUBMITTED, $proposal->fresh()->status);
+    }
+
+    public function test_can_submit_from_revision_needed_status()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::REVISION_NEEDED,
+        ]);
+
+        $proposal->teamMembers()->attach($this->dosen->id, ['role' => 'ketua', 'status' => 'accepted']);
+
+        $this->actingAs($this->dosen);
+        $result = app(SubmitProposalAction::class)->execute($proposal);
+
+        $this->assertTrue($result['success']);
+        $this->assertEquals(ProposalStatus::SUBMITTED, $proposal->fresh()->status);
+    }
+
+    public function test_submit_succeeds_with_no_team_members()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::DRAFT,
+        ]);
+
+        $this->actingAs($this->dosen);
+        $result = app(SubmitProposalAction::class)->execute($proposal);
+
+        $this->assertTrue($result['success']);
+        $this->assertEquals(ProposalStatus::SUBMITTED, $proposal->fresh()->status);
+    }
+
+    public function test_submit_fails_from_submitted_status()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::SUBMITTED,
+        ]);
+
+        $this->actingAs($this->dosen);
+        $result = app(SubmitProposalAction::class)->execute($proposal);
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('tidak dapat diajukan', $result['message']);
+    }
+
+    public function test_submit_sends_notification_to_dean_and_team()
+    {
+        Notification::fake();
+
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::DRAFT,
+        ]);
+
+        $proposal->teamMembers()->attach($this->dosen->id, ['role' => 'ketua', 'status' => 'accepted']);
+
+        $this->actingAs($this->dosen);
+        $submitAction = app(SubmitProposalAction::class);
+        $result = $submitAction->execute($proposal);
+
+        $this->assertTrue($result['success']);
+
+        Notification::assertSentTo(
+            [$this->dekan],
+            \App\Notifications\ProposalSubmitted::class
+        );
+    }
 }
