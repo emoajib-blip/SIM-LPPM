@@ -191,7 +191,7 @@ class StorageRestoreService
                 continue;
             }
 
-            if (str_contains($entry, '..') || str_starts_with($entry, '/')) {
+            if (preg_match('@(^|/)\.\.(/|$)@', $entry) || str_starts_with($entry, '/')) {
                 $issues[] = 'path_traversal: '.$entry;
             }
 
