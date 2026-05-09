@@ -76,3 +76,10 @@ build/phpstan/
 /sosiomen_deploy.zip
 /vendor_deploy.zip
 .user.ini
+
+# Temporary & Debug Files
+error_log
+user/
+public/.well-known/
+id,
+PLAN_CLEANUP.md
