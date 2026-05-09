@@ -45,11 +45,16 @@
                                  <span>Feature Flags</span>
                              </button>
                              <button wire:click="setActiveTab('sync')"
-                                 class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'sync' ? 'active' : '' }}">
-                                 <x-lucide-refresh-ccw class="icon" />
-                                 <span>Sinkronisasi Data</span>
-                             </button>
-                        </div>
+                                  class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'sync' ? 'active' : '' }}">
+                                  <x-lucide-refresh-ccw class="icon" />
+                                  <span>Sinkronisasi Data</span>
+                              </button>
+                              <button wire:click="setActiveTab('backup')"
+                                  class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'backup' ? 'active' : '' }}">
+                                  <x-lucide-database class="icon" />
+                                  <span>Backup Data</span>
+                              </button>
+                         </div>
                     @endrole
                 </div>
             </div>
@@ -90,13 +95,19 @@
                              <p class="mb-4 card-subtitle">Aktifkan atau nonaktifkan fitur sistem yang belum diwajibkan secara institusional.</p>
                              <livewire:settings.feature-flags />
                          </div>
-                     @elseif ($activeTab === 'sync')
-                         <div>
-                             <h2 class="mb-4">Sinkronisasi Data</h2>
-                             <p class="mb-4 card-subtitle">Sinkronkan data dari server produksi ke localhost untuk backup dan development.</p>
-                             <livewire:settings.data-sync />
-                         </div>
-                     @endif
+                      @elseif ($activeTab === 'sync')
+                          <div>
+                              <h2 class="mb-4">Sinkronisasi Data</h2>
+                              <p class="mb-4 card-subtitle">Sinkronkan data dari server produksi ke localhost untuk backup dan development.</p>
+                              <livewire:settings.data-sync />
+                          </div>
+                      @elseif ($activeTab === 'backup')
+                          <div>
+                              <h2 class="mb-4">Backup Data</h2>
+                              <p class="mb-4 card-subtitle">Unduh cadangan database dan file storage untuk backup dan pengembangan lokal.</p>
+                              <livewire:settings.backup-data />
+                          </div>
+                      @endif
                 </div>
             </div>
         </div>
