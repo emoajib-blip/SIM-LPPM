@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8">
             <h3 class="card-title mb-3">
-                <x-lucide-upload-cloud class="icon me-1" />
+                <x-lucide-cloud-upload class="icon me-1" />
                 Pulihkan Data
             </h3>
 

@@ -56,7 +56,7 @@
                               </button>
                               <button wire:click="setActiveTab('restore')"
                                   class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'restore' ? 'active' : '' }}">
-                                  <x-lucide-upload-cloud class="icon" />
+                                  <x-lucide-cloud-upload class="icon" />
                                   <span>Pulihkan Data</span>
                               </button>
                          </div>
