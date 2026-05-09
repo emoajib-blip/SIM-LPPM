@@ -165,13 +165,15 @@ class StorageRestoreService
             $totalSize += $stat['size'] ?? 0;
         }
 
+        $totalEntries = $zip->count();
+        $validation = $this->validateZipEntries($zip);
         $zip->close();
 
         return [
-            'total_entries' => $zip->count(),
+            'total_entries' => $totalEntries,
             'total_size' => $totalSize,
             'entries' => $entries,
-            'validation' => $this->validateZipEntries(new ZipArchive),
+            'validation' => $validation,
         ];
     }
 
