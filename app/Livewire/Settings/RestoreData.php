@@ -55,10 +55,10 @@ class RestoreData extends Component
         }
 
         $filename = 'upload_restore_'.now()->format('Ymd_His').'.sql';
-        $this->sqlFile->move($backupDir, $filename);
         $this->uploadedSqlPath = $backupDir.'/'.$filename;
 
-        if (! file_exists($this->uploadedSqlPath)) {
+        $sourcePath = $this->sqlFile->getRealPath();
+        if ($sourcePath === false || ! copy($sourcePath, $this->uploadedSqlPath)) {
             $this->output = "❌ Gagal menyimpan file ke {$backupDir}.\n";
 
             return;
@@ -112,10 +112,10 @@ class RestoreData extends Component
         }
 
         $filename = 'upload_restore_'.now()->format('Ymd_His').'.zip';
-        $this->zipFile->move($backupDir, $filename);
         $this->uploadedZipPath = $backupDir.'/'.$filename;
 
-        if (! file_exists($this->uploadedZipPath)) {
+        $sourcePath = $this->zipFile->getRealPath();
+        if ($sourcePath === false || ! copy($sourcePath, $this->uploadedZipPath)) {
             $this->output = "❌ Gagal menyimpan file ke {$backupDir}.\n";
 
             return;
