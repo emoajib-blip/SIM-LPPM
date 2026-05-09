@@ -12,8 +12,6 @@ class DatabaseRestoreService
         'INSERT INTO',
         'INSERT IGNORE INTO',
         'REPLACE INTO',
-        'LOCK TABLES',
-        'UNLOCK TABLES',
         'SET',
     ];
 
