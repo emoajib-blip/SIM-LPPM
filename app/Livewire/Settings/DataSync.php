@@ -43,12 +43,12 @@ class DataSync extends Component
 
     public function loadConfig(): void
     {
-        $this->sshHost = config('sync.ssh_host', '');
-        $this->sshUser = config('sync.ssh_user', '');
-        $this->sshPort = config('sync.ssh_port', '22');
-        $this->remotePath = config('sync.remote_path', '');
-        $this->remoteDb = config('sync.remote_db', '');
-        $this->remoteDbUser = config('sync.remote_db_user', '');
+        $this->sshHost = config('sync.ssh_host') ?? '';
+        $this->sshUser = config('sync.ssh_user') ?? '';
+        $this->sshPort = (string) (config('sync.ssh_port') ?? '22');
+        $this->remotePath = config('sync.remote_path') ?? '';
+        $this->remoteDb = config('sync.remote_db') ?? '';
+        $this->remoteDbUser = config('sync.remote_db_user') ?? '';
 
         $this->configComplete = ! empty($this->sshHost) && ! empty($this->sshUser);
     }
@@ -59,20 +59,23 @@ class DataSync extends Component
             return;
         }
 
+        if (! $this->configComplete) {
+            $this->output = "⚠️ Konfigurasi SSH belum lengkap.\nMinta admin IT untuk mengisi konfigurasi di file .env\n";
+
+            return;
+        }
+
         $this->output = 'Menguji koneksi SSH...'."\n";
         $this->isRunning = true;
 
-        $sshHost = config('sync.ssh_host');
-        $sshUser = config('sync.ssh_user');
-        $sshPort = config('sync.ssh_port', 22);
-        $sshKey = config('sync.ssh_key_path');
+        $sshKey = config('sync.ssh_key_path') ?: '';
 
-        $cmd = ['ssh', '-p', (string) $sshPort, '-o', 'ConnectTimeout=10', '-o', 'StrictHostKeyChecking=accept-new'];
+        $cmd = ['ssh', '-p', $this->sshPort, '-o', 'ConnectTimeout=10', '-o', 'StrictHostKeyChecking=accept-new'];
         if ($sshKey) {
             $cmd[] = '-i';
             $cmd[] = $sshKey;
         }
-        $cmd[] = "{$sshUser}@{$sshHost}";
+        $cmd[] = "{$this->sshUser}@{$this->sshHost}";
         $cmd[] = 'echo "Koneksi berhasil ke $(hostname) pada $(date)"';
 
         $process = Process::run($cmd, function ($type, $output) {
@@ -85,9 +88,9 @@ class DataSync extends Component
             $this->output .= "\n✅ Koneksi SSH berhasil! Server produksi dapat dijangkau.";
         } else {
             $this->output .= "\n❌ Koneksi SSH gagal. Periksa:\n";
-            $this->output .= "   • Host: {$sshHost}\n";
-            $this->output .= "   • User: {$sshUser}\n";
-            $this->output .= "   • Port: {$sshPort}\n";
+            $this->output .= "   • Host: {$this->sshHost}\n";
+            $this->output .= "   • User: {$this->sshUser}\n";
+            $this->output .= "   • Port: {$this->sshPort}\n";
             $this->output .= '   • SSH Key: '.($sshKey ?: 'default')."\n";
             $this->output .= "   • Pastikan SSH key sudah terdaftar di server produksi.\n";
             $this->output .= "   • Error: {$process->errorOutput()}\n";
