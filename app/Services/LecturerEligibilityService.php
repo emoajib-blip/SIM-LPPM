@@ -58,7 +58,7 @@ class LecturerEligibilityService
 
         // --- 2. Historical Obligation Checks ---
         // Find all proposals where user was chairperson in the previous period
-        $prevProposals = Proposal::where('submitter_id', $user->id)
+        $prevProposals = Proposal::with('outputs')->where('submitter_id', $user->id)
             ->whereIn('status', [ProposalStatus::APPROVED, ProposalStatus::COMPLETED])
             ->where(function ($query) use ($prevYear, $prevSemester) {
                 if ($prevSemester === 'ganjil') {
@@ -84,7 +84,7 @@ class LecturerEligibilityService
             }
 
             // Check for Mandatory Outputs
-            $targets = $proposal->outputs()->where('category', 'Wajib')->get();
+            $targets = $proposal->outputs->where('category', 'Wajib');
             /** @var ProposalOutput $target */
             foreach ($targets as $target) {
                 $isSubmitted = DB::table('mandatory_outputs')->join('progress_reports', 'mandatory_outputs.progress_report_id', '=', 'progress_reports.id')->where('progress_reports.proposal_id', $proposal->id)->where('mandatory_outputs.proposal_output_id', $target->id)->exists();

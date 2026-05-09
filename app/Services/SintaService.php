@@ -88,7 +88,7 @@ class SintaService
      */
     public function bulkSync(): array
     {
-        $users = User::whereHas('identity', function ($query) {
+        $users = User::with('identity')->whereHas('identity', function ($query) {
             $query->whereNotNull('sinta_id');
         })->get();
 
