@@ -32,10 +32,16 @@ class SyncProductionData extends Command
             return 1;
         }
 
-        $remoteUser = 'simlppmi';
-        $remoteHost = 'sim-lppm.itsnupekalongan.ac.id';
-        $remotePath = '/home/simlppmi/sim-lppm';
-        $remoteDb = 'simlppmi_sim_lppm';
+        $remoteUser = config('sync.remote_user');
+        $remoteHost = config('sync.remote_host');
+        $remotePath = config('sync.remote_path');
+        $remoteDb = config('sync.remote_db');
+
+        if (empty($remoteUser) || empty($remoteHost)) {
+            $this->error('Konfigurasi server remote belum lengkap. Set SYNC_REMOTE_USER dan SYNC_REMOTE_HOST di .env');
+
+            return 1;
+        }
 
         $this->info("🚀 Memulai sinkronisasi dari $remoteHost...");
 

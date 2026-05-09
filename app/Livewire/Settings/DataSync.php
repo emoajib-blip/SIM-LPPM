@@ -55,7 +55,15 @@ class DataSync extends Component
 
     public function testConnection(): void
     {
+        abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
+
         if ($this->isRunning) {
+            return;
+        }
+
+        if (! app()->environment('local')) {
+            $this->output = "⚠️ Fitur ini hanya tersedia di lingkungan LOCAL.\n";
+
             return;
         }
 
@@ -99,7 +107,15 @@ class DataSync extends Component
 
     public function runSync(): void
     {
+        abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
+
         if ($this->isRunning) {
+            return;
+        }
+
+        if (! app()->environment('local')) {
+            $this->output = "⚠️ Fitur ini hanya tersedia di lingkungan LOCAL.\n";
+
             return;
         }
 
