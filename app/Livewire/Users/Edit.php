@@ -271,8 +271,8 @@ class Edit extends Component
                     'type' => $validated['type'],
                     'institution_id' => $finalInstitutionId,
                     'institution_name' => $finalInstitutionName,
-                    'faculty_id' => $validated['faculty_id'] ?? null,
-                    'study_program_id' => $validated['study_program_id'] ?? null,
+                    'faculty_id' => ! empty($validated['faculty_id']) ? $validated['faculty_id'] : null,
+                    'study_program_id' => ! empty($validated['study_program_id']) ? $validated['study_program_id'] : null,
                 ]
             );
 
