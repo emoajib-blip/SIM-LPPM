@@ -1,0 +1,310 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Process;
+
+class DatabaseRestoreService
+{
+    protected array $allowedPrefixes = [
+        'INSERT INTO',
+        'INSERT IGNORE INTO',
+        'REPLACE INTO',
+        'LOCK TABLES',
+        'UNLOCK TABLES',
+        'SET',
+    ];
+
+    protected array $blockedPatterns = [
+        '/^\s*DROP\s+(TABLE|DATABASE|SCHEMA|PROCEDURE|FUNCTION|TRIGGER|VIEW|INDEX)\s/i',
+        '/^\s*ALTER\s+(TABLE|DATABASE|SCHEMA|PROCEDURE|FUNCTION|TRIGGER|VIEW)\s/i',
+        '/^\s*TRUNCATE\s+(TABLE)\s/i',
+        '/^\s*DELETE\s+(FROM\s+)?/i',
+        '/^\s*UPDATE\s+.+\s+SET\s/i',
+        '/^\s*RENAME\s+TABLE\s/i',
+        '/^\s*CREATE\s+(PROCEDURE|FUNCTION|TRIGGER|EVENT|USER|DATABASE|SCHEMA)\s/i',
+        '/^\s*GRANT\s/i',
+        '/^\s*REVOKE\s/i',
+        '/^\s*FLUSH\s/i',
+        '/^\s*KILL\s/i',
+        '/^\s*SHUTDOWN\s/i',
+    ];
+
+    protected int $batchSize = 500;
+
+    public function preview(string $sqlPath): array
+    {
+        if (! file_exists($sqlPath)) {
+            throw new \RuntimeException('File SQL tidak ditemukan.');
+        }
+
+        $statements = $this->parseStatements($sqlPath);
+        $filtered = [];
+        $blocked = [];
+        $tables = [];
+
+        foreach ($statements as $i => $stmt) {
+            $trimmed = trim($stmt);
+            if (empty($trimmed)) {
+                continue;
+            }
+
+            if ($this->isAllowed($trimmed)) {
+                $filtered[] = $trimmed;
+
+                if (preg_match('/INSERT\s+(IGNORE\s+)?INTO\s+[`"\']?(\w+)[`"\']?\s/i', $trimmed, $m)) {
+                    $table = $m[2];
+                    $tables[$table] = ($tables[$table] ?? 0) + 1;
+                }
+            } else {
+                $type = $this->classifyStatement($trimmed);
+                if ($type !== 'comment' && $type !== 'empty') {
+                    $blocked[] = [
+                        'line' => $i + 1,
+                        'type' => $type,
+                        'preview' => mb_substr($trimmed, 0, 80),
+                    ];
+                }
+            }
+        }
+
+        return [
+            'total_statements' => count($statements),
+            'allowed' => count($filtered),
+            'blocked' => $blocked,
+            'blocked_count' => count($blocked),
+            'tables' => $tables,
+            'statements' => $filtered,
+        ];
+    }
+
+    public function restore(string $sqlPath, bool $backupFirst = true): array
+    {
+        if (! file_exists($sqlPath)) {
+            throw new \RuntimeException('File SQL tidak ditemukan.');
+        }
+
+        $preview = $this->preview($sqlPath);
+        $statements = $preview['statements'];
+
+        if (empty($statements)) {
+            return [
+                'success' => false,
+                'message' => 'Tidak ada statement INSERT yang ditemukan dalam file.',
+                'inserted' => 0,
+            ];
+        }
+
+        if ($backupFirst) {
+            $backupPath = $this->autoBackup();
+        }
+
+        $inserted = 0;
+        $errors = [];
+
+        DB::beginTransaction();
+
+        try {
+            DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+            DB::statement('SET UNIQUE_CHECKS = 0');
+            DB::statement('SET SQL_MODE = ""');
+
+            foreach ($statements as $stmt) {
+                try {
+                    DB::unprepared($stmt);
+                    $inserted++;
+                } catch (\Throwable $e) {
+                    $errors[] = [
+                        'statement' => mb_substr($stmt, 0, 100),
+                        'error' => $e->getMessage(),
+                    ];
+
+                    if (count($errors) > 50) {
+                        throw new \RuntimeException('Terlalu banyak error. Rollback.');
+                    }
+                }
+            }
+
+            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            DB::statement('SET UNIQUE_CHECKS = 1');
+
+            DB::commit();
+
+            $message = count($errors) === 0
+                ? "✅ Restore berhasil! {$inserted} baris data dipulihkan."
+                : "✅ Restore selesai dengan {$inserted} baris dan ".count($errors).' peringatan.';
+
+            Log::info('Database restore completed', [
+                'file' => basename($sqlPath),
+                'inserted' => $inserted,
+                'errors' => count($errors),
+            ]);
+
+            return [
+                'success' => true,
+                'message' => $message,
+                'inserted' => $inserted,
+                'errors' => $errors,
+                'backup_path' => $backupPath ?? null,
+                'tables' => $preview['tables'],
+            ];
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            DB::statement('SET UNIQUE_CHECKS = 1');
+
+            Log::error('Database restore failed', [
+                'file' => basename($sqlPath),
+                'error' => $e->getMessage(),
+            ]);
+
+            return [
+                'success' => false,
+                'message' => '❌ Restore gagal: '.$e->getMessage().' Semua perubahan di-rollback.',
+                'inserted' => 0,
+                'errors' => [],
+                'backup_path' => $backupPath ?? null,
+            ];
+        }
+    }
+
+    public function autoBackup(): string
+    {
+        $backupDir = storage_path('app/backup');
+        if (! is_dir($backupDir)) {
+            mkdir($backupDir, 0755, true);
+        }
+
+        $timestamp = now()->format('Ymd_His');
+        $filename = "pre_restore_backup_{$timestamp}.sql";
+        $path = "{$backupDir}/{$filename}";
+
+        $dbName = config('database.connections.mysql.database');
+        $dbUser = config('database.connections.mysql.username');
+        $dbPass = config('database.connections.mysql.password');
+
+        $cmd = ['mysqldump', '-u', $dbUser];
+        if ($dbPass) {
+            $cmd[] = "-p{$dbPass}";
+        }
+        $cmd[] = $dbName;
+
+        $result = Process::run($cmd, function () {});
+
+        if ($result->successful()) {
+            file_put_contents($path, $result->output());
+        }
+
+        return $path;
+    }
+
+    protected function parseStatements(string $sqlPath): array
+    {
+        $content = file_get_contents($sqlPath);
+        if ($content === false) {
+            throw new \RuntimeException('Gagal membaca file SQL.');
+        }
+
+        $lines = explode("\n", $content);
+        $statements = [];
+        $current = '';
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+
+            if (empty($trimmed) || str_starts_with($trimmed, '--') || str_starts_with($trimmed, '#')) {
+                continue;
+            }
+
+            if (str_starts_with($trimmed, '/*!')) {
+                $end = strpos($trimmed, '*/');
+                if ($end !== false) {
+                    $content = substr($trimmed, 3, $end - 3);
+                    $rest = substr($trimmed, $end + 2);
+                    $current .= $content;
+                    if (str_contains($rest, ';')) {
+                        $parts = explode(';', $rest);
+                        $current .= array_shift($parts);
+                        $statements[] = trim($current);
+                        $current = '';
+                        foreach ($parts as $part) {
+                            if (trim($part)) {
+                                $statements[] = trim($part);
+                            }
+                        }
+                    } else {
+                        $current .= $rest;
+                    }
+                }
+
+                continue;
+            }
+
+            $current .= ($current ? "\n" : '').$line;
+
+            if (str_ends_with(trim($line), ';')) {
+                $statements[] = trim($current);
+                $current = '';
+            }
+        }
+
+        if (trim($current)) {
+            $statements[] = trim($current);
+        }
+
+        return $statements;
+    }
+
+    protected function isAllowed(string $statement): bool
+    {
+        foreach ($this->blockedPatterns as $pattern) {
+            if (preg_match($pattern, $statement)) {
+                return false;
+            }
+        }
+
+        foreach ($this->allowedPrefixes as $prefix) {
+            if (str_starts_with(strtoupper($statement), strtoupper($prefix))) {
+                return true;
+            }
+        }
+
+        if (preg_match('/^\s*\/\*!\d+\s+SET\s/i', $statement)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function classifyStatement(string $statement): string
+    {
+        if (preg_match('/^\s*\/\*!/', $statement)) {
+            return 'comment';
+        }
+        if (preg_match('/^\s*--/', $statement)) {
+            return 'comment';
+        }
+        if (preg_match('/^\s*CREATE\s+TABLE\s/i', $statement)) {
+            return 'create_table';
+        }
+        if (preg_match('/^\s*DROP\s/i', $statement)) {
+            return 'drop';
+        }
+        if (preg_match('/^\s*ALTER\s/i', $statement)) {
+            return 'alter';
+        }
+        if (preg_match('/^\s*TRUNCATE\s/i', $statement)) {
+            return 'truncate';
+        }
+        if (preg_match('/^\s*DELETE\s/i', $statement)) {
+            return 'delete';
+        }
+        if (preg_match('/^\s*UPDATE\s/i', $statement)) {
+            return 'update';
+        }
+
+        return 'other';
+    }
+}

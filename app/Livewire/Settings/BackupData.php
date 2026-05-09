@@ -203,9 +203,10 @@ class BackupData extends Component
             }, 'error.txt', ['Content-Type' => 'text/plain']);
         }
 
-        $path = storage_path("app/backup/{$filename}");
+        $backupDir = storage_path('app/backup');
+        $path = realpath($backupDir.'/'.$filename);
 
-        if (! file_exists($path)) {
+        if ($path === false || ! str_starts_with($path, $backupDir) || ! file_exists($path)) {
             return response()->streamDownload(function () {
                 echo 'File backup tidak ditemukan.';
             }, 'error.txt', ['Content-Type' => 'text/plain']);

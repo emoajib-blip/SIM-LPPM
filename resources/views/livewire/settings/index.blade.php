@@ -54,6 +54,11 @@
                                   <x-lucide-database class="icon" />
                                   <span>Backup Data</span>
                               </button>
+                              <button wire:click="setActiveTab('restore')"
+                                  class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'restore' ? 'active' : '' }}">
+                                  <x-lucide-upload-cloud class="icon" />
+                                  <span>Pulihkan Data</span>
+                              </button>
                          </div>
                     @endrole
                 </div>
@@ -106,6 +111,12 @@
                               <h2 class="mb-4">Backup Data</h2>
                               <p class="mb-4 card-subtitle">Unduh cadangan database dan file storage untuk backup dan pengembangan lokal.</p>
                               <livewire:settings.backup-data />
+                          </div>
+                      @elseif ($activeTab === 'restore')
+                          <div>
+                              <h2 class="mb-4">Pulihkan Data</h2>
+                              <p class="mb-4 card-subtitle">Upload file backup untuk memulihkan database dan file storage setelah disaster recovery.</p>
+                              <livewire:settings.restore-data />
                           </div>
                       @endif
                 </div>
