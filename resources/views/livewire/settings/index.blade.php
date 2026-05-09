@@ -6,65 +6,59 @@
     <x-tabler.alert />
     <div class="card">
         <div class="row g-0">
-            <div class="border-end col-12 col-md-3">
+            <div class="col-12 col-md-3 settings-sidebar">
                 <div class="card-body">
                     <h4 class="subheader">Pengaturan Akun</h4>
                     <div class="list-group list-group-transparent">
                         <button wire:click="setActiveTab('profile')"
-                            class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'profile' ? 'active' : '' }}">
-                            <x-lucide-user class="me-2 icon" />
-                            Profil Saya
+                            class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'profile' ? 'active' : '' }}">
+                            <x-lucide-user class="icon" />
+                            <span>Profil Saya</span>
                         </button>
                         <button wire:click="setActiveTab('password')"
-                            class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'password' ? 'active' : '' }}">
-                            <x-lucide-lock class="me-2 icon" />
-                            Ubah Kata Sandi
+                            class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'password' ? 'active' : '' }}">
+                            <x-lucide-lock class="icon" />
+                            <span>Ubah Kata Sandi</span>
                         </button>
-                        {{-- <button wire:click="setActiveTab('two-factor')"
-                            class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'two-factor' ? 'active' : '' }}">
-                            <x-lucide-shield class="me-2 icon" />
-                            Autentikasi Dua Faktor
-                        </button> --}}
                         <button wire:click="setActiveTab('security')"
-                            class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'security' ? 'active' : '' }}">
-                            <x-lucide-activity class="me-2 icon" />
-                            Log Keamanan
+                            class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'security' ? 'active' : '' }}">
+                            <x-lucide-activity class="icon" />
+                            <span>Log Keamanan</span>
                         </button>
                     </div>
                     @role('admin lppm')
                         <h4 class="mt-4 subheader">Pengaturan Sistem</h4>
                         <div class="list-group list-group-transparent">
                             <button wire:click="setActiveTab('appearance')"
-                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'appearance' ? 'active' : '' }}">
-                                <x-lucide-palette class="me-2 icon" />
-                                Tampilan
+                                class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'appearance' ? 'active' : '' }}">
+                                <x-lucide-palette class="icon" />
+                                <span>Tampilan</span>
                             </button>
                             <button wire:click="setActiveTab('audit')"
-                                class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'audit' ? 'active' : '' }}">
-                                <x-lucide-eye class="me-2 icon" />
-                                Audit Log
+                                class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'audit' ? 'active' : '' }}">
+                                <x-lucide-eye class="icon" />
+                                <span>Audit Log</span>
                             </button>
                              <button wire:click="setActiveTab('feature-flags')"
-                                 class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'feature-flags' ? 'active' : '' }}">
-                                 <x-lucide-toggle-left class="me-2 icon" />
-                                 Feature Flags
+                                 class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'feature-flags' ? 'active' : '' }}">
+                                 <x-lucide-toggle-left class="icon" />
+                                 <span>Feature Flags</span>
                              </button>
                              <button wire:click="setActiveTab('sync')"
-                                 class="list-group-item list-group-item-action d-flex align-items-center {{ $activeTab === 'sync' ? 'active' : '' }}">
-                                 <x-lucide-refresh-ccw class="me-2 icon" />
-                                 Sinkronisasi Data
+                                 class="list-group-item list-group-item-action d-flex align-items-center gap-2 {{ $activeTab === 'sync' ? 'active' : '' }}">
+                                 <x-lucide-refresh-ccw class="icon" />
+                                 <span>Sinkronisasi Data</span>
                              </button>
                         </div>
                     @endrole
                 </div>
             </div>
 
-            <div class="d-flex flex-column col-12 col-md-9">
+            <div class="col-12 col-md-9 ps-md-0">
                 <div class="card-body">
                     @if ($activeTab === 'profile')
                         <div>
                             <h2 class="mb-4">Profil Saya</h2>
-
                             <livewire:settings.profile-form />
                         </div>
                     @elseif ($activeTab === 'password')
@@ -74,10 +68,6 @@
                                 acak untuk tetap aman.</p>
                             <livewire:settings.password />
                         </div>
-                        {{-- @elseif ($activeTab === 'two-factor')
-                        <div>
-                            <livewire:settings.two-factor />
-                        </div> --}}
                     @elseif ($activeTab === 'appearance')
                         <div>
                             <livewire:settings.appearance />
@@ -112,3 +102,15 @@
         </div>
     </div>
 </div>
+
+<style>
+    .settings-sidebar {
+        border-right: 1px solid var(--tblr-border-color);
+    }
+    @media (max-width: 767.98px) {
+        .settings-sidebar {
+            border-right: none;
+            border-bottom: 1px solid var(--tblr-border-color);
+        }
+    }
+</style>
