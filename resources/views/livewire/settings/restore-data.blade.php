@@ -15,7 +15,9 @@
                 <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
                     <x-lucide-alert-triangle class="icon" />
                     <div>
-                        <strong>Perhatian:</strong> Data yang ada saat ini akan ditimpa.
+                        <strong>Perhatian:</strong>
+                        Mode <strong>Sinkron</strong> akan menghapus data lama dan mengganti dengan data backup.
+                        Mode <strong>Tambah</strong> hanya menambahkan data baru (risiko duplikasi).
                         Sistem akan membuat <strong>backup otomatis</strong> sebelum memulihkan.
                     </div>
                 </div>
@@ -63,6 +65,46 @@
                 </div>
             </div>
 
+            @if ($uploadedSqlPath)
+                <div class="mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-2">
+                                <x-lucide-settings-2 class="icon me-1" />
+                                Mode Restore Database
+                            </h4>
+                            <p class="text-secondary small mb-3">Pilih cara data database dipulihkan.</p>
+                            <div class="d-flex gap-4">
+                                <label class="form-check">
+                                    <input
+                                        type="radio"
+                                        wire:model.live="replaceMode"
+                                        value="1"
+                                        class="form-check-input"
+                                    >
+                                    <span class="form-check-label">
+                                        <strong>Sinkron</strong>
+                                        <small class="d-block text-secondary">Hapus data lama, ganti dengan data backup. Aman untuk sinkronisasi hosting ↔ local.</small>
+                                    </span>
+                                </label>
+                                <label class="form-check">
+                                    <input
+                                        type="radio"
+                                        wire:model.live="replaceMode"
+                                        value="0"
+                                        class="form-check-input"
+                                    >
+                                    <span class="form-check-label">
+                                        <strong>Tambah</strong>
+                                        <small class="d-block text-secondary">INSERT data backup tanpa hapus data lama. Hanya untuk database kosong.</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @if ($hasPreview && !empty($preview))
                 @if (isset($preview['valid']))
                     <div class="mb-3">
@@ -95,13 +137,27 @@
                                     <tr>
                                         <th>Tabel</th>
                                         <th class="text-end">Baris</th>
+                                        <th class="text-end">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $service = app(\App\Services\DatabaseRestoreService::class);
+                                        $preservedTables = $service->getPreservedTableInfo($preview['tables']);
+                                    @endphp
                                     @foreach ($preview['tables'] as $table => $count)
                                         <tr>
                                             <td>{{ $table }}</td>
                                             <td class="text-end">{{ number_format($count) }}</td>
+                                            <td class="text-end">
+                                                @if (isset($preservedTables[$table]))
+                                                    <span class="badge bg-secondary">Dipertahankan</span>
+                                                @elseif ($replaceMode)
+                                                    <span class="badge bg-info">Diganti</span>
+                                                @else
+                                                    <span class="badge bg-success">Ditambah</span>
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -114,6 +170,17 @@
                                 <div>
                                     <strong>{{ $preview['blocked_count'] }} statement</strong> diblokir (DROP, ALTER, dll.)
                                     akan dilewati.
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($replaceMode && !empty($preservedTables))
+                            <div class="alert alert-info d-flex align-items-center gap-2">
+                                <x-lucide-shield class="icon" />
+                                <div>
+                                    <strong>Tabel sistem dipertahankan:</strong>
+                                    {{ implode(', ', array_keys($preservedTables)) }}
+                                    — tidak akan dihapus atau diisi ulang.
                                 </div>
                             </div>
                         @endif
@@ -212,7 +279,7 @@
                                 <small>
                                     <strong>Alternatif CLI:</strong><br>
                                     <code class="d-block mt-1">
-php artisan app:restore-backup --sql=file.sql --storage=file.zip
+php artisan app:restore-backup --sql=file.sql --storage=file.zip --replace
                                     </code>
                                 </small>
                             </div>

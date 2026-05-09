@@ -29,6 +29,8 @@ class RestoreData extends Component
 
     public ?string $uploadedZipPath = null;
 
+    public bool $replaceMode = true;
+
     public function mount(): void
     {
         abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
@@ -66,15 +68,28 @@ class RestoreData extends Component
         $this->preview = $service->preview($this->uploadedSqlPath);
         $this->hasPreview = true;
 
-        $this->output = "File: {$filename}\n";
+        $mode = $this->replaceMode ? 'Sinkron' : 'Tambah';
+        $this->output = "Mode: {$mode}\n";
+        $this->output .= "File: {$filename}\n";
         $this->output .= 'Tabel: '.count($this->preview['tables'])."\n";
         $this->output .= "Baris: {$this->preview['allowed']}\n";
+
+        if ($this->replaceMode) {
+            $preserved = $service->getPreservedTableInfo($this->preview['tables']);
+            if (! empty($preserved)) {
+                $this->output .= 'Tabel sistem dipertahankan: '.implode(', ', array_keys($preserved))."\n";
+            }
+        }
 
         if ($this->preview['blocked_count'] > 0) {
             $this->output .= "\n⚠️ Statement diblokir: {$this->preview['blocked_count']}\n";
             foreach (array_slice($this->preview['blocked'], 0, 5) as $b) {
                 $this->output .= "  [{$b['type']}] {$b['preview']}...\n";
             }
+        }
+
+        if (! $this->replaceMode) {
+            $this->output .= "\n⚠️ Mode Tambah: data baru akan ditambahkan. Risiko duplikasi jika data sudah ada.\n";
         }
     }
 
@@ -139,9 +154,13 @@ class RestoreData extends Component
 
         try {
             if ($this->uploadedSqlPath) {
-                $this->output .= "Memulihkan database...\n";
+                $modeLabel = $this->replaceMode ? 'Sinkron' : 'Tambah';
+                $this->output .= "Memulihkan database (mode: {$modeLabel})...\n";
                 $service = app(DatabaseRestoreService::class);
-                $result = $service->restore($this->uploadedSqlPath, true);
+
+                $result = $this->replaceMode
+                    ? $service->restoreWithReplace($this->uploadedSqlPath, true)
+                    : $service->restore($this->uploadedSqlPath, true);
 
                 $this->output .= $result['message']."\n";
 

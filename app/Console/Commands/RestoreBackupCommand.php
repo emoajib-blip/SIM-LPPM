@@ -11,6 +11,7 @@ class RestoreBackupCommand extends Command
     protected $signature = 'app:restore-backup
         {--sql= : Path ke file SQL backup}
         {--storage= : Path ke file ZIP storage backup}
+        {--replace : Hapus data lama sebelum INSERT (sinkronisasi, default: INSERT-only)}
         {--force : Skip konfirmasi}
         {--no-backup : Jangan backup database sebelum restore}';
 
@@ -36,18 +37,27 @@ class RestoreBackupCommand extends Command
                 return 1;
             }
 
+            $replaceMode = $this->option('replace');
+
             if (! $this->option('force')) {
                 $preview = $dbRestore->preview($sqlPath);
-                $this->info('Preview restore database:');
+                $modeLabel = $replaceMode ? 'Sinkron' : 'Tambah';
+                $this->info("Preview restore database (mode: {$modeLabel}):");
                 $this->line("  Total statement: {$preview['total_statements']}");
                 $this->line("  Statement diizinkan: {$preview['allowed']}");
                 $this->line("  Statement diblokir: {$preview['blocked_count']}");
 
                 if (! empty($preview['tables'])) {
-                    $this->line('  Tabel yang akan diisi:');
+                    $this->line('  Tabel:');
+                    $preserved = $dbRestore->getPreservedTableInfo($preview['tables']);
                     foreach ($preview['tables'] as $table => $count) {
-                        $this->line("    - {$table}: {$count} baris");
+                        $status = isset($preserved[$table]) ? '(dipertahankan)' : ($replaceMode ? '(diganti)' : '(ditambah)');
+                        $this->line("    - {$table}: {$count} baris {$status}");
                     }
+                }
+
+                if ($replaceMode && ! empty($preserved)) {
+                    $this->line('  Tabel sistem dipertahankan: '.implode(', ', array_keys($preserved)));
                 }
 
                 if (! $this->confirm('Lanjutkan restore database?', false)) {
@@ -57,7 +67,9 @@ class RestoreBackupCommand extends Command
                 }
             }
 
-            $result = $dbRestore->restore($sqlPath, ! $this->option('no-backup'));
+            $result = $replaceMode
+                ? $dbRestore->restoreWithReplace($sqlPath, ! $this->option('no-backup'))
+                : $dbRestore->restore($sqlPath, ! $this->option('no-backup'));
 
             if ($result['success']) {
                 $this->info($result['message']);

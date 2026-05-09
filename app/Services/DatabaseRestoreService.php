@@ -34,6 +34,20 @@ class DatabaseRestoreService
 
     protected int $batchSize = 500;
 
+    protected array $preservedTables = [
+        'migrations',
+        'sessions',
+        'cache',
+        'cache_locks',
+        'jobs',
+        'job_batches',
+        'failed_jobs',
+        'personal_access_tokens',
+        'telescope_entries',
+        'telescope_entries_tags',
+        'telescope_monitoring',
+    ];
+
     public function preview(string $sqlPath): array
     {
         if (! file_exists($sqlPath)) {
@@ -163,6 +177,130 @@ class DatabaseRestoreService
             return [
                 'success' => false,
                 'message' => '❌ Restore gagal: '.$e->getMessage().' Semua perubahan di-rollback.',
+                'inserted' => 0,
+                'errors' => [],
+                'backup_path' => $backupPath ?? null,
+            ];
+        }
+    }
+
+    public function restoreWithReplace(string $sqlPath, bool $backupFirst = true): array
+    {
+        if (! file_exists($sqlPath)) {
+            throw new \RuntimeException('File SQL tidak ditemukan.');
+        }
+
+        $preview = $this->preview($sqlPath);
+        $statements = $preview['statements'];
+
+        if (empty($statements)) {
+            return [
+                'success' => false,
+                'message' => 'Tidak ada statement INSERT yang ditemukan dalam file.',
+                'inserted' => 0,
+            ];
+        }
+
+        if ($backupFirst) {
+            $backupPath = $this->autoBackup();
+        }
+
+        $inserted = 0;
+        $deleted = 0;
+        $errors = [];
+
+        $tablesToDelete = [];
+        foreach ($preview['tables'] as $table => $count) {
+            if (! in_array($table, $this->preservedTables)) {
+                $tablesToDelete[] = $table;
+            }
+        }
+
+        DB::beginTransaction();
+
+        try {
+            DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+            DB::statement('SET UNIQUE_CHECKS = 0');
+            DB::statement('SET SQL_MODE = ""');
+
+            foreach ($tablesToDelete as $table) {
+                $count = DB::table($table)->count();
+                DB::table($table)->delete();
+                $deleted += $count;
+            }
+
+            foreach ($statements as $stmt) {
+                if ($this->isPreservedTableStatement($stmt)) {
+                    continue;
+                }
+
+                try {
+                    DB::unprepared($stmt);
+                    $inserted++;
+                } catch (\Throwable $e) {
+                    $errors[] = [
+                        'statement' => mb_substr($stmt, 0, 100),
+                        'error' => $e->getMessage(),
+                    ];
+
+                    if (count($errors) > 50) {
+                        throw new \RuntimeException('Terlalu banyak error. Rollback.');
+                    }
+                }
+            }
+
+            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            DB::statement('SET UNIQUE_CHECKS = 1');
+
+            DB::commit();
+
+            $skippedPreserved = 0;
+            foreach ($preview['tables'] as $table => $count) {
+                if (in_array($table, $this->preservedTables)) {
+                    $skippedPreserved += $count;
+                }
+            }
+
+            $message = count($errors) === 0
+                ? "✅ Sinkron berhasil! {$deleted} baris dihapus, {$inserted} baris dipulihkan."
+                : "✅ Sinkron selesai dengan {$inserted} baris dan ".count($errors).' peringatan.';
+
+            if ($skippedPreserved > 0) {
+                $message .= " {$skippedPreserved} baris dari tabel sistem dilewati.";
+            }
+
+            Log::info('Database restore-with-replace completed', [
+                'file' => basename($sqlPath),
+                'deleted' => $deleted,
+                'inserted' => $inserted,
+                'skipped_preserved' => $skippedPreserved,
+                'errors' => count($errors),
+            ]);
+
+            return [
+                'success' => true,
+                'message' => $message,
+                'deleted' => $deleted,
+                'inserted' => $inserted,
+                'errors' => $errors,
+                'backup_path' => $backupPath ?? null,
+                'tables' => $preview['tables'],
+                'preserved_tables' => $this->getPreservedTableInfo($preview['tables']),
+            ];
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            DB::statement('SET UNIQUE_CHECKS = 1');
+
+            Log::error('Database restore-with-replace failed', [
+                'file' => basename($sqlPath),
+                'error' => $e->getMessage(),
+            ]);
+
+            return [
+                'success' => false,
+                'message' => '❌ Sinkron gagal: '.$e->getMessage().' Semua perubahan di-rollback.',
+                'deleted' => 0,
                 'inserted' => 0,
                 'errors' => [],
                 'backup_path' => $backupPath ?? null,
@@ -306,5 +444,26 @@ class DatabaseRestoreService
         }
 
         return 'other';
+    }
+
+    protected function isPreservedTableStatement(string $statement): bool
+    {
+        if (preg_match('/INSERT\s+(IGNORE\s+)?INTO\s+[`"\']?(\w+)[`"\']?\s/i', $statement, $m)) {
+            return in_array($m[2], $this->preservedTables);
+        }
+
+        return false;
+    }
+
+    public function getPreservedTableInfo(array $tables): array
+    {
+        $preserved = [];
+        foreach ($tables as $table => $count) {
+            if (in_array($table, $this->preservedTables)) {
+                $preserved[$table] = $count;
+            }
+        }
+
+        return $preserved;
     }
 }
