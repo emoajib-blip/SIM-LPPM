@@ -53,8 +53,14 @@ class RestoreData extends Component
         }
 
         $filename = 'upload_restore_'.now()->format('Ymd_His').'.sql';
-        $this->sqlFile->storeAs('backup', $filename);
+        $this->sqlFile->move($backupDir, $filename);
         $this->uploadedSqlPath = $backupDir.'/'.$filename;
+
+        if (! file_exists($this->uploadedSqlPath)) {
+            $this->output = "❌ Gagal menyimpan file ke {$backupDir}.\n";
+
+            return;
+        }
 
         $service = app(DatabaseRestoreService::class);
         $this->preview = $service->preview($this->uploadedSqlPath);
@@ -91,8 +97,14 @@ class RestoreData extends Component
         }
 
         $filename = 'upload_restore_'.now()->format('Ymd_His').'.zip';
-        $this->zipFile->storeAs('backup', $filename);
+        $this->zipFile->move($backupDir, $filename);
         $this->uploadedZipPath = $backupDir.'/'.$filename;
+
+        if (! file_exists($this->uploadedZipPath)) {
+            $this->output = "❌ Gagal menyimpan file ke {$backupDir}.\n";
+
+            return;
+        }
 
         $service = app(StorageRestoreService::class);
         $validation = $service->preview($this->uploadedZipPath);
