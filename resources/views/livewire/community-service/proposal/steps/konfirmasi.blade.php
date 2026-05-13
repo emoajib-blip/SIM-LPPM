@@ -225,6 +225,61 @@
                         </div>
                     @endif
 
+                    {{-- Budget Group Summary --}}
+                    @php
+                        $konfSchemeId = $form->research_scheme_id ?: $form->community_service_scheme_id;
+                        $konfBudgetCap = \App\Models\BudgetCap::getCapForYear(
+                            (int) ($form->start_year ?: date('Y')),
+                            $form->research_scheme_id ? 'research' : 'community_service',
+                            $konfSchemeId ? (int) $konfSchemeId : null
+                        );
+                        $konfGroupTotals = $budgetItems->groupBy('budget_group_id')->map(fn($items) => $items->sum('total'));
+                    @endphp
+                    @if ($konfBudgetCap > 0)
+                        <div class="card card-sm mb-3">
+                            <div class="card-body">
+                                <h6>Ringkasan Alokasi per Kelompok Anggaran</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Kelompok</th>
+                                                <th class="text-end">Anggaran (Rp)</th>
+                                                <th class="text-end">% dari Cap</th>
+                                                <th class="text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($this->budgetGroups->whereNotNull('percentage') as $group)
+                                                @php
+                                                    $gTotal = $konfGroupTotals[$group->id] ?? 0;
+                                                    $gPct = $konfBudgetCap > 0 ? ($gTotal / $konfBudgetCap) * 100 : 0;
+                                                    $gAllowed = (float) $group->percentage;
+                                                    $gIsMinimum = $group->code === 'TEKNOLOGI';
+                                                    $gIsViolation = $gIsMinimum ? $gPct < $gAllowed : $gPct > $gAllowed;
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $group->name }}</td>
+                                                    <td class="text-end">Rp {{ number_format($gTotal, 0, ',', '.') }}</td>
+                                                    <td class="text-end">{{ number_format($gPct, 1) }}%</td>
+                                                    <td class="text-center">
+                                                        @if ($gTotal > 0)
+                                                            <x-tabler.badge :color="$gIsViolation ? 'danger' : 'success'">
+                                                                {{ $gIsViolation ? 'Tidak Sesuai' : 'Sesuai' }}
+                                                            </x-tabler.badge>
+                                                        @else
+                                                            <x-tabler.badge color="secondary">Belum Diisi</x-tabler.badge>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="table-responsive">
                         <table class="table table-bordered table-sm">
                             <thead>

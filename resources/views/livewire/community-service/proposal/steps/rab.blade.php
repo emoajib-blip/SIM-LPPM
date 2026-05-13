@@ -2,9 +2,9 @@
 @php
     $startYear = (int) ($form->start_year ?: date('Y'));
     $duration = (int) ($form->duration_in_years ?: 1);
-    $currentYear = date('Y');
-    $budgetCap = \App\Models\BudgetCap::where('year', $currentYear)->first();
-    $communityCap = $budgetCap?->community_service_budget_cap;
+    $currentYear = (int) ($form->start_year ?: date('Y'));
+    $schemeId = $form->research_scheme_id ?: $form->community_service_scheme_id;
+    $budgetCap = \App\Models\BudgetCap::getCapForYear($currentYear, 'community_service', $schemeId ? (int) $schemeId : null);
 
     // Calculate totals per group for percentage visualization
     $totalBudget = collect($form->budget_items)->sum(fn($item) => (float) ($item['total'] ?? 0));
@@ -42,7 +42,7 @@
                         @foreach ($this->budgetGroups->whereNotNull('percentage') as $group)
                             @php
                                 $groupTotal = $groupTotals[$group->id] ?? 0;
-                                $percentageUsed = $communityCap > 0 ? ($groupTotal / $communityCap) * 100 : 0;
+                                $percentageUsed = $budgetCap > 0 ? ($groupTotal / $budgetCap) * 100 : 0;
                                 $allowedPercentage = (float) $group->percentage;
                                 $isOver = $percentageUsed > $allowedPercentage;
                                 $isMinimum = $group->code === 'TEKNOLOGI';
@@ -63,29 +63,32 @@
                                         @endif
                                         <small class="text-muted"> - {{ $group->description }}</small>
                                     </div>
-                                     @if ($totalBudget > 0)
-                                        <x-tabler.badge :color="$isOver || $isBelowMinimum ? 'danger' : 'success'">
-                                            {{ number_format($percentageUsed, 1) }}%
-                                            (Rp {{ number_format($groupTotal, 0, ',', '.') }})
-                                        </x-tabler.badge>
-                                    @endif
+                                     @if ($budgetCap > 0)
+                                         <x-tabler.badge :color="$isOver || $isBelowMinimum ? 'danger' : 'success'">
+                                             {{ number_format($percentageUsed, 1) }}%
+                                             (Rp {{ number_format($groupTotal, 0, ',', '.') }})
+                                         </x-tabler.badge>
+                                         @if ($totalBudget > 0)
+                                             <small class="text-muted ms-2">{{ number_format(($groupTotal / $totalBudget) * 100, 1) }}% dari total RAB</small>
+                                         @endif
+                                     @endif
                                 </div>
-                                @if ($communityCap > 0 && $totalBudget > 0)
-                                    <div class="progress mt-1" style="height: 6px;">
-                                        <div class="progress-bar {{ $isOver || $isBelowMinimum ? 'bg-danger' : 'bg-success' }}"
-                                            role="progressbar"
-                                            style="width: {{ min($percentageUsed, 100) }}%">
-                                        </div>
-                                    </div>
-                                @endif
+                                @if ($budgetCap > 0)
+                                     <div class="progress mt-1" style="height: 6px;">
+                                         <div class="progress-bar {{ $isOver || $isBelowMinimum ? 'bg-danger' : 'bg-success' }}"
+                                             role="progressbar"
+                                             style="width: {{ min($percentageUsed, 100) }}%">
+                                         </div>
+                                     </div>
+                                 @endif
                             </li>
                         @endforeach
                     </ul>
-                    @if ($communityCap)
+                    @if ($budgetCap)
                         <div class="border-top mt-2 pt-2">
                             <strong>Batas Maksimal Anggaran Pengabdian {{ $currentYear }}:</strong>
                             <x-tabler.badge color="danger">
-                                Rp {{ number_format($communityCap, 0, ',', '.') }}
+                                Rp {{ number_format($budgetCap, 0, ',', '.') }}
                             </x-tabler.badge>
                         </div>
                     @endif
