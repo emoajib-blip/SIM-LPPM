@@ -234,18 +234,25 @@
                             $konfSchemeId ? (int) $konfSchemeId : null
                         );
                         $konfGroupTotals = $budgetItems->groupBy('budget_group_id')->map(fn($items) => $items->sum('total'));
+                        $konfTotalBudget = $budgetItems->sum('total');
                     @endphp
-                    @if ($konfBudgetCap > 0)
+                    @if ($konfBudgetCap > 0 || $konfTotalBudget > 0)
                         <div class="card card-sm mb-3">
                             <div class="card-body">
                                 <h6>Ringkasan Alokasi per Kelompok Anggaran</h6>
+                                @if (!$konfBudgetCap)
+                                    <div class="alert alert-warning py-1 small mb-2">
+                                        <x-lucide-alert-triangle class="icon alert-icon" />
+                                        Batas anggaran belum ditetapkan Admin LPPM. Persentase ditampilkan terhadap total RAB.
+                                    </div>
+                                @endif
                                 <div class="table-responsive">
                                     <table class="table table-sm table-bordered mb-0">
                                         <thead>
                                             <tr>
                                                 <th>Kelompok</th>
                                                 <th class="text-end">Anggaran (Rp)</th>
-                                                <th class="text-end">% dari Cap</th>
+                                                <th class="text-end">{{ $konfBudgetCap ? '% dari Cap' : '% dari Total RAB' }}</th>
                                                 <th class="text-center">Status</th>
                                             </tr>
                                         </thead>
@@ -253,7 +260,7 @@
                                             @foreach ($this->budgetGroups->whereNotNull('percentage') as $group)
                                                 @php
                                                     $gTotal = $konfGroupTotals[$group->id] ?? 0;
-                                                    $gPct = $konfBudgetCap > 0 ? ($gTotal / $konfBudgetCap) * 100 : 0;
+                                                    $gPct = $konfBudgetCap > 0 ? ($gTotal / $konfBudgetCap) * 100 : ($konfTotalBudget > 0 ? ($gTotal / $konfTotalBudget) * 100 : 0);
                                                     $gAllowed = (float) $group->percentage;
                                                     $gIsMinimum = $group->code === 'TEKNOLOGI';
                                                     $gIsViolation = $gIsMinimum ? $gPct < $gAllowed : $gPct > $gAllowed;

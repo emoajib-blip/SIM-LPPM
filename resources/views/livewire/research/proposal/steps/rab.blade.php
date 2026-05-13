@@ -71,6 +71,11 @@
                                          @if ($totalBudget > 0)
                                              <small class="text-muted ms-2">{{ number_format(($groupTotal / $totalBudget) * 100, 1) }}% dari total RAB</small>
                                          @endif
+                                     @elseif ($totalBudget > 0)
+                                         <x-tabler.badge color="info">
+                                             {{ number_format(($groupTotal / $totalBudget) * 100, 1) }}%
+                                             (Rp {{ number_format($groupTotal, 0, ',', '.') }})
+                                         </x-tabler.badge>
                                      @endif
                                 </div>
                                 @if ($budgetCap > 0)
@@ -78,6 +83,13 @@
                                          <div class="progress-bar {{ $isOver || $isBelowMinimum ? 'bg-danger' : 'bg-success' }}" 
                                              role="progressbar" 
                                              style="width: {{ min($percentageUsed, 100) }}%">
+                                         </div>
+                                     </div>
+                                 @elseif ($totalBudget > 0)
+                                     <div class="progress mt-1" style="height: 6px;">
+                                         <div class="progress-bar bg-info" 
+                                             role="progressbar" 
+                                             style="width: {{ min(($groupTotal / $totalBudget) * 100, 100) }}%">
                                          </div>
                                      </div>
                                  @endif
@@ -90,6 +102,12 @@
                             <x-tabler.badge color="danger">
                                 Rp {{ number_format($budgetCap, 0, ',', '.') }}
                             </x-tabler.badge>
+                        </div>
+                    @endif
+                    @if (!$budgetCap && $totalBudget > 0)
+                        <div class="alert alert-warning mt-2 mb-0 py-1 small">
+                            <x-lucide-alert-triangle class="icon alert-icon" />
+                            Batas anggaran tahun {{ $currentYear }} belum ditetapkan Admin LPPM. Persentase ditampilkan terhadap total RAB sementara.
                         </div>
                     @endif
                 </div>
