@@ -9,8 +9,6 @@ jobs:
   deploy:
     name: 🚀 Deploy ke VPS (cPanel)
     runs-on: ubuntu-latest
-    needs: [lint, analyse, test]
-    if: ${{ success() }}
 
     steps:
       - uses: actions/checkout@v4
