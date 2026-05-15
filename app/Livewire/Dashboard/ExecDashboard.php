@@ -159,15 +159,15 @@ class ExecDashboard extends Component
      */
     private function transformStats(Collection $raw, ?int $facultyId, int $yearFilter): array
     {
-        $research = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'Research'));
-        $communityService = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'CommunityService'));
+        $research = $raw->filter(fn ($r) => str_contains($r->detailable_type ?? '', 'Research'));
+        $communityService = $raw->filter(fn ($r) => str_contains($r->detailable_type ?? '', 'CommunityService'));
 
         return [
             'total_research' => $research->sum('count'),
             'total_community_service' => $communityService->sum('count'),
             // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-            'research_approved' => $research->filter(fn ($r) => in_array($r->status->value, ['APPROVED', 'COMPLETED']))->sum('count'),
-            'community_service_approved' => $communityService->filter(fn ($r) => in_array($r->status->value, ['APPROVED', 'COMPLETED']))->sum('count'),
+            'research_approved' => $research->filter(fn ($r) => in_array($r->status->value ?? '', ['APPROVED', 'COMPLETED']))->sum('count'),
+            'community_service_approved' => $communityService->filter(fn ($r) => in_array($r->status->value ?? '', ['APPROVED', 'COMPLETED']))->sum('count'),
             'faculty_name' => $facultyId ? $this->user->identity?->faculty?->name : null,
             'final_report_pending' => $this->roleName === 'rektor'
                 ? InstitutionalReport::where('status', InstitutionalReportStatus::SUBMITTED)->count()
@@ -215,12 +215,12 @@ class ExecDashboard extends Component
             ->get();
 
         $this->recentResearch = $recentProposals
-            ->filter(fn ($p) => str_contains($p->detailable_type, 'Research'))
+            ->filter(fn ($p) => str_contains($p->detailable_type ?? '', 'Research'))
             ->take(10)
             ->values();
 
         $this->recentCommunityService = $recentProposals
-            ->filter(fn ($p) => str_contains($p->detailable_type, 'CommunityService'))
+            ->filter(fn ($p) => str_contains($p->detailable_type ?? '', 'CommunityService'))
             ->take(10)
             ->values();
     }
@@ -265,12 +265,12 @@ class ExecDashboard extends Component
                     ->groupBy('detailable_type', 'status')
                     ->get();
 
-                $researchTotal = $data->filter(fn ($d) => str_contains($d->detailable_type, 'Research'))->sum('count');
+                $researchTotal = $data->filter(fn ($d) => str_contains($d->detailable_type ?? '', 'Research'))->sum('count');
                 // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-                $researchApproved = $data->filter(fn ($d) => str_contains($d->detailable_type, 'Research') && in_array($d->status->value, ['APPROVED', 'COMPLETED']))->sum('count');
+                $researchApproved = $data->filter(fn ($d) => str_contains($d->detailable_type ?? '', 'Research') && in_array($d->status->value ?? '', ['APPROVED', 'COMPLETED']))->sum('count');
 
-                $pkmTotal = $data->filter(fn ($d) => str_contains($d->detailable_type, 'CommunityService'))->sum('count');
-                $pkmApproved = $data->filter(fn ($d) => str_contains($d->detailable_type, 'CommunityService') && in_array($d->status->value, ['APPROVED', 'COMPLETED']))->sum('count');
+                $pkmTotal = $data->filter(fn ($d) => str_contains($d->detailable_type ?? '', 'CommunityService'))->sum('count');
+                $pkmApproved = $data->filter(fn ($d) => str_contains($d->detailable_type ?? '', 'CommunityService') && in_array($d->status->value ?? '', ['APPROVED', 'COMPLETED']))->sum('count');
 
                 if ($researchTotal > 0 || $pkmTotal > 0) {
                     $summary[] = [

@@ -106,16 +106,16 @@ class DosenDashboard extends Component
             ->groupBy('detailable_type', 'status')
             ->get();
 
-        $research = $statsRaw->filter(fn ($r) => str_contains($r->detailable_type, 'Research'));
-        $communityService = $statsRaw->filter(fn ($r) => str_contains($r->detailable_type, 'CommunityService'));
+        $research = $statsRaw->filter(fn ($r) => str_contains($r->detailable_type ?? '', 'Research'));
+        $communityService = $statsRaw->filter(fn ($r) => str_contains($r->detailable_type ?? '', 'CommunityService'));
 
         $this->stats = [
             'my_research' => $research->sum('count'),
             'my_community_service' => $communityService->sum('count'),
-            'research_pending' => $research->where('status', 'SUBMITTED')->sum('count'),
-            'community_service_pending' => $communityService->where('status', 'SUBMITTED')->sum('count'),
-            'research_approved' => $research->where('status', 'APPROVED')->sum('count'),
-            'community_service_approved' => $communityService->where('status', 'APPROVED')->sum('count'),
+            'research_pending' => $research->filter(fn ($r) => ($r->status->value ?? '') === 'SUBMITTED')->sum('count'),
+            'community_service_pending' => $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'SUBMITTED')->sum('count'),
+            'research_approved' => $research->filter(fn ($r) => ($r->status->value ?? '') === 'APPROVED')->sum('count'),
+            'community_service_approved' => $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'APPROVED')->sum('count'),
         ];
     }
 
@@ -140,11 +140,11 @@ class DosenDashboard extends Component
             ->get();
 
         $this->stats['research_as_member'] = $memberStats
-            ->filter(fn ($r) => str_contains($r->detailable_type, 'Research'))
+            ->filter(fn ($r) => str_contains($r->detailable_type ?? '', 'Research'))
             ->sum('count');
 
         $this->stats['community_service_as_member'] = $memberStats
-            ->filter(fn ($r) => str_contains($r->detailable_type, 'CommunityService'))
+            ->filter(fn ($r) => str_contains($r->detailable_type ?? '', 'CommunityService'))
             ->sum('count');
     }
 

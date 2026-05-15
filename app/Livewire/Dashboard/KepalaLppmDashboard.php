@@ -105,22 +105,22 @@ class KepalaLppmDashboard extends Component
      */
     private function transformStats(Collection $raw, string $yearFilter): array
     {
-        $research = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'Research'));
-        $communityService = $raw->filter(fn ($r) => str_contains($r->detailable_type, 'CommunityService'));
+        $research = $raw->filter(fn ($r) => str_contains($r->detailable_type ?? '', 'Research'));
+        $communityService = $raw->filter(fn ($r) => str_contains($r->detailable_type ?? '', 'CommunityService'));
 
-        $researchPending = $research->where('status', 'REVIEWED')->sum('count');
-        $communityServicePending = $communityService->where('status', 'REVIEWED')->sum('count');
+        $researchPending = $research->filter(fn ($r) => ($r->status->value ?? '') === 'REVIEWED')->sum('count');
+        $communityServicePending = $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'REVIEWED')->sum('count');
 
         return [
             'total_research' => $research->sum('count'),
             'total_community_service' => $communityService->sum('count'),
             'research_pending' => $researchPending,
             'community_service_pending' => $communityServicePending,
-            'research_approved' => $research->where('status', 'APPROVED')->sum('count'),
-            'community_service_approved' => $communityService->where('status', 'APPROVED')->sum('count'),
-            'research_completed' => $research->where('status', 'COMPLETED')->sum('count'),
-            'community_service_completed' => $communityService->where('status', 'COMPLETED')->sum('count'),
-            'pending_initial_approval' => $raw->where('status', 'APPROVED')->sum('count'),
+            'research_approved' => $research->filter(fn ($r) => ($r->status->value ?? '') === 'APPROVED')->sum('count'),
+            'community_service_approved' => $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'APPROVED')->sum('count'),
+            'research_completed' => $research->filter(fn ($r) => ($r->status->value ?? '') === 'COMPLETED')->sum('count'),
+            'community_service_completed' => $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'COMPLETED')->sum('count'),
+            'pending_initial_approval' => $raw->filter(fn ($r) => ($r->status->value ?? '') === 'APPROVED')->sum('count'),
             'pending_final_decision' => $researchPending + $communityServicePending,
             'final_report_pending' => ProgressReport::query()
                 ->where('reporting_period', 'final')
