@@ -68,7 +68,9 @@ class Partner extends Model implements HasMedia
     public function hasCommitmentForProposal(string $proposalId): bool
     {
         return $this->getMedia('commitment_letter')
-            ->where('custom_properties.proposal_id', $proposalId)
+            ->filter(function ($media) use ($proposalId) {
+                return $media->getCustomProperty('proposal_id') === $proposalId;
+            })
             ->isNotEmpty();
     }
 
@@ -78,7 +80,9 @@ class Partner extends Model implements HasMedia
     public function getCommitmentUrlForProposal(string $proposalId): ?string
     {
         return $this->getMedia('commitment_letter')
-            ->where('custom_properties.proposal_id', $proposalId)
+            ->filter(function ($media) use ($proposalId) {
+                return $media->getCustomProperty('proposal_id') === $proposalId;
+            })
             ->first()?->getUrl();
     }
 }

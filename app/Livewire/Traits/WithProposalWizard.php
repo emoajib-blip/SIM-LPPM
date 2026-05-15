@@ -8,6 +8,7 @@ use App\Services\BudgetValidationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 trait WithProposalWizard
 {
@@ -72,41 +73,51 @@ trait WithProposalWizard
             'form.new_partner_commitment_file' => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
-        DB::transaction(function () {
-            $partner = Partner::create([
-                'name' => $this->form->new_partner['name'],
-                'email' => $this->form->new_partner['email'],
-                'institution' => $this->form->new_partner['institution'],
-                'country' => $this->form->new_partner['country'],
-                'type' => $this->form->new_partner['type'],
-                'address' => $this->form->new_partner['address'],
+        try {
+            DB::transaction(function () {
+                $partner = Partner::create([
+                    'name' => $this->form->new_partner['name'],
+                    'email' => $this->form->new_partner['email'],
+                    'institution' => $this->form->new_partner['institution'],
+                    'country' => $this->form->new_partner['country'],
+                    'type' => $this->form->new_partner['type'],
+                    'address' => $this->form->new_partner['address'],
+                ]);
+
+                if ($this->form->new_partner_commitment_file && $this->form->proposal) {
+                    if ($this->form->new_partner_commitment_file instanceof TemporaryUploadedFile) {
+                        $partner
+                            ->addMedia($this->form->new_partner_commitment_file->getRealPath())
+                            ->usingName($this->form->new_partner_commitment_file->getClientOriginalName())
+                            ->usingFileName($this->form->new_partner_commitment_file->hashName())
+                            ->withCustomProperties(['proposal_id' => $this->form->proposal->id])
+                            ->toMediaCollection('commitment_letter');
+                    }
+                }
+
+                $this->form->partner_ids[] = $partner->id;
+
+                $this->form->new_partner = [
+                    'name' => '',
+                    'email' => '',
+                    'institution' => '',
+                    'country' => '',
+                    'type' => '',
+                    'address' => '',
+                ];
+
+                $this->form->new_partner_commitment_file = null;
+            });
+
+            $this->toastSuccess('Mitra baru berhasil ditambahkan.');
+            $this->dispatch('partner-created');
+            $this->dispatch('close-modal', modalId: 'modal-partner');
+        } catch (\Exception $e) {
+            \Log::error('Save New Partner Error: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
             ]);
-
-            if ($this->form->new_partner_commitment_file && $this->form->proposal) {
-                $partner
-                    ->addMedia($this->form->new_partner_commitment_file->getRealPath())
-                    ->usingName($this->form->new_partner_commitment_file->getClientOriginalName())
-                    ->usingFileName($this->form->new_partner_commitment_file->hashName())
-                    ->withCustomProperties(['proposal_id' => $this->form->proposal->id])
-                    ->toMediaCollection('commitment_letter');
-            }
-
-            $this->form->partner_ids[] = $partner->id;
-
-            $this->form->new_partner = [
-                'name' => '',
-                'email' => '',
-                'institution' => '',
-                'country' => '',
-                'type' => '',
-                'address' => '',
-            ];
-
-            $this->form->new_partner_commitment_file = null;
-        });
-
-        $this->dispatch('partner-created');
-        $this->dispatch('close-modal', modalId: 'modal-partner');
+            $this->toastError('Gagal menambahkan mitra: '.$e->getMessage());
+        }
     }
 
     /**
@@ -159,37 +170,66 @@ trait WithProposalWizard
     {
         $targetPartnerId = $partnerId ?? $this->commitmentUploadPartnerId;
 
-        $this->validate([
-            'commitmentUploadFile' => 'required|file|mimes:pdf|max:5120',
-        ]);
-
-        $partner = Partner::find($targetPartnerId);
-        if (! $partner) {
-            $this->addError('commitmentUploadFile', 'Mitra tidak ditemukan.');
+        if (! $targetPartnerId) {
+            $this->toastError('ID Mitra tidak ditemukan.');
 
             return;
         }
 
-        if ($this->form->proposal) {
-            $proposalId = $this->form->proposal->id;
+        $this->validate([
+            'commitmentUploadFile' => 'required|file|mimes:pdf|max:5120',
+        ]);
 
-            // Hapus file lama HANYA untuk proposal ini
-            $partner->getMedia('commitment_letter')
-                ->where('custom_properties.proposal_id', $proposalId)
-                ->each(fn ($media) => $media->delete());
+        try {
+            $partner = Partner::find($targetPartnerId);
+            if (! $partner) {
+                $this->addError('commitmentUploadFile', 'Mitra tidak ditemukan.');
 
-            $partner->addMedia($this->commitmentUploadFile->getRealPath())
-                ->usingName($this->commitmentUploadFile->getClientOriginalName())
-                ->usingFileName($this->commitmentUploadFile->hashName())
-                ->withCustomProperties(['proposal_id' => $proposalId])
-                ->toMediaCollection('commitment_letter');
+                return;
+            }
+
+            if ($this->form->proposal) {
+                $proposalId = $this->form->proposal->id;
+
+                // Hapus file lama HANYA untuk proposal ini (menggunakan filter yang lebih aman)
+                $partner->getMedia('commitment_letter')
+                    ->filter(function ($media) use ($proposalId) {
+                        return $media->getCustomProperty('proposal_id') === $proposalId;
+                    })
+                    ->each(fn ($media) => $media->delete());
+
+                // Pastikan file adalah instance TemporaryUploadedFile yang valid
+                if (! ($this->commitmentUploadFile instanceof TemporaryUploadedFile)) {
+                    throw new \Exception('File tidak valid atau gagal diunggah. Silakan coba unggah kembali.');
+                }
+
+                $partner->addMedia($this->commitmentUploadFile->getRealPath())
+                    ->usingName($this->commitmentUploadFile->getClientOriginalName())
+                    ->usingFileName($this->commitmentUploadFile->hashName())
+                    ->withCustomProperties(['proposal_id' => $proposalId])
+                    ->toMediaCollection('commitment_letter');
+
+                $this->toastSuccess('Surat Kesediaan berhasil diunggah.');
+            } else {
+                // Jika ini adalah proposal baru (masih di memori), kita simpan ke array sementara?
+                // Namun sistem saat ini mewajibkan proposal di-save draft dulu sebelum upload mitra.
+                $this->toastWarning('Silakan simpan draft usulan terlebih dahulu sebelum mengunggah dokumen mitra.');
+            }
+
+            $this->resetCommitmentUpload();
+            $this->dispatch('close-modal', modalId: 'modal-upload-kesediaan');
+
+            // Refresh computed partners agar tampilan tabel terupdate
+            unset($this->partners);
+        } catch (\Exception $e) {
+            \Log::error('Upload Commitment Letter Error: '.$e->getMessage(), [
+                'partner_id' => $targetPartnerId,
+                'proposal_id' => $this->form->proposal?->id,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            $this->toastError('Gagal mengunggah file: '.$e->getMessage());
         }
-
-        $this->resetCommitmentUpload();
-        $this->dispatch('close-modal', modalId: 'modal-upload-kesediaan');
-
-        // Refresh computed partners agar tampilan tabel terupdate
-        unset($this->partners);
     }
 
     /**
