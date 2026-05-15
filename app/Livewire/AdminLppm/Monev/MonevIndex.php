@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Schema;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
@@ -296,25 +297,37 @@ class MonevIndex extends Component
 
         $monev->save();
 
-        if ($this->berita_acara) {
-            $monev->clearMediaCollection('berita_acara');
-            $monev->addMedia($this->berita_acara->getRealPath())
-                ->usingFileName($this->berita_acara->getClientOriginalName())
-                ->toMediaCollection('berita_acara');
+        if ($this->berita_acara && $this->berita_acara instanceof TemporaryUploadedFile) {
+            try {
+                $monev->clearMediaCollection('berita_acara');
+                $monev->addMedia($this->berita_acara->getRealPath())
+                    ->usingFileName($this->berita_acara->getClientOriginalName())
+                    ->toMediaCollection('berita_acara');
+            } catch (\Exception $e) {
+                Log::error('Upload Monev Berita Acara failed: '.$e->getMessage());
+            }
         }
 
-        if ($this->borang) {
-            $monev->clearMediaCollection('borang');
-            $monev->addMedia($this->borang->getRealPath())
-                ->usingFileName($this->borang->getClientOriginalName())
-                ->toMediaCollection('borang');
+        if ($this->borang && $this->borang instanceof TemporaryUploadedFile) {
+            try {
+                $monev->clearMediaCollection('borang');
+                $monev->addMedia($this->borang->getRealPath())
+                    ->usingFileName($this->borang->getClientOriginalName())
+                    ->toMediaCollection('borang');
+            } catch (\Exception $e) {
+                Log::error('Upload Monev Borang failed: '.$e->getMessage());
+            }
         }
 
-        if ($this->rekap_penilaian) {
-            $monev->clearMediaCollection('rekap_penilaian');
-            $monev->addMedia($this->rekap_penilaian->getRealPath())
-                ->usingFileName($this->rekap_penilaian->getClientOriginalName())
-                ->toMediaCollection('rekap_penilaian');
+        if ($this->rekap_penilaian && $this->rekap_penilaian instanceof TemporaryUploadedFile) {
+            try {
+                $monev->clearMediaCollection('rekap_penilaian');
+                $monev->addMedia($this->rekap_penilaian->getRealPath())
+                    ->usingFileName($this->rekap_penilaian->getClientOriginalName())
+                    ->toMediaCollection('rekap_penilaian');
+            } catch (\Exception $e) {
+                Log::error('Upload Monev Rekap Penilaian failed: '.$e->getMessage());
+            }
         }
 
         $this->toastSuccess('Data Monev berhasil disimpan.');

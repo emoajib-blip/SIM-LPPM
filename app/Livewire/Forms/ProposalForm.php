@@ -24,6 +24,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\Form;
 use Spatie\Permission\Models\Role;
 
@@ -374,26 +375,34 @@ class ProposalForm extends Form
         ]);
 
         // Upload substance file using Media Library
-        if ($this->substance_file) {
-            $research
-                ->addMedia($this->substance_file->getRealPath())
-                ->usingName($this->substance_file->getClientOriginalName())
-                ->usingFileName($this->substance_file->hashName())
-                ->withCustomProperties(['uploaded_by' => $submitterId])
-                ->toMediaCollection('substance_file');
+        if ($this->substance_file && $this->substance_file instanceof TemporaryUploadedFile) {
+            try {
+                $research
+                    ->addMedia($this->substance_file->getRealPath())
+                    ->usingName($this->substance_file->getClientOriginalName())
+                    ->usingFileName($this->substance_file->hashName())
+                    ->withCustomProperties(['uploaded_by' => $submitterId])
+                    ->toMediaCollection('substance_file');
+            } catch (\Exception $e) {
+                \Log::error('Upload research substance file failed: '.$e->getMessage());
+            }
 
             // Reset to prevent "UnableToRetrieveMetadata" error on subsequent validations
             $this->substance_file = null;
         }
 
         // Upload approval file if exists
-        if ($this->approval_file) {
-            $research
-                ->addMedia($this->approval_file->getRealPath())
-                ->usingName($this->approval_file->getClientOriginalName())
-                ->usingFileName($this->approval_file->hashName())
-                ->withCustomProperties(['uploaded_by' => $submitterId])
-                ->toMediaCollection('approval_file');
+        if ($this->approval_file && $this->approval_file instanceof TemporaryUploadedFile) {
+            try {
+                $research
+                    ->addMedia($this->approval_file->getRealPath())
+                    ->usingName($this->approval_file->getClientOriginalName())
+                    ->usingFileName($this->approval_file->hashName())
+                    ->withCustomProperties(['uploaded_by' => $submitterId])
+                    ->toMediaCollection('approval_file');
+            } catch (\Exception $e) {
+                \Log::error('Upload research approval file failed: '.$e->getMessage());
+            }
 
             $this->approval_file = null;
         }
@@ -464,26 +473,34 @@ class ProposalForm extends Form
         ]);
 
         // Upload substance file using Media Library
-        if ($this->substance_file) {
-            $communityService
-                ->addMedia($this->substance_file->getRealPath())
-                ->usingName($this->substance_file->getClientOriginalName())
-                ->usingFileName($this->substance_file->hashName())
-                ->withCustomProperties(['uploaded_by' => $submitterId])
-                ->toMediaCollection('substance_file');
+        if ($this->substance_file && $this->substance_file instanceof TemporaryUploadedFile) {
+            try {
+                $communityService
+                    ->addMedia($this->substance_file->getRealPath())
+                    ->usingName($this->substance_file->getClientOriginalName())
+                    ->usingFileName($this->substance_file->hashName())
+                    ->withCustomProperties(['uploaded_by' => $submitterId])
+                    ->toMediaCollection('substance_file');
+            } catch (\Exception $e) {
+                \Log::error('Upload community service substance file failed: '.$e->getMessage());
+            }
 
             // Reset to prevent "UnableToRetrieveMetadata" error on subsequent validations
             $this->substance_file = null;
         }
 
         // Upload approval file if exists
-        if ($this->approval_file) {
-            $communityService
-                ->addMedia($this->approval_file->getRealPath())
-                ->usingName($this->approval_file->getClientOriginalName())
-                ->usingFileName($this->approval_file->hashName())
-                ->withCustomProperties(['uploaded_by' => $submitterId])
-                ->toMediaCollection('approval_file');
+        if ($this->approval_file && $this->approval_file instanceof TemporaryUploadedFile) {
+            try {
+                $communityService
+                    ->addMedia($this->approval_file->getRealPath())
+                    ->usingName($this->approval_file->getClientOriginalName())
+                    ->usingFileName($this->approval_file->hashName())
+                    ->withCustomProperties(['uploaded_by' => $submitterId])
+                    ->toMediaCollection('approval_file');
+            } catch (\Exception $e) {
+                \Log::error('Upload community service approval file failed: '.$e->getMessage());
+            }
 
             $this->approval_file = null;
         }
@@ -550,26 +567,34 @@ class ProposalForm extends Form
                     ]);
 
                     // Update substance file ONLY if a new file is uploaded
-                    if ($this->substance_file && ! is_string($this->substance_file)) {
-                        $detailable
-                            ->addMedia($this->substance_file->getRealPath())
-                            ->usingName($this->substance_file->getClientOriginalName())
-                            ->usingFileName($this->substance_file->hashName())
-                            ->withCustomProperties(['uploaded_by' => Auth::id()])
-                            ->toMediaCollection('substance_file');
+                    if ($this->substance_file && $this->substance_file instanceof TemporaryUploadedFile) {
+                        try {
+                            $detailable
+                                ->addMedia($this->substance_file->getRealPath())
+                                ->usingName($this->substance_file->getClientOriginalName())
+                                ->usingFileName($this->substance_file->hashName())
+                                ->withCustomProperties(['uploaded_by' => Auth::id()])
+                                ->toMediaCollection('substance_file');
+                        } catch (\Exception $e) {
+                            \Log::error('Update research substance file failed: '.$e->getMessage());
+                        }
 
                         // Reset to prevent "UnableToRetrieveMetadata" error on subsequent validations
                         $this->substance_file = null;
                     }
 
                     // Update approval file ONLY if a new file is uploaded
-                    if ($this->approval_file && ! is_string($this->approval_file)) {
-                        $detailable
-                            ->addMedia($this->approval_file->getRealPath())
-                            ->usingName($this->approval_file->getClientOriginalName())
-                            ->usingFileName($this->approval_file->hashName())
-                            ->withCustomProperties(['uploaded_by' => Auth::id()])
-                            ->toMediaCollection('approval_file');
+                    if ($this->approval_file && $this->approval_file instanceof TemporaryUploadedFile) {
+                        try {
+                            $detailable
+                                ->addMedia($this->approval_file->getRealPath())
+                                ->usingName($this->approval_file->getClientOriginalName())
+                                ->usingFileName($this->approval_file->hashName())
+                                ->withCustomProperties(['uploaded_by' => Auth::id()])
+                                ->toMediaCollection('approval_file');
+                        } catch (\Exception $e) {
+                            \Log::error('Update research approval file failed: '.$e->getMessage());
+                        }
 
                         $this->approval_file = null;
                     }
@@ -601,26 +626,34 @@ class ProposalForm extends Form
                     ]);
 
                     // Update substance file ONLY if a new file is uploaded
-                    if ($this->substance_file && ! is_string($this->substance_file)) {
-                        $detailable
-                            ->addMedia($this->substance_file->getRealPath())
-                            ->usingName($this->substance_file->getClientOriginalName())
-                            ->usingFileName($this->substance_file->hashName())
-                            ->withCustomProperties(['uploaded_by' => Auth::id()])
-                            ->toMediaCollection('substance_file');
+                    if ($this->substance_file && $this->substance_file instanceof TemporaryUploadedFile) {
+                        try {
+                            $detailable
+                                ->addMedia($this->substance_file->getRealPath())
+                                ->usingName($this->substance_file->getClientOriginalName())
+                                ->usingFileName($this->substance_file->hashName())
+                                ->withCustomProperties(['uploaded_by' => Auth::id()])
+                                ->toMediaCollection('substance_file');
+                        } catch (\Exception $e) {
+                            \Log::error('Update community service substance file failed: '.$e->getMessage());
+                        }
 
                         // Reset to prevent "UnableToRetrieveMetadata" error on subsequent validations
                         $this->substance_file = null;
                     }
 
                     // Update approval file ONLY if a new file is uploaded
-                    if ($this->approval_file && ! is_string($this->approval_file)) {
-                        $detailable
-                            ->addMedia($this->approval_file->getRealPath())
-                            ->usingName($this->approval_file->getClientOriginalName())
-                            ->usingFileName($this->approval_file->hashName())
-                            ->withCustomProperties(['uploaded_by' => Auth::id()])
-                            ->toMediaCollection('approval_file');
+                    if ($this->approval_file && $this->approval_file instanceof TemporaryUploadedFile) {
+                        try {
+                            $detailable
+                                ->addMedia($this->approval_file->getRealPath())
+                                ->usingName($this->approval_file->getClientOriginalName())
+                                ->usingFileName($this->approval_file->hashName())
+                                ->withCustomProperties(['uploaded_by' => Auth::id()])
+                                ->toMediaCollection('approval_file');
+                        } catch (\Exception $e) {
+                            \Log::error('Update community service approval file failed: '.$e->getMessage());
+                        }
 
                         $this->approval_file = null;
                     }

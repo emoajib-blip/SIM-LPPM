@@ -14,6 +14,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\Form;
 
 class ReportForm extends Form
@@ -753,17 +754,25 @@ class ReportForm extends Form
         $file,
         string $collectionName
     ): void {
-        $report->clearMediaCollection($collectionName);
-        $report
-            ->addMedia($file->getRealPath())
-            ->usingName($file->getClientOriginalName())
-            ->usingFileName($file->getClientOriginalName())
-            ->withCustomProperties([
-                'uploaded_by' => Auth::id(),
-                'proposal_id' => $this->proposal->id,
-                'report_type' => $this->type,
-            ])
-            ->toMediaCollection($collectionName);
+        if (! $file || ! $file instanceof TemporaryUploadedFile) {
+            return;
+        }
+
+        try {
+            $report->clearMediaCollection($collectionName);
+            $report
+                ->addMedia($file->getRealPath())
+                ->usingName($file->getClientOriginalName())
+                ->usingFileName($file->hashName())
+                ->withCustomProperties([
+                    'uploaded_by' => Auth::id(),
+                    'proposal_id' => $this->proposal->id,
+                    'report_type' => $this->type,
+                ])
+                ->toMediaCollection($collectionName);
+        } catch (\Exception $e) {
+            \Log::error('Upload report file failed ('.$collectionName.'): '.$e->getMessage());
+        }
     }
 
     /**

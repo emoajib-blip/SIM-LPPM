@@ -7,8 +7,9 @@ namespace App\Livewire\Traits;
 use App\Models\AdditionalOutput;
 use App\Models\MandatoryOutput;
 use App\Models\ProgressReport;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 trait HasFileUploads
 {
@@ -92,26 +93,25 @@ trait HasFileUploads
      */
     protected function saveSubstanceFile(ProgressReport $report, string $reportType = 'progress'): void
     {
-        if (! $this->substanceFile || ! $this->substanceFile instanceof UploadedFile) {
+        if (! $this->substanceFile || ! $this->substanceFile instanceof TemporaryUploadedFile) {
             return;
         }
 
-        // Check if file still exists (Livewire temp files are deleted after first request)
-        if (! file_exists($this->substanceFile->getRealPath())) {
-            return;
+        try {
+            $report->clearMediaCollection('substance_file');
+            $report
+                ->addMedia($this->substanceFile->getRealPath())
+                ->usingName($this->substanceFile->getClientOriginalName())
+                ->usingFileName($this->substanceFile->hashName())
+                ->withCustomProperties([
+                    'uploaded_by' => Auth::id(),
+                    'proposal_id' => $report->proposal_id,
+                    'report_type' => $reportType,
+                ])
+                ->toMediaCollection('substance_file');
+        } catch (\Exception $e) {
+            Log::error('Upload report substance file failed: '.$e->getMessage());
         }
-
-        $report->clearMediaCollection('substance_file');
-        $report
-            ->addMedia($this->substanceFile->getRealPath())
-            ->usingName($this->substanceFile->getClientOriginalName())
-            ->usingFileName($this->substanceFile->hashName())
-            ->withCustomProperties([
-                'uploaded_by' => Auth::id(),
-                'proposal_id' => $report->proposal_id,
-                'report_type' => $reportType,
-            ])
-            ->toMediaCollection('substance_file');
     }
 
     /**
@@ -119,26 +119,25 @@ trait HasFileUploads
      */
     protected function saveRealizationFile(ProgressReport $report, string $reportType = 'final'): void
     {
-        if (! $this->realizationFile || ! $this->realizationFile instanceof UploadedFile) {
+        if (! $this->realizationFile || ! $this->realizationFile instanceof TemporaryUploadedFile) {
             return;
         }
 
-        // Check if file still exists (Livewire temp files are deleted after first request)
-        if (! file_exists($this->realizationFile->getRealPath())) {
-            return;
+        try {
+            $report->clearMediaCollection('realization_file');
+            $report
+                ->addMedia($this->realizationFile->getRealPath())
+                ->usingName($this->realizationFile->getClientOriginalName())
+                ->usingFileName($this->realizationFile->hashName())
+                ->withCustomProperties([
+                    'uploaded_by' => Auth::id(),
+                    'proposal_id' => $report->proposal_id,
+                    'report_type' => $reportType,
+                ])
+                ->toMediaCollection('realization_file');
+        } catch (\Exception $e) {
+            Log::error('Upload report realization file failed: '.$e->getMessage());
         }
-
-        $report->clearMediaCollection('realization_file');
-        $report
-            ->addMedia($this->realizationFile->getRealPath())
-            ->usingName($this->realizationFile->getClientOriginalName())
-            ->usingFileName($this->realizationFile->hashName())
-            ->withCustomProperties([
-                'uploaded_by' => Auth::id(),
-                'proposal_id' => $report->proposal_id,
-                'report_type' => $reportType,
-            ])
-            ->toMediaCollection('realization_file');
     }
 
     /**
@@ -146,26 +145,25 @@ trait HasFileUploads
      */
     protected function savePresentationFile(ProgressReport $report, string $reportType = 'final'): void
     {
-        if (! $this->presentationFile || ! $this->presentationFile instanceof UploadedFile) {
+        if (! $this->presentationFile || ! $this->presentationFile instanceof TemporaryUploadedFile) {
             return;
         }
 
-        // Check if file still exists (Livewire temp files are deleted after first request)
-        if (! file_exists($this->presentationFile->getRealPath())) {
-            return;
+        try {
+            $report->clearMediaCollection('presentation_file');
+            $report
+                ->addMedia($this->presentationFile->getRealPath())
+                ->usingName($this->presentationFile->getClientOriginalName())
+                ->usingFileName($this->presentationFile->hashName())
+                ->withCustomProperties([
+                    'uploaded_by' => Auth::id(),
+                    'proposal_id' => $report->proposal_id,
+                    'report_type' => $reportType,
+                ])
+                ->toMediaCollection('presentation_file');
+        } catch (\Exception $e) {
+            Log::error('Upload report presentation file failed: '.$e->getMessage());
         }
-
-        $report->clearMediaCollection('presentation_file');
-        $report
-            ->addMedia($this->presentationFile->getRealPath())
-            ->usingName($this->presentationFile->getClientOriginalName())
-            ->usingFileName($this->presentationFile->hashName())
-            ->withCustomProperties([
-                'uploaded_by' => Auth::id(),
-                'proposal_id' => $report->proposal_id,
-                'report_type' => $reportType,
-            ])
-            ->toMediaCollection('presentation_file');
     }
 
     /**
@@ -179,22 +177,25 @@ trait HasFileUploads
 
         $file = $this->tempMandatoryFiles[$proposalOutputId];
 
-        // Check if file is valid and still exists
-        if (! $file instanceof UploadedFile || ! file_exists($file->getRealPath())) {
+        if (! $file instanceof TemporaryUploadedFile) {
             return;
         }
 
-        $output->clearMediaCollection('journal_article');
-        $output
-            ->addMedia($file->getRealPath())
-            ->usingName($file->getClientOriginalName())
-            ->usingFileName($file->hashName())
-            ->withCustomProperties([
-                'uploaded_by' => Auth::id(),
-                'proposal_id' => $output->progressReport->proposal_id,
-                'report_type' => $reportType,
-            ])
-            ->toMediaCollection('journal_article');
+        try {
+            $output->clearMediaCollection('journal_article');
+            $output
+                ->addMedia($file->getRealPath())
+                ->usingName($file->getClientOriginalName())
+                ->usingFileName($file->hashName())
+                ->withCustomProperties([
+                    'uploaded_by' => Auth::id(),
+                    'proposal_id' => $output->progressReport->proposal_id,
+                    'report_type' => $reportType,
+                ])
+                ->toMediaCollection('journal_article');
+        } catch (\Exception $e) {
+            Log::error('Upload report mandatory output file failed: '.$e->getMessage());
+        }
     }
 
     /**
@@ -208,22 +209,25 @@ trait HasFileUploads
 
         $file = $this->tempAdditionalFiles[$proposalOutputId];
 
-        // Check if file is valid and still exists
-        if (! $file instanceof UploadedFile || ! file_exists($file->getRealPath())) {
+        if (! $file instanceof TemporaryUploadedFile) {
             return;
         }
 
-        $output->clearMediaCollection('book_document');
-        $output
-            ->addMedia($file->getRealPath())
-            ->usingName($file->getClientOriginalName())
-            ->usingFileName($file->hashName())
-            ->withCustomProperties([
-                'uploaded_by' => Auth::id(),
-                'proposal_id' => $output->progressReport->proposal_id,
-                'report_type' => $reportType,
-            ])
-            ->toMediaCollection('book_document');
+        try {
+            $output->clearMediaCollection('book_document');
+            $output
+                ->addMedia($file->getRealPath())
+                ->usingName($file->getClientOriginalName())
+                ->usingFileName($file->hashName())
+                ->withCustomProperties([
+                    'uploaded_by' => Auth::id(),
+                    'proposal_id' => $output->progressReport->proposal_id,
+                    'report_type' => $reportType,
+                ])
+                ->toMediaCollection('book_document');
+        } catch (\Exception $e) {
+            Log::error('Upload report additional output file failed: '.$e->getMessage());
+        }
     }
 
     /**
@@ -237,22 +241,25 @@ trait HasFileUploads
 
         $file = $this->tempAdditionalCerts[$proposalOutputId];
 
-        // Check if file is valid and still exists
-        if (! $file instanceof UploadedFile || ! file_exists($file->getRealPath())) {
+        if (! $file instanceof TemporaryUploadedFile) {
             return;
         }
 
-        $output->clearMediaCollection('publication_certificate');
-        $output
-            ->addMedia($file->getRealPath())
-            ->usingName($file->getClientOriginalName())
-            ->usingFileName($file->hashName())
-            ->withCustomProperties([
-                'uploaded_by' => Auth::id(),
-                'proposal_id' => $output->progressReport->proposal_id,
-                'report_type' => $reportType,
-            ])
-            ->toMediaCollection('publication_certificate');
+        try {
+            $output->clearMediaCollection('publication_certificate');
+            $output
+                ->addMedia($file->getRealPath())
+                ->usingName($file->getClientOriginalName())
+                ->usingFileName($file->hashName())
+                ->withCustomProperties([
+                    'uploaded_by' => Auth::id(),
+                    'proposal_id' => $output->progressReport->proposal_id,
+                    'report_type' => $reportType,
+                ])
+                ->toMediaCollection('publication_certificate');
+        } catch (\Exception $e) {
+            Log::error('Upload report additional output certificate failed: '.$e->getMessage());
+        }
     }
 
     /**
