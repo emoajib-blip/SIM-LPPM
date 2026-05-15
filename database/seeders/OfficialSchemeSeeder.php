@@ -15,17 +15,14 @@ class OfficialSchemeSeeder extends Seeder
             [
                 'name' => 'Skema 1: Reguler',
                 'strata' => 'Reguler',
-                'description' => 'Skema penelitian reguler',
             ],
             [
                 'name' => 'Skema 2: Kolaborasi Internal',
                 'strata' => 'Kolaborasi Internal',
-                'description' => 'Skema penelitian kolaborasi internal',
             ],
             [
                 'name' => 'Skema 3: Kolaborasi Eksternal',
                 'strata' => 'Kerja Sama Antar PT',
-                'description' => 'Skema penelitian kolaborasi eksternal',
             ],
         ];
 
@@ -41,17 +38,14 @@ class OfficialSchemeSeeder extends Seeder
             [
                 'name' => 'Skema 1: Reguler',
                 'strata' => 'PKM-Reguler',
-                'description' => 'Skema pengabdian reguler',
             ],
             [
                 'name' => 'Skema 2: Kolaborasi Internal',
                 'strata' => 'PKM-KI',
-                'description' => 'Skema pengabdian kolaborasi internal',
             ],
             [
                 'name' => 'Skema 3: Kolaborasi Eksternal',
                 'strata' => 'PKM-KE',
-                'description' => 'Skema pengabdian kolaborasi eksternal',
             ],
         ];
 
