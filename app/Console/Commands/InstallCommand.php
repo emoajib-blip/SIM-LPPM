@@ -469,67 +469,7 @@ class InstallCommand extends Command
             'MEDIA_DISK' => $responses['media_disk'],
         ];
 
-        if ($responses['filesystem_disk'] === 's3' || $responses['media_disk'] === 's3') {
-            $config = array_merge($config, $this->configureS3Storage($options));
-        }
-
         return $config;
-    }
-
-    private function configureS3Storage(array $options): array
-    {
-        $this->newLine();
-        note('S3/Object Storage Configuration');
-
-        $responses = form()
-            ->text(
-                label: 'Access Key ID',
-                required: true,
-                name: 'access_key'
-            )
-            ->password(
-                label: 'Secret Access Key',
-                required: true,
-                name: 'secret_key'
-            )
-            ->select(
-                label: 'Region',
-                options: $options['awsRegion'],
-                default: 'ap-southeast-1',
-                name: 'region'
-            )
-            ->text(
-                label: 'Bucket Name',
-                required: true,
-                name: 'bucket'
-            )
-            ->text(
-                label: 'Endpoint URL (optional)',
-                hint: 'For S3-compatible storage like MinIO, DigitalOcean Spaces',
-                name: 'endpoint'
-            )
-            ->text(
-                label: 'Public URL (optional)',
-                hint: 'CDN or public URL for assets',
-                name: 'url'
-            )
-            ->confirm(
-                label: 'Use Path Style Endpoint?',
-                default: false,
-                hint: 'Required for MinIO and some S3-compatible services',
-                name: 'path_style'
-            )
-            ->submit();
-
-        return [
-            'AWS_ACCESS_KEY_ID' => $responses['access_key'],
-            'AWS_SECRET_ACCESS_KEY' => $responses['secret_key'],
-            'AWS_DEFAULT_REGION' => $responses['region'],
-            'AWS_BUCKET' => $responses['bucket'],
-            'AWS_ENDPOINT' => $responses['endpoint'] ?? '',
-            'AWS_URL' => $responses['url'] ?? '',
-            'AWS_USE_PATH_STYLE_ENDPOINT' => $responses['path_style'] ? 'true' : 'false',
-        ];
     }
 
     private function configureDatabase(): ?array

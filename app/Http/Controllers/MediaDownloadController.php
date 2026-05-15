@@ -27,14 +27,6 @@ class MediaDownloadController extends Controller
 
             $diskName = config('media-library.disk_name', 'public');
 
-            if ($diskName === 's3') {
-                // For S3, redirect to temporary signed URL
-                $url = $media->getTemporaryUrl(now()->addMinutes(5));
-                ob_end_clean();
-
-                return redirect($url);
-            }
-
             // 3. Path Traversal & Existence Check for local disks
             $disk = Storage::disk($diskName);
             // getPath() already returns full path, don't double-prepend disk root

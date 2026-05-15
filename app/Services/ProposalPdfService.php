@@ -29,55 +29,20 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class ProposalPdfService
 {
     /**
-     * Get a local PDF path for a media file, downloading from S3 if necessary.
-     * Returns null if the file cannot be accessed or is not a PDF.
+     * Get a local PDF path for a media file.
+     * Returns null if the file cannot be found.
      *
      * @param  array<int, string>  $tempFiles
      *
-     * For S3 disks: downloads to a temp file and registers automatic cleanup.
      * For local disks: resolves to the absolute filesystem path.
      */
     private function getLocalPdfPath(Media $media, array &$tempFiles): ?string
     {
         $diskName = config('media-library.disk_name', 'public');
-
-        // S3/Cloud: download to temp file
-        if (in_array($diskName, ['s3', 's3_public'])) {
-            try {
-                $tempFile = tempnam(sys_get_temp_dir(), 'pdf_merge_').'.pdf';
-                $content = Storage::disk($diskName)->get($media->getPath());
-                file_put_contents($tempFile, $content);
-
-                // Track for cleanup
-                $tempFiles[] = $tempFile;
-
-                // Fallback cleanup in case of script crash
-                register_shutdown_function(fn () => @unlink($tempFile));
-
-                Log::debug('Downloaded S3 media to temp for PDF merge', [
-                    's3_path' => $media->getPath(),
-                    'file_name' => $media->file_name,
-                    'media_id' => $media->id,
-                    'temp_path' => $tempFile,
-                    'file_size' => strlen($content),
-                    'md5' => md5($content),
-                ]);
-
-                return $tempFile;
-            } catch (\Throwable $e) {
-                Log::warning('Failed to download S3 media for PDF merge', [
-                    'media_id' => $media->id,
-                    'error' => $e->getMessage(),
-                ]);
-
-                return null;
-            }
-        }
-
-        // Local disk: resolve path
         $path = $media->getPath();
+        $fullPath = str_starts_with($path, '/') ? $path : Storage::disk($diskName)->path($path);
 
-        return str_starts_with($path, '/') ? $path : Storage::disk($diskName)->path($path);
+        return file_exists($fullPath) ? $fullPath : null;
     }
 
     /**
@@ -335,7 +300,7 @@ class ProposalPdfService
         // 2. Prepare FPDI for merging
         $pdf = new Fpdi;
 
-        // Track temp files for cleanup (S3 downloads)
+        // Track temp files for cleanup if needed
         $tempFiles = [];
 
         // Add pages from the generated info PDF
@@ -487,7 +452,7 @@ class ProposalPdfService
         // Cleanup temporary info PDF
         @unlink($tempInfoPath);
 
-        // Cleanup temp files from S3 downloads
+        // Cleanup temp files
         foreach ($tempFiles as $tempFile) {
             @unlink($tempFile);
         }
@@ -685,7 +650,7 @@ class ProposalPdfService
 
         $pdf = new Fpdi;
 
-        // Track temp files for cleanup (S3 downloads)
+        // Track temp files for cleanup if needed
         $tempFiles = [];
 
         $pageCount = $pdf->setSourceFile($tempInfoPath);
@@ -874,7 +839,7 @@ class ProposalPdfService
         $pdf->Output('F', $cachePath);
         @unlink($tempInfoPath);
 
-        // Cleanup temp files from S3 downloads
+        // Cleanup temp files
         foreach ($tempFiles as $tempFile) {
             @unlink($tempFile);
         }
