@@ -14,6 +14,7 @@
                 <thead>
                     <tr>
                         <th>Tahun</th>
+                        <th>Semester</th>
                         <th>Batas Anggaran Penelitian</th>
                         <th>Batas Anggaran Pengabdian</th>
                         <th class="w-25">Aksi</th>
@@ -23,6 +24,13 @@
                     @forelse ($budgetCaps as $item)
                         <tr wire:key="budget-cap-{{ $item->id }}">
                             <td><span class="bg-blue-lt badge">{{ $item->year }}</span></td>
+                            <td>
+                                @if ($item->semester == 'ganjil')
+                                    <span class="badge bg-purple-lt">Ganjil</span>
+                                @else
+                                    <span class="badge bg-indigo-lt">Genap</span>
+                                @endif
+                            </td>
                             <td>
                                 @if ($item->research_budget_cap)
                                     <div class="text-success fw-bold">Default: Rp
@@ -92,20 +100,32 @@
 
     <x-tabler.modal-confirmation wire:key="modal-confirm-delete-budget-cap" id="modal-confirm-delete-budget-cap"
         title="Konfirmasi Hapus"
-        message="Apakah Anda yakin ingin menghapus pengaturan anggaran untuk tahun {{ $deleteItemYear ?? '' }}?"
+        message="Apakah Anda yakin ingin menghapus pengaturan anggaran untuk {{ $deleteItemYear ?? '' }}?"
         confirm-text="Ya, Hapus" cancel-text="Batal" component-id="{{ $this->getId() }}"
         on-confirm="handleConfirmDeleteAction" />
     <x-tabler.modal wire:key="modal-budget-cap" id="modal-budget-cap" :title="$modalTitle" onHide="resetForm"
         component-id="{{ $this->getId() }}">
         <x-slot:body>
             <form wire:submit="save" id="form-budget-cap">
-                <div class="mb-3">
-                    <label class="form-label required">Tahun Anggaran</label>
-                    <input type="number" wire:model="year" class="form-control" placeholder="2025" min="2000"
-                        max="2100">
-                    @error('year')
-                        <div class="d-block invalid-feedback">{{ $message }}</div>
-                    @enderror
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label required">Tahun Anggaran</label>
+                        <input type="number" wire:model="year" class="form-control" placeholder="2026" min="2000"
+                            max="2100">
+                        @error('year')
+                            <div class="d-block invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label required">Semester</label>
+                        <select wire:model="semester" class="form-select">
+                            <option value="ganjil">Ganjil</option>
+                            <option value="genap">Genap</option>
+                        </select>
+                        @error('semester')
+                            <div class="d-block invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="alert alert-info py-2 mb-3">
                     <div class="d-flex">

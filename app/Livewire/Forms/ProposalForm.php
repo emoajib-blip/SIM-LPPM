@@ -75,6 +75,9 @@ class ProposalForm extends Form
     #[Validate('required|integer|min:2020|max:2050')]
     public string $start_year = '2026';
 
+    #[Validate('required|string|in:ganjil,genap')]
+    public string $semester = 'ganjil';
+
     #[Validate('required|string|min:100')]
     public string $summary = '';
 
@@ -193,6 +196,7 @@ class ProposalForm extends Form
         $this->sbk_value = (string) $proposal->sbk_value;
         $this->duration_in_years = (string) $proposal->duration_in_years;
         $this->start_year = (string) ($proposal->start_year ?? date('Y'));
+        $this->semester = (string) ($proposal->semester ?? 'ganjil');
         $this->summary = $proposal->summary ?? '';
         $this->asta_cita = $proposal->asta_cita ?? '';
         $this->sdg_ids = $proposal->sdgs->pluck('id')->toArray();
@@ -411,6 +415,7 @@ class ProposalForm extends Form
             'sbk_value' => ! empty($this->sbk_value) ? $this->sbk_value : null,
             'duration_in_years' => (int) $this->duration_in_years,
             'start_year' => (int) $this->start_year,
+            'semester' => (int) $this->semester,
             'summary' => $this->summary,
             'asta_cita' => $this->asta_cita ?: null,
             'status' => 'DRAFT',
@@ -500,6 +505,7 @@ class ProposalForm extends Form
             'sbk_value' => ! empty($this->sbk_value) ? $this->sbk_value : null,
             'duration_in_years' => (int) $this->duration_in_years,
             'start_year' => (int) $this->start_year,
+            'semester' => (int) $this->semester,
             'summary' => $this->summary,
             'asta_cita' => $this->asta_cita ?: null,
             'status' => 'DRAFT',
@@ -637,6 +643,7 @@ class ProposalForm extends Form
                 'sbk_value' => ! empty($this->sbk_value) ? $this->sbk_value : null,
                 'duration_in_years' => (int) $this->duration_in_years,
                 'start_year' => (int) $this->start_year,
+                'semester' => (int) $this->semester,
                 'summary' => $this->summary,
                 'asta_cita' => $this->asta_cita ?: null,
             ]);
@@ -701,6 +708,7 @@ class ProposalForm extends Form
             'sbk_value' => 'nullable|numeric|min:0',
             'duration_in_years' => 'required|integer|min:1|max:10',
             'start_year' => 'required|integer|min:2020|max:2050',
+            'semester' => 'required|string|in:ganjil,genap',
             'summary' => 'required|string|min:100',
             'asta_cita' => 'nullable|string',
             'eligibility_check' => [
@@ -1030,11 +1038,12 @@ class ProposalForm extends Form
 
         // Get proposal type to determine which budget cap to use
         $proposalType = $this->getProposalType();
-        $currentYear = (int) date('Y');
-
-        // Get budget cap for current year and proposal type (with scheme priority)
+        $currentYear = (int) ($this->start_year ?: date('Y'));
+        $currentSemester = $this->semester ?: 'ganjil';
         $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
-        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, (int) $schemeId);
+        $type = $this->research_scheme_id ? 'research' : 'community_service';
+
+        $budgetCap = BudgetCap::getCapForPeriod($currentYear, $currentSemester, $type, $schemeId ? (int) $schemeId : null);
 
         if ($budgetCap === null || $budgetCap <= 0) {
             // No budget cap set, cannot validate percentages
@@ -1103,12 +1112,13 @@ class ProposalForm extends Form
             return;
         }
 
-        // Get current year
-        $currentYear = (int) date('Y');
+        // Get year and semester from form
+        $currentYear = (int) ($this->start_year ?: date('Y'));
+        $currentSemester = $this->semester ?: 'ganjil';
 
-        // Get budget cap for current year and proposal type (with scheme priority)
+        // Get budget cap for current year/semester and proposal type (with scheme priority)
         $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
-        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, (int) $schemeId);
+        $budgetCap = BudgetCap::getCapForPeriod($currentYear, $currentSemester, $proposalType, $schemeId ? (int) $schemeId : null);
 
         if ($budgetCap === null) {
             // No cap set, allow any amount
@@ -1117,12 +1127,14 @@ class ProposalForm extends Form
 
         if ($totalBudget > $budgetCap) {
             $typeLabel = $proposalType === 'research' ? 'Penelitian' : 'Pengabdian Masyarakat';
+            $semesterLabel = ucfirst($currentSemester);
             throw ValidationException::withMessages([
                 'budget_items' => [
                     sprintf(
-                        'Total anggaran melebihi batas maksimal untuk %s tahun %s. Batas: Rp %s, Total saat ini: Rp %s',
+                        'Total anggaran melebihi batas maksimal untuk %s tahun %s (%s). Batas: Rp %s, Total saat ini: Rp %s',
                         $typeLabel,
                         $currentYear,
+                        $semesterLabel,
                         number_format($budgetCap, 0, ',', '.'),
                         number_format($totalBudget, 0, ',', '.')
                     ),

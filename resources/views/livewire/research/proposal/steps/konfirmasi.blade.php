@@ -185,11 +185,11 @@
 
                     {{-- Budget Group Summary --}}
                     @php
-                        $konfSchemeId = $form->research_scheme_id ?: $form->community_service_scheme_id;
-                        $konfBudgetCap = \App\Models\BudgetCap::getCapForYear(
-                            (int) ($form->start_year ?: date('Y')),
-                            $form->research_scheme_id ? 'research' : 'community_service',
-                            $konfSchemeId ? (int) $konfSchemeId : null
+                        $konfBudgetCap = \App\Models\BudgetCap::getCapForPeriod(
+                            (int) $this->form->start_year,
+                            $this->form->semester,
+                            'research',
+                            (int) $this->form->research_scheme_id
                         );
                         $konfGroupTotals = $budgetItems->groupBy('budget_group_id')->map(fn($items) => $items->sum('total'));
                         $konfTotalBudget = $budgetItems->sum('total');

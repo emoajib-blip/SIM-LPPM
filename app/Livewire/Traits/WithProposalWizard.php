@@ -205,6 +205,8 @@ trait WithProposalWizard
     {
         try {
             if (! empty($this->form->budget_items)) {
+                $year = (int) ($this->form->start_year ?: date('Y'));
+                $semester = $this->form->semester ?: 'ganjil';
                 $schemeId = $this->getProposalTypeForValidation() === 'research'
                     ? (int) $this->form->research_scheme_id
                     : (int) $this->form->community_service_scheme_id;
@@ -212,15 +214,17 @@ trait WithProposalWizard
                 app(BudgetValidationService::class)->validateBudgetGroupPercentages(
                     $this->form->budget_items,
                     $this->getProposalTypeForValidation(),
-                    (int) date('Y'),
-                    $schemeId
+                    $year,
+                    $semester,
+                    $schemeId ?: null
                 );
 
                 app(BudgetValidationService::class)->validateBudgetCap(
                     $this->form->budget_items,
                     $this->getProposalTypeForValidation(),
-                    (int) date('Y'),
-                    $schemeId
+                    $year,
+                    $semester,
+                    $schemeId ?: null
                 );
             }
 

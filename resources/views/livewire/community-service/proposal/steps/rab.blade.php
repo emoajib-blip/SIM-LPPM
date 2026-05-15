@@ -3,8 +3,9 @@
     $startYear = (int) ($form->start_year ?: date('Y'));
     $duration = (int) ($form->duration_in_years ?: 1);
     $currentYear = (int) ($form->start_year ?: date('Y'));
+    $currentSemester = $form->semester ?: 'ganjil';
     $schemeId = $form->research_scheme_id ?: $form->community_service_scheme_id;
-    $budgetCap = \App\Models\BudgetCap::getCapForYear($currentYear, 'community_service', $schemeId ? (int) $schemeId : null);
+    $budgetCap = \App\Models\BudgetCap::getCapForPeriod($currentYear, $currentSemester, 'community_service', $schemeId ? (int) $schemeId : null);
 
     // Calculate totals per group for percentage visualization
     $totalBudget = collect($form->budget_items)->sum(fn($item) => (float) ($item['total'] ?? 0));
@@ -105,9 +106,16 @@
                         </div>
                     @endif
                     @if (!$budgetCap && $totalBudget > 0)
-                        <div class="alert alert-warning mt-2 mb-0 py-1 small">
-                            <x-lucide-alert-triangle class="icon alert-icon" />
-                            Batas anggaran tahun {{ $currentYear }} belum ditetapkan Admin LPPM. Persentase ditampilkan terhadap total RAB sementara.
+                        <div class="alert alert-warning mb-0 mt-3" role="alert">
+                            <div class="d-flex">
+                                <div>
+                                    <x-lucide-alert-triangle class="icon alert-icon" />
+                                </div>
+                                <div>
+                                    @php $semesterLabel = ucfirst($currentSemester); @endphp
+                                    Batas anggaran tahun {{ $currentYear }} (Semester {{ $semesterLabel }}) belum ditetapkan Admin LPPM. Persentase ditampilkan terhadap total RAB sementara.
+                                </div>
+                            </div>
                         </div>
                     @endif
                 </div>

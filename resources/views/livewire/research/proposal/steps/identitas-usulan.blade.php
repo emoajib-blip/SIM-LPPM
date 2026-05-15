@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="">
                     <label class="form-label" for="start_year">Tahun Mulai <span class="text-danger">*</span></label>
                     <input id="start_year" type="number"
@@ -64,7 +64,24 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="">
+                    <label class="form-label" for="semester">Semester <span class="text-danger">*</span></label>
+                    <select id="semester" class="form-select @error('form.semester') is-invalid @enderror"
+                        wire:model.live="form.semester" required>
+                        <option value="ganjil">Ganjil</option>
+                        <option value="genap">Genap</option>
+                    </select>
+                    <small class="text-muted d-block mt-1">
+                        Ganjil: 1 Sep - 28/29 Feb | Genap: 1 Mar - 31 Agt
+                    </small>
+                    @error('form.semester')
+                        <div class="d-block invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-md-3">
                 <div class="">
                     <label class="form-label" for="duration_in_years">Durasi (Tahun) <span
                             class="text-danger">*</span></label>

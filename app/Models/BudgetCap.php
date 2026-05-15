@@ -22,6 +22,7 @@ class BudgetCap extends Model
 
     protected $fillable = [
         'year',
+        'semester',
         'research_budget_cap',
         'community_service_budget_cap',
         'scheme_caps',
@@ -36,6 +37,7 @@ class BudgetCap extends Model
     {
         return [
             'year' => 'integer',
+            'semester' => 'string',
             'research_budget_cap' => 'decimal:2',
             'community_service_budget_cap' => 'decimal:2',
             'scheme_caps' => 'array',
@@ -43,14 +45,21 @@ class BudgetCap extends Model
     }
 
     /**
-     * Get the budget cap for a specific year, type and selectively by scheme.
+     * Get the budget cap for a specific year, semester, type and selectively by scheme.
      *
      * @param  string  $type  'research' or 'community_service'
+     * @param  string|null  $semester  'ganjil' or 'genap'
      * @param  int|null  $schemeId  Optional scheme ID to check for specific caps
      */
-    public static function getCapForYear(int $year, string $type, ?int $schemeId = null): ?float
+    public static function getCapForPeriod(int $year, ?string $semester = null, string $type = 'research', ?int $schemeId = null): ?float
     {
-        $budgetCap = self::where('year', $year)->first();
+        $query = self::where('year', $year);
+
+        if ($semester) {
+            $query->where('semester', $semester);
+        }
+
+        $budgetCap = $query->first();
 
         if (! $budgetCap) {
             return null;

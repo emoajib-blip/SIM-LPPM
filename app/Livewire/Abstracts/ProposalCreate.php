@@ -329,15 +329,17 @@ abstract class ProposalCreate extends Component
         app(BudgetValidationService::class)->validateBudgetGroupPercentages(
             $this->form->budget_items,
             $this->getProposalType(),
-            null,
-            $schemeId
+            (int) $this->form->start_year,
+            $this->form->semester,
+            $schemeId ?: null
         );
 
         app(BudgetValidationService::class)->validateBudgetCap(
             $this->form->budget_items,
             $this->getProposalType(),
-            null,
-            $schemeId
+            (int) $this->form->start_year,
+            $this->form->semester,
+            $schemeId ?: null
         );
 
         if ($this->form->proposal) {

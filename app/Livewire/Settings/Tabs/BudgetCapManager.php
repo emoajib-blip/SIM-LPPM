@@ -24,6 +24,9 @@ class BudgetCapManager extends Component
     #[Validate('required|integer|min:2000|max:2100')]
     public string $year = '';
 
+    #[Validate('required|string|in:ganjil,genap')]
+    public string $semester = 'ganjil';
+
     #[Validate('nullable|integer|min:0')]
     public ?string $research_budget_cap = null;
 
@@ -63,7 +66,7 @@ class BudgetCapManager extends Component
 
     public function create(): void
     {
-        $this->reset(['year', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
+        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
         $this->modalTitle = 'Tambah Aturan Anggaran';
     }
 
@@ -71,15 +74,17 @@ class BudgetCapManager extends Component
     {
         $this->validate();
 
-        // Check for duplicate year (except when editing)
+        // Check for duplicate year/semester (except when editing)
         $exists = BudgetCap::where('year', $this->year)
+            ->where('semester', $this->semester)
             ->when($this->editingId, function ($query) {
                 $query->where('id', '!=', $this->editingId);
             })
             ->exists();
 
         if ($exists) {
-            $this->addError('year', 'Pengaturan anggaran untuk tahun '.$this->year.' sudah ada.');
+            $semesterLabel = ucfirst($this->semester);
+            $this->addError('year', "Pengaturan anggaran untuk tahun $this->year semester $semesterLabel sudah ada.");
 
             return;
         }
@@ -103,6 +108,7 @@ class BudgetCapManager extends Component
 
         $data = [
             'year' => (int) $this->year,
+            'semester' => $this->semester,
             'research_budget_cap' => $this->research_budget_cap ? (int) $this->research_budget_cap : null,
             'community_service_budget_cap' => $this->community_service_budget_cap ? (int) $this->community_service_budget_cap : null,
             'scheme_caps' => $schemeCaps,
@@ -118,7 +124,7 @@ class BudgetCapManager extends Component
 
         // close modal
         $this->dispatch('close-modal', modalId: 'modal-budget-cap');
-        $this->reset(['year', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
+        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
 
         session()->flash('success', $message);
         $this->toastSuccess($message);
@@ -128,6 +134,7 @@ class BudgetCapManager extends Component
     {
         $this->editingId = $budgetCap->id;
         $this->year = (string) $budgetCap->year;
+        $this->semester = (string) $budgetCap->semester;
         $this->research_budget_cap = $budgetCap->research_budget_cap ? (string) (int) $budgetCap->research_budget_cap : null;
         $this->community_service_budget_cap = $budgetCap->community_service_budget_cap ? (string) (int) $budgetCap->community_service_budget_cap : null;
 
@@ -164,7 +171,7 @@ class BudgetCapManager extends Component
 
     public function resetForm(): void
     {
-        $this->reset(['year', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
+        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
     }
 
     public function handleConfirmDeleteAction(): void
@@ -187,8 +194,11 @@ class BudgetCapManager extends Component
     public function confirmDelete(int $id): void
     {
         $this->deleteItemId = $id;
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-        $this->deleteItemYear = (string) (BudgetCap::find($id)->year ?? '');
+        $item = BudgetCap::find($id);
+        if ($item) {
+            $semesterLabel = ucfirst($item->semester);
+            $this->deleteItemYear = "Tahun $item->year (Semester $semesterLabel)";
+        }
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-budget-cap');
     }
 }

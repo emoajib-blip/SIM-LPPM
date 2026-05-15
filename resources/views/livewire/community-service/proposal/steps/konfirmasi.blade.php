@@ -228,8 +228,9 @@
                     {{-- Budget Group Summary --}}
                     @php
                         $konfSchemeId = $form->research_scheme_id ?: $form->community_service_scheme_id;
-                        $konfBudgetCap = \App\Models\BudgetCap::getCapForYear(
+                        $konfBudgetCap = \App\Models\BudgetCap::getCapForPeriod(
                             (int) ($form->start_year ?: date('Y')),
+                            $form->semester ?: 'ganjil',
                             $form->research_scheme_id ? 'research' : 'community_service',
                             $konfSchemeId ? (int) $konfSchemeId : null
                         );

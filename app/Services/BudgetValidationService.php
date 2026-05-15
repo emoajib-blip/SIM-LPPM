@@ -12,6 +12,7 @@ class BudgetValidationService
         array $budgetItems,
         string $proposalType,
         ?int $currentYear = null,
+        ?string $semester = null,
         ?int $schemeId = null
     ): void {
         $proposalType = str_replace('-', '_', $proposalType);
@@ -21,15 +22,17 @@ class BudgetValidationService
         }
 
         $currentYear ??= (int) date('Y');
-        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, $schemeId);
+        $semester ??= 'ganjil';
+        $budgetCap = BudgetCap::getCapForPeriod($currentYear, $semester, $proposalType, $schemeId);
 
         if ($budgetCap === null || $budgetCap <= 0) {
             throw ValidationException::withMessages([
                 'budget_items' => [
                     sprintf(
-                        'Batas anggaran untuk %s tahun %s belum diatur. Silakan hubungi Admin LPPM.',
+                        'Batas anggaran untuk %s tahun %s (%s) belum diatur. Silakan hubungi Admin LPPM.',
                         $proposalType === 'research' ? 'Penelitian' : 'Pengabdian Masyarakat',
-                        $currentYear
+                        $currentYear,
+                        ucfirst($semester)
                     ),
                 ],
             ]);
@@ -69,6 +72,7 @@ class BudgetValidationService
         array $budgetItems,
         string $proposalType,
         ?int $currentYear = null,
+        ?string $semester = null,
         ?int $schemeId = null
     ): void {
         $proposalType = str_replace('-', '_', $proposalType);
@@ -84,7 +88,8 @@ class BudgetValidationService
         }
 
         $currentYear ??= (int) date('Y');
-        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, $schemeId);
+        $semester ??= 'ganjil';
+        $budgetCap = BudgetCap::getCapForPeriod($currentYear, $semester, $proposalType, $schemeId);
 
         if ($budgetCap === null) {
             return;
@@ -95,9 +100,10 @@ class BudgetValidationService
             throw ValidationException::withMessages([
                 'budget_items' => [
                     sprintf(
-                        'Total anggaran melebihi batas maksimal untuk %s tahun %s. Batas: Rp %s, Total saat ini: Rp %s',
+                        'Total anggaran melebihi batas maksimal untuk %s tahun %s (%s). Batas: Rp %s, Total saat ini: Rp %s',
                         $typeLabel,
                         $currentYear,
+                        ucfirst($semester),
                         number_format($budgetCap, 0, ',', '.'),
                         number_format($totalBudget, 0, ',', '.')
                     ),
@@ -111,12 +117,13 @@ class BudgetValidationService
         return collect($budgetItems)->sum(fn ($item) => (float) ($item['total'] ?? 0));
     }
 
-    public function getBudgetSummary(array $budgetItems, string $proposalType, ?int $currentYear = null, ?int $schemeId = null): array
+    public function getBudgetSummary(array $budgetItems, string $proposalType, ?int $currentYear = null, ?string $semester = null, ?int $schemeId = null): array
     {
         $proposalType = str_replace('-', '_', $proposalType);
 
         $currentYear ??= (int) date('Y');
-        $budgetCap = BudgetCap::getCapForYear($currentYear, $proposalType, $schemeId) ?? 0;
+        $semester ??= 'ganjil';
+        $budgetCap = BudgetCap::getCapForPeriod($currentYear, $semester, $proposalType, $schemeId) ?? 0;
         $totalBudget = $this->calculateTotalBudget($budgetItems);
         $remainingBudget = max(0, $budgetCap - $totalBudget);
 
