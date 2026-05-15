@@ -93,29 +93,6 @@ class EnvironmentWriter
             $content = $this->updateValue($content, 'MEDIA_DISK', $this->resolveValue($config, ['MEDIA_DISK', 'media_disk'], 'public'));
         }
 
-        // Update AWS S3 configuration
-        if ($this->hasConfigKey($config, ['AWS_ACCESS_KEY_ID', 'aws_access_key_id'])) {
-            $content = $this->updateValue($content, 'AWS_ACCESS_KEY_ID', $this->resolveValue($config, ['AWS_ACCESS_KEY_ID', 'aws_access_key_id'], ''));
-        }
-        if ($this->hasConfigKey($config, ['AWS_SECRET_ACCESS_KEY', 'aws_secret_access_key'])) {
-            $content = $this->updateValue($content, 'AWS_SECRET_ACCESS_KEY', $this->resolveValue($config, ['AWS_SECRET_ACCESS_KEY', 'aws_secret_access_key'], ''));
-        }
-        if ($this->hasConfigKey($config, ['AWS_DEFAULT_REGION', 'aws_default_region'])) {
-            $content = $this->updateValue($content, 'AWS_DEFAULT_REGION', $this->resolveValue($config, ['AWS_DEFAULT_REGION', 'aws_default_region'], 'ap-southeast-1'));
-        }
-        if ($this->hasConfigKey($config, ['AWS_BUCKET', 'aws_bucket'])) {
-            $content = $this->updateValue($content, 'AWS_BUCKET', $this->resolveValue($config, ['AWS_BUCKET', 'aws_bucket'], ''));
-        }
-        if ($this->hasConfigKey($config, ['AWS_URL', 'aws_url'])) {
-            $content = $this->updateValue($content, 'AWS_URL', $this->resolveValue($config, ['AWS_URL', 'aws_url'], ''));
-        }
-        if ($this->hasConfigKey($config, ['AWS_ENDPOINT', 'aws_endpoint'])) {
-            $content = $this->updateValue($content, 'AWS_ENDPOINT', $this->resolveValue($config, ['AWS_ENDPOINT', 'aws_endpoint'], ''));
-        }
-        if ($this->hasConfigKey($config, ['AWS_USE_PATH_STYLE_ENDPOINT', 'aws_use_path_style_endpoint'])) {
-            $content = $this->updateValue($content, 'AWS_USE_PATH_STYLE_ENDPOINT', $this->resolveValue($config, ['AWS_USE_PATH_STYLE_ENDPOINT', 'aws_use_path_style_endpoint'], 'false'));
-        }
-
         File::put($envPath, $content);
 
         // Reload configuration
