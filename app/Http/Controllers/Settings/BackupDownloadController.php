@@ -119,10 +119,19 @@ class BackupDownloadController extends Controller
     private function streamFile(string $filename, string $mime): StreamedResponse
     {
         $backupDir = storage_path('app/backup');
-        $path = realpath($backupDir.'/'.$filename);
+        $fullPath = $backupDir.'/'.$filename;
 
-        if ($path === false || ! str_starts_with($path, $backupDir) || ! file_exists($path)) {
-            abort(404, 'File backup tidak ditemukan.');
+        $realPath = realpath($fullPath);
+        if ($realPath !== false) {
+            if (! str_starts_with($realPath, $backupDir) || ! file_exists($realPath)) {
+                abort(404, 'File backup tidak ditemukan.');
+            }
+            $path = $realPath;
+        } else {
+            if (! file_exists($fullPath)) {
+                abort(404, 'File backup tidak ditemukan.');
+            }
+            $path = $fullPath;
         }
 
         return response()->streamDownload(
