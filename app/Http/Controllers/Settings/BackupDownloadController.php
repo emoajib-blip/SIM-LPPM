@@ -58,22 +58,43 @@ class BackupDownloadController extends Controller
 
     /**
      * Find latest backup file in storage directory.
+     * Uses alternative method for cPanel compatibility.
      */
     private function findLatestBackup(string $prefix, string $extension): ?string
     {
         $backupDir = storage_path('app/backup');
+
         if (! is_dir($backupDir)) {
             return null;
         }
 
-        $files = glob("{$backupDir}/{$prefix}*.{$extension}");
-        if (empty($files)) {
+        if (! is_readable($backupDir)) {
             return null;
         }
 
-        usort($files, fn ($a, $b) => filemtime($b) - filemtime($a));
+        $files = scandir($backupDir);
+        if ($files === false) {
+            return null;
+        }
 
-        return basename($files[0]);
+        $matchingFiles = [];
+        foreach ($files as $file) {
+            if (is_file($backupDir.'/'.$file) &&
+                str_starts_with($file, $prefix) &&
+                str_ends_with($file, $extension)) {
+                $matchingFiles[] = $file;
+            }
+        }
+
+        if (empty($matchingFiles)) {
+            return null;
+        }
+
+        usort($matchingFiles, function ($a, $b) use ($backupDir) {
+            return filemtime($backupDir.'/'.$b) - filemtime($backupDir.'/'.$a);
+        });
+
+        return $matchingFiles[0];
     }
 
     /**
