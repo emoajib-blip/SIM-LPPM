@@ -132,13 +132,6 @@ it('writes empty values from installer inputs', function () {
         'TURNSTILE_SECRET_KEY=old',
         'FILESYSTEM_DISK=local',
         'MEDIA_DISK=public',
-        'AWS_ACCESS_KEY_ID=old',
-        'AWS_SECRET_ACCESS_KEY=old',
-        'AWS_DEFAULT_REGION=ap-southeast-1',
-        'AWS_BUCKET=old',
-        'AWS_URL=old',
-        'AWS_ENDPOINT=old',
-        'AWS_USE_PATH_STYLE_ENDPOINT=true',
     ])."\n";
 
     $envPath = base_path('.env');
@@ -171,13 +164,6 @@ it('writes empty values from installer inputs', function () {
         'TURNSTILE_SECRET_KEY' => '',
         'FILESYSTEM_DISK' => 'local',
         'MEDIA_DISK' => 'public',
-        'AWS_ACCESS_KEY_ID' => '',
-        'AWS_SECRET_ACCESS_KEY' => '',
-        'AWS_DEFAULT_REGION' => 'ap-southeast-1',
-        'AWS_BUCKET' => '',
-        'AWS_URL' => '',
-        'AWS_ENDPOINT' => '',
-        'AWS_USE_PATH_STYLE_ENDPOINT' => 'false',
         'DB_CONNECTION' => 'mariadb',
         'DB_HOST' => '127.0.0.1',
         'DB_PORT' => '3306',
@@ -195,11 +181,6 @@ it('writes empty values from installer inputs', function () {
         ->and($written)->toContain('MAIL_FROM_NAME=')
         ->and($written)->toContain('TURNSTILE_SITE_KEY=')
         ->and($written)->toContain('TURNSTILE_SECRET_KEY=')
-        ->and($written)->toContain('AWS_ACCESS_KEY_ID=')
-        ->and($written)->toContain('AWS_SECRET_ACCESS_KEY=')
-        ->and($written)->toContain('AWS_BUCKET=')
-        ->and($written)->toContain('AWS_URL=')
-        ->and($written)->toContain('AWS_ENDPOINT=')
         ->and($written)->toContain('DB_PASSWORD=secret');
 
     if ($originalEnv === null) {

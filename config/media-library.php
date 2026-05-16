@@ -125,7 +125,7 @@ return [
 
     /*
      * When urls to files get generated, this class will be called. Use the default
-     * if your files are stored locally above the site root or on s3.
+     * if your files are stored locally above the site root.
      */
     'url_generator' => DefaultUrlGenerator::class,
 
@@ -265,7 +265,7 @@ return [
          * a remote disk. Even though supported headers may vary between
          * different drivers, a sensible default has been provided.
          *
-         * Supported by S3: CacheControl, Expires, StorageClass,
+         * Supported by remote disks: CacheControl, Expires, StorageClass,
          * ServerSideEncryption, Metadata, ACL, ContentEncoding
          */
         'extra_headers' => [
@@ -300,7 +300,7 @@ return [
     /*
      * When enabling this option, a route will be registered that will enable
      * the Media Library Pro Vue and React components to move uploaded files
-     * in a S3 bucket to their right place.
+     * in a remote disk to their right place.
      */
     'enable_vapor_uploads' => env('ENABLE_MEDIA_LIBRARY_VAPOR_UPLOADS', false),
 

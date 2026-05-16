@@ -24,7 +24,7 @@ return [
     | may even configure multiple disks for the same driver. Examples for
     | most supported storage drivers are configured here for reference.
     |
-    | Supported drivers: "local", "ftp", "sftp", "s3"
+    | Supported drivers: "local", "ftp", "sftp"
     |
     */
 
@@ -46,9 +46,6 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
-        // S3 removed — application uses local and public disks only.
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
     ],
 
