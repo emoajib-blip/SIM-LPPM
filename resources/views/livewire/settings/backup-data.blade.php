@@ -51,25 +51,21 @@
                     </span>
                 </button>
 
-                <button
-                    type="button"
-                    wire:click="downloadDb"
-                    class="btn btn-success"
-                    @disabled(!$lastDbFile || $isRunning)
+                <a
+                    href="{{ route('settings.download-db') }}"
+                    class="btn btn-success @if(!$lastDbFile || $isRunning) disabled @endif"
                 >
                     <x-lucide-file-text class="icon me-1" />
                     Download SQL
-                </button>
+                </a>
 
-                <button
-                    type="button"
-                    wire:click="downloadStorage"
-                    class="btn btn-success"
-                    @disabled(!$lastStorageFile || $isRunning)
+                <a
+                    href="{{ route('settings.download-storage') }}"
+                    class="btn btn-success @if(!$lastStorageFile || $isRunning) disabled @endif"
                 >
                     <x-lucide-file-archive class="icon me-1" />
                     Download ZIP
-                </button>
+                </a>
             </div>
 
             @if (!empty($output))

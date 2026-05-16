@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Process;
 use Illuminate\View\View;
 use Livewire\Component;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use ZipArchive;
 
 class BackupData extends Component
@@ -177,46 +176,6 @@ class BackupData extends Component
         }
 
         $this->isRunning = false;
-    }
-
-    public function downloadDb(): StreamedResponse
-    {
-        abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
-
-        return $this->streamDownload('db');
-    }
-
-    public function downloadStorage(): StreamedResponse
-    {
-        abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
-
-        return $this->streamDownload('storage');
-    }
-
-    private function streamDownload(string $type): StreamedResponse
-    {
-        $filename = $type === 'db' ? $this->lastDbFile : $this->lastStorageFile;
-
-        if (! $filename) {
-            return response()->streamDownload(function () {
-                echo 'Tidak ada file backup tersedia.';
-            }, 'error.txt', ['Content-Type' => 'text/plain']);
-        }
-
-        $backupDir = storage_path('app/backup');
-        $path = realpath($backupDir.'/'.$filename);
-
-        if ($path === false || ! str_starts_with($path, $backupDir) || ! file_exists($path)) {
-            return response()->streamDownload(function () {
-                echo 'File backup tidak ditemukan.';
-            }, 'error.txt', ['Content-Type' => 'text/plain']);
-        }
-
-        $mime = $type === 'db' ? 'application/sql' : 'application/zip';
-
-        return response()->streamDownload(function () use ($path) {
-            readfile($path);
-        }, $filename, ['Content-Type' => $mime]);
     }
 
     public function render(): View

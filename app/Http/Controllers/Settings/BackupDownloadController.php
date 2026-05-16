@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Http\Controllers\Settings;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Process;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+class BackupDownloadController extends Controller
+{
+    /**
+     * Download database backup.
+     *
+     * Filename diambil dari cache, BUKAN dari URL — mencegah directory traversal.
+     */
+    public function downloadDatabase(): StreamedResponse
+    {
+        abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
+
+        $filename = cache('backup_last_db_file');
+        if (! $filename) {
+            abort(404, 'Tidak ada backup database tersedia. Buat backup terlebih dahulu.');
+        }
+
+        return $this->streamFile($filename, 'application/sql');
+    }
+
+    /**
+     * Download storage backup.
+     *
+     * Filename diambil dari cache, BUKAN dari URL — mencegah directory traversal.
+     */
+    public function downloadStorage(): StreamedResponse
+    {
+        abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
+
+        $filename = cache('backup_last_storage_file');
+        if (! $filename) {
+            abort(404, 'Tidak ada backup storage tersedia. Buat backup terlebih dahulu.');
+        }
+
+        return $this->streamFile($filename, 'application/zip');
+    }
+
+    /**
+     * Download database backup dari Admin Dashboard (legacy).
+     *
+     * Membuat backup baru lalu langsung download.
+     */
+    public function downloadDatabaseBackup(): StreamedResponse
+    {
+        abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
+
+        $backupDir = storage_path('app/backup');
+        if (! is_dir($backupDir)) {
+            mkdir($backupDir, 0755, true);
+        }
+
+        $filename = 'backup_db_'.date('Y-m-d_His').'.sql';
+        $path = "{$backupDir}/{$filename}";
+
+        $dbName = config('database.connections.mysql.database');
+        $dbUser = config('database.connections.mysql.username');
+        $dbPass = config('database.connections.mysql.password');
+
+        Process::run("mysqldump -u $dbUser -p$dbPass $dbName > $path");
+
+        if (! file_exists($path) || filesize($path) === 0) {
+            abort(500, 'Gagal membuat file backup database.');
+        }
+
+        return response()->streamDownload(
+            function () use ($path) {
+                readfile($path);
+                @unlink($path);
+            },
+            $filename,
+            ['Content-Type' => 'application/sql']
+        );
+    }
+
+    /**
+     * Stream file dari folder backup dengan validasi keamanan.
+     */
+    private function streamFile(string $filename, string $mime): StreamedResponse
+    {
+        $backupDir = storage_path('app/backup');
+        $path = realpath($backupDir.'/'.$filename);
+
+        if ($path === false || ! str_starts_with($path, $backupDir) || ! file_exists($path)) {
+            abort(404, 'File backup tidak ditemukan.');
+        }
+
+        return response()->streamDownload(
+            fn () => readfile($path),
+            $filename,
+            ['Content-Type' => $mime]
+        );
+    }
+}

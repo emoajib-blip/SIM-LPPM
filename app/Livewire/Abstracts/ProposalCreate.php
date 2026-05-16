@@ -402,6 +402,12 @@ abstract class ProposalCreate extends Component
             session()->flash('success', $message);
             $this->toastSuccess($message);
 
+            // Reload proposal from database to ensure form has fresh data (including outputs)
+            $freshProposal = Proposal::with(['outputs', 'budgetItems', 'partners', 'keywords', 'sdgs', 'targetedIkus'])->find($proposal->id);
+            if ($freshProposal) {
+                $this->form->setProposal($freshProposal);
+            }
+
             // For drafts, redirect to edit page so data persists on refresh
             $this->redirect(route($this->getProposalType().'.proposal.edit', $proposal->id));
         } catch (\Exception $e) {

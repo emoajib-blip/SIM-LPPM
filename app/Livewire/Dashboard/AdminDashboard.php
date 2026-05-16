@@ -16,7 +16,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Process;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -306,34 +305,6 @@ class AdminDashboard extends Component
         } catch (\Throwable $e) {
             $this->dispatch('swal', title: 'Gagal!', text: 'Terjadi kesalahan saat sinkronisasi: '.$e->getMessage(), icon: 'error');
         }
-    }
-
-    /**
-     * Download backup database (Hanya di PRODUCTION)
-     */
-    public function downloadDatabaseBackup(): mixed
-    {
-        if (config('app.env') === 'local') {
-            return null;
-        }
-
-        $filename = 'backup_db_'.date('Y-m-d_His').'.sql';
-        $path = storage_path('app/'.$filename);
-
-        $dbName = config('database.connections.mysql.database');
-        $dbUser = config('database.connections.mysql.username');
-        $dbPass = config('database.connections.mysql.password');
-
-        $command = "mysqldump -u $dbUser -p$dbPass $dbName > $path";
-        Process::run($command);
-
-        if (! file_exists($path)) {
-            $this->dispatch('swal', title: 'Gagal!', text: 'Gagal membuat file backup.', icon: 'error');
-
-            return null;
-        }
-
-        return response()->download($path)->deleteFileAfterSend(true);
     }
 
     public function render()

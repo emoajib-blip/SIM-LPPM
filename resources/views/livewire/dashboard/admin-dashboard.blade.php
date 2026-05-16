@@ -393,12 +393,9 @@
                                     <span wire:loading><span class="spinner-border spinner-border-sm me-2"></span> Memproses...</span>
                                 </button>
                             @else
-                                <button type="button" class="btn btn-outline-white d-flex align-items-center gap-2" 
-                                    wire:click="downloadDatabaseBackup"
-                                    wire:loading.attr="disabled">
-                                    <span wire:loading.remove><i class="ti ti-database-export fs-2"></i> Download Backup DB</span>
-                                    <span wire:loading><span class="spinner-border spinner-border-sm me-2"></span> Menyiapkan file...</span>
-                                </button>
+                                <a href="{{ route('settings.download-backup-db') }}" class="btn btn-outline-white d-flex align-items-center gap-2">
+                                    <i class="ti ti-database-export fs-2"></i> Download Backup DB
+                                </a>
                             @endif
                         </div>
                     </div>

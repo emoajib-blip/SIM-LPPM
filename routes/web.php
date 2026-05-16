@@ -10,6 +10,7 @@ use App\Http\Controllers\ReportExportController;
 use App\Http\Controllers\ReportVerificationController;
 use App\Http\Controllers\ReviewExportController;
 use App\Http\Controllers\RoleSwitcherController;
+use App\Http\Controllers\Settings\BackupDownloadController;
 use App\Http\Controllers\Settings\ProposalTemplateUploadController;
 use App\Http\Controllers\SintaExportController;
 use App\Livewire\Admin\Archive\ManageArchives;
@@ -286,6 +287,16 @@ Route::middleware(['auth'])->group(function () {
             'settings/proposal-template/upload/{type}',
             [ProposalTemplateUploadController::class, 'upload']
         )->name('settings.proposal-template.upload');
+    });
+
+    // Backup Download Routes (Bypass Livewire WAF issues — safe approach: filename from cache, not URL)
+    Route::middleware(['auth', 'verified'])->prefix('settings')->name('settings.')->group(function () {
+        Route::get('download-backup-db', [BackupDownloadController::class, 'downloadDatabaseBackup'])
+            ->name('download-backup-db');
+        Route::get('download-db', [BackupDownloadController::class, 'downloadDatabase'])
+            ->name('download-db');
+        Route::get('download-storage', [BackupDownloadController::class, 'downloadStorage'])
+            ->name('download-storage');
     });
 
     Route::get('settings/two-factor', TwoFactor::class)
