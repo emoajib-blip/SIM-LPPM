@@ -31,7 +31,19 @@ class NotificationService
      */
     public function send(User|Collection|array $recipients, mixed $notification): void
     {
-        Notification::send($recipients, $notification);
+        try {
+            Notification::send($recipients, $notification);
+        } catch (\Exception $e) {
+            \Log::error('Failed to send notification: '.$e->getMessage(), [
+                'notification' => get_class($notification),
+                'exception' => $e,
+            ]);
+
+            // If we are in local, we might want to know. In production, we don't want to crash.
+            if (config('app.debug')) {
+                // throw $e; // Optional: rethrow in debug mode
+            }
+        }
     }
 
     /**

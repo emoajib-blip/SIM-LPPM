@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * BudgetCap model represents year-based budget limits for proposals.
@@ -55,7 +56,9 @@ class BudgetCap extends Model
     {
         $query = self::where('year', $year);
 
-        if ($semester) {
+        // Defensive check: only filter by semester if the column exists in the database
+        // This prevents 500 errors during the transition period when migrations are pending
+        if ($semester && Schema::hasColumn('budget_caps', 'semester')) {
             $query->where('semester', $semester);
         }
 

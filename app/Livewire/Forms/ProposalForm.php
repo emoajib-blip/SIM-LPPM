@@ -548,160 +548,172 @@ class ProposalForm extends Form
             $this->validate();
         }
 
-        DB::transaction(function (): void {
-            // Update detailable based on type
-            $detailable = $this->proposal->detailable;
+        try {
+            DB::transaction(function (): void {
+                // Update detailable based on type
+                $detailable = $this->proposal->detailable;
 
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
+                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
-            if ($detailable) {
-                if ($detailable instanceof Research) {
-                    // Update Research-specific fields
-                    $detailable->update([
-                        'macro_research_group_id' => $this->macro_research_group_id ?: null,
-                        'tkt_type' => $this->tkt_type ?: null,
-                        'background' => $this->background,
-                        'state_of_the_art' => $this->state_of_the_art ?: null,
-                        'methodology' => $this->methodology,
-                        'roadmap_data' => $this->roadmap_data ?: null,
-                    ]);
+                if ($detailable) {
+                    if ($detailable instanceof Research) {
+                        // Update Research-specific fields
+                        $detailable->update([
+                            'macro_research_group_id' => $this->macro_research_group_id ?: null,
+                            'tkt_type' => $this->tkt_type ?: null,
+                            'background' => $this->background,
+                            'state_of_the_art' => $this->state_of_the_art ?: null,
+                            'methodology' => $this->methodology,
+                            'roadmap_data' => $this->roadmap_data ?: null,
+                        ]);
 
-                    // Update substance file ONLY if a new file is uploaded
-                    if ($this->substance_file && $this->substance_file instanceof TemporaryUploadedFile) {
-                        try {
-                            $detailable
-                                ->addMedia($this->substance_file->getRealPath())
-                                ->usingName($this->substance_file->getClientOriginalName())
-                                ->usingFileName($this->substance_file->hashName())
-                                ->withCustomProperties(['uploaded_by' => Auth::id()])
-                                ->toMediaCollection('substance_file');
-                        } catch (\Exception $e) {
-                            \Log::error('Update research substance file failed: '.$e->getMessage());
+                        // Update substance file ONLY if a new file is uploaded
+                        if ($this->substance_file && $this->substance_file instanceof TemporaryUploadedFile) {
+                            try {
+                                $detailable
+                                    ->addMedia($this->substance_file->getRealPath())
+                                    ->usingName($this->substance_file->getClientOriginalName())
+                                    ->usingFileName($this->substance_file->hashName())
+                                    ->withCustomProperties(['uploaded_by' => Auth::id()])
+                                    ->toMediaCollection('substance_file');
+                            } catch (\Exception $e) {
+                                \Log::error('Update research substance file failed: '.$e->getMessage());
+                            }
+
+                            // Reset to prevent "UnableToRetrieveMetadata" error on subsequent validations
+                            $this->substance_file = null;
                         }
 
-                        // Reset to prevent "UnableToRetrieveMetadata" error on subsequent validations
-                        $this->substance_file = null;
-                    }
+                        // Update approval file ONLY if a new file is uploaded
+                        if ($this->approval_file && $this->approval_file instanceof TemporaryUploadedFile) {
+                            try {
+                                $detailable
+                                    ->addMedia($this->approval_file->getRealPath())
+                                    ->usingName($this->approval_file->getClientOriginalName())
+                                    ->usingFileName($this->approval_file->hashName())
+                                    ->withCustomProperties(['uploaded_by' => Auth::id()])
+                                    ->toMediaCollection('approval_file');
+                            } catch (\Exception $e) {
+                                \Log::error('Update research approval file failed: '.$e->getMessage());
+                            }
 
-                    // Update approval file ONLY if a new file is uploaded
-                    if ($this->approval_file && $this->approval_file instanceof TemporaryUploadedFile) {
-                        try {
-                            $detailable
-                                ->addMedia($this->approval_file->getRealPath())
-                                ->usingName($this->approval_file->getClientOriginalName())
-                                ->usingFileName($this->approval_file->hashName())
-                                ->withCustomProperties(['uploaded_by' => Auth::id()])
-                                ->toMediaCollection('approval_file');
-                        } catch (\Exception $e) {
-                            \Log::error('Update research approval file failed: '.$e->getMessage());
+                            $this->approval_file = null;
+                        }
+                        // IMPORTANT: If $this->substance_file is null, we do NOTHING.
+                        // This preserves the existing file in the media collection.
+
+                        // Sync TKT Levels
+                        if (! empty($this->tkt_results)) {
+                            $detailable->tktLevels()->sync($this->tkt_results);
                         }
 
-                        $this->approval_file = null;
-                    }
-                    // IMPORTANT: If $this->substance_file is null, we do NOTHING.
-                    // This preserves the existing file in the media collection.
-
-                    // Sync TKT Levels
-                    if (! empty($this->tkt_results)) {
-                        $detailable->tktLevels()->sync($this->tkt_results);
-                    }
-
-                    // Sync TKT Indicators
-                    if (! empty($this->tkt_indicator_scores)) {
-                        $indicatorSyncData = [];
-                        foreach ($this->tkt_indicator_scores as $indicatorId => $score) {
-                            $indicatorSyncData[$indicatorId] = ['score' => $score];
+                        // Sync TKT Indicators
+                        if (! empty($this->tkt_indicator_scores)) {
+                            $indicatorSyncData = [];
+                            foreach ($this->tkt_indicator_scores as $indicatorId => $score) {
+                                $indicatorSyncData[$indicatorId] = ['score' => $score];
+                            }
+                            $detailable->tktIndicators()->sync($indicatorSyncData);
                         }
-                        $detailable->tktIndicators()->sync($indicatorSyncData);
-                    }
-                } elseif ($detailable instanceof CommunityService) {
-                    // Update CommunityService-specific fields
-                    $detailable->update([
-                        'macro_research_group_id' => $this->macro_research_group_id ?: null,
-                        'partner_id' => $this->partner_id ?: null,
-                        'partner_issue_summary' => $this->partner_issue_summary ?: null,
-                        'solution_offered' => $this->solution_offered ?: null,
-                        'background' => $this->background,
-                        'methodology' => $this->methodology,
-                    ]);
+                    } elseif ($detailable instanceof CommunityService) {
+                        // Update CommunityService-specific fields
+                        $detailable->update([
+                            'macro_research_group_id' => $this->macro_research_group_id ?: null,
+                            'partner_id' => $this->partner_id ?: null,
+                            'partner_issue_summary' => $this->partner_issue_summary ?: null,
+                            'solution_offered' => $this->solution_offered ?: null,
+                            'background' => $this->background,
+                            'methodology' => $this->methodology,
+                        ]);
 
-                    // Update substance file ONLY if a new file is uploaded
-                    if ($this->substance_file && $this->substance_file instanceof TemporaryUploadedFile) {
-                        try {
-                            $detailable
-                                ->addMedia($this->substance_file->getRealPath())
-                                ->usingName($this->substance_file->getClientOriginalName())
-                                ->usingFileName($this->substance_file->hashName())
-                                ->withCustomProperties(['uploaded_by' => Auth::id()])
-                                ->toMediaCollection('substance_file');
-                        } catch (\Exception $e) {
-                            \Log::error('Update community service substance file failed: '.$e->getMessage());
+                        // Update substance file ONLY if a new file is uploaded
+                        if ($this->substance_file && $this->substance_file instanceof TemporaryUploadedFile) {
+                            try {
+                                $detailable
+                                    ->addMedia($this->substance_file->getRealPath())
+                                    ->usingName($this->substance_file->getClientOriginalName())
+                                    ->usingFileName($this->substance_file->hashName())
+                                    ->withCustomProperties(['uploaded_by' => Auth::id()])
+                                    ->toMediaCollection('substance_file');
+                            } catch (\Exception $e) {
+                                \Log::error('Update community service substance file failed: '.$e->getMessage());
+                            }
+
+                            // Reset to prevent "UnableToRetrieveMetadata" error on subsequent validations
+                            $this->substance_file = null;
                         }
 
-                        // Reset to prevent "UnableToRetrieveMetadata" error on subsequent validations
-                        $this->substance_file = null;
-                    }
+                        // Update approval file ONLY if a new file is uploaded
+                        if ($this->approval_file && $this->approval_file instanceof TemporaryUploadedFile) {
+                            try {
+                                $detailable
+                                    ->addMedia($this->approval_file->getRealPath())
+                                    ->usingName($this->approval_file->getClientOriginalName())
+                                    ->usingFileName($this->approval_file->hashName())
+                                    ->withCustomProperties(['uploaded_by' => Auth::id()])
+                                    ->toMediaCollection('approval_file');
+                            } catch (\Exception $e) {
+                                \Log::error('Update community service approval file failed: '.$e->getMessage());
+                            }
 
-                    // Update approval file ONLY if a new file is uploaded
-                    if ($this->approval_file && $this->approval_file instanceof TemporaryUploadedFile) {
-                        try {
-                            $detailable
-                                ->addMedia($this->approval_file->getRealPath())
-                                ->usingName($this->approval_file->getClientOriginalName())
-                                ->usingFileName($this->approval_file->hashName())
-                                ->withCustomProperties(['uploaded_by' => Auth::id()])
-                                ->toMediaCollection('approval_file');
-                        } catch (\Exception $e) {
-                            \Log::error('Update community service approval file failed: '.$e->getMessage());
+                            $this->approval_file = null;
                         }
-
-                        $this->approval_file = null;
                     }
                 }
-            }
 
-            // Update proposal fields
-            $this->proposal->update([
-                'title' => $this->title,
-                'research_scheme_id' => $this->research_scheme_id ?: null,
-                'community_service_scheme_id' => $this->community_service_scheme_id ?: null,
-                'focus_area_id' => $this->focus_area_id,
-                'theme_id' => $this->theme_id,
-                'topic_id' => $this->topic_id,
-                'national_priority_id' => $this->national_priority_id ?: null,
-                'study_program_roadmap_id' => $this->study_program_roadmap_id ?: null,
-                'cluster_level1_id' => $this->cluster_level1_id,
-                'cluster_level2_id' => $this->cluster_level2_id ?: null,
-                'cluster_level3_id' => $this->cluster_level3_id ?: null,
-                'sbk_value' => ! empty($this->sbk_value) ? $this->sbk_value : null,
-                'duration_in_years' => (int) $this->duration_in_years,
-                'start_year' => (int) $this->start_year,
-                'semester' => $this->semester,
-                'summary' => $this->summary,
-                'asta_cita' => $this->asta_cita ?: null,
+                // Update proposal fields
+                $this->proposal->update([
+                    'title' => $this->title,
+                    'research_scheme_id' => $this->research_scheme_id ?: null,
+                    'community_service_scheme_id' => $this->community_service_scheme_id ?: null,
+                    'focus_area_id' => $this->focus_area_id,
+                    'theme_id' => $this->theme_id,
+                    'topic_id' => $this->topic_id,
+                    'national_priority_id' => $this->national_priority_id ?: null,
+                    'study_program_roadmap_id' => $this->study_program_roadmap_id ?: null,
+                    'cluster_level1_id' => $this->cluster_level1_id,
+                    'cluster_level2_id' => $this->cluster_level2_id ?: null,
+                    'cluster_level3_id' => $this->cluster_level3_id ?: null,
+                    'sbk_value' => ! empty($this->sbk_value) ? $this->sbk_value : null,
+                    'duration_in_years' => (int) $this->duration_in_years,
+                    'start_year' => (int) $this->start_year,
+                    'semester' => $this->semester,
+                    'summary' => $this->summary,
+                    'asta_cita' => $this->asta_cita ?: null,
+                ]);
+
+                $this->attachTeamMembers($this->proposal, $this->proposal->submitter_id);
+
+                // Update outputs (delete old, create new)
+                $this->proposal->outputs()->delete();
+                $this->attachOutputs($this->proposal);
+
+                // Update budget items (delete old, create new)
+                $this->proposal->budgetItems()->delete();
+                $this->attachBudgetItems($this->proposal);
+
+                // Update partners (sync)
+                $this->attachPartners($this->proposal);
+
+                // Update keywords (sync)
+                $this->attachKeywords($this->proposal);
+
+                // Update SDGs (sync)
+                $this->attachSdgs($this->proposal);
+
+                $this->attachTargetedIkus($this->proposal);
+            });
+        } catch (\Exception $e) {
+            \Log::error('Proposal update failed: '.$e->getMessage(), [
+                'proposal_id' => $this->proposal->id ?? 'unknown',
+                'exception' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
             ]);
 
-            $this->attachTeamMembers($this->proposal, $this->proposal->submitter_id);
-
-            // Update outputs (delete old, create new)
-            $this->proposal->outputs()->delete();
-            $this->attachOutputs($this->proposal);
-
-            // Update budget items (delete old, create new)
-            $this->proposal->budgetItems()->delete();
-            $this->attachBudgetItems($this->proposal);
-
-            // Update partners (sync)
-            $this->attachPartners($this->proposal);
-
-            // Update keywords (sync)
-            $this->attachKeywords($this->proposal);
-
-            // Update SDGs (sync)
-            $this->attachSdgs($this->proposal);
-
-            $this->attachTargetedIkus($this->proposal);
-        });
+            throw $e;
+        }
     }
 
     /**
@@ -938,8 +950,8 @@ class ProposalForm extends Form
                     // Preserve status if already exists, otherwise default to pending
                     $status = ! empty($member['is_manual']) ? 'accepted' : 'pending';
                     if (isset($existingMembers[$userId])) {
-                        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-                        $status = $existingMembers[$userId]->pivot->getAttribute('status');
+                        // Safe way to get pivot status
+                        $status = $existingMembers[$userId]->pivot->status ?? 'pending';
                     }
 
                     $syncData[$userId] = [
