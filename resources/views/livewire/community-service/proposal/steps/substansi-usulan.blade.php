@@ -100,9 +100,7 @@
                 Belum ada luaran target. Klik tombol "Tambah Luaran" untuk menambahkan.
             </div>
         @else
-            <div class="table-responsive" x-data="{
-                    typesMap: @js(\App\Constants\ProposalConstants::PKM_OUTPUT_TYPES)
-                }">
+            <div class="table-responsive">
                 <table class="table table-bordered">
                     @php
                         $duration = (int) ($form->duration_in_years ?? 1);
@@ -121,12 +119,9 @@
                     </thead>
                     <tbody>
                         @foreach ($form->outputs as $index => $output)
-                            <tr wire:key="output-{{ $index }}" x-data="{
-                                        group: $wire.entangle('form.outputs.{{ $index }}.group').live,
-                                        type: $wire.entangle('form.outputs.{{ $index }}.type').live
-                                    }">
+                            <tr wire:key="output-{{ $index }}">
                                 <td>
-                                    <select wire:model="form.outputs.{{ $index }}.year"
+                                    <select wire:model.live="form.outputs.{{ $index }}.year"
                                         class="form-select form-select-sm @error('form.outputs.' . $index . '.year') is-invalid @enderror">
                                         @for ($y = 1; $y <= $duration; $y++)
                                             <option value="{{ $y }}">{{ $y }}
@@ -136,14 +131,14 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select wire:model="form.outputs.{{ $index }}.category"
+                                    <select wire:model.live="form.outputs.{{ $index }}.category"
                                         class="form-select-sm form-select @error('form.outputs.' . $index . '.category') is-invalid @enderror">
                                         <option value="Wajib">Wajib</option>
                                         <option value="Tambahan">Tambahan</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <select x-model="group"
+                                    <select wire:model.live="form.outputs.{{ $index }}.group"
                                         class="form-select-sm form-select @error('form.outputs.' . $index . '.group') is-invalid @enderror">
                                         <option value="">-- Pilih --</option>
                                         <option value="pemberdayaan">Pemberdayaan</option>
@@ -155,16 +150,20 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select x-model="type"
+                                    <select wire:model.live="form.outputs.{{ $index }}.type"
                                         class="form-select-sm form-select @error('form.outputs.' . $index . '.type') is-invalid @enderror">
                                         <option value="">-- Pilih --</option>
-                                        <template x-for="typeOption in (typesMap[group] || [])">
-                                            <option x-text="typeOption" :value="typeOption"></option>
-                                        </template>
+                                        @php
+                                            $group = $output['group'] ?? '';
+                                            $types = \App\Constants\ProposalConstants::PKM_OUTPUT_TYPES[$group] ?? [];
+                                        @endphp
+                                        @foreach ($types as $typeOption)
+                                            <option value="{{ $typeOption }}">{{ $typeOption }}</option>
+                                        @endforeach
                                     </select>
                                 </td>
                                 <td>
-                                    <select wire:model="form.outputs.{{ $index }}.status"
+                                    <select wire:model.live="form.outputs.{{ $index }}.status"
                                         class="form-select form-select-sm @error('form.outputs.' . $index . '.status') is-invalid @enderror">
                                         <option value="">-- Pilih --</option>
                                         @foreach(\App\Constants\ProposalConstants::OUTPUT_STATUSES as $status)
@@ -173,7 +172,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" wire:model="form.outputs.{{ $index }}.description"
+                                    <input type="text" wire:model.live="form.outputs.{{ $index }}.description"
                                         class="form-control form-control-sm @error('form.outputs.' . $index . '.description') is-invalid @enderror"
                                         placeholder="Keterangan (URL)">
                                 </td>

@@ -131,7 +131,8 @@ class BackupData extends Component
         $storagePath = storage_path('app/public');
 
         if (! is_dir($storagePath)) {
-            $this->output .= "\n⚠️ Folder storage/app/public tidak ditemukan.";
+            $this->output .= "\n❌ Folder storage/app/public tidak ditemukan.";
+            $this->output .= "\n   Pastikan symlink storage sudah dibuat.";
             $this->isRunning = false;
 
             return;
@@ -139,40 +140,45 @@ class BackupData extends Component
 
         $this->cleanOldBackups('storage_*');
 
-        $zip = new ZipArchive;
-        if ($zip->open($path, ZipArchive::CREATE) !== true) {
-            $this->output .= "\n❌ Gagal membuat file zip.";
+        try {
+            $zip = new ZipArchive;
+            if ($zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                $this->output .= "\n❌ Gagal membuat file zip.";
+                $this->isRunning = false;
 
-            $this->isRunning = false;
-
-            return;
-        }
-
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($storagePath),
-            \RecursiveIteratorIterator::LEAVES_ONLY
-        );
-
-        $count = 0;
-        foreach ($files as $file) {
-            if (! $file->isFile()) {
-                continue;
+                return;
             }
-            $relativePath = substr($file->getPathname(), strlen($storagePath) + 1);
-            $zip->addFile($file->getPathname(), $relativePath);
-            $count++;
-        }
-        $zip->close();
 
-        if ($count > 0) {
-            cache(['backup_last_storage_file' => $filename]);
-            $this->lastStorageFile = $filename;
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($storagePath),
+                \RecursiveIteratorIterator::LEAVES_ONLY
+            );
 
-            $size = $this->formatSize(filesize($path));
-            $this->output .= "\n✅ Backup storage berhasil! ({$count} file, {$size})";
-        } else {
+            $count = 0;
+            foreach ($files as $file) {
+                if (! $file->isFile()) {
+                    continue;
+                }
+                $relativePath = substr($file->getPathname(), strlen($storagePath) + 1);
+                $zip->addFile($file->getPathname(), $relativePath);
+                $count++;
+            }
+            $zip->close();
+
+            if ($count > 0) {
+                cache(['backup_last_storage_file' => $filename]);
+                $this->lastStorageFile = $filename;
+
+                $size = $this->formatSize(filesize($path));
+                $this->output .= "\n✅ Backup storage berhasil! ({$count} file, {$size})";
+            } else {
+                @unlink($path);
+                $this->output .= "\n⚠️ Tidak ada file storage untuk di-backup.";
+                $this->output .= "\n   Upload file terlebih dahulu melalui aplikasi.";
+            }
+        } catch (\Exception $e) {
+            $this->output .= "\n❌ Error: ".$e->getMessage();
             @unlink($path);
-            $this->output .= "\n⚠️ Tidak ada file storage untuk di-backup.";
         }
 
         $this->isRunning = false;
