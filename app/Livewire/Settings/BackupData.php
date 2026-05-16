@@ -60,7 +60,18 @@ class BackupData extends Component
 
         $this->cleanOldBackups('db_*');
 
-        $cmd = ['mysqldump'];
+        $mysqldumpPath = $this->findMysqldump();
+        if (! $mysqldumpPath) {
+            $this->output .= "\n❌ perintah `mysqldump` tidak tersedia di server ini.";
+            $this->output .= "\n   Gunakan alternatif: export manual via phpMyAdmin.";
+            $this->isRunning = false;
+
+            return;
+        }
+
+        $this->output .= "mysqldump: {$mysqldumpPath}\n\n";
+
+        $cmd = [$mysqldumpPath];
         if ($dbHost && $dbHost !== '127.0.0.1' && $dbHost !== 'localhost') {
             $cmd[] = '-h';
             $cmd[] = $dbHost;
@@ -74,10 +85,13 @@ class BackupData extends Component
         if ($dbPass) {
             $cmd[] = "-p{$dbPass}";
         }
+        $cmd[] = '--single-transaction';
+        $cmd[] = '--quick';
+        $cmd[] = '--lock-tables=false';
         $cmd[] = $dbName;
 
-        $result = Process::run($cmd, function ($type, $line) {
-            $this->output .= $line;
+        $result = Process::timeout(600)->run($cmd, function ($type, $line) {
+            $this->output .= $line."\n";
         });
 
         if ($result->successful()) {
@@ -93,16 +107,29 @@ class BackupData extends Component
 
                 $size = $this->formatSize(filesize($path));
                 $this->output .= "\n✅ Backup database berhasil! ({$size})";
+                $this->output .= "\n📁 File: {$filename}";
             } else {
                 $this->output .= "\n❌ File backup kosong atau gagal ditulis.";
             }
         } else {
             $error = $result->errorOutput();
-            if (str_contains($error, 'not found') || str_contains($error, 'command not found')) {
+            $output = $result->output();
+
+            if (empty($error) && empty($output)) {
+                $this->output .= "\n❌ Backup gagal. Proses timeout atau error tak terduga.";
+                $this->output .= "\n   Tips: Coba lagi atau gunakan export manual via phpMyAdmin.";
+            } elseif (str_contains($error, 'not found') || str_contains($error, 'command not found')) {
                 $this->output .= "\n❌ perintah `mysqldump` tidak tersedia di server ini.";
                 $this->output .= "\n   Gunakan alternatif: export manual via phpMyAdmin.";
+            } elseif (str_contains($error, 'Access denied') || str_contains($error, 'password')) {
+                $this->output .= "\n❌ Gagal koneksi ke database: akses ditolak.";
+                $this->output .= "\n   Periksa username & password database di file .env";
+            } elseif (str_contains($error, 'Unknown database')) {
+                $this->output .= "\n❌ Database tidak ditemukan: {$dbName}";
+                $this->output .= "\n   Periksa nama database di file .env";
             } else {
-                $this->output .= "\n❌ Backup database gagal: {$error}";
+                $this->output .= "\n❌ Backup database gagal:";
+                $this->output .= "\n   ".($error ?: $output);
             }
         }
 
@@ -197,6 +224,37 @@ class BackupData extends Component
                 @unlink($file);
             }
         }
+    }
+
+    private function findMysqldump(): ?string
+    {
+        $paths = [
+            '/usr/bin/mysqldump',
+            '/usr/local/bin/mysqldump',
+            '/opt/cpanel/ea-mysql*/bin/mysqldump',
+            'mysqldump',
+        ];
+
+        foreach ($paths as $path) {
+            if (str_contains($path, '*')) {
+                $matches = glob($path);
+                if (! empty($matches)) {
+                    return $matches[0];
+                }
+            } else {
+                $result = Process::run(['which', $path]);
+                if ($result->successful()) {
+                    return trim($result->output());
+                }
+            }
+        }
+
+        $result = Process::run(['which', 'mysqldump']);
+        if ($result->successful()) {
+            return 'mysqldump';
+        }
+
+        return null;
     }
 
     private function formatSize(int $bytes): string

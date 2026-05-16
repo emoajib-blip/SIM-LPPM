@@ -14,12 +14,18 @@ class BackupDownloadController extends Controller
      * Download database backup.
      *
      * Filename diambil dari cache, BUKAN dari URL — mencegah directory traversal.
+     * Fallback: jika cache kosong, cari file terbaru langsung di storage.
      */
     public function downloadDatabase(): StreamedResponse|RedirectResponse
     {
         abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
 
         $filename = cache('backup_last_db_file');
+
+        if (! $filename) {
+            $filename = $this->findLatestBackup('db_', '.sql');
+        }
+
         if (! $filename) {
             return redirect()->to(route('settings'))->with('error', 'Tidak ada backup database tersedia. Buat backup terlebih dahulu.');
         }
@@ -31,17 +37,43 @@ class BackupDownloadController extends Controller
      * Download storage backup.
      *
      * Filename diambil dari cache, BUKAN dari URL — mencegah directory traversal.
+     * Fallback: jika cache kosong, cari file terbaru langsung di storage.
      */
     public function downloadStorage(): StreamedResponse|RedirectResponse
     {
         abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
 
         $filename = cache('backup_last_storage_file');
+
+        if (! $filename) {
+            $filename = $this->findLatestBackup('storage_', '.zip');
+        }
+
         if (! $filename) {
             return redirect()->to(route('settings'))->with('error', 'Tidak ada backup storage tersedia. Buat backup terlebih dahulu.');
         }
 
         return $this->streamFile($filename, 'application/zip');
+    }
+
+    /**
+     * Find latest backup file in storage directory.
+     */
+    private function findLatestBackup(string $prefix, string $extension): ?string
+    {
+        $backupDir = storage_path('app/backup');
+        if (! is_dir($backupDir)) {
+            return null;
+        }
+
+        $files = glob("{$backupDir}/{$prefix}*.{$extension}");
+        if (empty($files)) {
+            return null;
+        }
+
+        usort($files, fn ($a, $b) => filemtime($b) - filemtime($a));
+
+        return basename($files[0]);
     }
 
     /**
