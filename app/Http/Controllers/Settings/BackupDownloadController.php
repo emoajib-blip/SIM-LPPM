@@ -21,7 +21,7 @@ class BackupDownloadController extends Controller
 
         $filename = cache('backup_last_db_file');
         if (! $filename) {
-            return redirect()->back()->with('error', 'Tidak ada backup database tersedia. Buat backup terlebih dahulu.');
+            return redirect()->to(route('settings'))->with('error', 'Tidak ada backup database tersedia. Buat backup terlebih dahulu.');
         }
 
         return $this->streamFile($filename, 'application/sql');
@@ -38,7 +38,7 @@ class BackupDownloadController extends Controller
 
         $filename = cache('backup_last_storage_file');
         if (! $filename) {
-            return redirect()->back()->with('error', 'Tidak ada backup storage tersedia. Buat backup terlebih dahulu.');
+            return redirect()->to(route('settings'))->with('error', 'Tidak ada backup storage tersedia. Buat backup terlebih dahulu.');
         }
 
         return $this->streamFile($filename, 'application/zip');
