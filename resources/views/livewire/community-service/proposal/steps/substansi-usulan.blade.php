@@ -122,8 +122,8 @@
                     <tbody>
                         @foreach ($form->outputs as $index => $output)
                             <tr wire:key="output-{{ $index }}" x-data="{
-                                        group: $wire.entangle('form.outputs.{{ $index }}.group'),
-                                        type: $wire.entangle('form.outputs.{{ $index }}.type')
+                                        group: $wire.entangle('form.outputs.{{ $index }}.group').live,
+                                        type: $wire.entangle('form.outputs.{{ $index }}.type').live
                                     }">
                                 <td>
                                     <select wire:model="form.outputs.{{ $index }}.year"
