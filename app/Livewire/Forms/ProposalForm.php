@@ -685,8 +685,11 @@ class ProposalForm extends Form
                 $this->attachTeamMembers($this->proposal, $this->proposal->submitter_id);
 
                 // Update outputs (delete old, create new)
-                $this->proposal->outputs()->delete();
-                $this->attachOutputs($this->proposal);
+                // Preserve existing outputs if new outputs are empty (prevents data loss on draft save)
+                if (! empty($this->outputs)) {
+                    $this->proposal->outputs()->delete();
+                    $this->attachOutputs($this->proposal);
+                }
 
                 // Update budget items (delete old, create new)
                 $this->proposal->budgetItems()->delete();
