@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Process;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -14,13 +15,13 @@ class BackupDownloadController extends Controller
      *
      * Filename diambil dari cache, BUKAN dari URL — mencegah directory traversal.
      */
-    public function downloadDatabase(): StreamedResponse
+    public function downloadDatabase(): StreamedResponse|RedirectResponse
     {
         abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
 
         $filename = cache('backup_last_db_file');
         if (! $filename) {
-            abort(404, 'Tidak ada backup database tersedia. Buat backup terlebih dahulu.');
+            return redirect()->back()->with('error', 'Tidak ada backup database tersedia. Buat backup terlebih dahulu.');
         }
 
         return $this->streamFile($filename, 'application/sql');
@@ -31,13 +32,13 @@ class BackupDownloadController extends Controller
      *
      * Filename diambil dari cache, BUKAN dari URL — mencegah directory traversal.
      */
-    public function downloadStorage(): StreamedResponse
+    public function downloadStorage(): StreamedResponse|RedirectResponse
     {
         abort_unless(Auth::user()?->hasRole('admin lppm'), 403);
 
         $filename = cache('backup_last_storage_file');
         if (! $filename) {
-            abort(404, 'Tidak ada backup storage tersedia. Buat backup terlebih dahulu.');
+            return redirect()->back()->with('error', 'Tidak ada backup storage tersedia. Buat backup terlebih dahulu.');
         }
 
         return $this->streamFile($filename, 'application/zip');

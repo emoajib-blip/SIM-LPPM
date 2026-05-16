@@ -4,6 +4,6 @@
 
 @section('code', '404')
 
-@section('message', 'Oops… Halaman tidak ditemukan')
+@section('message', $exception->getMessage() ?: 'Oops… Halaman tidak ditemukan')
 
-@section('description', 'Maaf, halaman yang Anda cari tidak ditemukan atau telah dipindahkan.')
+@section('description', $exception->getMessage() ?: 'Maaf, halaman yang Anda cari tidak ditemukan atau telah dipindahkan.')
