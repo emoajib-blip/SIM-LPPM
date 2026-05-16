@@ -182,6 +182,7 @@ class BackupData extends Component
             );
 
             $count = 0;
+            $totalSize = 0;
             foreach ($files as $file) {
                 if (! $file->isFile()) {
                     continue;
@@ -189,6 +190,7 @@ class BackupData extends Component
                 $relativePath = substr($file->getPathname(), strlen($storagePath) + 1);
                 $zip->addFile($file->getPathname(), $relativePath);
                 $count++;
+                $totalSize += $file->getSize();
             }
             $zip->close();
 
