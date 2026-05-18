@@ -167,7 +167,50 @@ class BackupData extends Component
 
         $this->cleanOldBackups('storage_*');
 
+        // Optimasi: Gunakan perintah native 'zip' jika tersedia (jauh lebih cepat & efisien)
+        $zipPath = $this->findZipCommand();
+        if ($zipPath) {
+            $this->output .= "Menggunakan perintah native zip: {$zipPath}\n";
+
+            $cmd = [$zipPath, '-r', $path, '.'];
+            $result = Process::path($storagePath)->timeout(900)->run($cmd, function ($type, $line) {
+                if (str_contains($line, 'adding:')) {
+                    static $count = 0;
+                    if (++$count % 50 === 0) {
+                        $this->output .= "Memproses file... ({$count} file)\n";
+                    }
+                }
+            });
+
+            if ($result->successful() && file_exists($path) && filesize($path) > 0) {
+                $this->finalizeStorageBackup($filename, $path);
+
+                return;
+            } else {
+                $this->output .= "\n⚠️ Gagal menggunakan perintah native zip. Mencoba fallback PHP ZipArchive...\n";
+            }
+        }
+
+        $this->backupStoragePhpFallback($path, $storagePath, $filename);
+    }
+
+    private function finalizeStorageBackup(string $filename, string $path): void
+    {
+        cache(['backup_last_storage_file' => $filename]);
+        $this->lastStorageFile = $filename;
+
+        $size = $this->formatSize(filesize($path));
+        $this->output .= "\n✅ Backup storage berhasil! ({$size})";
+        $this->output .= "\n📁 File: {$filename}";
+        $this->isRunning = false;
+    }
+
+    private function backupStoragePhpFallback(string $path, string $storagePath, string $filename): void
+    {
         try {
+            set_time_limit(900);
+            ini_set('memory_limit', '1024M');
+
             $zip = new ZipArchive;
             if ($zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
                 $this->output .= "\n❌ Gagal membuat file zip.";
@@ -182,7 +225,6 @@ class BackupData extends Component
             );
 
             $count = 0;
-            $totalSize = 0;
             foreach ($files as $file) {
                 if (! $file->isFile()) {
                     continue;
@@ -190,27 +232,25 @@ class BackupData extends Component
                 $relativePath = substr($file->getPathname(), strlen($storagePath) + 1);
                 $zip->addFile($file->getPathname(), $relativePath);
                 $count++;
-                $totalSize += $file->getSize();
+
+                if ($count % 50 === 0) {
+                    $this->output .= "Memasukkan file ke ZIP... ({$count})\n";
+                }
             }
             $zip->close();
 
-            if ($count > 0) {
-                cache(['backup_last_storage_file' => $filename]);
-                $this->lastStorageFile = $filename;
-
-                $size = $this->formatSize(filesize($path));
-                $this->output .= "\n✅ Backup storage berhasil! ({$count} file, {$size})";
+            if ($count > 0 && file_exists($path) && filesize($path) > 0) {
+                $this->finalizeStorageBackup($filename, $path);
             } else {
                 @unlink($path);
                 $this->output .= "\n⚠️ Tidak ada file storage untuk di-backup.";
-                $this->output .= "\n   Upload file terlebih dahulu melalui aplikasi.";
+                $this->isRunning = false;
             }
         } catch (\Exception $e) {
             $this->output .= "\n❌ Error: ".$e->getMessage();
             @unlink($path);
+            $this->isRunning = false;
         }
-
-        $this->isRunning = false;
     }
 
     public function render(): View
@@ -226,6 +266,20 @@ class BackupData extends Component
                 @unlink($file);
             }
         }
+    }
+
+    private function findZipCommand(): ?string
+    {
+        $paths = ['/usr/bin/zip', '/usr/local/bin/zip', 'zip'];
+
+        foreach ($paths as $path) {
+            $result = Process::run(['which', $path]);
+            if ($result->successful()) {
+                return trim($result->output());
+            }
+        }
+
+        return null;
     }
 
     private function findMysqldump(): ?string
