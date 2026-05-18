@@ -33,6 +33,9 @@ class BudgetCapManager extends Component
     #[Validate('nullable|integer|min:0')]
     public ?string $community_service_budget_cap = null;
 
+    #[Validate('boolean')]
+    public bool $enforce_percentage = true;
+
     public array $research_scheme_caps = [];
 
     public array $community_service_scheme_caps = [];
@@ -66,7 +69,8 @@ class BudgetCapManager extends Component
 
     public function create(): void
     {
-        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
+        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'enforce_percentage', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
+        $this->enforce_percentage = true;
         $this->modalTitle = 'Tambah Aturan Anggaran';
     }
 
@@ -112,6 +116,7 @@ class BudgetCapManager extends Component
             'research_budget_cap' => $this->research_budget_cap ? (int) $this->research_budget_cap : null,
             'community_service_budget_cap' => $this->community_service_budget_cap ? (int) $this->community_service_budget_cap : null,
             'scheme_caps' => $schemeCaps,
+            'enforce_percentage' => $this->enforce_percentage,
         ];
 
         if ($this->editingId) {
@@ -124,7 +129,7 @@ class BudgetCapManager extends Component
 
         // close modal
         $this->dispatch('close-modal', modalId: 'modal-budget-cap');
-        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
+        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'enforce_percentage', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
 
         session()->flash('success', $message);
         $this->toastSuccess($message);
@@ -137,6 +142,7 @@ class BudgetCapManager extends Component
         $this->semester = (string) $budgetCap->semester;
         $this->research_budget_cap = $budgetCap->research_budget_cap ? (string) (int) $budgetCap->research_budget_cap : null;
         $this->community_service_budget_cap = $budgetCap->community_service_budget_cap ? (string) (int) $budgetCap->community_service_budget_cap : null;
+        $this->enforce_percentage = $budgetCap->enforce_percentage;
 
         /** @var array<string, array<int, mixed>> $caps */
         $caps = is_array($budgetCap->scheme_caps) ? $budgetCap->scheme_caps : [];
@@ -171,7 +177,7 @@ class BudgetCapManager extends Component
 
     public function resetForm(): void
     {
-        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
+        $this->reset(['year', 'semester', 'research_budget_cap', 'community_service_budget_cap', 'enforce_percentage', 'research_scheme_caps', 'community_service_scheme_caps', 'editingId']);
     }
 
     public function handleConfirmDeleteAction(): void

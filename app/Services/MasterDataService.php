@@ -144,9 +144,17 @@ class MasterDataService
         return $this->cache['sdgs'] ??= Sdg::all();
     }
 
-    public function budgetGroups(): Collection
+    public function budgetGroups(?string $proposalType = null): Collection
     {
-        return $this->cache['budget_groups'] ??= BudgetGroup::with('components')->get();
+        $cacheKey = 'budget_groups_'.($proposalType ?? 'all');
+
+        return $this->cache[$cacheKey] ??= BudgetGroup::with('components')
+            ->where('is_active', true)
+            ->when($proposalType, function ($query) use ($proposalType) {
+                $query->forProposalType($proposalType);
+            })
+            ->orderBy('code')
+            ->get();
     }
 
     public function budgetComponents(?int $groupId = null): Collection

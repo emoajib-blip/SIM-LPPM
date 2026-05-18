@@ -6,7 +6,6 @@ use App\Actions\Proposal\IdentityEligibilityAction;
 use App\Constants\ProposalConstants;
 use App\Livewire\Research\Proposal\Components\TktMeasurement;
 use App\Models\BudgetCap;
-use App\Models\BudgetGroup;
 use App\Models\CommunityService;
 use App\Models\CommunityServiceScheme;
 use App\Models\Identity;
@@ -17,6 +16,7 @@ use App\Models\Research;
 use App\Models\ResearchScheme;
 use App\Models\TktLevel;
 use App\Models\User;
+use App\Services\BudgetValidationService;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -1075,6 +1075,7 @@ class ProposalForm extends Form
     /**
      * Validate budget items against budget group percentage limits.
      * Percentages are calculated based on the budget cap, not the total budget entered.
+     * Delegates to BudgetValidationService for single source of truth.
      *
      * @throws ValidationException
      */
@@ -1084,60 +1085,18 @@ class ProposalForm extends Form
             return;
         }
 
-        // Get proposal type to determine which budget cap to use
         $proposalType = $this->getProposalType();
         $currentYear = (int) ($this->start_year ?: date('Y'));
         $currentSemester = $this->semester ?: 'ganjil';
         $schemeId = $this->research_scheme_id ?: $this->community_service_scheme_id;
-        $type = $this->research_scheme_id ? 'research' : 'community_service';
 
-        $budgetCap = BudgetCap::getCapForPeriod($currentYear, $currentSemester, $type, $schemeId ? (int) $schemeId : null);
-
-        if ($budgetCap === null || $budgetCap <= 0) {
-            // No budget cap set, cannot validate percentages
-            throw ValidationException::withMessages([
-                'budget_items' => [
-                    sprintf(
-                        'Batas anggaran untuk %s tahun %s belum diatur. Silakan hubungi Admin LPPM.',
-                        $proposalType === 'research' ? 'Penelitian' : 'Pengabdian Masyarakat',
-                        $currentYear
-                    ),
-                ],
-            ]);
-        }
-
-        // Group budget items by budget_group_id and check percentages
-        $budgetGroups = BudgetGroup::whereNotNull('percentage')->get();
-        $errors = [];
-
-        foreach ($budgetGroups as $group) {
-            // Calculate total spent in this group
-            $groupTotal = collect($this->budget_items)
-                ->where('budget_group_id', $group->id)
-                ->sum(fn ($item) => (float) ($item['total'] ?? 0));
-
-            // Calculate percentage used BASED ON BUDGET CAP
-            $percentageUsed = ($groupTotal / $budgetCap) * 100;
-            $allowedPercentage = (float) $group->percentage;
-
-            // Check if percentage exceeds limit
-            if ($percentageUsed > $allowedPercentage) {
-                $errors[] = sprintf(
-                    'Kelompok anggaran "%s" melebihi batas %s%%. Saat ini: %s%% (Rp %s dari batas anggaran Rp %s)',
-                    $group->name,
-                    number_format($allowedPercentage, 2),
-                    number_format($percentageUsed, 2),
-                    number_format($groupTotal, 0, ',', '.'),
-                    number_format($budgetCap, 0, ',', '.')
-                );
-            }
-        }
-
-        if (! empty($errors)) {
-            throw ValidationException::withMessages([
-                'budget_items' => $errors,
-            ]);
-        }
+        app(BudgetValidationService::class)->validateBudgetGroupPercentages(
+            $this->budget_items,
+            $proposalType,
+            $currentYear,
+            $currentSemester,
+            $schemeId ? (int) $schemeId : null
+        );
     }
 
     /**

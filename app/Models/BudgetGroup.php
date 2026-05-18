@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string|null $description
  * @property float|null $percentage
+ * @property string|null $proposal_type (research, community_service, null)
+ * @property string|null $percentage_type (min, max)
+ * @property bool $is_active
  * @property-read Collection|BudgetComponent[] $components
  * @property-read Collection|BudgetItem[] $budgetItems
  */
@@ -28,6 +31,9 @@ class BudgetGroup extends Model
         'name',
         'description',
         'percentage',
+        'proposal_type',
+        'percentage_type',
+        'is_active',
     ];
 
     /**
@@ -39,7 +45,24 @@ class BudgetGroup extends Model
     {
         return [
             'percentage' => 'decimal:2',
+            'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * Scope to filter budget groups by proposal type with grandfather clause.
+     * Groups with null proposal_type appear in all proposal types.
+     */
+    public function scopeForProposalType($query, ?string $proposalType = null)
+    {
+        if ($proposalType === null) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($proposalType) {
+            $q->where('proposal_type', $proposalType)
+                ->orWhereNull('proposal_type');
+        });
     }
 
     /**

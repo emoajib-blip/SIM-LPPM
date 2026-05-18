@@ -27,6 +27,7 @@ class BudgetCap extends Model
         'research_budget_cap',
         'community_service_budget_cap',
         'scheme_caps',
+        'enforce_percentage',
     ];
 
     /**
@@ -42,6 +43,7 @@ class BudgetCap extends Model
             'research_budget_cap' => 'decimal:2',
             'community_service_budget_cap' => 'decimal:2',
             'scheme_caps' => 'array',
+            'enforce_percentage' => 'boolean',
         ];
     }
 

@@ -95,7 +95,7 @@ class BudgetValidationTest extends TestCase
         ];
 
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Honorarium" melebihi batas 30.00%');
+        $this->expectExceptionMessage('Honorarium" melebihi batas MAKSIMAL 30.00%');
 
         $this->budgetService->validateBudgetGroupPercentages($budgetItems, 'research', $year);
     }

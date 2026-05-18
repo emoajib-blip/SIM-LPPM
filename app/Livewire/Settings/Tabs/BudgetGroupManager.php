@@ -23,6 +23,15 @@ class BudgetGroupManager extends Component
     #[Validate('nullable|integer|min:0|max:100')]
     public ?string $percentage = null;
 
+    #[Validate('nullable|in:research,community_service')]
+    public ?string $proposal_type = null;
+
+    #[Validate('nullable|in:min,max')]
+    public ?string $percentage_type = null;
+
+    #[Validate('boolean')]
+    public bool $is_active = true;
+
     public ?int $editingId = null;
 
     public string $modalTitle = 'Kelompok Anggaran';
@@ -40,7 +49,8 @@ class BudgetGroupManager extends Component
 
     public function create(): void
     {
-        $this->reset(['code', 'name', 'description', 'percentage', 'editingId']);
+        $this->reset(['code', 'name', 'description', 'percentage', 'proposal_type', 'percentage_type', 'is_active', 'editingId']);
+        $this->is_active = true;
         $this->modalTitle = 'Tambah Kelompok Anggaran';
     }
 
@@ -62,6 +72,9 @@ class BudgetGroupManager extends Component
             'name' => $this->name,
             'description' => $this->description,
             'percentage' => $this->percentage ? (int) $this->percentage : null,
+            'proposal_type' => $this->proposal_type,
+            'percentage_type' => $this->percentage_type,
+            'is_active' => $this->is_active,
         ];
 
         if ($this->editingId) {
@@ -74,7 +87,7 @@ class BudgetGroupManager extends Component
 
         // close modal
         $this->dispatch('close-modal', modalId: 'modal-budget-group');
-        $this->reset(['code', 'name', 'description', 'percentage', 'editingId']);
+        $this->reset(['code', 'name', 'description', 'percentage', 'proposal_type', 'percentage_type', 'is_active', 'editingId']);
 
         session()->flash('success', $message);
         $this->toastSuccess($message);
@@ -87,6 +100,9 @@ class BudgetGroupManager extends Component
         $this->name = $budgetGroup->name;
         $this->description = $budgetGroup->description;
         $this->percentage = $budgetGroup->percentage ? (string) (int) $budgetGroup->percentage : null;
+        $this->proposal_type = $budgetGroup->proposal_type;
+        $this->percentage_type = $budgetGroup->percentage_type;
+        $this->is_active = $budgetGroup->is_active;
         $this->modalTitle = 'Edit Kelompok Anggaran';
         $this->dispatch('open-modal', modalId: 'modal-budget-group');
     }
@@ -103,7 +119,7 @@ class BudgetGroupManager extends Component
 
     public function resetForm(): void
     {
-        $this->reset(['code', 'name', 'description', 'percentage', 'editingId']);
+        $this->reset(['code', 'name', 'description', 'percentage', 'proposal_type', 'percentage_type', 'is_active', 'editingId']);
     }
 
     public function handleConfirmDeleteAction(): void

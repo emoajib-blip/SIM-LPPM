@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BudgetCap;
 use App\Models\BudgetGroup;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 class BudgetValidationService
@@ -23,6 +24,15 @@ class BudgetValidationService
 
         $currentYear ??= (int) date('Y');
         $semester ??= 'ganjil';
+
+        $budgetCapModel = BudgetCap::where('year', $currentYear)
+            ->when($semester && Schema::hasColumn('budget_caps', 'semester'), fn ($q) => $q->where('semester', $semester))
+            ->first();
+
+        if ($budgetCapModel && ! $budgetCapModel->enforce_percentage) {
+            return;
+        }
+
         $budgetCap = BudgetCap::getCapForPeriod($currentYear, $semester, $proposalType, $schemeId);
 
         if ($budgetCap === null || $budgetCap <= 0) {
@@ -38,7 +48,10 @@ class BudgetValidationService
             ]);
         }
 
-        $budgetGroups = BudgetGroup::whereNotNull('percentage')->get();
+        $budgetGroups = BudgetGroup::forProposalType($proposalType)
+            ->whereNotNull('percentage')
+            ->where('is_active', true)
+            ->get();
         $errors = [];
 
         foreach ($budgetGroups as $group) {
@@ -49,14 +62,24 @@ class BudgetValidationService
             $percentageUsed = ($groupTotal / $budgetCap) * 100;
             $allowedPercentage = (float) $group->percentage;
 
-            if ($percentageUsed > $allowedPercentage) {
+            // Treat null percentage_type as 'max' for backward compatibility
+            $percentageType = $group->percentage_type ?? 'max';
+
+            if ($percentageType === 'max' && $percentageUsed > $allowedPercentage) {
                 $errors[] = sprintf(
-                    'Kelompok anggaran "%s" melebihi batas %s%%. Saat ini: %s%% (Rp %s dari batas anggaran Rp %s)',
+                    'Kelompok anggaran "%s" melebihi batas MAKSIMAL %s%%. Saat ini: %s%% (Rp %s dari batas anggaran Rp %s)',
                     $group->name,
                     number_format($allowedPercentage, 2),
                     number_format($percentageUsed, 2),
                     number_format($groupTotal, 0, ',', '.'),
                     number_format($budgetCap, 0, ',', '.')
+                );
+            } elseif ($percentageType === 'min' && $percentageUsed < $allowedPercentage) {
+                $errors[] = sprintf(
+                    'Kelompok anggaran "%s" belum mencapai batas MINIMAL %s%%. Saat ini: %s%%',
+                    $group->name,
+                    number_format($allowedPercentage, 2),
+                    number_format($percentageUsed, 2)
                 );
             }
         }
