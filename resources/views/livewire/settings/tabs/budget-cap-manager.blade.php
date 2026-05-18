@@ -11,15 +11,16 @@
         </div>
         <div class="table-responsive">
             <table class="card-table table table-vcenter">
-                <thead>
-                    <tr>
-                        <th>Tahun</th>
-                        <th>Semester</th>
-                        <th>Batas Anggaran Penelitian</th>
-                        <th>Batas Anggaran Pengabdian</th>
-                        <th class="w-25">Aksi</th>
-                    </tr>
-                </thead>
+<thead>
+                     <tr>
+                         <th>Tahun</th>
+                         <th>Semester</th>
+                         <th>Batas Anggaran Penelitian</th>
+                         <th>Batas Anggaran Pengabdian</th>
+                         <th>Persentase</th>
+                         <th class="w-25">Aksi</th>
+                     </tr>
+                 </thead>
                 <tbody>
                     @forelse ($budgetCaps as $item)
                         <tr wire:key="budget-cap-{{ $item->id }}">
@@ -81,11 +82,18 @@
                                     </button>
                                 </div>
                             </td>
+                            <td>
+                                @if ($item->enforce_percentage)
+                                    <span class="badge bg-success-lt">Aktif</span>
+                                @else
+                                    <span class="badge bg-danger-lt">Nonaktif (Panic)</span>
+                                @endif
+                            </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="4" class="text-muted text-center">Belum ada pengaturan anggaran</td>
-                        </tr>
+<tr>
+            <td colspan="5" class="text-muted text-center">Belum ada pengaturan anggaran</td>
+        </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -187,6 +195,19 @@
                             </div>
                         </div>
                     @endforeach
+                </div>
+
+                <div class="hr-text text-warning fw-bold">Keamanan Persentase</div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" wire:model="enforce_percentage" class="form-check-input" id="enforce_percentage">
+                        <label class="form-check-label" for="enforce_percentage">
+                            <strong>Aktifkan Validasi Persentase</strong>
+                        </label>
+                    </div>
+                    <small class="form-hint text-warning">
+                        <x-lucide-info class="icon" /> Jika dinonaktifkan, validasi batasan persentase per kelompok anggaran akan dilewati. Gunakan hanya untuk keadaan darurat (panic button).
+                    </small>
                 </div>
             </form>
         </x-slot:body>
