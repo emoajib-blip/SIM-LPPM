@@ -72,8 +72,8 @@ class BudgetGroupManager extends Component
             'name' => $this->name,
             'description' => $this->description,
             'percentage' => $this->percentage ? (int) $this->percentage : null,
-            'proposal_type' => $this->proposal_type,
-            'percentage_type' => $this->percentage_type,
+            'proposal_type' => $this->proposal_type ?: null,
+            'percentage_type' => $this->percentage_type ?: null,
             'is_active' => $this->is_active,
         ];
 
