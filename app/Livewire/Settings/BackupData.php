@@ -71,15 +71,23 @@ class BackupData extends Component
 
         $this->output .= "mysqldump: {$mysqldumpPath}\n\n";
 
-        $cmd = [$mysqldumpPath];
-        if ($dbHost && $dbHost !== '127.0.0.1' && $dbHost !== 'localhost') {
-            $cmd[] = '-h';
-            $cmd[] = $dbHost;
+        // Fix: Paksa menggunakan TCP jika host adalah localhost atau 127.0.0.1
+        // untuk menghindari error 'Can't connect to local server through socket'
+        $finalHost = $dbHost;
+        if ($dbHost === 'localhost' || empty($dbHost)) {
+            $finalHost = '127.0.0.1';
         }
-        if ($dbPort && (int) $dbPort !== 3306) {
+
+        $cmd = [$mysqldumpPath];
+        $cmd[] = '-h';
+        $cmd[] = $finalHost;
+
+        if ($dbPort) {
             $cmd[] = '-P';
             $cmd[] = (string) $dbPort;
         }
+
+        $cmd[] = '--protocol=tcp'; // Memastikan tidak menggunakan socket
         $cmd[] = '-u';
         $cmd[] = $dbUser;
         if ($dbPass) {
