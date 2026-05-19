@@ -17,6 +17,9 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        // Forget cached permissions at the start
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
         // sanity check: make sure no duplicate role names are already present
         $this->assertUnique(Role::class, 'name');
 
@@ -63,6 +66,9 @@ class RoleSeeder extends Seeder
                 ['name' => $permissionName, 'guard_name' => 'web'],
                 ['id' => Str::uuid()->toString(), 'name' => $permissionName, 'guard_name' => 'web']
             );
+
+            // Re-forget cache after creating permission to ensure hasPermissionTo works
+            app(PermissionRegistrar::class)->forgetCachedPermissions();
 
             foreach ($roleNames as $roleName) {
                 $role = \App\Models\Role::where('name', $roleName)->where('guard_name', 'web')->first();

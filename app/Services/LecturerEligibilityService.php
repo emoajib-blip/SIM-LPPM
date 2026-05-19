@@ -78,7 +78,7 @@ class LecturerEligibilityService
         /** @var Proposal $proposal */
         foreach ($prevProposals as $proposal) {
             // Check for Final Report
-            $hasFinalReport = ProgressReport::where('proposal_id', $proposal->id)->where('reporting_period', 'final')->whereIn('status', ['APPROVED', 'COMPLETED'])->exists();
+            $hasFinalReport = ProgressReport::where('proposal_id', $proposal->id)->where('reporting_period', 'final')->whereIn('status', ['approved', 'completed'])->exists();
             if (! $hasFinalReport) {
                 $reasons[] = "Proposal '{$proposal->title}' belum memiliki Laporan Akhir yang disetujui.";
             }

@@ -37,7 +37,7 @@
                 </td>
                 <td style="border: 1px solid black;">{{ $latestReview?->score ?? '-' }}</td>
                 <td style="border: 1px solid black;">
-                    {{ $latestReview ? str_replace('_', ' ', strtoupper($latestReview->status)) : 'PENDING' }}
+                    {{ $latestReview ? str_replace('_', ' ', strtoupper($latestReview->status)) : 'pending' }}
                 </td>
                 <td style="border: 1px solid black;">{{ $latestReview?->reviewer?->name ?? '-' }}</td>
                 <td style="border: 1px solid black;">{{ $latestReview?->notes ?? '-' }}</td>

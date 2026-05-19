@@ -91,7 +91,7 @@ class ReportSignatureTest extends TestCase
             'document_id' => $report->id,
             'document_type' => get_class($report),
             'signed_role' => 'lecturer',
-            'action' => 'SUBMITTED',
+            'action' => 'submitted',
         ]);
 
         // Verify DocumentSignature created for dekan (since status is approved)
@@ -99,7 +99,7 @@ class ReportSignatureTest extends TestCase
             'document_id' => $report->id,
             'document_type' => get_class($report),
             'signed_role' => 'dekan',
-            'action' => 'APPROVED',
+            'action' => 'approved',
         ]);
 
         // Verify DocumentSignature created for kepala lppm (since status is approved)

@@ -427,7 +427,7 @@ class ProposalForm extends Form
             'semester' => $this->semester,
             'summary' => $this->summary,
             'asta_cita' => $this->asta_cita ?: null,
-            'status' => 'DRAFT',
+            'status' => 'draft',
         ]);
 
         $this->attachTeamMembers($proposal, $submitterId);
@@ -525,7 +525,7 @@ class ProposalForm extends Form
             'semester' => $this->semester,
             'summary' => $this->summary,
             'asta_cita' => $this->asta_cita ?: null,
-            'status' => 'DRAFT',
+            'status' => 'draft',
         ]);
 
         $this->attachTeamMembers($proposal, $submitterId);

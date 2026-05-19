@@ -21,6 +21,14 @@ class CompleteReviewAction
      */
     public function execute(ProposalReviewer $review, string $comments, string $recommendation): array
     {
+        // 0. SELF-REVIEW CHECK: Prevent reviewer from reviewing their own proposal
+        if ($review->proposal->submitter_id === Auth::id()) {
+            return [
+                'success' => false,
+                'message' => 'Reviewer tidak dapat mereview proposal sendiri.',
+            ];
+        }
+
         // 1. SECURITY: Ownership check
         if ($review->user_id !== Auth::id()) {
             return [
@@ -37,11 +45,15 @@ class CompleteReviewAction
             ];
         }
 
-        $validRecommendations = ['approved', 'rejected', 'revision_needed'];
+        $validRecommendations = [
+            ProposalStatus::APPROVED->value,
+            ProposalStatus::REJECTED->value,
+            ProposalStatus::REVISION_NEEDED->value,
+        ];
         if (! in_array($recommendation, $validRecommendations)) {
             return [
                 'success' => false,
-                'message' => 'Rekomendasi harus "approved", "rejected", atau "revision_needed".',
+                'message' => 'Rekomendasi harus "'.ProposalStatus::APPROVED->value.'", "'.ProposalStatus::REJECTED->value.'", atau "'.ProposalStatus::REVISION_NEEDED->value.'".',
             ];
         }
 

@@ -77,7 +77,7 @@ class ApprovalButton extends Component
         }
 
         $proposal = $this->proposal;
-        $result = $action->execute($proposal, 'COMPLETED');
+        $result = $action->execute($proposal, 'completed');
 
         if ($result['success']) {
             session()->flash('success', $result['message']);
@@ -105,7 +105,7 @@ class ApprovalButton extends Component
         }
 
         $proposal = $this->proposal;
-        $result = $action->execute($proposal, 'REJECTED');
+        $result = $action->execute($proposal, 'rejected');
 
         if ($result['success']) {
             session()->flash('warning', $result['message']);

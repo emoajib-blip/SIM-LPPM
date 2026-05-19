@@ -72,7 +72,7 @@ class SubmitButton extends Component
     public function rejectedMembers()
     {
         return $this->proposal->teamMembers()
-            ->wherePivot('status', 'REJECTED')
+            ->wherePivot('status', 'rejected')
             ->get();
     }
 

@@ -56,7 +56,7 @@ trait WithTeamManagement
 
         DB::transaction(function () use ($proposal, $userId) {
             $proposal->teamMembers()
-                ->updateExistingPivot($userId, ['status' => 'REJECTED']);
+                ->updateExistingPivot($userId, ['status' => 'rejected']);
 
             $member = $proposal->teamMembers()->find($userId);
             if ($member) {

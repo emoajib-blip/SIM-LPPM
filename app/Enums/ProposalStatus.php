@@ -4,16 +4,16 @@ namespace App\Enums;
 
 enum ProposalStatus: string
 {
-    case DRAFT = 'DRAFT';
-    case SUBMITTED = 'SUBMITTED';
-    case NEED_ASSIGNMENT = 'NEED_ASSIGNMENT';
-    case APPROVED = 'APPROVED';
-    case WAITING_REVIEWER = 'WAITING_REVIEWER';
-    case UNDER_REVIEW = 'UNDER_REVIEW';
-    case REVIEWED = 'REVIEWED';
-    case REVISION_NEEDED = 'REVISION_NEEDED';
-    case COMPLETED = 'COMPLETED';
-    case REJECTED = 'REJECTED';
+    case DRAFT = 'draft';
+    case SUBMITTED = 'submitted';
+    case NEED_ASSIGNMENT = 'need_assignment';
+    case APPROVED = 'approved';
+    case WAITING_REVIEWER = 'waiting_reviewer';
+    case UNDER_REVIEW = 'under_review';
+    case REVIEWED = 'reviewed';
+    case REVISION_NEEDED = 'revision_needed';
+    case COMPLETED = 'completed';
+    case REJECTED = 'rejected';
 
     /**
      * Mendapatkan label dalam bahasa Indonesia
@@ -43,14 +43,24 @@ enum ProposalStatus: string
             self::DRAFT => 'secondary',
             self::SUBMITTED => 'info',
             self::NEED_ASSIGNMENT => 'warning',
-            self::APPROVED => 'primary',
-            self::WAITING_REVIEWER => 'cyan',
-            self::UNDER_REVIEW => 'orange',
-            self::REVIEWED => 'purple',
+            self::APPROVED => 'success',
+            self::WAITING_REVIEWER => 'indigo',
+            self::UNDER_REVIEW => 'cyan',
+            self::REVIEWED => 'orange',
             self::REVISION_NEEDED => 'yellow',
-            self::COMPLETED => 'success',
+            self::COMPLETED => 'azure',
             self::REJECTED => 'danger',
         };
+    }
+
+    /**
+     * Mendapatkan array dari semua nilai enum
+     *
+     * @return array<int, string>
+     */
+    public static function values(): array
+    {
+        return array_map(fn ($status) => $status->value, self::cases());
     }
 
     /**
@@ -73,66 +83,22 @@ enum ProposalStatus: string
     }
 
     /**
-     * Mendapatkan deskripsi status
-     */
-    public function description(): string
-    {
-        return match ($this) {
-            self::DRAFT => 'Proposal sedang dalam tahap penyusunan',
-            self::SUBMITTED => 'Proposal telah diajukan dan menunggu persetujuan Dekan',
-            self::NEED_ASSIGNMENT => 'Proposal memerlukan persetujuan anggota tim',
-            self::APPROVED => 'Proposal telah disetujui Dekan dan menunggu persetujuan Kepala LPPM',
-            self::WAITING_REVIEWER => 'Proposal menunggu Admin LPPM menugaskan reviewer',
-            self::UNDER_REVIEW => 'Proposal sedang dalam proses review oleh reviewer yang ditugaskan',
-            self::REVIEWED => 'Semua reviewer telah menyelesaikan review, menunggu keputusan Kepala LPPM',
-            self::REVISION_NEEDED => 'Proposal memerlukan perbaikan sebelum disetujui',
-            self::COMPLETED => 'Proposal telah disetujui dan selesai',
-            self::REJECTED => 'Proposal ditolak',
-        };
-    }
-
-    /**
      * Mendapatkan semua status yang bisa ditampilkan di filter
      *
      * @return array<string, string>
      */
     public static function filterOptions(): array
     {
-        return [
-            'all' => 'Semua Status',
-            self::DRAFT->value => self::DRAFT->label(),
-            self::SUBMITTED->value => self::SUBMITTED->label(),
-            self::NEED_ASSIGNMENT->value => self::NEED_ASSIGNMENT->label(),
-            self::APPROVED->value => self::APPROVED->label(),
-            self::WAITING_REVIEWER->value => self::WAITING_REVIEWER->label(),
-            self::UNDER_REVIEW->value => self::UNDER_REVIEW->label(),
-            self::REVIEWED->value => self::REVIEWED->label(),
-            self::REVISION_NEEDED->value => self::REVISION_NEEDED->label(),
-            self::COMPLETED->value => self::COMPLETED->label(),
-            self::REJECTED->value => self::REJECTED->label(),
-        ];
+        $options = ['all' => 'Semua Status'];
+        foreach (self::cases() as $status) {
+            $options[$status->value] = $status->label();
+        }
+
+        return $options;
     }
 
     /**
-     * Mendapatkan array dari semua nilai enum
-     *
-     * @return array<int, string>
-     */
-    public static function values(): array
-    {
-        return array_map(fn ($status) => $status->value, self::cases());
-    }
-
-    /**
-     * Cek apakah proposal dalam tahap review
-     */
-    public function isInReviewPhase(): bool
-    {
-        return in_array($this, [self::WAITING_REVIEWER, self::UNDER_REVIEW, self::REVIEWED]);
-    }
-
-    /**
-     * Cek apakah proposal sudah final (tidak bisa diubah)
+     * Cek apakah status ini menunjukkan proposal sudah selesai
      */
     public function isFinal(): bool
     {

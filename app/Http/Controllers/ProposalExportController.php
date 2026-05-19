@@ -172,15 +172,15 @@ class ProposalExportController extends Controller
 
         // Signatories mapping: role => [action, condition, signed_at]
         $signatories = [
-            'lecturer' => ['SUBMITTED', true, $report->submitted_at ?? $report->created_at],
+            'lecturer' => ['submitted', true, $report->submitted_at ?? $report->created_at],
             'dekan' => [
-                'APPROVED',
-                in_array($reportStatusVal, ['approved_by_dekan', 'APPROVED', 'accepted']),
+                'approved',
+                in_array($reportStatusVal, ['approved_by_dekan', 'approved', 'accepted']),
                 $report->updated_at,
             ],
             'kepala_lppm' => [
                 'finalized',
-                in_array($reportStatusVal, ['APPROVED', 'accepted']),
+                in_array($reportStatusVal, ['approved', 'accepted']),
                 $report->updated_at,
             ],
         ];
@@ -258,8 +258,8 @@ class ProposalExportController extends Controller
 
         // Signatories mapping: role => [action, condition]
         $signatories = [
-            'lecturer' => ['SUBMITTED', true],
-            'dekan' => ['APPROVED', in_array($proposal->status->value, [ProposalStatus::APPROVED->value, ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
+            'lecturer' => ['submitted', true],
+            'dekan' => ['approved', in_array($proposal->status->value, [ProposalStatus::APPROVED->value, ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
             'kepala_lppm' => ['finalized', in_array($proposal->status->value, [ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
         ];
 

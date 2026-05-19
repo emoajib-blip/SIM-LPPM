@@ -288,7 +288,7 @@
                                                 </div>
                                                 <div class="col-4">
                                                     <div class="text-muted small">Status</div>
-                                                    <span class="badge bg-blue-lt text-uppercase">{{ str_replace('_', ' ', $activeMonevReview->status ?? 'PENDING') }}</span>
+                                                    <span class="badge bg-blue-lt text-uppercase">{{ str_replace('_', ' ', $activeMonevReview->status ?? 'pending') }}</span>
                                                 </div>
                                             </div>
                                             @if($activeMonevReview->notes)

@@ -84,7 +84,7 @@ class ProposalSignatureTest extends TestCase
             'document_id' => $proposal->id,
             'document_type' => get_class($proposal),
             'signed_role' => 'lecturer',
-            'action' => 'SUBMITTED',
+            'action' => 'submitted',
         ]);
     }
 
@@ -114,13 +114,13 @@ class ProposalSignatureTest extends TestCase
         $this->assertDatabaseHas('document_signatures', [
             'document_id' => $proposal->id,
             'signed_role' => 'dekan',
-            'action' => 'APPROVED',
+            'action' => 'approved',
         ]);
 
         $this->assertDatabaseHas('document_signatures', [
             'document_id' => $proposal->id,
             'signed_role' => 'lecturer',
-            'action' => 'SUBMITTED',
+            'action' => 'submitted',
         ]);
     }
 }

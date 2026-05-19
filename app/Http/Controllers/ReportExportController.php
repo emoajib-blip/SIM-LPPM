@@ -43,7 +43,7 @@ class ReportExportController extends Controller
             return null;
         }
 
-        return (string) $report->status->value === 'APPROVED' ? 'APPROVED' : ((string) $report->status->value === 'SUBMITTED' ? 'SUBMITTED' : null);
+        return (string) $report->status->value === 'approved' ? 'approved' : ((string) $report->status->value === 'submitted' ? 'submitted' : null);
     }
 
     protected function institutionalPdfCachePath(InstitutionalReport $report, string $variant): string
@@ -61,7 +61,7 @@ class ReportExportController extends Controller
                 ->where('document_type', $report->getMorphClass())
                 ->where('document_id', $report->id)
                 ->where('variant', $variant)
-                ->where('action', 'SUBMITTED')
+                ->where('action', 'submitted')
                 ->where('signed_role', 'kepala_lppm')
                 ->first();
 
@@ -73,7 +73,7 @@ class ReportExportController extends Controller
                 'doc_year' => (int) $report->year,
                 'doc_category' => (string) $report->type,
                 'variant' => $variant,
-                'action' => 'SUBMITTED',
+                'action' => 'submitted',
                 'signed_role' => 'kepala_lppm',
                 'signed_by' => (string) $report->submitted_by,
                 'signed_at' => $report->submitted_at->copy()->utc()->toIso8601ZuluString(),
@@ -90,7 +90,7 @@ class ReportExportController extends Controller
                     'document_type' => $report->getMorphClass(),
                     'document_id' => (string) $report->id,
                     'variant' => $variant,
-                    'action' => 'SUBMITTED',
+                    'action' => 'submitted',
                     'signed_role' => 'kepala_lppm',
                 ],
                 [
@@ -105,12 +105,12 @@ class ReportExportController extends Controller
             );
         }
 
-        if ($variant === 'APPROVED' && $report->approved_at && $report->approved_by) {
+        if ($variant === 'approved' && $report->approved_at && $report->approved_by) {
             $approved = DocumentSignature::query()
                 ->where('document_type', $report->getMorphClass())
                 ->where('document_id', $report->id)
                 ->where('variant', $variant)
-                ->where('action', 'APPROVED')
+                ->where('action', 'approved')
                 ->where('signed_role', 'rektor')
                 ->first();
 
@@ -122,7 +122,7 @@ class ReportExportController extends Controller
                 'doc_year' => (int) $report->year,
                 'doc_category' => (string) $report->type,
                 'variant' => $variant,
-                'action' => 'APPROVED',
+                'action' => 'approved',
                 'signed_role' => 'rektor',
                 'signed_by' => (string) $report->approved_by,
                 'signed_at' => $report->approved_at->copy()->utc()->toIso8601ZuluString(),
@@ -139,7 +139,7 @@ class ReportExportController extends Controller
                     'document_type' => $report->getMorphClass(),
                     'document_id' => (string) $report->id,
                     'variant' => $variant,
-                    'action' => 'APPROVED',
+                    'action' => 'approved',
                     'signed_role' => 'rektor',
                 ],
                 [
@@ -831,7 +831,7 @@ class ReportExportController extends Controller
                     'document_type' => $review->getMorphClass(),
                     'document_id' => (string) $review->id,
                     'variant' => $variant,
-                    'action' => 'REVIEWED',
+                    'action' => 'reviewed',
                     'signed_role' => 'reviewer',
                     'signed_by' => (string) $review->reviewer_id,
                     'signed_at' => $review->reviewed_at,
@@ -863,7 +863,7 @@ class ReportExportController extends Controller
                     'document_type' => $review->getMorphClass(),
                     'document_id' => (string) $review->id,
                     'variant' => $variant,
-                    'action' => 'APPROVED',
+                    'action' => 'approved',
                     'signed_role' => 'kepala_lppm',
                     'signed_by' => $review->approved_by_kepala_by,
                     'signed_at' => $review->approved_by_kepala_at,
@@ -919,7 +919,7 @@ class ReportExportController extends Controller
                     'doc_type' => 'monev_ba',
                     'doc_id' => (string) $review->id,
                     'variant' => $variant,
-                    'action' => 'REVIEWED',
+                    'action' => 'reviewed',
                     'signed_role' => 'reviewer',
                     'signed_by' => (string) $review->reviewer_id,
                     'signed_at' => $review->reviewed_at->copy()->utc()->toIso8601ZuluString(),
@@ -973,7 +973,7 @@ class ReportExportController extends Controller
                     'doc_type' => 'monev_ba',
                     'doc_id' => (string) $review->id,
                     'variant' => $variant,
-                    'action' => 'APPROVED',
+                    'action' => 'approved',
                     'signed_role' => 'kepala_lppm',
                     'signed_by' => (string) ($review->approved_by_kepala_by ?? ''),
                     'signed_at' => $review->approved_by_kepala_at->copy()->utc()->toIso8601ZuluString(),

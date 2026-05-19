@@ -112,10 +112,10 @@ class DosenDashboard extends Component
         $this->stats = [
             'my_research' => $research->sum('count'),
             'my_community_service' => $communityService->sum('count'),
-            'research_pending' => $research->filter(fn ($r) => ($r->status->value ?? '') === 'SUBMITTED')->sum('count'),
-            'community_service_pending' => $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'SUBMITTED')->sum('count'),
-            'research_approved' => $research->filter(fn ($r) => ($r->status->value ?? '') === 'APPROVED')->sum('count'),
-            'community_service_approved' => $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'APPROVED')->sum('count'),
+            'research_pending' => $research->filter(fn ($r) => ($r->status->value ?? '') === 'submitted')->sum('count'),
+            'community_service_pending' => $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'submitted')->sum('count'),
+            'research_approved' => $research->filter(fn ($r) => ($r->status->value ?? '') === 'approved')->sum('count'),
+            'community_service_approved' => $communityService->filter(fn ($r) => ($r->status->value ?? '') === 'approved')->sum('count'),
         ];
     }
 

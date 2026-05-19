@@ -73,7 +73,7 @@ class ReviewEvaluationSignatureTest extends TestCase
         $signature = DocumentSignature::query()
             ->where('document_type', $assignment->getMorphClass())
             ->where('document_id', (string) $assignment->id)
-            ->where('action', 'REVIEWED')
+            ->where('action', 'reviewed')
             ->where('signed_role', 'reviewer')
             ->first();
 

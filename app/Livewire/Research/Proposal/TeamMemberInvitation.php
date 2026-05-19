@@ -37,7 +37,7 @@ class TeamMemberInvitation extends Component
     public function rejectedMembers()
     {
         return $this->proposal->teamMembers()
-            ->wherePivot('status', 'REJECTED')
+            ->wherePivot('status', 'rejected')
             ->get();
     }
 
@@ -83,7 +83,7 @@ class TeamMemberInvitation extends Component
 
         if ($isMember) {
             DB::transaction(function () use ($user): void {
-                $this->proposal->teamMembers()->updateExistingPivot($user->id, ['status' => 'REJECTED']);
+                $this->proposal->teamMembers()->updateExistingPivot($user->id, ['status' => 'rejected']);
 
                 // Send notification
                 $notificationService = app(NotificationService::class);

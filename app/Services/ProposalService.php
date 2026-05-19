@@ -109,7 +109,7 @@ class ProposalService
         if (isset($filters['status']) && $filters['status'] !== '') {
             $statusValue = (string) $filters['status'];
             // Validate status against ProposalStatus enum values
-            $allStatusValues = ['DRAFT', 'SUBMITTED', 'NEED_ASSIGNMENT', 'APPROVED', 'WAITING_REVIEWER', 'UNDER_REVIEW', 'REVIEWED', 'REVISION_NEEDED', 'COMPLETED', 'REJECTED'];
+            $allStatusValues = ['draft', 'submitted', 'need_assignment', 'approved', 'waiting_reviewer', 'under_review', 'reviewed', 'revision_needed', 'completed', 'rejected'];
             if (in_array($statusValue, $allStatusValues)) {
                 $query->where('status', $statusValue);
             }
@@ -174,7 +174,7 @@ class ProposalService
             ->pluck('count', 'status')
             ->toArray();
 
-        $allStatuses = ['DRAFT', 'SUBMITTED', 'NEED_ASSIGNMENT', 'APPROVED', 'WAITING_REVIEWER', 'UNDER_REVIEW', 'REVIEWED', 'REVISION_NEEDED', 'COMPLETED', 'REJECTED'];
+        $allStatuses = ['draft', 'submitted', 'need_assignment', 'approved', 'waiting_reviewer', 'under_review', 'reviewed', 'revision_needed', 'completed', 'rejected'];
         $emptyStats = array_fill_keys($allStatuses, 0);
 
         return [

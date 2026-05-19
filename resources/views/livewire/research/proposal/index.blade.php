@@ -259,23 +259,9 @@
                         <!-- Status Filter -->
                         <div class="col-md-3">
                             <select class="form-select" wire:model.live="statusFilter">
-                                @php
-                                    $statusOptions = [
-                                        'all' => 'Semua Status',
-                                        'draft' => 'Draft',
-                                        'submitted' => 'Diajukan',
-                                        'need_assignment' => 'Perlu Persetujuan Anggota',
-                                        'approved' => 'Disetujui Dekan',
-                                        'waiting_reviewer' => 'Menunggu Penugasan Reviewer',
-                                        'under_review' => 'Sedang Direview',
-                                        'reviewed' => 'Review Selesai',
-                                        'revision_needed' => 'Perlu Revisi',
-                                        'completed' => 'Selesai',
-                                        'rejected' => 'Ditolak',
-                                    ];
-                                @endphp
-                                @foreach ($statusOptions as $value => $label)
-                                    <option value="{{ $value }}">{{ $label }}</option>
+                                <option value="all">Semua Status</option>
+                                @foreach (\App\Enums\ProposalStatus::cases() as $status)
+                                    <option value="{{ $status->value }}">{{ $status->label() }}</option>
                                 @endforeach
                             </select>
                         </div>

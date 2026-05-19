@@ -143,7 +143,7 @@ class AdminDashboard extends Component
                 fn ($q) => $q
                     ->where('detailable_type', 'App\Models\Research')
                     ->where('start_year', $this->selectedYear)
-                    ->whereIn('status', ['APPROVED', 'COMPLETED'])
+                    ->whereIn('status', ['approved', 'completed'])
             )->sum('total_price');
 
         $pkmBudget = (int) BudgetItem::query()
@@ -152,15 +152,15 @@ class AdminDashboard extends Component
                 fn ($q) => $q
                     ->where('detailable_type', 'App\Models\CommunityService')
                     ->where('start_year', $this->selectedYear)
-                    ->whereIn('status', ['APPROVED', 'COMPLETED'])
+                    ->whereIn('status', ['approved', 'completed'])
             )->sum('total_price');
 
         // FIX ENUM BUG: Laravel Collection whereIn compares by ==, but status
         // is a PHP 8.1 Enum. Must use ->value to get the string for comparison.
-        $researchApproved = $research->filter(fn ($r) => in_array($r->status?->value, ['APPROVED', 'COMPLETED']))->sum('count');
-        $pkmApproved = $communityService->filter(fn ($r) => in_array($r->status?->value, ['APPROVED', 'COMPLETED']))->sum('count');
-        $researchCompleted = $research->filter(fn ($r) => $r->status?->value === 'COMPLETED')->sum('count');
-        $pkmCompleted = $communityService->filter(fn ($r) => $r->status?->value === 'COMPLETED')->sum('count');
+        $researchApproved = $research->filter(fn ($r) => in_array($r->status?->value, ['approved', 'completed']))->sum('count');
+        $pkmApproved = $communityService->filter(fn ($r) => in_array($r->status?->value, ['approved', 'completed']))->sum('count');
+        $researchCompleted = $research->filter(fn ($r) => $r->status?->value === 'completed')->sum('count');
+        $pkmCompleted = $communityService->filter(fn ($r) => $r->status?->value === 'completed')->sum('count');
 
         $totalResearch = $research->sum('count');
         $totalPkm = $communityService->sum('count');
@@ -169,14 +169,14 @@ class AdminDashboard extends Component
             'total_research' => $totalResearch,
             'total_community_service' => $totalPkm,
             'total_proposals' => $totalResearch + $totalPkm,
-            'research_pending' => $research->filter(fn ($r) => $r->status?->value === 'SUBMITTED')->sum('count'),
-            'community_service_pending' => $communityService->filter(fn ($r) => $r->status?->value === 'SUBMITTED')->sum('count'),
+            'research_pending' => $research->filter(fn ($r) => $r->status?->value === 'submitted')->sum('count'),
+            'community_service_pending' => $communityService->filter(fn ($r) => $r->status?->value === 'submitted')->sum('count'),
             'research_approved' => $researchApproved,
             'community_service_approved' => $pkmApproved,
             'research_completed' => $researchCompleted,
             'community_service_completed' => $pkmCompleted,
-            'research_rejected' => $research->filter(fn ($r) => $r->status?->value === 'REJECTED')->sum('count'),
-            'community_service_rejected' => $communityService->filter(fn ($r) => $r->status?->value === 'REJECTED')->sum('count'),
+            'research_rejected' => $research->filter(fn ($r) => $r->status?->value === 'rejected')->sum('count'),
+            'community_service_rejected' => $communityService->filter(fn ($r) => $r->status?->value === 'rejected')->sum('count'),
             'research_budget' => $researchBudget,
             'pkm_budget' => $pkmBudget,
             'total_dosen' => $totalDosen,
@@ -191,24 +191,24 @@ class AdminDashboard extends Component
         $proposalsThisYearIds = $proposalsThisYear->pluck('id');
 
         // New Metrics: Draft & Approval Stages
-        $totalDraft = $proposalsThisYear->filter(fn ($p) => ($p->status->value ?? '') === 'DRAFT')->count();
-        $waitingDean = $proposalsThisYear->filter(fn ($p) => ($p->status->value ?? '') === 'SUBMITTED')->count();
-        $waitingLppm = $proposalsThisYear->filter(fn ($p) => in_array($p->status->value ?? '', ['APPROVED', 'REVIEWED']))->count();
+        $totalDraft = $proposalsThisYear->filter(fn ($p) => ($p->status->value ?? '') === 'draft')->count();
+        $waitingDean = $proposalsThisYear->filter(fn ($p) => ($p->status->value ?? '') === 'submitted')->count();
+        $waitingLppm = $proposalsThisYear->filter(fn ($p) => in_array($p->status->value ?? '', ['approved', 'reviewed']))->count();
 
         // 1. Review Status
         // Total Review = Proposals that have progressed past submission (i.e. currently in review or decided)
         $totalReview = Proposal::whereIn('id', $proposalsThisYearIds)
-            ->whereIn('status', ['REVIEWED', 'APPROVED', 'REJECTED', 'COMPLETED'])
+            ->whereIn('status', ['reviewed', 'approved', 'rejected', 'completed'])
             ->count();
 
         // Completed Review = Proposals that have a final decision
         $completedReview = Proposal::whereIn('id', $proposalsThisYearIds)
-            ->whereIn('status', ['APPROVED', 'REJECTED', 'COMPLETED'])
+            ->whereIn('status', ['approved', 'rejected', 'completed'])
             ->count();
 
         // 2 & 3. activeProposals: Only funded proposals (approved/completed) require Monev, Reports, and Outputs
         $activeProposals = $proposalsThisYear->filter(function ($p) {
-            return in_array($p->status->value, ['APPROVED', 'COMPLETED']);
+            return in_array($p->status->value, ['approved', 'completed']);
         });
         $activeProposalIds = $activeProposals->pluck('id');
 

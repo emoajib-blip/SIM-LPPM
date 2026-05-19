@@ -47,9 +47,9 @@ class SendDailySummaries extends Command
     private function getAdminData(array $data): array
     {
         return array_merge($data, [
-            'pending_proposals' => Proposal::where('status', 'SUBMITTED')->count(),
-            'UNDER_REVIEW' => Proposal::where('status', 'UNDER_REVIEW')->count(),
-            'awaiting_decision' => Proposal::where('status', 'REVIEWED')->count(),
+            'pending_proposals' => Proposal::where('status', 'submitted')->count(),
+            'under_review' => Proposal::where('status', 'under_review')->count(),
+            'awaiting_decision' => Proposal::where('status', 'reviewed')->count(),
             'total_reviews_pending' => ProposalReviewer::where('status', 'pending')->count(),
         ]);
     }
@@ -57,10 +57,10 @@ class SendDailySummaries extends Command
     private function getKepalaData(array $data): array
     {
         return array_merge($data, [
-            'pending_initial_approval' => Proposal::where('status', 'APPROVED')->count(),
-            'needing_reviewer_assignment' => Proposal::where('status', 'NEED_ASSIGNMENT')->count(),
-            'awaiting_final_decision' => Proposal::where('status', 'REVIEWED')->count(),
-            'completed_today' => Proposal::where('status', 'COMPLETED')
+            'pending_initial_approval' => Proposal::where('status', 'approved')->count(),
+            'needing_reviewer_assignment' => Proposal::where('status', 'need_assignment')->count(),
+            'awaiting_final_decision' => Proposal::where('status', 'reviewed')->count(),
+            'completed_today' => Proposal::where('status', 'completed')
                 ->whereDate('updated_at', now())
                 ->count(),
         ]);
@@ -69,11 +69,11 @@ class SendDailySummaries extends Command
     private function getDekanData(array $data): array
     {
         return array_merge($data, [
-            'pending_submissions' => Proposal::where('status', 'SUBMITTED')->count(),
-            'approved_today' => Proposal::where('status', 'APPROVED')
+            'pending_submissions' => Proposal::where('status', 'submitted')->count(),
+            'approved_today' => Proposal::where('status', 'approved')
                 ->whereDate('updated_at', now())
                 ->count(),
-            'rejected_today' => Proposal::where('status', 'REJECTED')
+            'rejected_today' => Proposal::where('status', 'rejected')
                 ->whereDate('updated_at', now())
                 ->count(),
         ]);
@@ -85,7 +85,7 @@ class SendDailySummaries extends Command
         // Individual reviewers will receive their own specific counts
         return array_merge($data, [
             'pending_assignments' => ProposalReviewer::where('status', 'pending')->count(),
-            'completed_today' => ProposalReviewer::where('status', 'COMPLETED')
+            'completed_today' => ProposalReviewer::where('status', 'completed')
                 ->whereDate('updated_at', now())
                 ->count(),
         ]);

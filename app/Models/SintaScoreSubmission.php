@@ -54,7 +54,7 @@ class SintaScoreSubmission extends Model
      */
     public function scopeApproved($query): Builder
     {
-        return $query->where('status', 'APPROVED');
+        return $query->where('status', 'approved');
     }
 
     /**
@@ -63,6 +63,6 @@ class SintaScoreSubmission extends Model
      */
     public function scopeRejected($query): Builder
     {
-        return $query->where('status', 'REJECTED');
+        return $query->where('status', 'rejected');
     }
 }

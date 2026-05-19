@@ -33,8 +33,8 @@ trait WithApproval
 
         DB::transaction(function () use ($proposal) {
             $newStatus = match ($this->approvalDecision) {
-                'APPROVED' => ProposalStatus::UNDER_REVIEW,
-                'REJECTED' => ProposalStatus::REJECTED,
+                'approved' => ProposalStatus::UNDER_REVIEW,
+                'rejected' => ProposalStatus::REJECTED,
                 default => throw new \Exception('Keputusan persetujuan tidak valid.'),
             };
 
@@ -77,11 +77,11 @@ trait WithApproval
             }
         });
 
-        $message = $this->approvalDecision === 'APPROVED'
+        $message = $this->approvalDecision === 'approved'
             ? 'Proposal berhasil disetujui.'
             : 'Proposal telah ditolak.';
 
-        session()->flash($this->approvalDecision === 'APPROVED' ? 'success' : 'error', $message);
+        session()->flash($this->approvalDecision === 'approved' ? 'success' : 'error', $message);
         $this->toastSuccess($message);
         $this->cancelApproval();
     }
@@ -103,9 +103,9 @@ trait WithApproval
 
         DB::transaction(function () use ($proposal) {
             $newStatus = match ($this->approvalDecision) {
-                'APPROVED' => ProposalStatus::APPROVED,
+                'approved' => ProposalStatus::APPROVED,
                 'need_fix' => ProposalStatus::NEED_ASSIGNMENT,
-                'REJECTED' => ProposalStatus::REJECTED,
+                'rejected' => ProposalStatus::REJECTED,
                 default => throw new \Exception('Keputusan dekan tidak valid.'),
             };
 
@@ -149,16 +149,16 @@ trait WithApproval
         });
 
         $message = match ($this->approvalDecision) {
-            'APPROVED' => 'Proposal berhasil disetujui dan diteruskan ke Kepala LPPM.',
+            'approved' => 'Proposal berhasil disetujui dan diteruskan ke Kepala LPPM.',
             'need_fix' => 'Proposal dikembalikan ke pengusul untuk diperbaiki.',
-            'REJECTED' => 'Proposal telah ditolak.',
+            'rejected' => 'Proposal telah ditolak.',
             default => 'Keputusan berhasil disimpan.',
         };
 
         $flashType = match ($this->approvalDecision) {
-            'APPROVED' => 'success',
+            'approved' => 'success',
             'need_fix' => 'warning',
-            'REJECTED' => 'error',
+            'rejected' => 'error',
             default => 'success',
         };
 

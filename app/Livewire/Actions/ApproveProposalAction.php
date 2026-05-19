@@ -28,26 +28,29 @@ class ApproveProposalAction
             ];
         }
 
-        // Normalize decision to uppercase to match enum values
-        $decision = strtoupper($decision);
+        // Normalize decision to lowercase to match enum values
+        $decision = strtolower($decision);
 
-        if (! in_array($decision, [ProposalStatus::COMPLETED->value, ProposalStatus::REJECTED->value])) {
+        $validDecisions = [
+            ProposalStatus::COMPLETED->value,
+            ProposalStatus::REJECTED->value,
+            ProposalStatus::REVISION_NEEDED->value,
+        ];
+
+        if (! in_array($decision, $validDecisions)) {
             return [
                 'success' => false,
-                'message' => 'Keputusan harus "COMPLETED" atau "REJECTED".',
+                'message' => 'Keputusan harus "'.ProposalStatus::COMPLETED->value.'", "'.ProposalStatus::REJECTED->value.'", atau "'.ProposalStatus::REVISION_NEEDED->value.'".',
             ];
         }
 
-        // Check if all reviewers completed
-        if (! $proposal->allReviewsCompleted()) {
+        // Check if all reviewers completed (except for revision_needed which can be done early)
+        if ($decision !== ProposalStatus::REVISION_NEEDED->value && ! $proposal->allReviewsCompleted()) {
             $pendingReviewers = $proposal->getPendingReviewers();
 
             return [
                 'success' => false,
-                'message' => sprintf(
-                    '%d reviewer masih belum menyelesaikan review.',
-                    $pendingReviewers->count()
-                ),
+                'message' => 'Belum semua reviewer menyelesaikan review.',
             ];
         }
 
@@ -62,7 +65,7 @@ class ApproveProposalAction
             [$proposal->submitter]
         );
 
-        $message = $decision === 'COMPLETED'
+        $message = $decision === 'completed'
             ? 'Proposal berhasil disetujui dan selesai.'
             : 'Proposal ditolak.';
 

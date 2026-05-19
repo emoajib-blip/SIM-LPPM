@@ -2,6 +2,7 @@
 
 namespace App\Actions\Dekan;
 
+use App\Enums\ProposalStatus;
 use App\Models\StudyProgram;
 use App\Models\User;
 use App\Notifications\RoadmapValidationDecision;
@@ -27,14 +28,14 @@ class DekanValidateStudyProgramRoadmapAction
      */
     public function execute(StudyProgram $studyProgram, string $decision, ?string $notes = null, ?User $dekan = null): array
     {
-        if (! in_array($decision, ['approved', 'rejected'])) {
+        if (! in_array($decision, [ProposalStatus::APPROVED->value, ProposalStatus::REJECTED->value])) {
             return [
                 'success' => false,
                 'message' => 'Keputusan validasi tidak valid.',
             ];
         }
 
-        if ($studyProgram->roadmap_status !== 'submitted') {
+        if ($studyProgram->roadmap_status !== ProposalStatus::SUBMITTED->value) {
             return [
                 'success' => false,
                 'message' => 'Roadmap harus dalam status "Menunggu Validasi" untuk diproses.',
@@ -69,7 +70,7 @@ class DekanValidateStudyProgramRoadmapAction
 
         try {
             DB::transaction(function () use ($studyProgram, $decision, $notes, $dekan): void {
-                $newStatus = $decision === 'approved' ? 'approved' : 'rejected';
+                $newStatus = $decision === ProposalStatus::APPROVED->value ? ProposalStatus::APPROVED->value : ProposalStatus::REJECTED->value;
 
                 $studyProgram->update([
                     'roadmap_status' => $newStatus,
@@ -86,7 +87,7 @@ class DekanValidateStudyProgramRoadmapAction
                 $this->sendNotifications($studyProgram, $decision, $dekan, $notes);
             });
 
-            $message = $decision === 'approved'
+            $message = $decision === ProposalStatus::APPROVED->value
                 ? "Roadmap penelitian {$studyProgram->name} berhasil disetujui."
                 : "Roadmap penelitian {$studyProgram->name} ditolak. Kaprodi akan diberitahu untuk melakukan perbaikan.";
 

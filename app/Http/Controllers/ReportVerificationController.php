@@ -22,22 +22,22 @@ class ReportVerificationController extends Controller
         ];
 
         $requestedVariant = (string) $request->query('variant', '');
-        $variant = in_array($requestedVariant, ['SUBMITTED', 'APPROVED'], true)
+        $variant = in_array($requestedVariant, ['submitted', 'approved'], true)
             ? $requestedVariant
-            : ((string) ($institutionalReport->status->value) === 'APPROVED' ? 'APPROVED' : 'SUBMITTED');
+            : ((string) ($institutionalReport->status->value) === 'approved' ? 'approved' : 'submitted');
 
         $signatures = DocumentSignature::query()
             ->where('document_type', $institutionalReport->getMorphClass())
             ->where('document_id', $institutionalReport->id)
             ->where('variant', $variant)
-            ->whereIn('action', ['SUBMITTED', 'APPROVED'])
+            ->whereIn('action', ['submitted', 'approved'])
             ->orderByDesc('signed_at')
             ->get()
             ->groupBy('action')
             ->map(fn ($items) => $items->first());
 
-        $submittedSignature = $signatures->get('SUBMITTED');
-        $approvedSignature = $signatures->get('APPROVED');
+        $submittedSignature = $signatures->get('submitted');
+        $approvedSignature = $signatures->get('approved');
 
         return view('reports.verify', [
             'report' => $institutionalReport->load(['submitter.identity', 'approver.identity']),

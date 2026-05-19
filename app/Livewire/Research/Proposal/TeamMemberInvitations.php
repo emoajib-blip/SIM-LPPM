@@ -72,7 +72,7 @@ class TeamMemberInvitations extends Component
     #[Computed]
     public function rejectedMembers(): Collection
     {
-        return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'REJECTED');
+        return $this->teamMembers->filter(fn ($member) => $member->pivot->status === 'rejected');
     }
 
     #[Computed]
@@ -131,7 +131,7 @@ class TeamMemberInvitations extends Component
         }
 
         $proposal->teamMembers()
-            ->updateExistingPivot($user->id, ['status' => 'REJECTED']);
+            ->updateExistingPivot($user->id, ['status' => 'rejected']);
 
         session()->flash('success', 'Undangan ditolak');
         $this->toastSuccess('Undangan ditolak');

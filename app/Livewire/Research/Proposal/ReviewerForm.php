@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Research\Proposal;
 
+use App\Enums\ProposalStatus;
 use App\Livewire\Actions\CompleteReviewAction;
 use App\Livewire\Concerns\HasToast;
 use App\Models\Proposal;
@@ -96,7 +97,7 @@ class ReviewerForm extends Component
     {
         $rules = [
             'reviewNotes' => 'required|min:10',
-            'recommendation' => 'required|in:approved,rejected,revision_needed',
+            'recommendation' => 'required|in:'.ProposalStatus::APPROVED->value.','.ProposalStatus::REJECTED->value.','.ProposalStatus::REVISION_NEEDED->value,
         ];
 
         foreach ($this->activeCriterias as $criteria) {
@@ -224,7 +225,7 @@ class ReviewerForm extends Component
         }
 
         // Jika rekomendasi sudah approved, tidak bisa edit
-        if ($review->recommendation === 'APPROVED') {
+        if ($review->recommendation === 'approved') {
             return false;
         }
 

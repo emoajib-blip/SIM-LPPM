@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\ProposalStatus;
+use App\Enums\ReportStatus;
+use App\Enums\ReviewStatus;
 use App\Models\AdditionalOutput;
 use App\Models\BudgetComponent;
 use App\Models\BudgetGroup;
@@ -276,7 +278,7 @@ class CommunityServiceSeeder extends Seeder
             $assignment = ProposalReviewer::create([
                 'proposal_id' => $proposal->id,
                 'user_id' => $reviewer->id,
-                'status' => $isCompleted ? 'completed' : 'pending',
+                'status' => $isCompleted ? ReviewStatus::COMPLETED : ReviewStatus::PENDING,
                 'review_notes' => $notes,
                 'recommendation' => $recommendation,
                 'round' => $currentRound,
@@ -342,7 +344,7 @@ class CommunityServiceSeeder extends Seeder
             'proposal_id' => $proposal->id,
             'reporting_year' => date('Y'),
             'reporting_period' => 'semester_1',
-            'status' => ProposalStatus::SUBMITTED,
+            'status' => ReportStatus::SUBMITTED,
             'summary_update' => fake()->paragraph(2),
             'submitted_by' => $submitter->id,
             'submitted_at' => Carbon::parse($completionDate)->addDays(10),

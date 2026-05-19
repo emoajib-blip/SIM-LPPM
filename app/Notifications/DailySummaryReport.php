@@ -57,7 +57,7 @@ class DailySummaryReport extends Notification implements ShouldQueue
             $message->line('📊 **Statistik Sistem:**')
                 ->line("- Total Proposal: {$this->data['total_proposals']}")
                 ->line("- Menunggu Persetujuan: {$this->data['pending_approval']}")
-                ->line("- Selesai: {$this->data['COMPLETED']}");
+                ->line("- Selesai: {$this->data['completed']}");
         }
 
         return $message->action('Lihat Dashboard', route('dashboard'))
