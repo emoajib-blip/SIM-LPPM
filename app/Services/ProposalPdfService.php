@@ -516,10 +516,10 @@ class ProposalPdfService
 
             $nonce = $signatureRecord?->payload['nonce'] ?? Str::random(32);
             $signedAt = [
-                'lecturer' => $proposal->created_at,
+                'lecturer' => $proposal->created_at ?? now(),
                 'dekan' => ProposalStatusLog::where('proposal_id', $proposal->id)->where('status_after', ProposalStatus::APPROVED)->value('at') ?? now(),
                 'kepala_lppm' => ProposalStatusLog::where('proposal_id', $proposal->id)->whereIn('status_after', [ProposalStatus::WAITING_REVIEWER, ProposalStatus::UNDER_REVIEW])->value('at') ?? now(),
-            ][$role] ?? $proposal->updated_at ?? now();
+            ][$role];
 
             $payload = [
                 'ver' => 1,
