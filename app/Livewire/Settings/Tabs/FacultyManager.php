@@ -88,7 +88,6 @@ class FacultyManager extends Component
         $this->editingId = $faculty->id;
         $this->name = $faculty->name;
         $this->code = $faculty->code;
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
         $this->institutionId = $faculty->institution_id !== null ? (int) $faculty->institution_id : null;
         $this->deanName = $faculty->dean_name ?? '';

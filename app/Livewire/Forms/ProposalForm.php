@@ -187,7 +187,6 @@ class ProposalForm extends Form
         $this->theme_id = $proposal->theme_id ?? '';
         $this->topic_id = $proposal->topic_id ?? '';
         $this->study_program_roadmap_id = $proposal->study_program_roadmap_id ? (string) $proposal->study_program_roadmap_id : null;
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
         $this->keywords = $proposal->keywords ? $proposal->keywords->pluck('name')->toArray() : [];
         $this->national_priority_id = $proposal->national_priority_id ?? '';
@@ -206,8 +205,6 @@ class ProposalForm extends Form
         // Load detailable-specific fields based on type
         $detailable = $proposal->detailable;
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-
         if ($detailable) {
             if ($detailable instanceof Research) {
                 // Research-specific fields
@@ -215,12 +212,10 @@ class ProposalForm extends Form
                 $this->macro_research_group_id = (string) ($detailable->macro_research_group_id ?? '');
                 $this->tkt_type = $detailable->tkt_type ?? '';
                 // Load TKT results from pivot
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 $this->tkt_results = $detailable->tktLevels->mapWithKeys(function ($level) {
                     return [$level->id => ['percentage' => $level->pivot->getAttribute('percentage')]];
                 })->toArray();
                 // Load TKT indicator scores
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 $this->tkt_indicator_scores = $detailable->tktIndicators->mapWithKeys(function ($indicator) {
                     return [$indicator->id => $indicator->pivot->getAttribute('score')];
                 })->toArray();
@@ -256,7 +251,6 @@ class ProposalForm extends Form
         // Load team members (excluding ketua/submitter - only load anggota)
         $this->members = $proposal->teamMembers
             ->filter(function ($member) {
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 // Only include non-ketua members (anggota)
                 return $member->pivot->getAttribute('role') !== 'ketua';
             })
@@ -264,7 +258,6 @@ class ProposalForm extends Form
                 return [
                     'name' => $member->name,
                     'nidn' => $member->identity?->identity_id,
-                    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                     'tugas' => $member->pivot->getAttribute('tasks'),
                     'role' => $member->pivot->getAttribute('role'),
                     'status' => $member->pivot->getAttribute('status') ?? 'pending',
@@ -276,13 +269,10 @@ class ProposalForm extends Form
         // Load student members from JSON column
         if (! empty($proposal->student_members)) {
             $studentMembersJSON = $proposal->student_members;
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
             if (is_string($studentMembersJSON)) {
                 $studentMembersJSON = json_decode($studentMembersJSON, true);
             }
-
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
             if (is_array($studentMembersJSON)) {
                 foreach ($studentMembersJSON as $student) {
@@ -327,7 +317,6 @@ class ProposalForm extends Form
                 'group' => $item->group,
                 'component' => $item->component,
                 'item' => $item->item_description,
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 'unit' => $item->budgetComponent->unit ?? '',
                 'volume' => $item->volume,
                 'unit_price' => $item->unit_price,
@@ -553,8 +542,6 @@ class ProposalForm extends Form
                 // Update detailable based on type
                 $detailable = $this->proposal->detailable;
 
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
-
                 if ($detailable) {
                     if ($detailable instanceof Research) {
                         // Update Research-specific fields
@@ -727,7 +714,6 @@ class ProposalForm extends Form
         if ($this->proposal) {
             DB::transaction(function (): void {
                 $this->proposal->teamMembers()->detach();
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 $this->proposal->detailable->delete();
                 $this->proposal->delete();
             });

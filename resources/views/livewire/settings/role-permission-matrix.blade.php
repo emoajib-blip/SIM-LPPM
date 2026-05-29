@@ -89,7 +89,6 @@
                 </div>
             </div>
             <div class="card-footer bg-transparent text-muted mt-3 d-flex justify-content-between">
-                <small><i class="ti ti-lock"></i> Vetted by AI - Manual Review Required by Senior Engineer/Manager</small>
                 <div wire:loading wire:target="save" class="text-primary small fw-bold">
                     Sedang menyimpan ke server...
                 </div>

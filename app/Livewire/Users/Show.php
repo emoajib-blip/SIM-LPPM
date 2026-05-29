@@ -13,7 +13,6 @@ use Livewire\WithPagination;
 
 /**
  * @property-read User $user
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 #[Layout('components.layouts.app', ['title' => 'User Details', 'pageTitle' => '', 'pageSubtitle' => 'User profile and metadata overview'])]
 class Show extends Component

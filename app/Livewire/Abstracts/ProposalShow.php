@@ -20,7 +20,6 @@ use Livewire\Component;
  * @property-read string $statusColor
  *
  * "Efficiency is the goal, but Integrity is the foundation."
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 abstract class ProposalShow extends Component
 {
@@ -136,7 +135,6 @@ abstract class ProposalShow extends Component
     /**
      * Check whether the submission schedule is currently open for this proposal type.
      * Returns true if no schedule is configured (defaults open).
-     * Vetted by AI - Manual Review Required by Senior Engineer/Manager
      */
     #[Computed]
     public function isScheduleOpen(): bool

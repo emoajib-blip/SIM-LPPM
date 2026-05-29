@@ -8,9 +8,6 @@ use App\Models\Proposal;
 use Illuminate\Validation\Rule;
 use Spatie\MediaLibrary\HasMedia;
 
-/**
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
- */
 class Create extends ProposalCreate
 {
     public function mount(?string $proposalId = null, ?Proposal $proposal = null): void

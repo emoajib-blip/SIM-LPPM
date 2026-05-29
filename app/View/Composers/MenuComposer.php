@@ -15,7 +15,6 @@ class MenuComposer
 {
     public function compose(View $view): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $view->with('headerMenuItems', $this->menuItems(Auth::user()));
     }
 
@@ -233,7 +232,7 @@ class MenuComposer
             [
                 'title' => 'Laporan',
                 'icon' => 'report-analytics',
-                'roles' => ['admin lppm', 'rektor', 'kepala lppm'],
+                'roles' => ['admin lppm', 'rektor', 'kepala lppm', 'dekan'],
                 'children' => [
                     [
                         'title' => 'Monitoring Laporan',

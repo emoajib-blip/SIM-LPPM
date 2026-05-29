@@ -8,9 +8,6 @@ use App\Http\Resources\PublicResearchResource;
 use App\Models\Research;
 use Illuminate\Http\Request;
 
-/**
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
- */
 class PublicResearchController extends Controller
 {
     /**

@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read ProposalReviewer $reviewer
  * @property-read ReviewCriteria $criteria
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewScore extends Model
 {
     protected $fillable = [

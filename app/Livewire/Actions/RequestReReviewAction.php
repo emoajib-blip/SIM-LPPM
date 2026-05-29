@@ -77,7 +77,6 @@ class RequestReReviewAction
 
         /** @var ProposalReviewer $reviewerRecord */
         foreach ($reviewers as $reviewerRecord) {
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
             if ($reviewerRecord->user) {
                 $this->notificationService->notifyProposalRevised(

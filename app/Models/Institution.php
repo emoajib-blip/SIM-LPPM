@@ -52,7 +52,6 @@ class Institution extends Model
     /**
      * Get the user who is the head of LPPM for this institution.
      */
-    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function lppmHeadUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'lppm_head_user_id');

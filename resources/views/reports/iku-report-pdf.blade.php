@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <title>Laporan Capaian IKU - {{ $period }}</title>
         <style>
-        /* Vetted by AI - Manual Review Required by Senior Engineer/Manager */
         @page {
             margin: 3cm 3cm 3cm 4cm;
         }

@@ -39,7 +39,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \Illuminate\Database\Eloquent\Collection|PolicyInvolvement[] $policyInvolvements
  * @property-read Pivot $pivot
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */

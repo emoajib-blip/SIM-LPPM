@@ -65,7 +65,6 @@ class Show extends Component
             $this->canEdit = false;
         }
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Load existing final report
         /** @var ProgressReport|null $finalReport */
         $finalReport = $proposal->progressReports()
@@ -195,7 +194,6 @@ class Show extends Component
     {
         // Save mandatory output files
         foreach ($this->form->mandatoryOutputs as $proposalOutputId => $data) {
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             if (empty($proposalOutputId)) {
                 continue;
             }
@@ -484,7 +482,6 @@ class Show extends Component
             session()->flash('success', $message);
             $this->toastSuccess($message);
             $this->dispatch('close-modal', modalId: 'modalAdditionalOutput');
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {

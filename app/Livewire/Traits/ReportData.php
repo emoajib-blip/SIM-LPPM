@@ -19,7 +19,6 @@ trait ReportData
         $query = $this->filterByUserAccess($query);
 
         $user = Auth::user();
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         /** @phpstan-ignore-next-line */
         $roleFilter = property_exists($this, 'roleFilter') ? $this->roleFilter : '';
 

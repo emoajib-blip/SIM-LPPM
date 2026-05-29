@@ -103,7 +103,6 @@ class FacultyRoadmapManager extends Component
             'is_active' => $this->isActive,
         ];
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Ensure Dekan cannot spoof faculty_id
         $user = auth()->user();
         if ($user->hasRole('dekan') && $this->facultyId !== $user->identity?->faculty_id) {

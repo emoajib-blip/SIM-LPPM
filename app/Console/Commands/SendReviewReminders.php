@@ -9,7 +9,6 @@ use Illuminate\Console\Command;
 
 /**
  * Send review reminders to reviewers 3 days before deadline
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class SendReviewReminders extends Command
 {

@@ -45,13 +45,11 @@ class KepalaLppmDashboard extends Component
 
     public function exportIkuPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.iku.export-pdf', ['period' => $this->selectedYear]));
     }
 
     public function exportIkuExcel(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.iku.export-excel', ['period' => $this->selectedYear]));
     }
 

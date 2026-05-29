@@ -6,7 +6,6 @@
 ])
 @if ($name)
     @php
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Komponen icon wrapper untuk Tabler Icons
         // Gunakan icon CSS class dari Tabler Icons (ti ti-*)
         $iconClass = trim("ti ti-{$name} {$class}");

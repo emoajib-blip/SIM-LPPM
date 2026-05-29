@@ -27,7 +27,6 @@ class ResearchSchemeManager extends Component
 
     public string $deleteItemName = '';
 
-    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     // Eligibility Properties
     public array $allowed_functional_positions = [];
 
@@ -55,7 +54,6 @@ class ResearchSchemeManager extends Component
 
     public string $pending_report_block_role = 'none';
 
-    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function getFunctionalPositionOptions(): array
     {
         return [

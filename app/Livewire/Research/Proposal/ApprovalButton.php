@@ -19,7 +19,6 @@ use Livewire\Component;
  * @property-read Collection|ProposalReviewer[] $pendingReviewers
  * @property-read Collection $reviewSummary
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ApprovalButton extends Component
 {
     use HasToast;

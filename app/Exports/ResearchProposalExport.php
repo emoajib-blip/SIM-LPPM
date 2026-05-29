@@ -115,7 +115,6 @@ class ResearchProposalExport implements FromQuery, WithHeadings, WithMapping
             }
         }
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         return [
             $no,
             $submitterIdentity->sinta_id ?? '',

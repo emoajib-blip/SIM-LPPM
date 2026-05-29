@@ -19,7 +19,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property-read Proposal $proposal
  *
  * "Efficiency is the goal, but Integrity is the foundation."
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class ProposalMonev extends Model implements HasMedia
 {

@@ -1,5 +1,4 @@
 <div class="row row-cards">
-    {{-- Vetted by AI - Manual Review Required by Senior Engineer/Manager --}}
     {{-- Year Filter & SINTA Portal --}}
     <div class="col-12">
         <div class="card border-0 shadow-sm">

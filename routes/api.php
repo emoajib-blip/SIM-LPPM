@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 
 /**
  * Public API Routes for LPPM Synchronization
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 Route::prefix('v1/public')->name('api.v1.public.')->group(function () {
 

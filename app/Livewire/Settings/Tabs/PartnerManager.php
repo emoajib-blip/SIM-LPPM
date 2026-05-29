@@ -9,7 +9,6 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class PartnerManager extends Component
 {
     use HasToast, WithFileUploads, WithPagination;

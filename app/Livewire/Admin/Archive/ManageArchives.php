@@ -150,14 +150,12 @@ class ManageArchives extends Component
     #[On('request-template-download')]
     public function downloadTemplate(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.archives.template'));
     }
 
     #[On('request-export-data')]
     public function exportData(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $url = route('admin.archives.export', [
             'search' => $this->search,
             'yearFilter' => $this->yearFilter,

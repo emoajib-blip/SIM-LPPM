@@ -691,7 +691,6 @@ class InstallCommand extends Command
             $addMore = confirm('Add another faculty?', default: count($faculties) < 2);
         }
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         warning('No faculties configured. Using defaults.');
         $faculties = [
             ['name' => 'SAINTEK', 'code' => 'SAINTEK'],

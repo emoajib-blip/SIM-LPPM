@@ -59,7 +59,6 @@ class MediaDownloadService
             $proposalId = $proposal?->id;
         } elseif (method_exists($model, 'proposal')) {
             try {
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 /** @phpstan-ignore-next-line */
                 $proposalId = optional($model->proposal)->id;
             } catch (\Throwable $e) {

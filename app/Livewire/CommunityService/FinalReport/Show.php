@@ -68,7 +68,6 @@ class Show extends Component
             $this->canEdit = false;
         }
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Load existing final report
         /** @var ProgressReport|null $finalReport */
         $finalReport = $proposal->progressReports()->where('reporting_period', 'final')->latest()->first();
@@ -194,7 +193,6 @@ class Show extends Component
     protected function saveOutputFiles($report): void
     {
         // Save mandatory output files
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         foreach ($this->mandatoryOutputs as $proposalOutputId => $data) {
             if (empty($proposalOutputId)) {
                 continue;

@@ -22,7 +22,6 @@ use Livewire\Component;
  * @property-read Collection|ProposalReviewer[] $pendingReviewers
  * @property-read Collection $reviewSummary
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class KepalaLppmFinalDecision extends Component
 {
     use HasToast;
@@ -155,7 +154,6 @@ class KepalaLppmFinalDecision extends Component
             // Send notifications
             $this->sendNotifications($proposal, $this->decision, $user);
 
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             $message = match ($this->decision) {
                 'completed' => 'Proposal berhasil disetujui dan selesai.',
                 'rejected' => 'Proposal telah ditolak.',

@@ -1,5 +1,4 @@
 <div>
-    {{-- Vetted by AI - Manual Review Required by Senior Engineer/Manager --}}
     <x-slot:pageHeader>
         {{-- Header empty as requested --}}
     </x-slot:pageHeader>

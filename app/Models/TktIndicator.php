@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property string $indicator
  * @property-read Pivot $pivot
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class TktIndicator extends Model
 {
     use HasFactory;

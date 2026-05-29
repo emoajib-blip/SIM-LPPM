@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 @php
-    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     // Defensive defaults in case variables are not passed from all render paths
     $isApproved ??= false;
     $isSigned ??= false;

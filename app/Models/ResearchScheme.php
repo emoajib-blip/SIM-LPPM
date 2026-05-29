@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $strata
  * @property array<string, mixed>|null $eligibility_rules
- *                                                        Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class ResearchScheme extends Model
 {

@@ -15,7 +15,6 @@
                 @endphp
                 <a href="/" aria-label="{{ $appName }}">
                     @php
-                        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                         // Check file physically exists before using custom logo (avoids 403 from stale media records)
                         $logoMedia = \App\Models\Setting::where('key', 'app_logo')->first()?->getFirstMedia('logo');
                         $customLogo = ($logoMedia && file_exists($logoMedia->getPath())) 

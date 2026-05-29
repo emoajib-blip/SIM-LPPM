@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property bool $is_active_for_community_service
  * @property-read Pivot $pivot
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class TktLevel extends Model
 {
     use HasFactory;

@@ -56,7 +56,6 @@ use Livewire\WithFileUploads;
  * @property-read string|null $templateUrl
  * @property-read string|null $partnerCommitmentTemplateUrl
  * @property-read string|null $proposalApprovalPageTemplateUrl
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 abstract class ProposalCreate extends Component
 {

@@ -7,7 +7,6 @@ use App\Exports\SintaResearchExport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class SintaExportController extends Controller
 {
     public function downloadResearch(Request $request)

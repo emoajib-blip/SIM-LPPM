@@ -8,9 +8,6 @@ use App\Models\CommunityService;
 use App\Models\Research;
 use Illuminate\Http\JsonResponse;
 
-/**
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
- */
 class PublicStatsController extends Controller
 {
     /**

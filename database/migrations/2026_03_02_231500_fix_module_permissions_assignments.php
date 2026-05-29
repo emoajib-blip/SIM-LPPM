@@ -10,7 +10,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
 
         $permissionsToFix = [
             'module_penelitian' => ['dosen', 'kepala lppm', 'admin lppm', 'rektor', 'dekan', 'superadmin'],

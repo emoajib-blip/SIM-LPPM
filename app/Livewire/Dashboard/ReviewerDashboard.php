@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 #[Layout('components.layouts.app', ['title' => 'Dashboard Reviewer', 'pageTitle' => 'Ruang Penilaian', 'pageSubtitle' => 'Kelola tugas review, deadline usulan, dan standarisasi kualitas riset'])]
 class ReviewerDashboard extends Component
 {

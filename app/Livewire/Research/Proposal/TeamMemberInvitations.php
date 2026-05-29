@@ -19,7 +19,6 @@ use Livewire\Component;
  * @property-read Collection|User[] $rejectedMembers
  * @property-read bool $allAccepted
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class TeamMemberInvitations extends Component
 {
     use HasToast;
@@ -99,7 +98,6 @@ class TeamMemberInvitations extends Component
             return;
         }
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         if ($member->pivot->getAttribute('status') === 'accepted') {
             $this->toastInfo('Anda sudah menerima undangan');
 

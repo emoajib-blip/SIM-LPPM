@@ -86,6 +86,18 @@ class RolePermissionMatrix extends Component
             return;
         }
 
+        // Safety Rule: Laporan tidak bisa dicabut untuk Administrator, Rektor, Kepala LPPM
+        if (
+            in_array($role->name, ['admin lppm', 'superadmin', 'rektor', 'kepala lppm']) &&
+            $permission->name === 'module_laporan'
+        ) {
+            $this->toastWarning('Hak akses Laporan untuk Administrator tidak dapat dicabut.', 'Keamanan');
+
+            $this->matrix[$roleId][$permissionId] = true;
+
+            return;
+        }
+
         // Just toggle the matrix state in memory
         $this->matrix[$roleId][$permissionId] = ! ($this->matrix[$roleId][$permissionId] ?? false);
     }
@@ -136,7 +148,6 @@ class RolePermissionMatrix extends Component
 
     public function render()
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         return view('livewire.settings.role-permission-matrix');
     }
 }

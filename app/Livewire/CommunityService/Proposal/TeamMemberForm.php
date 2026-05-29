@@ -13,7 +13,6 @@ use Livewire\Component;
  * @property-read Proposal|null $proposal
  * @property-read Collection|User[] $teamMembers
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class TeamMemberForm extends Component
 {
     public string $proposalId = '';

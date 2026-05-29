@@ -227,7 +227,6 @@ class TeamMembersForm extends Component
         $this->member_name = '';
         $this->member_email = '';
         $this->member_type = 'dosen';
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $institution = Institution::where('name', 'like', '%Pekalongan%')->first();
         $this->member_institution = $institution !== null ? $institution->name : 'ITSNU Pekalongan';
         $this->member_study_program = '';

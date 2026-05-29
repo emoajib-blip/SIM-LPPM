@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 #[Layout('components.layouts.app', ['title' => 'Dashboard Dosen', 'pageTitle' => 'Ruang Peneliti', 'pageSubtitle' => 'Kelola usulan, publikasi, dan kolaborasi riset Anda'])]
 class DosenDashboard extends Component
 {
@@ -187,7 +186,6 @@ class DosenDashboard extends Component
     public function openEditMetricsModal(): void
     {
         $identity = $this->user->identity;
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->sinta_score_v3_overall = $identity->sinta_score_v3_overall ?? 0;
         $this->scopus_h_index = $identity->scopus_h_index ?? 0;
         $this->gs_h_index = $identity->gs_h_index ?? 0;

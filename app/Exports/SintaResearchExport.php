@@ -13,7 +13,6 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class SintaResearchExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected ?string $institutionName;

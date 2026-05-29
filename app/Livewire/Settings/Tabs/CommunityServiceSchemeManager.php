@@ -27,7 +27,6 @@ class CommunityServiceSchemeManager extends Component
 
     public string $deleteItemName = '';
 
-    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     // Eligibility Properties
     public array $allowed_functional_positions = [];
 

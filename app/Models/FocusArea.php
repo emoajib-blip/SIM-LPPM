@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection|Theme[] $themes
  * @property-read Collection|Proposal[] $proposals
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class FocusArea extends Model
 {
     /** @use HasFactory<FocusAreaFactory> */

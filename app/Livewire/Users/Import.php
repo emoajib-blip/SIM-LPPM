@@ -136,7 +136,6 @@ class Import extends Component
 
     public function downloadTemplate(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('users.import-template'));
     }
 

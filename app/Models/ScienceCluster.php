@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $is_active_for_community_service
  * @property-read ScienceCluster|null $parent
  * @property-read Collection|ScienceCluster[] $children
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class ScienceCluster extends Model
 {

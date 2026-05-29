@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 #[Layout('components.layouts.app', ['title' => 'Dashboard Eksekutif', 'pageTitle' => 'Dashboard Strategis', 'pageSubtitle' => 'Ikhtisar capaian dan tren penelitian ditingkat institusi'])]
 class ExecDashboard extends Component
 {
@@ -54,13 +53,11 @@ class ExecDashboard extends Component
 
     public function exportIkuPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.iku.export-pdf', ['period' => $this->selectedYear]));
     }
 
     public function exportIkuExcel(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.iku.export-excel', ['period' => $this->selectedYear]));
     }
 
@@ -165,7 +162,6 @@ class ExecDashboard extends Component
         return [
             'total_research' => $research->sum('count'),
             'total_community_service' => $communityService->sum('count'),
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             'research_approved' => $research->filter(fn ($r) => in_array($r->status->value ?? '', ['approved', 'completed']))->sum('count'),
             'community_service_approved' => $communityService->filter(fn ($r) => in_array($r->status->value ?? '', ['approved', 'completed']))->sum('count'),
             'faculty_name' => $facultyId ? $this->user->identity?->faculty?->name : null,
@@ -266,7 +262,6 @@ class ExecDashboard extends Component
                     ->get();
 
                 $researchTotal = $data->filter(fn ($d) => str_contains($d->detailable_type ?? '', 'Research'))->sum('count');
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 $researchApproved = $data->filter(fn ($d) => str_contains($d->detailable_type ?? '', 'Research') && in_array($d->status->value ?? '', ['approved', 'completed']))->sum('count');
 
                 $pkmTotal = $data->filter(fn ($d) => str_contains($d->detailable_type ?? '', 'CommunityService'))->sum('count');

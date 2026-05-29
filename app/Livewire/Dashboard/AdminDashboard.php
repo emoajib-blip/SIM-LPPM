@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 #[Layout('components.layouts.app', ['title' => 'Dashboard Admin', 'pageTitle' => 'Dashboard Utama', 'pageSubtitle' => 'Ikhtisar performa dan aktivitas LPPM'])]
 class AdminDashboard extends Component
 {
@@ -56,19 +55,16 @@ class AdminDashboard extends Component
 
     public function exportResearch(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.dashboard.export-research', ['period' => $this->selectedYear]));
     }
 
     public function exportIkuPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.iku.export-pdf', ['period' => $this->selectedYear]));
     }
 
     public function exportIkuExcel(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.iku.export-excel', ['period' => $this->selectedYear]));
     }
 
@@ -185,7 +181,6 @@ class AdminDashboard extends Component
 
     private function loadProcessStats(string $yearFilter): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         // Baseline: Retrieve all proposals for the selected start_year
         $proposalsThisYear = Proposal::where('start_year', $yearFilter)->get();
         $proposalsThisYearIds = $proposalsThisYear->pluck('id');

@@ -152,7 +152,6 @@ class Show extends Component
     protected function saveOutputFiles($report): void
     {
         // Save mandatory output files
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         foreach ($this->mandatoryOutputs as $proposalOutputId => $data) {
             if (empty($proposalOutputId)) {
                 continue;

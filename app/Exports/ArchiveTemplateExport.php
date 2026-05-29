@@ -10,7 +10,6 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ArchiveTemplateExport implements FromArray, WithColumnWidths, WithHeadings, WithStyles, WithTitle
 {
     public function title(): string

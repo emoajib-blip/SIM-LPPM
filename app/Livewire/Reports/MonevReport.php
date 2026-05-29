@@ -2,8 +2,6 @@
 
 namespace App\Livewire\Reports;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
-
 use App\Models\CommunityService;
 use App\Models\MonevReview;
 use App\Models\Research;
@@ -104,7 +102,11 @@ class MonevReport extends Component
 
     protected function baseQuery()
     {
+        $user = auth()->user();
+        $facultyId = $user->hasRole('dekan') ? $user->identity?->faculty_id : null;
+
         return MonevReview::query()
+            ->when($facultyId, fn ($q) => $q->whereHas('proposal.submitter.identity', fn ($i) => $i->where('faculty_id', $facultyId)))
             ->when($this->period, fn ($q) => $q->where('academic_year', $this->period))
             ->when($this->selectedSemester !== 'all', fn ($q) => $q->where('semester', $this->selectedSemester))
             ->when($this->selectedType !== 'all', function ($q) {

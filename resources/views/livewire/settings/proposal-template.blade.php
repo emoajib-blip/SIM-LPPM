@@ -1,4 +1,3 @@
-{{-- Vetted by AI - Manual Review Required by Senior Engineer/Manager --}}
 <div>
     {{-- ═══════════════════════════════════════════════════════════════════
     PAGE HEADER

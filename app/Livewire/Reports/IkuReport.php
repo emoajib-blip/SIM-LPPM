@@ -67,7 +67,6 @@ class IkuReport extends Component
     #[On('preview-pdf')]
     public function previewPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('preview-pdf', url: route('admin.iku.export-pdf', [
             'period' => $this->period,
             'search' => $this->search,

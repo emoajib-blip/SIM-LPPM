@@ -176,7 +176,6 @@ class Show extends Component
         $this->activity_description = $note->activity_description;
         $this->progress_percentage = $note->progress_percentage;
         $this->notes = $note->notes ?? '';
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->budget_group_id = $note->budget_group_id !== null ? (int) $note->budget_group_id : null;
         $this->amount = $note->amount;
 

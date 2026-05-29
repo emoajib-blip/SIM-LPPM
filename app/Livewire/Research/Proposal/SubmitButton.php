@@ -20,7 +20,6 @@ use Livewire\Component;
  * @property-read Collection|User[] $pendingMembers
  * @property-read Collection|User[] $rejectedMembers
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class SubmitButton extends Component
 {
     use HasToast;

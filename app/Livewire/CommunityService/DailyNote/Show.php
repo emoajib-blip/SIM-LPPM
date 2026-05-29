@@ -167,7 +167,6 @@ class Show extends Component
             abort(403);
         }
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->editingId = $id;
         $this->activity_date = $note->activity_date->format('Y-m-d');
         $this->activity_description = $note->activity_description;

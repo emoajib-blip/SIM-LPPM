@@ -14,7 +14,6 @@ use Illuminate\Support\Str;
 /**
  * HasIkuCalculations
  *
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager.
  * Centralized logic for IKU calculations following Kepmen 358/M/KEP/2025.
  */
 trait HasIkuCalculations

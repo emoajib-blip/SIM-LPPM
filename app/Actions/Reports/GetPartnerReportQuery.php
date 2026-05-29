@@ -13,9 +13,10 @@ class GetPartnerReportQuery
      *
      * @return Builder<Partner>
      */
-    public function handle(string $search = '', string $type = '', string $period = ''): Builder
+    public function handle(string $search = '', string $type = '', string $period = '', ?string $facultyId = null): Builder
     {
         return Partner::query()
+            ->when($facultyId, fn ($q) => $q->whereHas('proposals.submitter.identity', fn ($i) => $i->where('faculty_id', $facultyId)))
             ->when($search, fn ($q) => $q->where(fn ($inner) => $inner->where('name', 'like', "%{$search}%")
                 ->orWhere('institution', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%")

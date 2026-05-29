@@ -11,7 +11,6 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * "Efficiency is the goal, but Integrity is the foundation."
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class CreateExternalReviewerAction
 {

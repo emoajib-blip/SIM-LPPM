@@ -68,7 +68,6 @@ class TktMeasurement extends Component
 
         // Initialize scores if empty
         if (empty($this->indicatorScores)) {
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             /** @var TktLevel $level */
             foreach ($this->levels as $level) {
                 /** @var TktIndicator $indicator */

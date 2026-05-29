@@ -134,7 +134,6 @@ class OutputReports extends Component
     #[On('export-pdf')]
     public function exportPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('reports.output.pdf', [
             'activeTab' => $this->activeTab,
             'period' => $this->period,
@@ -148,7 +147,6 @@ class OutputReports extends Component
     #[On('preview-pdf')]
     public function previewPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('preview-pdf', url: route('reports.output.pdf', [
             'activeTab' => $this->activeTab,
             'period' => $this->period,
@@ -163,7 +161,6 @@ class OutputReports extends Component
     #[On('export-excel')]
     public function exportExcel(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('reports.output.excel', [
             'activeTab' => $this->activeTab,
             'period' => $this->period,

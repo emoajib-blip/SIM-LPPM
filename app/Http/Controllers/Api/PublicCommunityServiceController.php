@@ -8,9 +8,6 @@ use App\Http\Resources\PublicCommunityServiceResource;
 use App\Models\CommunityService;
 use Illuminate\Http\Request;
 
-/**
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
- */
 class PublicCommunityServiceController extends Controller
 {
     /**

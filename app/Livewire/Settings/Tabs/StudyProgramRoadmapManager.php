@@ -126,7 +126,6 @@ class StudyProgramRoadmapManager extends Component
             'is_active' => $this->isActive,
         ];
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $user = auth()->user();
         if ($user->hasRole('kaprodi') && $this->studyProgramId !== $user->identity?->study_program_id) {
             abort(403, 'Unauthorized action.');

@@ -171,7 +171,6 @@ class ReportForm extends Form
                 // Media / Video / Product
                 'media_name' => $output->media_name,
                 'media_url' => $output->media_url,
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 'publication_date' => $output->publication_date
                     ? $output->publication_date->format('Y-m-d')
                     : null,
@@ -224,7 +223,6 @@ class ReportForm extends Form
                 'inventors' => $output->inventors,
                 'media_name' => $output->media_name,
                 'media_url' => $output->media_url,
-                // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                 'publication_date' => $output->publication_date
                     ? $output->publication_date->format('Y-m-d')
                     : null,
@@ -377,7 +375,6 @@ class ReportForm extends Form
     public function validateMandatoryOutput(int $outputId): void
     {
         $output = ProposalOutput::find($outputId);
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $type = strtolower($output->type ?? '');
         $group = strtolower($output->group ?? '');
 
@@ -426,7 +423,6 @@ class ReportForm extends Form
     public function validateAdditionalOutput(int $outputId): void
     {
         $output = ProposalOutput::find($outputId);
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $type = strtolower($output->type ?? '');
         $group = strtolower($output->group ?? '');
 
@@ -514,7 +510,6 @@ class ReportForm extends Form
     {
         $report = $this->save($existingReport);
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $report->update([
             'status' => 'submitted',
             'submitted_by' => Auth::id(),
@@ -548,7 +543,6 @@ class ReportForm extends Form
     protected function saveMandatoryOutputs(): void
     {
         foreach ($this->mandatoryOutputs as $proposalOutputId => $data) {
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             if (empty($proposalOutputId)) {
                 continue;
             }
@@ -607,7 +601,6 @@ class ReportForm extends Form
     protected function saveAdditionalOutputs(): void
     {
         foreach ($this->additionalOutputs as $proposalOutputId => $data) {
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             if (empty($proposalOutputId)) {
                 continue;
             }

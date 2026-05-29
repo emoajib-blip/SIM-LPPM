@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class MediaDownloadController extends Controller
 {
     public function download(Request $request, Media $media)

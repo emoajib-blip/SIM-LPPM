@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $expertise_keywords
  * @property-read User $user
  * @property-read Institution|null $institution
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class ReviewerProfile extends Model
 {

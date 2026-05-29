@@ -8,7 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @mixin CommunityService
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class PublicCommunityServiceResource extends JsonResource
 {

@@ -80,7 +80,6 @@ class DailyNote extends Model implements HasMedia
     /**
      * Register media conversions to generate an optimized image for PDF rendering.
      */
-    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('pdf_image')

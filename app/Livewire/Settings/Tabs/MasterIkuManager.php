@@ -11,7 +11,6 @@ use Livewire\WithPagination;
 /**
  * MasterIkuManager
  *
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager.
  * This component manages IKU targets, weights, and manual override status.
  */
 class MasterIkuManager extends Component

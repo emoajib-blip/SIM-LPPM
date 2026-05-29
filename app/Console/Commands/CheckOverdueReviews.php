@@ -9,7 +9,6 @@ use Illuminate\Console\Command;
 
 /**
  * Send notifications for overdue reviews
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class CheckOverdueReviews extends Command
 {

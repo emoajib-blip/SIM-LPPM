@@ -8,7 +8,6 @@ use App\Models\ResearchScheme;
 
 /**
  * Validate the team composition including students and cross-prodi rules.
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class ValidateTeamCompositionAction
 {

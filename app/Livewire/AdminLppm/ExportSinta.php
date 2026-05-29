@@ -7,7 +7,6 @@ use App\Models\Proposal;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 #[Layout('components.layouts.app', [
     'title' => 'Export SINTA',
     'pageTitle' => 'Export Data ke SINTA',

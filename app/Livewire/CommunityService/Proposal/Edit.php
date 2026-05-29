@@ -51,7 +51,6 @@ class Edit extends ProposalCreate
     protected function getStep2Rules(): array
     {
         // Check if file already exists (edit mode)
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $detailable = $this->form->proposal?->detailable;
         $hasFile = $detailable instanceof HasMedia &&
             $detailable->hasMedia('substance_file');
@@ -78,7 +77,6 @@ class Edit extends ProposalCreate
                 'string',
                 function ($attribute, $value, $fail) {
                     // Validate type matches group
-                    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
                     $index = (int) explode('.', $attribute)[2];
                     $group = $this->form->outputs[$index]['group'] ?? null;
                     if ($group && isset(ProposalConstants::PKM_OUTPUT_TYPES[$group])) {

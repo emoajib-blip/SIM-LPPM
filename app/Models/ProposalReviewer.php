@@ -106,7 +106,6 @@ class ProposalReviewer extends Model
     /**
      * Get the latest completed review log.
      */
-    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     public function latestLog(): ?ReviewLog
     {
         /** @var ReviewLog|null $log */
@@ -120,7 +119,6 @@ class ProposalReviewer extends Model
      */
     public function logForRound(int $round): ?ReviewLog
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         /** @var ReviewLog|null $log */
         $log = $this->logs()->where('round', $round)->first();
 
@@ -137,7 +135,6 @@ class ProposalReviewer extends Model
             return null;
         }
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         /** @var ReviewLog|null $prevLog */
         $prevLog = $this->logs()->where('round', $currentRound - 1)->first();
 

@@ -256,10 +256,15 @@ class ReportExportController extends Controller
     {
 
         try {
+            $user = Auth::user();
             $period = $request->query('period', date('Y'));
             $search = $request->query('search');
             $scheme = $request->query('scheme');
             $faculty = $request->query('faculty');
+
+            if ($user->hasRole('dekan')) {
+                $faculty = (string) ($user->identity->faculty_id ?? $faculty);
+            }
             $isPreview = $request->boolean('preview');
 
             $proposals = Proposal::query()
@@ -333,10 +338,15 @@ class ReportExportController extends Controller
     {
 
         try {
+            $user = Auth::user();
             $period = $request->query('period', date('Y'));
             $search = $request->query('search');
             $scheme = $request->query('scheme');
             $faculty = $request->query('faculty');
+
+            if ($user->hasRole('dekan')) {
+                $faculty = (string) ($user->identity->faculty_id ?? $faculty);
+            }
 
             $download = Excel::download(
                 new ResearchReportExport($period, $search, $scheme, $faculty),
@@ -357,10 +367,15 @@ class ReportExportController extends Controller
     {
 
         try {
+            $user = Auth::user();
             $period = $request->query('period', date('Y'));
             $search = $request->query('search');
             $scheme = $request->query('scheme');
             $faculty = $request->query('faculty');
+
+            if ($user->hasRole('dekan')) {
+                $faculty = (string) ($user->identity->faculty_id ?? $faculty);
+            }
             $isPreview = $request->boolean('preview');
 
             $proposals = Proposal::query()
@@ -434,10 +449,15 @@ class ReportExportController extends Controller
     {
 
         try {
+            $user = Auth::user();
             $period = $request->query('period', date('Y'));
             $search = $request->query('search');
             $scheme = $request->query('scheme');
             $faculty = $request->query('faculty');
+
+            if ($user->hasRole('dekan')) {
+                $faculty = (string) ($user->identity->faculty_id ?? $faculty);
+            }
 
             $download = Excel::download(
                 new CommunityServiceReportExport($period, $search, $scheme, $faculty),
@@ -458,12 +478,17 @@ class ReportExportController extends Controller
     {
 
         try {
+            $user = Auth::user();
             $activeTab = $request->query('activeTab', 'research');
             $search = $request->query('search', '');
             $outputType = $request->query('outputType', 'all');
             $period = $request->query('period', date('Y'));
             $scheme = $request->query('scheme');
             $faculty = $request->query('faculty');
+
+            if ($user->hasRole('dekan')) {
+                $faculty = (string) ($user->identity->faculty_id ?? $faculty);
+            }
             $isPreview = $request->boolean('preview');
 
             $proposals = $this->getOutputProposalsQuery($activeTab, $search, $outputType, $period, $scheme, $faculty)->get();
@@ -524,12 +549,17 @@ class ReportExportController extends Controller
     {
 
         try {
+            $user = Auth::user();
             $activeTab = $request->query('activeTab', 'research');
             $search = $request->query('search', '');
             $outputType = $request->query('outputType', 'all');
             $period = $request->query('period', date('Y'));
             $scheme = $request->query('scheme');
             $faculty = $request->query('faculty');
+
+            if ($user->hasRole('dekan')) {
+                $faculty = (string) ($user->identity->faculty_id ?? $faculty);
+            }
 
             $download = Excel::download(
                 new OutputReportExport($activeTab, $search, $outputType, $period, $scheme, $faculty),
@@ -591,11 +621,13 @@ class ReportExportController extends Controller
     {
 
         try {
+            $user = Auth::user();
+            $facultyId = $user->hasRole('dekan') ? $user->identity?->faculty_id : null;
             $search = $request->query('search', '');
             $typeFilter = $request->query('typeFilter', '');
             $periodFilter = $request->query('periodFilter', '');
 
-            $partners = $action->handle($search, $typeFilter, $periodFilter)->get();
+            $partners = $action->handle($search, $typeFilter, $periodFilter, $facultyId !== null ? (string) $facultyId : null)->get();
 
             $institutionalReport = InstitutionalReport::where('type', 'partner')
                 ->where('year', $periodFilter ?: date('Y'))
@@ -653,12 +685,14 @@ class ReportExportController extends Controller
     {
 
         try {
+            $user = Auth::user();
+            $facultyId = $user->hasRole('dekan') ? $user->identity?->faculty_id : null;
             $search = $request->query('search', '');
             $typeFilter = $request->query('typeFilter', '');
             $periodFilter = $request->query('periodFilter', '');
 
             $download = Excel::download(
-                new PartnerCollaborationExport($search, $typeFilter, $periodFilter),
+                new PartnerCollaborationExport($search, $typeFilter, $periodFilter, $facultyId !== null ? (string) $facultyId : null),
                 'laporan-mitra-'.now()->format('Y-m-d').'.xlsx'
             );
 
@@ -719,7 +753,6 @@ class ReportExportController extends Controller
             $period = $request->query('period', date('Y'));
             $filename = "research-proposals-{$period}.xlsx";
 
-            /** Vetted by AI - Manual Review Required by Senior Engineer/Manager */
             $download = Excel::download(
                 new ResearchProposalExport((int) $period),
                 $filename

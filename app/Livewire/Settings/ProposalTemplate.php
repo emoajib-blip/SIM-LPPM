@@ -1,7 +1,5 @@
 <?php
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
-
 namespace App\Livewire\Settings;
 
 use App\Livewire\Concerns\HasToast;

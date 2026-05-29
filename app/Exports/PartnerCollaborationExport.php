@@ -15,13 +15,16 @@ class PartnerCollaborationExport implements FromView, ShouldAutoSize, WithColumn
     public function __construct(
         protected string $search = '',
         protected string $typeFilter = '',
-        protected string $periodFilter = ''
+        protected string $periodFilter = '',
+        protected ?string $facultyId = null
     ) {}
 
     public function view(): View
     {
         $action = new GetPartnerReportQuery;
-        $partners = $action->handle($this->search, $this->typeFilter, $this->periodFilter)->get();
+        $partners = $action->handle($this->search, $this->typeFilter, $this->periodFilter)
+            ->when($this->facultyId, fn ($q) => $q->whereHas('proposals.submitter.identity', fn ($i) => $i->where('faculty_id', $this->facultyId)))
+            ->get();
 
         return view('exports.partner-collaboration', [
             'partners' => $partners,

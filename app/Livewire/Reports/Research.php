@@ -105,7 +105,6 @@ class Research extends Component
     #[On('export-pdf')]
     public function exportPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $params = [
             'period' => $this->period,
             'search' => $this->search,
@@ -119,7 +118,6 @@ class Research extends Component
     #[On('preview-pdf')]
     public function previewPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $params = [
             'period' => $this->period,
             'search' => $this->search,
@@ -134,7 +132,6 @@ class Research extends Component
     #[On('export-excel')]
     public function exportExcel(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $params = [
             'period' => $this->period,
             'search' => $this->search,

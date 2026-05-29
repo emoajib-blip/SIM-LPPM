@@ -21,7 +21,6 @@ class ProposalPolicy
 
     /**
      * Determine whether the user can view the model.
-     * Vetted by AI - Manual Review Required by Senior Engineer/Manager
      */
     public function view(User $user, Proposal $proposal): bool
     {
@@ -66,7 +65,6 @@ class ProposalPolicy
 
     /**
      * Determine whether the user can update the model.
-     * Vetted by AI - Manual Review Required by Senior Engineer/Manager
      */
     public function update(User $user, Proposal $proposal): bool
     {

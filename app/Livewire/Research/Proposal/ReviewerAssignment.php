@@ -18,7 +18,6 @@ use Livewire\Component;
  * @property-read Collection|User[] $availableReviewers
  * @property-read Collection|ProposalReviewer[] $currentReviewers
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerAssignment extends Component
 {
     use HasToast;

@@ -16,7 +16,6 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 #[Layout('components.layouts.app', ['title' => 'Laporan Kerjasama Mitra', 'pageTitle' => 'Laporan Kerjasama Mitra'])]
 class PartnerCollaboration extends Component
 {
@@ -74,9 +73,15 @@ class PartnerCollaboration extends Component
     #[Computed]
     public function summary(): array
     {
-        $total = Partner::count();
-        $withMou = Partner::whereHas('media', fn ($q) => $q->where('collection_name', 'mou_pks'))->count();
-        $withProposal = Partner::whereHas(
+        $user = auth()->user();
+        $facultyId = $user->hasRole('dekan') ? $user->identity?->faculty_id : null;
+
+        $basePartner = Partner::query()
+            ->when($facultyId, fn ($q) => $q->whereHas('proposals.submitter.identity', fn ($i) => $i->where('faculty_id', $facultyId)));
+
+        $total = (clone $basePartner)->count();
+        $withMou = (clone $basePartner)->whereHas('media', fn ($q) => $q->where('collection_name', 'mou_pks'))->count();
+        $withProposal = (clone $basePartner)->whereHas(
             'proposals',
             fn ($q) => $q->when($this->periodFilter, fn ($q2) => $q2->where('start_year', $this->periodFilter))
         )->count();
@@ -84,6 +89,7 @@ class PartnerCollaboration extends Component
         $activeBudget = Proposal::query()
             ->whereHas('partners')
             ->whereIn('status', [ProposalStatus::APPROVED->value, ProposalStatus::COMPLETED->value])
+            ->when($facultyId, fn ($q) => $q->whereHas('submitter.identity', fn ($i) => $i->where('faculty_id', $facultyId)))
             ->when($this->periodFilter, fn ($q) => $q->where('start_year', $this->periodFilter))
             ->sum('sbk_value');
 
@@ -98,7 +104,6 @@ class PartnerCollaboration extends Component
     #[On('export-pdf')]
     public function exportPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $url = route('reports.partner.pdf', [
             'search' => $this->search,
             'typeFilter' => $this->typeFilter,
@@ -110,7 +115,6 @@ class PartnerCollaboration extends Component
     #[On('preview-pdf')]
     public function previewPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $url = route('reports.partner.pdf', [
             'search' => $this->search,
             'typeFilter' => $this->typeFilter,
@@ -123,7 +127,6 @@ class PartnerCollaboration extends Component
     #[On('export-excel')]
     public function exportExcel(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $url = route('reports.partner.excel', [
             'search' => $this->search,
             'typeFilter' => $this->typeFilter,
@@ -134,13 +137,16 @@ class PartnerCollaboration extends Component
 
     public function render(GetPartnerReportQuery $action): View
     {
-        $partners = $action->handle($this->search, $this->typeFilter, $this->periodFilter)->paginate(15);
+        $user = auth()->user();
+        $facultyId = $user->hasRole('dekan') ? $user->identity?->faculty_id : null;
 
-        // Detail proposal untuk mitra yang dipilih
+        $partners = $action->handle($this->search, $this->typeFilter, $this->periodFilter, $facultyId !== null ? (string) $facultyId : null)->paginate(15);
+
         $detailProposals = null;
         if ($this->selectedPartnerId) {
             $detailProposals = Proposal::query()
                 ->whereHas('partners', fn ($q) => $q->where('partners.id', $this->selectedPartnerId))
+                ->when($facultyId, fn ($q) => $q->whereHas('submitter.identity', fn ($i) => $i->where('faculty_id', $facultyId)))
                 ->when($this->periodFilter, fn ($q) => $q->where('start_year', $this->periodFilter))
                 ->with(['submitter.identity', 'detailable'])
                 ->latest()

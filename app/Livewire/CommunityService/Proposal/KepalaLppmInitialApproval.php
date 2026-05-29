@@ -19,7 +19,6 @@ use Livewire\Component;
  * @property-read Proposal|null $proposal
  * @property-read bool $canApprove
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class KepalaLppmInitialApproval extends Component
 {
     use HasToast;

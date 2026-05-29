@@ -58,7 +58,6 @@ class NationalPriorityManager extends Component
 
     public function edit(NationalPriority $nationalPriority): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->editingId = (string) $nationalPriority->id;
         $this->name = $nationalPriority->name;
         $this->modalTitle = 'Edit Prioritas Nasional';

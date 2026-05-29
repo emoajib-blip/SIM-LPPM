@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $is_active_for_research
  * @property bool $is_active_for_community_service
  * @property-read FocusArea $focusArea
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class Theme extends Model
 {

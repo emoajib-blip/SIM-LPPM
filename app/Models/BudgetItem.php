@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read BudgetGroup $budgetGroup
  * @property-read BudgetComponent|null $budgetComponent
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class BudgetItem extends Model
 {
     /** @use HasFactory<BudgetItemFactory> */

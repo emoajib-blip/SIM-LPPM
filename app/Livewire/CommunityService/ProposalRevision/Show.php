@@ -69,10 +69,8 @@ class Show extends Component
 
         $this->form->setProposal($proposal);
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         /** @var CommunityService|null $communityService */
         $communityService = $proposal->detailable;
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->partnerId = (string) ($communityService->partner_id ?? '');
         $this->partnerIssueSummary = $communityService->partner_issue_summary ?? '';
         $this->solutionOffered = $communityService->solution_offered ?? '';
@@ -118,7 +116,6 @@ class Show extends Component
         $this->validate();
 
         try {
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             /** @var CommunityService $communityService */
             $communityService = $this->form->proposal->detailable;
 

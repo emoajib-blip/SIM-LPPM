@@ -19,25 +19,21 @@ class IkuDashboard extends Component
 
     public function exportPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.iku.export-pdf', ['period' => $this->period]));
     }
 
     public function previewPdf(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('preview-pdf', url: route('admin.iku.export-pdf', ['period' => $this->period, 'preview' => true]));
     }
 
     public function exportExcel(): void
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->dispatch('download-file', url: route('admin.iku.export-excel', ['period' => $this->period]));
     }
 
     public function mount()
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $this->period = (string) request()->query('period', date('Y'));
     }
 

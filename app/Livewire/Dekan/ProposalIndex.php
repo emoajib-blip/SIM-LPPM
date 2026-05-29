@@ -21,7 +21,6 @@ use Livewire\WithPagination;
  * @property-read array $availableYears
  * @property-read ?string $facultyName
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ProposalIndex extends Component
 {
     use WithPagination;

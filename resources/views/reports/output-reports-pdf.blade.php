@@ -4,7 +4,6 @@
     <title>Laporan Luaran</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <style>
-        /* Vetted by AI - Manual Review Required by Senior Engineer/Manager */
         @page {
             margin: 3cm 3cm 3cm 4cm;
         }

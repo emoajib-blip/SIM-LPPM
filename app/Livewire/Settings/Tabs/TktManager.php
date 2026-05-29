@@ -19,7 +19,6 @@ use Livewire\Component;
  * @property-read Collection $indicators
  * @property-read Collection $types
  * @property-read Collection $typesWithLevels
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class TktManager extends Component
 {

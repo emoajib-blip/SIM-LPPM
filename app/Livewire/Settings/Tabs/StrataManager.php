@@ -101,7 +101,6 @@ class StrataManager extends Component
     public function confirmDelete(int $id): void
     {
         $this->deleteItemId = $id;
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $item = Strata::find($id);
         $this->deleteItemName = $item->name ?? '';
         $this->dispatch('open-modal', modalId: 'modal-confirm-delete-strata');

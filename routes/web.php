@@ -82,31 +82,31 @@ Route::get('dashboard', Dashboard::class)
 
 Route::middleware(['auth'])->group(function () {
     Route::get('laporan-penelitian', Research::class)
-        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->middleware(['permission:module_laporan'])
         ->name('reports.research');
 
     Route::get('laporan-pkm', CommunityService::class)
-        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->middleware(['permission:module_laporan'])
         ->name('reports.pkm');
 
     Route::get('laporan-luaran', OutputReports::class)
-        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->middleware(['permission:module_laporan'])
         ->name('reports.outputs');
 
     Route::get('laporan-mitra', PartnerCollaboration::class)
-        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->middleware(['permission:module_laporan'])
         ->name('reports.partners');
 
     Route::get('/reports/iku', IkuReport::class)
-        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->middleware(['permission:module_laporan'])
         ->name('reports.iku');
 
     Route::get('/reports/monitoring', InstitutionalReportMonitoring::class)
-        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->middleware(['permission:module_laporan'])
         ->name('reports.monitoring');
 
     Route::get('laporan-monev', MonevReport::class)
-        ->middleware(['role:admin lppm|rektor|kepala lppm'])
+        ->middleware(['permission:module_laporan'])
         ->name('reports.monev');
 
     // User Management Routes
@@ -353,7 +353,7 @@ Route::get('/verify/signatures/{documentSignature}', [DocumentSignatureVerificat
     ->middleware(['signed'])
     ->name('signatures.verify');
 
-// Rute Ekspor Laporan via Standar HTTP (Bypass Livewire)
+// Rute Ekspor Laporan (Dekan & Role dengan module_laporan)
 Route::group(['middleware' => ['auth', 'verified', 'permission:module_laporan']], function () {
     Route::get('/laporan-penelitian/export/pdf', [ReportExportController::class, 'researchPdf'])->name('reports.research.pdf');
     Route::get('/laporan-penelitian/export/excel', [ReportExportController::class, 'researchExcel'])->name('reports.research.excel');
@@ -366,7 +366,10 @@ Route::group(['middleware' => ['auth', 'verified', 'permission:module_laporan']]
 
     Route::get('/laporan-mitra/export/pdf', [ReportExportController::class, 'partnerPdf'])->name('reports.partner.pdf');
     Route::get('/laporan-mitra/export/excel', [ReportExportController::class, 'partnerExcel'])->name('reports.partner.excel');
+});
 
+// Rute Ekspor Admin (dashboard, monev, IKU)
+Route::group(['middleware' => ['auth', 'verified', 'role:admin lppm|rektor|kepala lppm']], function () {
     Route::get('/admin/dashboard/export-research', [ReportExportController::class, 'dashboardResearchExport'])->name('admin.dashboard.export-research');
 
     Route::get('/monev/export-recap', [ReportExportController::class, 'monevRecapExcel'])->name('export.monev.recap');

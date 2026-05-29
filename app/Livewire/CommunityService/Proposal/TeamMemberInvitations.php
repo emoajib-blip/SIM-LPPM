@@ -17,7 +17,6 @@ use Livewire\Component;
  * @property-read Collection<int, User> $pendingInvitations
  * @property-read Collection<int, User> $acceptedMembers
  * @property-read Collection<int, User> $rejectedMembers
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class TeamMemberInvitations extends Component
 {
@@ -47,21 +46,18 @@ class TeamMemberInvitations extends Component
     #[Computed]
     public function pendingInvitations()
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         return $this->teamMembers->filter(fn ($member) => $member->pivot->getAttribute('status') === 'pending');
     }
 
     #[Computed]
     public function acceptedMembers()
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         return $this->teamMembers->filter(fn ($member) => $member->pivot->getAttribute('status') === 'accepted');
     }
 
     #[Computed]
     public function rejectedMembers()
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         return $this->teamMembers->filter(fn ($member) => $member->pivot->getAttribute('status') === 'rejected');
     }
 
@@ -89,7 +85,6 @@ class TeamMemberInvitations extends Component
             return;
         }
 
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         if ($member->pivot->getAttribute('status') === 'accepted') {
             $this->toastInfo('Anda sudah menerima undangan');
 

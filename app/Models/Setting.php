@@ -9,7 +9,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Setting extends Model implements HasMedia
 {
-    // Vetted by AI - Manual Review Required by Senior Engineer/Manager
     use HasUuids, InteractsWithMedia;
 
     protected $fillable = [

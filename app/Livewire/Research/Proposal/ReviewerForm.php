@@ -35,7 +35,6 @@ use Livewire\Component;
  * @property-read Collection<int, ReviewLog> $previousRoundLogs
  * @property-read Collection<int, \Illuminate\Database\Eloquent\Collection<int, ReviewLog>> $allReviewLogs
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class ReviewerForm extends Component
 {
     use HasToast;
@@ -240,7 +239,6 @@ class ReviewerForm extends Component
     #[Computed]
     public function reviewRound(): int
     {
-        // Vetted by AI - Manual Review Required by Senior Engineer/Manager
         $currentRound = $this->myReview->round ?? 1;
 
         return $currentRound;

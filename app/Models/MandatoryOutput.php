@@ -62,7 +62,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string $submitter_name
  * @property string|null $document_url
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class MandatoryOutput extends Model implements HasMedia
 {
     /** @use HasFactory<MandatoryOutputFactory> */

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Service Skeleton for SINTA API Integration
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class SintaService
 {

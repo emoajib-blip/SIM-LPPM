@@ -14,7 +14,6 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class HistoricalProposalImport implements SkipsEmptyRows, ToCollection, WithHeadingRow
 {
     /** @var array Baris gagal beserta alasannya */
@@ -213,7 +212,6 @@ class HistoricalProposalImport implements SkipsEmptyRows, ToCollection, WithHead
         foreach ($entries as $entry) {
             // Format: "Nama Mahasiswa|NIM" atau hanya "Nama Mahasiswa"
             $parts = array_map('trim', explode('|', $entry));
-            // Vetted by AI - Manual Review Required by Senior Engineer/Manager
             $result[] = [
                 'name' => $parts[0], // Offset 0 always exists after explode
                 'nim' => $parts[1] ?? null,

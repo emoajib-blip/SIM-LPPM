@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection|BudgetComponent[] $components
  * @property-read Collection|BudgetItem[] $budgetItems
  */
-// Vetted by AI - Manual Review Required by Senior Engineer/Manager
 class BudgetGroup extends Model
 {
     /** @use HasFactory<BudgetGroupFactory> */

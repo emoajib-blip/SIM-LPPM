@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Service to check if a lecturer is eligible to submit a new proposal.
- * Vetted by AI - Manual Review Required by Senior Engineer/Manager
  */
 class LecturerEligibilityService
 {
