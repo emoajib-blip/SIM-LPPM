@@ -568,6 +568,7 @@ class ProposalPdfService
                     'variant' => 'final',
                 ],
                 [
+                    'action' => $action,
                     'signed_by' => $user->id,
                     'signed_at' => $signedAt,
                     'hash_alg' => 'sha256',

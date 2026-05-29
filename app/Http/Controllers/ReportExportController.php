@@ -94,6 +94,7 @@ class ReportExportController extends Controller
                     'signed_role' => 'kepala_lppm',
                 ],
                 [
+                    'action' => 'submitted',
                     'signed_by' => (string) $report->submitted_by,
                     'signed_at' => $report->submitted_at,
                     'hash_alg' => 'sha256',
@@ -143,6 +144,7 @@ class ReportExportController extends Controller
                     'signed_role' => 'rektor',
                 ],
                 [
+                    'action' => 'approved',
                     'signed_by' => (string) $report->approved_by,
                     'signed_at' => $report->approved_at,
                     'hash_alg' => 'sha256',

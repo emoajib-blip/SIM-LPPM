@@ -759,7 +759,7 @@
                 <tr>
                     <td class="text-center" style="height: 120px; vertical-align: bottom; padding-bottom: 20px;">
                         @php
-                            $dekanSig = $proposal->signatures->where('signed_role', 'dekan')->where('action', 'approved')->first();
+                            $dekanSig = $proposal->signatures->first(fn($s) => $s->signed_role === 'dekan' && strtolower($s->action) === 'approved');
                         @endphp
                         @if($dekanSig && $dekanSig->signed_at)
                             <div style="margin-bottom: 5px;">
@@ -774,7 +774,7 @@
                     </td>
                     <td class="text-center" style="height: 120px; vertical-align: bottom; padding-bottom: 20px;">
                         @php
-                            $lecturerSig = $proposal->signatures->where('signed_role', 'lecturer')->where('action', 'submitted')->first();
+                            $lecturerSig = $proposal->signatures->first(fn($s) => $s->signed_role === 'lecturer' && strtolower($s->action) === 'submitted');
                             $statusValue = $proposal->status->value;
                             Log::debug('Lecturer signature check', [
                                 'proposal_id' => $proposal->id,
@@ -809,7 +809,7 @@
                 <tr>
                     <td class="text-center" style="height: 120px; vertical-align: bottom;">
                         @php
-                            $lppmSig = $proposal->signatures->where('signed_role', 'kepala_lppm')->where('action', 'finalized')->first();
+                            $lppmSig = $proposal->signatures->first(fn($s) => $s->signed_role === 'kepala_lppm' && strtolower($s->action) === 'finalized');
                         @endphp
                         @if($lppmSig && $lppmSig->signed_at)
                             <div style="margin-bottom: 5px;">
