@@ -255,32 +255,32 @@ class ProposalPdfService
         // Use placeholder hash first, will be updated after PDF is generated
         $this->createProposalSignatures($proposal, 'placeholder-hash-for-initial-generation');
 
-        // Reload signatures relationship to get fresh data
-        $proposal->load('signatures');
+        // Load all relationships needed for the view
+        $proposal->load([
+            'submitter.identity.institution',
+            'submitter.identity.studyProgram',
+            'submitter.identity.faculty',
+            'teamMembers.identity.institution',
+            'teamMembers.identity.studyProgram',
+            'teamMembers.identity.faculty',
+            'researchScheme',
+            'focusArea',
+            'theme',
+            'topic',
+            'clusterLevel1',
+            'keywords',
+            'budgetItems.budgetGroup',
+            'budgetItems.budgetComponent',
+            'partners',
+            'detailable.macroResearchGroup',
+            'outputs',
+            'signatures',
+        ]);
 
         // 1. Generate the basic info PDF using DomPDF
         $infoPdfContent = Pdf::loadView('pdf.proposal-export', [
             'isPreview' => $isPreview,
-            'proposal' => $proposal->load([
-                'submitter.identity.institution',
-                'submitter.identity.studyProgram',
-                'submitter.identity.faculty',
-                'teamMembers.identity.institution',
-                'teamMembers.identity.studyProgram',
-                'teamMembers.identity.faculty',
-                'researchScheme',
-                'focusArea',
-                'theme',
-                'topic',
-                'clusterLevel1',
-                'keywords',
-                'budgetItems.budgetGroup',
-                'budgetItems.budgetComponent',
-                'partners',
-                'detailable.macroResearchGroup',
-                'outputs',
-                'signatures',
-            ]),
+            'proposal' => $proposal,
             'dean_name' => $deanName,
             'dean_id' => $deanId,
             'lppm_head_name' => $lppmHeadName,
