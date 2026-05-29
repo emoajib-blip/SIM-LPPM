@@ -259,15 +259,7 @@ class ProposalPdfService
             'status_class' => get_class($proposal->status),
             'will_create_lecturer_sig' => in_array($proposal->status->value, [ProposalStatus::SUBMITTED->value, ProposalStatus::NEED_ASSIGNMENT->value, ProposalStatus::APPROVED->value, ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value]),
         ]);
-        try {
-            $this->createProposalSignatures($proposal, 'placeholder-hash-for-initial-generation');
-        } catch (\Throwable $e) {
-            Log::error('Failed to create proposal signatures', [
-                'proposal_id' => $proposal->id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-        }
+        $this->createProposalSignatures($proposal, 'placeholder-hash-for-initial-generation');
 
         // Debug: Check what was created
         $createdSigs = DocumentSignature::where('document_type', get_class($proposal))
