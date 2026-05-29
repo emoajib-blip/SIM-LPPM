@@ -255,6 +255,9 @@ class ProposalPdfService
         // Use placeholder hash first, will be updated after PDF is generated
         $this->createProposalSignatures($proposal, 'placeholder-hash-for-initial-generation');
 
+        // Refresh proposal to get latest signatures
+        $proposal->refresh();
+
         // 1. Generate the basic info PDF using DomPDF
         $infoPdfContent = Pdf::loadView('pdf.proposal-export', [
             'isPreview' => $isPreview,
