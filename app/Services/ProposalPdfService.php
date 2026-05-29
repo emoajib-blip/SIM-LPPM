@@ -248,6 +248,14 @@ class ProposalPdfService
 
         $lecturerSignedAt = $submissionLog->at ?? $proposal->created_at;
 
+        // Clean up any existing signatures for draft proposals (should not have signatures)
+        if ($proposal->status->value === ProposalStatus::DRAFT->value) {
+            DocumentSignature::where('document_type', get_class($proposal))
+                ->where('document_id', $proposal->id)
+                ->where('variant', 'final')
+                ->delete();
+        }
+
         // Pre-fetch approval mode once (reused for Blade view & FPDI merge)
         $approvalMode = Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
 
