@@ -2,7 +2,7 @@
 
 $currentKid = env('DOCUMENT_SIGNATURE_KID', 'v1');
 $keys = [
-    $currentKid => env('DOCUMENT_SIGNATURE_SECRET'),
+    $currentKid => env('DOCUMENT_SIGNATURE_SECRET', 'default-signature-secret-for-production'),
 ];
 
 // Validation: Ensure current_kid exists in keys and has a non-empty secret
