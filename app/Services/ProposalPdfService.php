@@ -257,15 +257,24 @@ class ProposalPdfService
             'proposal_id' => $proposal->id,
             'status' => $proposal->status->value,
             'status_class' => get_class($proposal->status),
+            'will_create_lecturer_sig' => in_array($proposal->status->value, [ProposalStatus::SUBMITTED->value, ProposalStatus::NEED_ASSIGNMENT->value, ProposalStatus::APPROVED->value, ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value]),
         ]);
         $this->createProposalSignatures($proposal, 'placeholder-hash-for-initial-generation');
 
-        // Force fresh load of signatures directly from database
-        $proposal->unsetRelation('signatures');
-        $proposal->setRelation('signatures', DocumentSignature::where('document_type', get_class($proposal))
+        // Debug: Check what was created
+        $createdSigs = DocumentSignature::where('document_type', get_class($proposal))
             ->where('document_id', $proposal->id)
             ->where('variant', 'final')
-            ->get());
+            ->get();
+        Log::info('Created signatures', [
+            'proposal_id' => $proposal->id,
+            'count' => $createdSigs->count(),
+            'roles' => $createdSigs->pluck('signed_role')->toArray(),
+        ]);
+
+        // Force fresh load of signatures directly from database
+        $proposal->unsetRelation('signatures');
+        $proposal->setRelation('signatures', $createdSigs);
 
         // Load all relationships needed for the view
         $proposal->load([
