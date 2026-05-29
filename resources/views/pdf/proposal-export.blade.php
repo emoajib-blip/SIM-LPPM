@@ -2,7 +2,10 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Proposal Export - {{ $proposal->id }}</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>Proposal Export - {{ $proposal->id }} ({{ $proposal->status }})</title>
     <style>
         @page {
             margin: 3cm 3cm 3cm 4cm;
