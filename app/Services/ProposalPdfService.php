@@ -494,14 +494,6 @@ class ProposalPdfService
             'kepala_lppm' => ['finalized', in_array($proposal->status->value, [ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
         ];
 
-        /** @var Collection<string, DocumentSignature> $proposalSigs */
-        $proposalSigs = $proposal->signatures()
-            ->get()
-            ->keyBy(function (Model $s) {
-                /** @var DocumentSignature $s */
-                return (string) "{$s->action}|{$s->signed_role}";
-            });
-
         foreach ($signatories as $role => $config) {
             [$action, $condition] = $config;
 
@@ -519,14 +511,13 @@ class ProposalPdfService
                 continue;
             }
 
-            $signatureRecord = $proposalSigs->get("{$action}|{$role}");
-
-            $nonce = $signatureRecord?->payload['nonce'] ?? Str::random(32);
             $signedAt = [
                 'lecturer' => $proposal->created_at ?? now(),
                 'dekan' => ProposalStatusLog::where('proposal_id', $proposal->id)->where('status_after', ProposalStatus::APPROVED)->value('at') ?? now(),
                 'kepala_lppm' => ProposalStatusLog::where('proposal_id', $proposal->id)->whereIn('status_after', [ProposalStatus::WAITING_REVIEWER, ProposalStatus::UNDER_REVIEW])->value('at') ?? now(),
             ][$role];
+
+            $nonce = Str::random(32);
 
             $payload = [
                 'ver' => 1,
@@ -543,8 +534,10 @@ class ProposalPdfService
                 'nonce' => $nonce,
             ];
 
-            $proposal->signatures()->updateOrCreate(
+            DocumentSignature::updateOrCreate(
                 [
+                    'document_type' => get_class($proposal),
+                    'document_id' => (string) $proposal->id,
                     'signed_role' => $role,
                     'action' => $action,
                     'variant' => 'final',
