@@ -16,6 +16,7 @@ use App\Models\Research;
 use App\Models\Setting;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -28,6 +29,10 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProposalPdfService
 {
+    public function __construct(
+        protected DocumentSignatureService $signatureService
+    ) {}
+
     /**
      * Get a local PDF path for a media file.
      * Returns null if the file cannot be found.
@@ -246,6 +251,10 @@ class ProposalPdfService
         // Pre-fetch approval mode once (reused for Blade view & FPDI merge)
         $approvalMode = Setting::where('key', 'proposal_approval_mode')->value('value') ?? 'digital';
 
+        // Create signatures BEFORE generating PDF (so they exist when blade renders)
+        // Use placeholder hash first, will be updated after PDF is generated
+        $this->createProposalSignatures($proposal, 'placeholder-hash-for-initial-generation');
+
         // 1. Generate the basic info PDF using DomPDF
         $infoPdfContent = Pdf::loadView('pdf.proposal-export', [
             'isPreview' => $isPreview,
@@ -449,6 +458,11 @@ class ProposalPdfService
 
         $pdf->Output('F', $cachePath);
 
+        // Update signature hashes with actual PDF hash
+        $pdfBinary = file_get_contents($cachePath);
+        $actualHash = hash('sha256', $pdfBinary);
+        $this->updateProposalSignatureHashes($proposal, $actualHash);
+
         // Cleanup temporary info PDF
         @unlink($tempInfoPath);
 
@@ -458,6 +472,103 @@ class ProposalPdfService
         }
 
         return $cachePath;
+    }
+
+    /**
+     * Create proposal signatures before PDF generation.
+     */
+    protected function createProposalSignatures(Proposal $proposal, string $placeholderHash): void
+    {
+        $kid = config('document-signatures.current_kid', 'v1');
+
+        $signatories = [
+            'lecturer' => ['submitted', in_array($proposal->status->value, [ProposalStatus::SUBMITTED->value, ProposalStatus::NEED_ASSIGNMENT->value, ProposalStatus::APPROVED->value, ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
+            'dekan' => ['approved', in_array($proposal->status->value, [ProposalStatus::APPROVED->value, ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
+            'kepala_lppm' => ['finalized', in_array($proposal->status->value, [ProposalStatus::WAITING_REVIEWER->value, ProposalStatus::UNDER_REVIEW->value, ProposalStatus::REVIEWED->value, ProposalStatus::COMPLETED->value])],
+        ];
+
+        /** @var Collection<string, DocumentSignature> $proposalSigs */
+        $proposalSigs = $proposal->signatures()
+            ->get()
+            ->keyBy(function (Model $s) {
+                /** @var DocumentSignature $s */
+                return (string) "{$s->action}|{$s->signed_role}";
+            });
+
+        foreach ($signatories as $role => $config) {
+            [$action, $condition] = $config;
+
+            if (! $condition) {
+                continue;
+            }
+
+            $user = [
+                'lecturer' => $proposal->submitter,
+                'dekan' => $proposal->submitter->identity?->faculty?->deanUser,
+                'kepala_lppm' => User::role('kepala lppm')->first(),
+            ][$role] ?? null;
+
+            if (! $user) {
+                continue;
+            }
+
+            $signatureRecord = $proposalSigs->get("{$action}|{$role}");
+
+            $nonce = $signatureRecord?->payload['nonce'] ?? Str::random(32);
+            $signedAt = [
+                'lecturer' => $proposal->created_at,
+                'dekan' => ProposalStatusLog::where('proposal_id', $proposal->id)->where('status_after', ProposalStatus::APPROVED)->value('at') ?? now(),
+                'kepala_lppm' => ProposalStatusLog::where('proposal_id', $proposal->id)->whereIn('status_after', [ProposalStatus::WAITING_REVIEWER, ProposalStatus::UNDER_REVIEW])->value('at') ?? now(),
+            ][$role] ?? $proposal->updated_at ?? now();
+
+            $payload = [
+                'ver' => 1,
+                'doc_type' => 'proposal',
+                'doc_id' => (string) $proposal->id,
+                'variant' => 'final',
+                'action' => $action,
+                'signed_role' => $role,
+                'signed_by' => (string) $user->id,
+                'signed_at' => Carbon::parse($signedAt)->copy()->utc()->toIso8601ZuluString(),
+                'pdf_hash_alg' => 'SHA-256',
+                'pdf_hash' => $placeholderHash,
+                'kid' => $kid,
+                'nonce' => $nonce,
+            ];
+
+            $proposal->signatures()->updateOrCreate(
+                [
+                    'signed_role' => $role,
+                    'action' => $action,
+                    'variant' => 'final',
+                ],
+                [
+                    'signed_by' => $user->id,
+                    'signed_at' => $signedAt,
+                    'hash_alg' => 'sha256',
+                    'document_hash' => $placeholderHash,
+                    'kid' => $kid,
+                    'payload' => $payload,
+                    'signature' => $this->signatureService->signPayload($payload, $kid),
+                ]
+            );
+        }
+    }
+
+    /**
+     * Update signature hashes with actual PDF hash.
+     */
+    protected function updateProposalSignatureHashes(Proposal $proposal, string $actualHash): void
+    {
+        $kid = config('document-signatures.current_kid', 'v1');
+
+        $proposal->signatures()
+            ->where('document_type', get_class($proposal))
+            ->where('document_id', $proposal->id)
+            ->where('variant', 'final')
+            ->update([
+                'document_hash' => $actualHash,
+            ]);
     }
 
     /**

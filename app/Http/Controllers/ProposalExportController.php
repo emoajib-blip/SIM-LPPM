@@ -43,19 +43,6 @@ class ProposalExportController extends Controller
 
         try {
             $pdfPath = $this->pdfService->export($proposal, $request->has('preview'));
-            $pdfBinary = file_get_contents($pdfPath);
-
-            $this->upsertProposalSignatures($proposal, $pdfBinary);
-
-            // Clear cache so PDF will be regenerated with signatures on next request
-            $cacheDir = storage_path('app/public/pdf_cache/proposals');
-            $oldPdfs = glob($cacheDir.DIRECTORY_SEPARATOR."proposal_{$proposal->id}_*.pdf");
-            foreach ($oldPdfs as $oldPdf) {
-                @unlink($oldPdf);
-            }
-
-            // Regenerate PDF with signatures
-            $pdfPath = $this->pdfService->export($proposal, $request->has('preview'));
 
             $title = preg_replace('/[^A-Za-z0-9_\-]/', '_', substr($proposal->title, 0, 50));
             $filename = 'Proposal_'.$title.'.pdf';
@@ -87,19 +74,6 @@ class ProposalExportController extends Controller
         }
 
         try {
-            $pdfPath = $this->pdfService->export($proposal, true);
-            $pdfBinary = file_get_contents($pdfPath);
-
-            $this->upsertProposalSignatures($proposal, $pdfBinary);
-
-            // Clear cache so PDF will be regenerated with signatures on next request
-            $cacheDir = storage_path('app/public/pdf_cache/proposals');
-            $oldPdfs = glob($cacheDir.DIRECTORY_SEPARATOR."proposal_{$proposal->id}_*.pdf");
-            foreach ($oldPdfs as $oldPdf) {
-                @unlink($oldPdf);
-            }
-
-            // Regenerate PDF with signatures
             $pdfPath = $this->pdfService->export($proposal, true);
 
             // Return the cached file directly without deleting it
