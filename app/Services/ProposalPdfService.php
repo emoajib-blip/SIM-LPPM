@@ -253,6 +253,11 @@ class ProposalPdfService
 
         // Create signatures BEFORE generating PDF (so they exist when blade renders)
         // Use placeholder hash first, will be updated after PDF is generated
+        Log::info('Creating proposal signatures', [
+            'proposal_id' => $proposal->id,
+            'status' => $proposal->status->value,
+            'status_class' => get_class($proposal->status),
+        ]);
         $this->createProposalSignatures($proposal, 'placeholder-hash-for-initial-generation');
 
         // Force fresh load of signatures directly from database

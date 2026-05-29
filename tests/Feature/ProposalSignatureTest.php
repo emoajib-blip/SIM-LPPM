@@ -85,6 +85,10 @@ class ProposalSignatureTest extends TestCase
             'signed_role' => 'lecturer',
             'action' => 'submitted',
         ]);
+
+        // Verify signature has signed_at (important for QR code display)
+        $signature = $proposal->signatures()->where('signed_role', 'lecturer')->where('action', 'submitted')->first();
+        $this->assertNotNull($signature->signed_at, 'Signature signed_at should not be null');
     }
 
     public function test_draft_proposal_has_no_lecturer_signature()

@@ -772,6 +772,12 @@
                     <td class="text-center" style="height: 120px; vertical-align: bottom; padding-bottom: 20px;">
                         @php
                             $lecturerSig = $proposal->signatures->where('signed_role', 'lecturer')->where('action', 'submitted')->first();
+                            Log::debug('Lecturer signature check', [
+                                'proposal_id' => $proposal->id,
+                                'signatures_count' => $proposal->signatures->count(),
+                                'lecturer_sig_found' => $lecturerSig ? 'yes' : 'no',
+                                'lecturer_sig_id' => $lecturerSig->id ?? null,
+                            ]);
                         @endphp
                         @if($lecturerSig && $lecturerSig->signed_at)
                             <div style="margin-bottom: 5px;">
