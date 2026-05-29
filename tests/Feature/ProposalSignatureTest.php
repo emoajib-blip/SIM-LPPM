@@ -82,6 +82,31 @@ class ProposalSignatureTest extends TestCase
         // Verify DocumentSignature created for lecturer
         $this->assertDatabaseHas('document_signatures', [
             'document_id' => $proposal->id,
+            'signed_role' => 'lecturer',
+            'action' => 'submitted',
+        ]);
+    }
+
+    public function test_draft_proposal_has_no_lecturer_signature()
+    {
+        $research = Research::factory()->create();
+        $proposal = Proposal::factory()->create([
+            'submitter_id' => $this->dosen->id,
+            'detailable_id' => $research->id,
+            'detailable_type' => Research::class,
+            'status' => ProposalStatus::DRAFT,
+        ]);
+
+        $this->actingAs($this->dosen);
+
+        $response = $this->get(route('proposals.export-pdf', $proposal));
+
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/pdf');
+
+        // Verify NO DocumentSignature created for lecturer when draft
+        $this->assertDatabaseMissing('document_signatures', [
+            'document_id' => $proposal->id,
             'document_type' => get_class($proposal),
             'signed_role' => 'lecturer',
             'action' => 'submitted',
