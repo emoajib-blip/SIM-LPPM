@@ -775,14 +775,16 @@
                     <td class="text-center" style="height: 120px; vertical-align: bottom; padding-bottom: 20px;">
                         @php
                             $lecturerSig = $proposal->signatures->where('signed_role', 'lecturer')->where('action', 'submitted')->first();
+                            $statusValue = $proposal->status->value;
                             Log::debug('Lecturer signature check', [
                                 'proposal_id' => $proposal->id,
                                 'signatures_count' => $proposal->signatures->count(),
                                 'lecturer_sig_found' => $lecturerSig ? 'yes' : 'no',
                                 'lecturer_sig_id' => $lecturerSig->id ?? null,
+                                'proposal_status' => $statusValue,
                             ]);
                         @endphp
-                        @if($lecturerSig && $lecturerSig->signed_at)
+                        @if($lecturerSig && $lecturerSig->signed_at && !in_array($statusValue, ['draft', 'revision_needed']))
                             <div style="margin-bottom: 5px;">
                                 <img src="{{ generate_qr_code_data_uri(\Illuminate\Support\Facades\URL::signedRoute('signatures.verify', ['documentSignature' => $lecturerSig->id])) }}" width="70">
                             </div>

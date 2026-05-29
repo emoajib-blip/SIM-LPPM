@@ -248,8 +248,8 @@ class ProposalPdfService
 
         $lecturerSignedAt = $submissionLog->at ?? $proposal->created_at;
 
-        // Clean up any existing signatures for draft proposals (should not have signatures)
-        if ($proposal->status->value === ProposalStatus::DRAFT->value) {
+        // Clean up any existing signatures for draft/revision proposals (should not have signatures)
+        if (in_array($proposal->status->value, [ProposalStatus::DRAFT->value, ProposalStatus::REVISION_NEEDED->value])) {
             DocumentSignature::where('document_type', get_class($proposal))
                 ->where('document_id', $proposal->id)
                 ->where('variant', 'final')
