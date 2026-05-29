@@ -255,9 +255,12 @@ class ProposalPdfService
         // Use placeholder hash first, will be updated after PDF is generated
         $this->createProposalSignatures($proposal, 'placeholder-hash-for-initial-generation');
 
-        // Force reload signatures from database to ensure they're available in blade
+        // Force fresh load of signatures directly from database
         $proposal->unsetRelation('signatures');
-        $proposal->load('signatures');
+        $proposal->setRelation('signatures', DocumentSignature::where('document_type', get_class($proposal))
+            ->where('document_id', $proposal->id)
+            ->where('variant', 'final')
+            ->get());
 
         // Load all relationships needed for the view
         $proposal->load([
