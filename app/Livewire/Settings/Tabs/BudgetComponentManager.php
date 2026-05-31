@@ -132,6 +132,34 @@ class BudgetComponentManager extends Component
         $this->resetPage();
     }
 
+    public function updatedBudgetGroupId($value): void
+    {
+        if (! $value || $this->editingId) {
+            return;
+        }
+
+        $group = BudgetGroup::find($value);
+        if (! $group) {
+            return;
+        }
+
+        $prefix = $group->code;
+        $prefixLen = strlen($prefix);
+
+        $lastCode = BudgetComponent::where('budget_group_id', $value)
+            ->where('code', 'like', $prefix.'%')
+            ->orderByRaw('LENGTH(code) DESC')
+            ->orderByRaw('code DESC')
+            ->value('code');
+
+        if ($lastCode) {
+            $number = (int) substr($lastCode, $prefixLen);
+            $this->code = $prefix.($number + 1);
+        } else {
+            $this->code = $prefix.'1';
+        }
+    }
+
     public function handleConfirmDeleteAction(): void
     {
         if ($this->deleteItemId) {
