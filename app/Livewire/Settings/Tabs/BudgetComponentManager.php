@@ -35,10 +35,28 @@ class BudgetComponentManager extends Component
 
     public string $deleteItemName = '';
 
+    public string $search = '';
+
+    public ?int $filterGroupId = null;
+
     public function render()
     {
+        $query = BudgetComponent::with(['budgetGroup']);
+
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('code', 'like', "%{$this->search}%")
+                    ->orWhere('unit', 'like', "%{$this->search}%");
+            });
+        }
+
+        if ($this->filterGroupId) {
+            $query->where('budget_group_id', $this->filterGroupId);
+        }
+
         return view('livewire.settings.tabs.budget-component-manager', [
-            'budgetComponents' => BudgetComponent::with(['budgetGroup'])->latest()->paginate(10),
+            'budgetComponents' => $query->latest()->paginate(10),
             'budgetGroups' => BudgetGroup::all(),
         ]);
     }
@@ -102,6 +120,16 @@ class BudgetComponentManager extends Component
     public function resetForm(): void
     {
         $this->reset(['budgetGroupId', 'code', 'name', 'unit', 'description', 'editingId']);
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFilterGroupId(): void
+    {
+        $this->resetPage();
     }
 
     public function handleConfirmDeleteAction(): void
