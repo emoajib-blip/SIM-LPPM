@@ -39,6 +39,8 @@ class BudgetComponentManager extends Component
 
     public ?int $filterGroupId = null;
 
+    public ?string $filterProposalType = null;
+
     public function render()
     {
         $query = BudgetComponent::with(['budgetGroup']);
@@ -55,9 +57,21 @@ class BudgetComponentManager extends Component
             $query->where('budget_group_id', $this->filterGroupId);
         }
 
+        if ($this->filterProposalType) {
+            $query->whereHas('budgetGroup', function ($q) {
+                $q->where('proposal_type', $this->filterProposalType);
+            });
+        }
+
+        $proposalTypes = BudgetGroup::whereNotNull('proposal_type')
+            ->distinct()
+            ->pluck('proposal_type')
+            ->toArray();
+
         return view('livewire.settings.tabs.budget-component-manager', [
             'budgetComponents' => $query->latest()->paginate(10),
             'budgetGroups' => BudgetGroup::all(),
+            'proposalTypes' => $proposalTypes,
         ]);
     }
 
@@ -128,6 +142,11 @@ class BudgetComponentManager extends Component
     }
 
     public function updatedFilterGroupId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFilterProposalType(): void
     {
         $this->resetPage();
     }

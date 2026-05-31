@@ -23,6 +23,12 @@
                 <option value="{{ $group->id }}">{{ $group->code }} - {{ $group->name }}</option>
             @endforeach
         </select>
+        <select class="form-select w-auto" wire:model.live="filterProposalType">
+            <option value="">Semua Kategori</option>
+            @foreach ($proposalTypes as $type)
+                <option value="{{ $type }}">{{ ucfirst(str_replace('_', ' ', $type)) }}</option>
+            @endforeach
+        </select>
     </div>
     <div class="table-responsive">
             <table class="card-table table table-vcenter">
